@@ -21,56 +21,51 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "Changing directory..."
+            echo "Starting Deployment..."
             cd ~/domains/egimedical.com/public_html/ || exit 1
 
-            # 1. إعداد هوية السحب من جيت هب (داخل السيرفر)
+            # 1. تعريف هوية السحب من GitHub
             export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
 
-            # 2. التأكد من وجود Composer
-            if [ ! -f "composer2" ]; then
-              echo "Downloading Composer..."
-              php -r "copy('https://getcomposer.org/composer-stable.phar', 'composer2');"
-            fi
-
-            # 3. تحديث الكود
+            # 2. التأكد من وجود Composer وتحديث الكود
+            [ ! -f "composer2" ] && php -r "copy('https://getcomposer.org/composer-stable.phar', 'composer2');"
+            
             if [ ! -d ".git" ]; then
               git init
               git remote add origin git@github.com:egypt-vision/egimedical.com.git
             fi
-            echo "Fetching latest code..."
+
+            echo "Fetching latest changes..."
             git fetch origin main
             git reset --hard origin/main
 
-            # 4. تثبيت المكتبات (مرة واحدة فقط)
+            # 3. تثبيت المكتبات وتجهيز البيئة
             echo "Installing dependencies..."
             export APP_ENV=production
             export APP_DEBUG=false
             php composer2 install --no-dev --optimize-autoloader
 
-            # 5. التعامل مع ملف Admin (يجب أن يكون هنا قبل الـ Optimize)
+            # 4. التعامل مع ملف Admin (قبل الـ Optimize)
             ADMIN_FILE="vendor/laravel/framework/src/Illuminate/Foundation/Auth/Admin.php"
             if [ ! -f "$ADMIN_FILE" ]; then
-              echo "Admin.php not found. Creating it now..."
+              echo "Creating Admin.php patch..."
               mkdir -p "$(dirname "$ADMIN_FILE")"
-              # إذا كان لديك محتوى للملف في الـ Secrets استخدمه هنا، وإلا سيظل فارغاً
               echo "${{ secrets.ADMIN_FILE }}" > "$ADMIN_FILE"
-              echo "✅ Admin.php created successfully."
             fi
 
-            # 6. تحديث قاعدة البيانات وتهيئتها
-            echo "Migrating database and clearing cache..."
+            # 5. تهيئة قاعدة البيانات والكاش
+            echo "Optimizing Laravel..."
             php artisan migrate --force || exit 1
             php artisan optimize:clear
             php artisan scribe:generate --force
 
-            # 7. إصلاح التوافقية (Patch) لمرة واحدة
-            if [ -f "vendor/joedixon/laravel-translation/src/Drivers/Translation.php" ]; then
-              sed -i "s/function (\$value, &\$key)/function (\$value, \$key)/g" vendor/joedixon/laravel-translation/src/Drivers/Translation.php
+            # 6. إصلاح توافقية PHP 8.2 لملف الترجمة
+            TRANS_FILE="vendor/joedixon/laravel-translation/src/Drivers/Translation.php"
+            if [ -f "$TRANS_FILE" ]; then
+              sed -i "s/function (\$value, &\$key)/function (\$value, \$key)/g" "$TRANS_FILE"
             fi
 
-            # 8. إصلاح الصلاحيات (آخر خطوة)
-            echo "Fixing permissions..."
+            # 7. ضبط الصلاحيات (خطوة أخيرة هامة)
             chmod -R 775 storage bootstrap/cache
 
-            echo "✅ All steps completed successfully!"
+            echo "✅ Deployment completed successfully!"
