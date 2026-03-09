@@ -24,32 +24,36 @@ jobs:
             echo "Changing directory..."
             cd ~/domains/egimedical.com/public_html/ || exit 1
 
-            # 1. إعداد مفتاح الـ SSH الصحيح (الذي أثبتنا نجاحه في الاختبار)
+            # إعداد المفتاح الصحيح (RSA) كما أكد الاختبار
             export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
 
-            # 2. تحميل Composer أولاً لتجنب خطأ "command not found"
             if [ ! -f "composer2" ]; then
-              echo "Downloading Composer..."
               php -r "copy('https://getcomposer.org/composer-stable.phar', 'composer2');"
             fi
 
-            # 3. تحديث الكود من Git
             if [ ! -d ".git" ]; then
               git init
               git remote add origin git@github.com:egypt-vision/egimedical.com.git
             fi
-            
-            echo "Fetching latest code..."
+
             git fetch origin main
             git reset --hard origin/main
+
+            php composer2 install --no-dev --optimize-autoloader
+            php artisan optimize:clear
+            php artisan migrate --force || exit 1
+            
+            # Patch لملف الترجمة
+            if [ -f "vendor/joedixon/laravel-translation/src/Drivers/Translation.php" ]; then
+              sed -i "s/function (\$value, &\$key)/function (\$value, \$key)/g" vendor/joedixon/laravel-translation/src/Drivers/Translation.php
+            fi
+
+            echo "✅ Deployment completed successfully!"
 
             # 4. تثبيت المكتبات (تم وضع التنزيل قبل الاستخدام)
             echo "Installing dependencies..."
             export APP_ENV=production
             export APP_DEBUG=false
-            
-            # تحديث المكتبات
-            php composer2 install --no-dev --optimize-autoloader
 
             # 5. التعامل مع ملف Admin (تنبيه: الأفضل نقله خارج الـ vendor مستقبلاً)
             ADMIN_FILE="vendor/laravel/framework/src/Illuminate/Foundation/Auth/Admin.php"
@@ -60,21 +64,11 @@ jobs:
               echo "✅ Admin.php created successfully."
             fi
 
-            # 6. تحديث قاعدة البيانات وتهيئتها
-            echo "Migrating database..."
-            php artisan migrate --force || exit 1
-
             echo "Fixing permissions..."
             chmod -R 775 storage bootstrap/cache
-
-            echo "Clearing cache..."
-            php artisan optimize:clear
             
             echo "Regenerating API documentation..."
             php artisan scribe:generate --force
-
-            echo "Regenerating autoload files..."
-            php composer2 dump-autoload --optimize || exit 1
 
             # 7. إصلاح التوافقية لمكتبة الترجمة (PHP 8.2 Patch)
             if [ -f "vendor/joedixon/laravel-translation/src/Drivers/Translation.php" ]; then
