@@ -43,7 +43,7 @@ jobs:
             echo "Installing dependencies..."
             export APP_ENV=production
             export APP_DEBUG=false
-            php composer install --no-dev --optimize-autoloader
+            composer install --no-dev --optimize-autoloader
 
             # 4. التعامل مع ملف Admin (قبل الـ Optimize)
             ADMIN_FILE="vendor/laravel/framework/src/Illuminate/Foundation/Auth/Admin.php"
