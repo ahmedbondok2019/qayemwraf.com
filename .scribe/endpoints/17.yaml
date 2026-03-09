@@ -1,0 +1,428 @@
+name: 'User Addresses'
+description: |-
+
+  APIs for managing user addresses
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/addresses
+    metadata:
+      custom: []
+      groupName: 'User Addresses'
+      groupDescription: |-
+
+        APIs for managing user addresses
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Addresses'
+      description: 'Get all addresses for the authenticated user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"success":false,"message":"Unauthenticated","errors":null}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/addresses
+    metadata:
+      custom: []
+      groupName: 'User Addresses'
+      groupDescription: |-
+
+        APIs for managing user addresses
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Add Address'
+      description: 'Add a new address for the authenticated user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'The name for the address (e.g., Home, Work).'
+        required: true
+        example: Home
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      country_id:
+        custom: []
+        name: country_id
+        description: 'The country ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      governorate_id:
+        custom: []
+        name: governorate_id
+        description: 'The governorate ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      city_id:
+        custom: []
+        name: city_id
+        description: 'The city ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      address:
+        custom: []
+        name: address
+        description: 'The full address details.'
+        required: true
+        example: '123 Street Name'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: 'Phone number for this address.'
+        required: true
+        example: '01021456325'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lat:
+        custom: []
+        name: lat
+        description: 'Optional latitude.'
+        required: false
+        example: '30.0444'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      lng:
+        custom: []
+        name: lng
+        description: 'Optional longitude.'
+        required: false
+        example: '31.2357'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      is_main:
+        custom: []
+        name: is_main
+        description: 'Set as main address.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: Home
+      country_id: 1
+      governorate_id: 1
+      city_id: 1
+      address: '123 Street Name'
+      phone: '01021456325'
+      lat: '30.0444'
+      lng: '31.2357'
+      is_main: true
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/addresses/{id}'
+    metadata:
+      custom: []
+      groupName: 'User Addresses'
+      groupDescription: |-
+
+        APIs for managing user addresses
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update Address'
+      description: 'Update an existing address.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the address.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      country_id:
+        custom: []
+        name: country_id
+        description: 'The <code>id</code> of an existing record in the countries table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      governorate_id:
+        custom: []
+        name: governorate_id
+        description: 'The <code>id</code> of an existing record in the governorates table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      city_id:
+        custom: []
+        name: city_id
+        description: 'The <code>id</code> of an existing record in the cities table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      address:
+        custom: []
+        name: address
+        description: ''
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: ''
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      lat:
+        custom: []
+        name: lat
+        description: ''
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      lng:
+        custom: []
+        name: lng
+        description: ''
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      is_main:
+        custom: []
+        name: is_main
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+      address: consequatur
+      phone: consequatur
+      lat: consequatur
+      lng: consequatur
+      is_main: false
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/addresses/{id}'
+    metadata:
+      custom: []
+      groupName: 'User Addresses'
+      groupDescription: |-
+
+        APIs for managing user addresses
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete Address'
+      description: 'Delete an address.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the address.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/addresses/{id}/set-main'
+    metadata:
+      custom: []
+      groupName: 'User Addresses'
+      groupDescription: |-
+
+        APIs for managing user addresses
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Set Main Address'
+      description: 'Set a specific address as the main address for the user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the address.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

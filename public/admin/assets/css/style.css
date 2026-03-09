@@ -1,0 +1,247 @@
+/*================================================================================
+	Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+	Version: 2.0
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+@font-face {
+    font-family: "calibri", sans-serif;
+    src: url("website/Tajwal/Tajawal-Medium") format("ttf");
+}
+
+body {
+    /*margin: 0;*/
+    font-family: "calibri", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.5;
+    /*color: #212529;*/
+    /*text-align: left;*/
+    /*background-color: #fff;*/
+    direction: ltr;
+}
+
+/* --------------------------------------------------- */
+/* category page */
+.tree {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tree li {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 5px 0;
+    cursor: grab;
+    padding: 10px;
+    list-style-type: none;
+}
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    /* دعم الشاشات الصغيرة */
+    justify-content: space-between;
+}
+
+.tree-item img {
+    width: 35px;
+    height: 35px;
+}
+
+.toggle-btn {
+    cursor: pointer;
+    font-weight: bold;
+    color: #007bff;
+    width: 20px;
+    text-align: center;
+}
+
+.toggle-btn:hover {
+    color: #0056b3;
+}
+
+.nested {
+    display: none;
+    margin-right: 20px;
+    padding-right: 10px;
+    /* border-right: 1px solid #ccc; */
+}
+
+.active {
+    display: block;
+}
+
+.dragging {
+    opacity: 0.5;
+    background: #ddd;
+}
+
+.product-count {
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+}
+
+.product-count:hover {
+    text-decoration: underline;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    /* دعم الشاشات الصغيرة */
+}
+
+.delete-btn {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.delete-btn:hover {
+    background-color: darkred;
+}
+
+select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:hover {
+    border-color: #007bff;
+}
+
+select:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 91, 187, 0.5);
+}
+
+@media (max-width: 600px) {
+    /* .tree-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .controls {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 5px;
+    } */
+}
+
+.list-group-item {
+    background-color: #ffffff00;
+}
+
+.card-body ul {
+    margin: 0;
+    padding: 0;
+}
+
+/* category page */
+/* --------------------------------------------------- */
+
+/* Mushaf Home Dashboard Theme Overrides */
+:root {
+    --primary-color: #1e5631; /* Deep Islamic Green */
+    --secondary-color: #c5a059; /* Gold/Bronze */
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color: #143e23 !important; /* Darker shade of primary */
+    border-color: #143e23 !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+/* Pagination & Navigation */
+.page-item.active .page-link {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.page-link {
+    color: var(--primary-color) !important;
+}
+
+/* Custom Checkboxes & Radios */
+.custom-control-input:checked ~ .custom-control-label::before {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.custom-switch-primary
+    .custom-control-input:checked
+    ~ .custom-control-label::before {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Form Focus */
+.form-control:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(30, 86, 49, 0.25) !important;
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* Header Navbar matches primary if desired, or keep white but accents */
+.navbar-header .navbar-brand h2 {
+    color: var(--primary-color);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color) !important;
+}

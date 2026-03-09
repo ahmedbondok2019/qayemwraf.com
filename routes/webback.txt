@@ -1,0 +1,195 @@
+<?php
+
+use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\SiteMapController;
+use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\OrderController;
+use App\Http\Controllers\User\UsersController;
+use App\Http\Controllers\WelcomeController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
+Route::get('cache-clear', function () {
+    \Illuminate\Support\Facades\Artisan::call('config:cache');
+
+    return 'cache-clear';
+});
+
+/* free convert */
+Route::any('convert', [\App\Http\Controllers\helper\Text_to_speech::class, 'convert'])->name('convert');
+
+/* paid google convert */
+Route::get('/text_to_speech/{text}', [\App\Http\Controllers\helper\Text_to_speech::class, 'TextToSpeech'])->name('TextToSpeech');
+Route::get('service-account-file.json', [\App\Http\Controllers\helper\Text_to_speech::class, 'service_account_file']);
+
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'last_url'],
+], function () {
+
+    Route::middleware(['Language'])->group(function () {
+        Route::get('fawryCallback', [\App\Http\Controllers\User\CreditController::class, 'fawryCallback'])->name('fawryCallback');
+
+        Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+
+        Route::prefix('blogs')->name('blogs.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\BlogController::class, 'index']);
+            Route::get('{id}/{slug}', [\App\Http\Controllers\BlogController::class, 'details']);
+            Route::post('addComment', [\App\Http\Controllers\BlogController::class, 'addComment']);
+        });
+        Route::get('/search_blog', [\App\Http\Controllers\BlogController::class, 'search_blog']);
+        Route::get('/blog/search/{keyword}', [\App\Http\Controllers\BlogController::class, 'blog_result']);
+        Route::get('blogs/tag/{tags}', [\App\Http\Controllers\BlogController::class, 'tags']);
+        Route::get('print/{id}', [ProductsController::class, 'print']);
+        Route::get('siteMap', [ProductsController::class, 'siteMap']);
+
+        Route::post('change_lang', [WelcomeController::class, 'change_lang']);
+
+        Route::prefix('user')->name('user.')->group(function () {
+            Route::middleware(['guest:web', 'PreventBackHistory'])->group(function () {
+                Route::get('/login', [UsersController::class, 'login'])->name('login');
+                Route::get('/register', [UsersController::class, 'register'])->name('register');
+                Route::post('/create', [UsersController::class, 'create'])->name('create');
+                Route::post('/check', [UsersController::class, 'check'])->name('check');
+            });
+
+            Route::get('verify', [UsersController::class, 'verify'])->name('verify');
+            Route::post('chechVerificationCode', [UsersController::class, 'chechVerificationCode'])->name('chechVerificationCode');
+            Route::get('verification_resend', [UsersController::class, 'verification_resend'])->name('verification.resend');
+
+            Route::middleware(['auth:web', 'PreventBackHistory'])->group(function () {
+                Route::get('/home', [UsersController::class, 'index'])->name('home');
+                Route::get('/myaccount', [UsersController::class, 'myaccount'])->name('myaccount');
+                Route::get('/delete_account', [UsersController::class, 'delete_account']);
+                Route::get('/myorders', [UsersController::class, 'myorders'])->name('myorders');
+                Route::get('order/{id}', [UsersController::class, 'order_details'])->name('order_details');
+                Route::post('deleteOrder', [OrderController::class, 'deleteOrder'])->name('deleteOrder');
+                Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
+                Route::post('updateUser', [UsersController::class, 'update'])->name('update');
+
+                Route::post('validateEmail', [UsersController::class, 'validateEmail'])->name('validateEmail');
+                Route::post('validatePhone', [UsersController::class, 'validatePhone'])->name('validatePhone');
+                Route::get('validate/{code}/{type}', [UsersController::class, 'validateLink'])->name('validateLink');
+
+                Route::get('wishlist', [CartController::class, 'WishList'])->name('WishList');
+                Route::any('AddToWishlist/{id?}', [CartController::class, 'addWishlist'])->name('addWishlist');
+                Route::post('deleteFromWishlist', [CartController::class, 'deleteFromWishlist']);
+
+                Route::get('compare', [CartController::class, 'compare'])->name('compare');
+                Route::any('AddToCompare/{id?}', [CartController::class, 'AddToCompare'])->name('AddToCompare');
+                Route::post('deleteFromCompare', [CartController::class, 'deleteFromCompare']);
+
+                Route::post('addToCart', [CartController::class, 'addToCart']);
+                Route::get('Cart', [CartController::class, 'Cart'])->name('cart');
+                Route::post('updateCart', [CartController::class, 'updateCart']);
+                Route::post('CouponCode', [CartController::class, 'CouponCode']);
+                Route::post('updateCartService', [CartController::class, 'updateCartService']);
+                Route::any('deleteFromCart', [CartController::class, 'deleteFromCart']);
+
+                Route::get('myaddresses', [UsersController::class, 'myaddresses']);
+                Route::get('getAllArea', [UsersController::class, 'getAllArea']);
+                Route::post('getAllCity', [UsersController::class, 'getAllCity'])->name('getAllCity');
+                Route::post('getAllZones', [UsersController::class, 'getAllZones']);
+                Route::post('addAddress', [UsersController::class, 'addAddress'])->name('address_new');
+                Route::post('getAddress', [UsersController::class, 'getAddress']);
+                Route::post('editAddress', [UsersController::class, 'editAddress']);
+                Route::post('getShippingCost', [UsersController::class, 'getShippingCost']);
+                Route::post('updateAddress', [UsersController::class, 'updateAddress'])->name('updateAddress');
+                Route::DELETE('deleteAddress', [UsersController::class, 'deleteAddress'])->name('deleteAddress');
+
+                Route::get('order_information', [OrderController::class, 'order_information']);
+                Route::any('checkout', [OrderController::class, 'checkout']);
+                Route::post('CreateOrder', [OrderController::class, 'CreateOrder']);
+                Route::get('complete/{id}', [OrderController::class, 'complete'])->name('complete');
+                Route::post('fetch_product_rating', [ProductsController::class, 'fetch_product_rating']);
+                Route::post('insert_rating_product', [ProductsController::class, 'insert_rating_product'])->name('insert_rating_product');
+            });
+
+            Route::get('/login/{provider}', [UsersController::class, 'redirectToProvider']);
+            Route::get('/login/{provider}/callback', [UsersController::class, 'handleProviderCallback']);
+        });
+
+        Route::any('search_products', [ProductsController::class, 'search_products']);
+        Route::post('header_search', [WelcomeController::class, 'getProductSuggestions']);
+
+        Route::any('search', [ProductsController::class, 'search_products']);
+        Route::post('ajax_search', [ProductsController::class, 'ajax_search']);
+        Route::post('ajax_category', [ProductsController::class, 'ajax_category']);
+
+        Route::any('products/search/{keyword}/{page?}', [ProductsController::class, 'product_result']);
+        Route::get('products/{category?}', [ProductsController::class, 'index']);
+        Route::get('best_seller', [ProductsController::class, 'best_seller']);
+        Route::get('latest', [ProductsController::class, 'latest']);
+        Route::get('videos/products/{category?}', [ProductsController::class, 'videos']);
+        Route::get('products/latest', [ProductsController::class, 'latest']);
+        Route::post('products/{category?}/{page?}', [ProductsController::class, 'ajaxData']);
+        Route::post('videos/products/{category?}/{page?}', [ProductsController::class, 'ajaxDataVideo']);
+        Route::get('brands', [ProductsController::class, 'brands']);
+        Route::get('brand/{id}/{brands?}', [ProductsController::class, 'brands_details']);
+        Route::get('flash_deals/{day?}', [ProductsController::class, 'flash_deals']);
+        Route::get('hot_deals', [ProductsController::class, 'hot_deals']);
+        Route::get('/product_pdf/{file_name?}', [WelcomeController::class, 'product_pdf'])->name('product_pdf');
+        Route::get('product/{id}/{slug}/{category?}', [ProductsController::class, 'product_details'])->name('product_details');
+        Route::get('short/{short_url}', [ProductsController::class, 'product_details']);
+        Route::get('short_urls', [ProductsController::class, 'short_urls']);
+
+        Route::get('contact', [WelcomeController::class, 'contact']);
+        Route::post('send/contact', [WelcomeController::class, 'sendContact']);
+        Route::post('subscribe', [WelcomeController::class, 'subscribe']);
+        Route::get('team', [WelcomeController::class, 'team']);
+        Route::get('faqs', [WelcomeController::class, 'faqs']);
+        Route::get('gallery', [WelcomeController::class, 'gallery']);
+        Route::get('gallery_details/{id}/{slug}', [WelcomeController::class, 'gallery_details']);
+
+        Route::get('about', [WelcomeController::class, 'about']);
+        Route::get('terms', [WelcomeController::class, 'terms'])->name('terms');
+        Route::get('privacy', [WelcomeController::class, 'privacy'])->name('privacy');
+
+        Route::get('password/reset', [UsersController::class, 'forgetPassword'])->name('forgetPassword');
+        // Route::post('password/update', [ \App\Http\Controllers\Auth\ResetPasswordController::class])->name('password.update');
+
+        Route::get('/sitemap.xml', [SiteMapController::class, 'index']);
+        Route::get('/sitemap/{name}', [SiteMapController::class, 'view_sitemap']);
+        Route::get('/create_sitemap', [SiteMapController::class, 'create_sitemap']);
+
+        Route::get('testTime', [WelcomeController::class, 'testTime']);
+        Route::get('/pages/{id}/{slug}', [\App\Http\Controllers\PageController::class, 'index']);
+        Route::get('qr_code', [WelcomeController::class, 'qr_code']);
+    });
+});
+
+Auth::routes();
+
+// Landing Page عامة تعرض كل المنتجات النشطة مجمعة حسب الفئة
+// Route::get('/', [LandingPageController::class, 'index'])->name('landing');
+// Route::get('/landing', [LandingPageController::class, 'index'])->name('landing');
+
+// routes/web.php
+Route::post('/guest-order-direct', [LandingPageController::class, 'guestOrder'])->name('guest.order.direct');
+
+// routes/web.php
+Route::post('/get-shipping-cost', function (Request $request) {
+    $cost = \App\Models\ShippingCategoryArea::where('area_id', $request->area_id)
+        ->where('shipping_category_id', $request->shipping_category_id)
+        ->first()?->value ?? 50;
+
+    return response()->json(['shipping_cost' => $cost]);
+})->name('get.shipping.cost');
+
+//    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/import_categories', [App\Http\Controllers\ImportsController::class, 'categories']);
+Route::get('/import_products', [App\Http\Controllers\ImportsController::class, 'products']);
+Route::get('/import_brands', [App\Http\Controllers\ImportsController::class, 'brands']);
+Route::get('/import_users', [App\Http\Controllers\ImportsController::class, 'users']);
+Route::get('getNotify', [App\Http\Controllers\User\CreditController::class, 'getNotify']);
+
+Route::get('exportBrands', [App\Http\Controllers\WelcomeController::class, 'exportBrands']);
+Route::get('exportCategory', [App\Http\Controllers\WelcomeController::class, 'exportCategory']);
+Route::get('export_users', [App\Http\Controllers\WelcomeController::class, 'exportUsers']);
+Route::get('export_products', [App\Http\Controllers\WelcomeController::class, 'export_products']);
+Route::get('export_cvs', [App\Http\Controllers\WelcomeController::class, 'exportCsv']);
+Route::get('export_tvs_google', [App\Http\Controllers\WelcomeController::class, 'exportCsvGoogle']);
+Route::get('export_all', [App\Http\Controllers\WelcomeController::class, 'export_all']);

@@ -1,0 +1,118 @@
+name: Wishlist
+description: |-
+
+  APIs for managing the user wishlist
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/wishlist
+    metadata:
+      custom: []
+      groupName: Wishlist
+      groupDescription: |-
+
+        APIs for managing the user wishlist
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Wishlist Items'
+      description: 'Get all products in the wishlist for the authenticated user or guest.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      temp_user_id:
+        custom: []
+        name: temp_user_id
+        description: 'Optional. Required if user is not authenticated.'
+        required: false
+        example: guest_123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      temp_user_id: guest_123
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"success":true,"message":"\u062a\u0645\u062a \u0627\u0644\u0639\u0645\u0644\u064a\u0629 \u0628\u0646\u062c\u0627\u062d","data":[]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '32'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/wishlist/toggle
+    metadata:
+      custom: []
+      groupName: Wishlist
+      groupDescription: |-
+
+        APIs for managing the user wishlist
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Toggle Wishlist'
+      description: 'Add or remove a product from the wishlist.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      product_id:
+        custom: []
+        name: product_id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      temp_user_id:
+        custom: []
+        name: temp_user_id
+        description: 'Optional. Required if user is not authenticated.'
+        required: false
+        example: guest_123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      product_id: 1
+      temp_user_id: guest_123
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

@@ -1,0 +1,78 @@
+/* Elegant Dropdown Styling */
+.elegant-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.elegant-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    min-width: 180px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 0.5rem;
+    z-index: 1000;
+    margin-top: 0.5rem;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Arrow for the dropdown */
+.elegant-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    border-left: 1px solid rgba(0,0,0,0.05);
+}
+
+.elegant-dropdown:hover .elegant-dropdown-menu {
+    display: block;
+    animation: fadeInDown 0.2s ease-out;
+}
+
+.elegant-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    color: #4a5568 !important; /* Force color to override header links */
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.elegant-dropdown-item:hover {
+    background-color: #f7fafc;
+    color: #1E5631 !important;
+}
+
+.elegant-dropdown-item i {
+    width: 20px;
+    text-align: center;
+    color: #a0aec0;
+}
+
+.elegant-dropdown-item:hover i {
+    color: #1E5631;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}

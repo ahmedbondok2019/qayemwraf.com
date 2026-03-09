@@ -1,0 +1,117 @@
+name: Options
+description: |-
+
+  APIs for fetching product options/attributes.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/products/{id}/options'
+    metadata:
+      custom: []
+      groupName: Options
+      groupDescription: |-
+
+        APIs for fetching product options/attributes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Product Options'
+      description: 'Returns the specific options available for a product.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      product_id:
+        custom: []
+        name: product_id
+        description: 'The ID of the product.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+      product_id: 17
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"success":true,"message":"\u062a\u0645\u062a \u0627\u0644\u0639\u0645\u0644\u064a\u0629 \u0628\u0646\u062c\u0627\u062d","data":[]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '38'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/options
+    metadata:
+      custom: []
+      groupName: Options
+      groupDescription: |-
+
+        APIs for fetching product options/attributes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get All Options'
+      description: 'Returns a list of all available options and their values.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"success":true,"message":"\u062a\u0645\u062a \u0627\u0644\u0639\u0645\u0644\u064a\u0629 \u0628\u0646\u062c\u0627\u062d","data":[{"id":1,"name":"\u0627\u0644\u062d\u062c\u0645","type":"single","values":[{"id":1,"value":"\u0627\u0644\u062c\u064a\u0628 (10x14)"},{"id":2,"value":"\u0631\u0628\u0639 (14x20)"},{"id":3,"value":"\u0639\u0627\u062f\u064a (17x24)"},{"id":4,"value":"\u062c\u0648\u0627\u0645\u0639\u064a (20x28)"},{"id":5,"value":"\u062a\u0647\u062c\u062f (25x35)"}]},{"id":2,"name":"\u0627\u0644\u0631\u0648\u0627\u064a\u0629","type":"single","values":[{"id":6,"value":"\u062d\u0641\u0635 \u0639\u0646 \u0639\u0627\u0635\u0645"},{"id":7,"value":"\u0648\u0631\u0634 \u0639\u0646 \u0646\u0627\u0641\u0639"},{"id":8,"value":"\u0642\u0627\u0644\u0648\u0646 \u0639\u0646 \u0646\u0627\u0641\u0639"},{"id":9,"value":"\u0627\u0644\u062f\u0648\u0631\u064a \u0639\u0646 \u0623\u0628\u064a \u0639\u0645\u0631\u0648"},{"id":10,"value":"\u0634\u0639\u0628\u0629 \u0639\u0646 \u0639\u0627\u0635\u0645"}]},{"id":3,"name":"\u0646\u0648\u0639 \u0627\u0644\u063a\u0644\u0627\u0641","type":"single","values":[{"id":11,"value":"\u0645\u062c\u0644\u062f \u0643\u0631\u062a\u0648\u0646"},{"id":12,"value":"\u063a\u0644\u0627\u0641 \u0648\u0631\u0642\u064a"},{"id":13,"value":"\u062c\u0644\u062f \u062a\u0631\u0645\u0648"},{"id":14,"value":"\u0642\u0637\u064a\u0641\u0629"},{"id":15,"value":"\u0639\u0644\u0628\u0629"}]},{"id":4,"name":"\u0646\u0648\u0639 \u0627\u0644\u0648\u0631\u0642","type":"single","values":[{"id":16,"value":"\u0634\u0627\u0645\u0648\u0627\u0647 (\u0623\u0635\u0641\u0631)"},{"id":17,"value":"\u0623\u0628\u064a\u0636"},{"id":18,"value":"\u0645\u0642\u0635\u0639 (Art)"}]},{"id":5,"name":"\u0644\u0648\u0646 \u0627\u0644\u063a\u0644\u0627\u0641","type":"single","values":[{"id":19,"value":"\u0623\u062e\u0636\u0631"},{"id":20,"value":"\u0623\u0632\u0631\u0642"},{"id":21,"value":"\u0623\u062d\u0645\u0631\/\u0646\u0628\u064a\u062a\u064a"},{"id":22,"value":"\u0623\u0633\u0648\u062f"},{"id":23,"value":"\u0628\u0646\u064a"}]}]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '37'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

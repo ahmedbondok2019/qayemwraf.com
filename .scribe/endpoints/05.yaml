@@ -1,0 +1,49 @@
+name: Home
+description: |-
+
+  APIs for home page components like sliders.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/sliders
+    metadata:
+      custom: []
+      groupName: Home
+      groupDescription: |-
+
+        APIs for home page components like sliders.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Sliders'
+      description: 'Returns a list of active sliders with their translations and associated categories.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"success":true,"message":"\u062a\u0645\u062a \u0627\u0644\u0639\u0645\u0644\u064a\u0629 \u0628\u0646\u062c\u0627\u062d","data":[{"id":1,"image":"http:\/\/127.0.0.1:8000\/_fixed\/sliders.jpg","link_type":null,"link_id":null,"title":"\u0645\u0631\u062d\u0628\u0627\u064b \u0628\u0643\u0645 \u0641\u064a \u0645\u0635\u062d\u0641 \u0647\u0648\u0645","description":"","category":null,"sort_order":0,"link":"","category_id":null,"category_title":"","type":"category"},{"id":2,"image":"http:\/\/127.0.0.1:8000\/_fixed\/sliders.jpg","link_type":null,"link_id":null,"title":"\u062c\u062f\u064a\u062f \u0627\u0644\u0645\u0635\u0627\u062d\u0641","description":"","category":null,"sort_order":1,"link":"","category_id":null,"category_title":"","type":"category"}]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '53'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

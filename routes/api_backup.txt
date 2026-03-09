@@ -1,0 +1,121 @@
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+// });
+
+/* website route */
+Route::group(['middleware' => ['Language']], function () {
+    Route::prefix('app-2023')->group(function () {
+        Route::post('/logout', [\App\Http\Controllers\Api\UserController::class, 'logout']);
+        Route::post('/EditUser', [\App\Http\Controllers\Api\UserController::class, 'update']);
+        Route::post('/newUserData', [\App\Http\Controllers\Api\UserController::class, 'newUserData']);
+        Route::get('userData', [\App\Http\Controllers\Api\UserController::class, 'userData']);
+        Route::post('delete_account', [\App\Http\Controllers\Api\UserController::class, 'delete_account']);
+
+        Route::post('newsBar', [\App\Http\Controllers\Api\UserController::class, 'newsBar']);
+        Route::post('UserFirebase', [\App\Http\Controllers\Api\UserController::class, 'UserFirebase']);
+
+        Route::get('home', [\App\Http\Controllers\Api\HomePageController::class, 'index']);
+        Route::get('bestProducts', [\App\Http\Controllers\Api\HomePageController::class, 'bestProducts']);
+        Route::get('topSeller', [\App\Http\Controllers\Api\HomePageController::class, 'topSeller']);
+        Route::get('flashDeals', [\App\Http\Controllers\Api\HomePageController::class, 'flashDeals']);
+        Route::get('latestProducts', [\App\Http\Controllers\Api\HomePageController::class, 'latestProducts']);
+        Route::get('mostviewedProducts', [\App\Http\Controllers\Api\HomePageController::class, 'mostviewedProducts']);
+        Route::get('home_brands', [\App\Http\Controllers\Api\HomePageController::class, 'home_brands']);
+        Route::get('home_categories', [\App\Http\Controllers\Api\HomePageController::class, 'home_categories']);
+        Route::get('home_offer', [\App\Http\Controllers\Api\HomePageController::class, 'home_offer']);
+        Route::get('slider', [\App\Http\Controllers\Api\HomePageController::class, 'slider']);
+
+        Route::get('notifications', [\App\Http\Controllers\Api\UserController::class, 'notifications']);
+        Route::get('updateNotification', [\App\Http\Controllers\Api\UserController::class, 'updateNotification']);
+        Route::get('testNotification', [\App\Http\Controllers\Api\HomePageController::class, 'testNotification']);
+        Route::get('brand', [\App\Http\Controllers\Api\HomePageController::class, 'brands']);
+        Route::get('offers', [\App\Http\Controllers\Api\HomePageController::class, 'offers']);
+        Route::get('search', [\App\Http\Controllers\Api\HomePageController::class, 'search']);
+
+        Route::get('categories', [\App\Http\Controllers\Api\ShopController::class, 'index']);
+        Route::get('categories_sub', [\App\Http\Controllers\Api\ShopController::class, 'categories_sub']);
+        Route::get('categories_products', [\App\Http\Controllers\Api\ShopController::class, 'products']);
+        Route::get('brandProducts', [\App\Http\Controllers\Api\ShopController::class, 'brandProducts']);
+        Route::get('productDetails', [\App\Http\Controllers\Api\ShopController::class, 'productDetails']);
+
+        Route::get('Cart', [\App\Http\Controllers\Api\CartController::class, 'index']);
+        Route::get('validCouponCode', [\App\Http\Controllers\Api\CartController::class, 'validCode']);
+        Route::post('addToCart', [\App\Http\Controllers\Api\CartController::class, 'addToCart']);
+        Route::get('updateCart', [\App\Http\Controllers\Api\CartController::class, 'updateCart']);
+        Route::get('deleteFromCart', [\App\Http\Controllers\Api\CartController::class, 'deleteFromCart']);
+
+        Route::get('getOrders', [\App\Http\Controllers\Api\OrdersController::class, 'index']);
+        Route::get('getOrderDetails', [\App\Http\Controllers\Api\OrdersController::class, 'orderDetails']);
+        Route::get('shipping_cost', [\App\Http\Controllers\Api\OrdersController::class, 'shipping_cost']);
+        Route::get('OrderData', [\App\Http\Controllers\Api\OrdersController::class, 'OrderData']);
+        Route::get('createOrder', [\App\Http\Controllers\Api\OrdersController::class, 'createOrder']);
+        Route::get('cancelOrder', [\App\Http\Controllers\Api\OrdersController::class, 'cancelOrder']);
+        Route::post('rateProduct', [\App\Http\Controllers\Api\OrdersController::class, 'rateProduct']);
+        Route::post('orderStatusChange', [\App\Http\Controllers\Api\OrdersController::class, 'orderStatusChange']);
+
+        Route::get('wishlist', [\App\Http\Controllers\Api\UserController::class, 'wishlist']);
+        Route::post('AddToWishlist', [\App\Http\Controllers\Api\UserController::class, 'AddToWishlist']);
+        Route::DELETE('deleteFromWishlist', [\App\Http\Controllers\Api\UserController::class, 'deleteFromWishlist']);
+
+        Route::get('userAddress', [\App\Http\Controllers\Api\UserController::class, 'userAddress']);
+        Route::get('getAllArea', [\App\Http\Controllers\Api\UserController::class, 'getAllArea']);
+        Route::get('getAllCity', [\App\Http\Controllers\Api\UserController::class, 'getAllCity']);
+        Route::get('getAllCountries', [\App\Http\Controllers\Api\UserController::class, 'getAllCountries']);
+        Route::post('addAddress', [\App\Http\Controllers\Api\UserController::class, 'addAddress']);
+        Route::post('updateAddress', [\App\Http\Controllers\Api\UserController::class, 'updateAddress']);
+        Route::DELETE('deleteAddress', [\App\Http\Controllers\Api\UserController::class, 'deleteAddress']);
+
+        Route::post('mySaved', [\App\Http\Controllers\Api\HomePageController::class, 'mySaved']);
+        Route::post('setting', [\App\Http\Controllers\Api\HomePageController::class, 'setting']);
+        Route::get('configuration', [\App\Http\Controllers\Api\SettingController::class, 'configuration']);
+        Route::get('terms', [\App\Http\Controllers\Api\SettingController::class, 'terms']);
+        Route::get('privacy', [\App\Http\Controllers\Api\SettingController::class, 'privacy']);
+        Route::get('contact', [\App\Http\Controllers\Api\SettingController::class, 'contact']);
+        Route::post('send_message', [\App\Http\Controllers\Api\SettingController::class, 'send_message']);
+        Route::get('about', [\App\Http\Controllers\Api\SettingController::class, 'about']);
+        Route::post('send', [\App\Http\Controllers\Api\GenerateQrCodeController::class, 'send']);
+        Route::post('receive', [\App\Http\Controllers\Api\GenerateQrCodeController::class, 'receive']);
+        Route::get('simpleQrCode', [\App\Http\Controllers\Api\GenerateQrCodeController::class, 'simpleQrCode']);
+        Route::post('searchUser', [\App\Http\Controllers\Api\GenerateQrCodeController::class, 'searchUser']);
+        Route::get('currencies', [\App\Http\Controllers\Api\UserController::class, 'currencies']);
+        Route::get('supporttickets', [\App\Http\Controllers\Api\UserController::class, 'supporttickets']);
+    });
+});
+
+Route::group(['middleware' => 'Language'], function () {
+    Route::prefix('app-2023')->group(function () {
+
+        Route::post('/login', [\App\Http\Controllers\Api\UserController::class, 'login']);
+        Route::post('/registerUser', [\App\Http\Controllers\Api\UserController::class, 'CreateUser']);
+        Route::post('/validCode', [\App\Http\Controllers\Api\UserController::class, 'validCode']);
+        Route::post('/createRandomCode', [\App\Http\Controllers\Api\UserController::class, 'createRandomCode']);
+        Route::post('/forgetPassword', [\App\Http\Controllers\Api\UserController::class, 'forgetPassword']);
+        Route::post('/ResetPassword', [\App\Http\Controllers\Api\UserController::class, 'ResetPassword']);
+        Route::post('/Check', [\App\Http\Controllers\Api\UserController::class, 'check']);
+        Route::post('/ForgetPasswordcheck', [\App\Http\Controllers\Api\UserController::class, 'ForgetPasswordcheck']);
+
+        Route::post('SocialCheck', [\App\Http\Controllers\Api\SocialController::class, 'check']);
+        Route::post('SocialCreate', [\App\Http\Controllers\Api\SocialController::class, 'CreateUser']);
+
+        Route::get('welcome', [\App\Http\Controllers\Api\WelcomeController::class, 'welcome']);
+
+        // dashboard use
+        Route::get('options', [\App\Http\Controllers\Api\WelcomeController::class, 'options']);
+        Route::get('product_categories', [\App\Http\Controllers\Api\WelcomeController::class, 'product_categories']);
+        Route::get('related_products', [\App\Http\Controllers\Api\WelcomeController::class, 'related_products']);
+    });
+});
+
+Route::post('/fawryPaymentNotificationURL', [\App\Http\Controllers\Api\FawryController::class, 'fawryPaymentNotificationURL']);

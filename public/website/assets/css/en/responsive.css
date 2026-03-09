@@ -1,0 +1,215 @@
+@media only screen and (max-width: 7000px){
+	.page-wrapper{
+		overflow: hidden;
+	}
+	
+}
+
+@media only screen and (max-width: 1799px){
+	.feature-block .image {
+		text-align: right;
+	}
+	.feature-block .image img {
+		width: 50%;
+	}
+}
+
+@media only screen and (max-width: 1675px){
+	.features-section-two .side-image {
+		display: none;
+	}
+}
+
+@media only screen and (max-width: 1400px){
+
+	.main-menu .navigation>li:nth-last-child(-n+3)>ul>li>ul {
+	    left: auto;
+	    right: 100%;
+	}
+	.main-menu .navigation > li:nth-last-child(-n+2) > ul {
+	    left: auto;
+	    right: 0;
+	}
+	.main-menu .navigation > li:nth-last-child(-n+2) > ul > li > ul {
+	    left: auto;
+	    right: 100%;
+	}
+	/*  */
+
+}
+
+@media only screen and (max-width: 1199px){
+	.header-upper .navbar-right-info {
+	 	display: none;
+	}
+	.main-header .header-upper .search-box {
+		width: 400px;
+	}
+}
+
+@media only screen and (max-width: 1139px){
+	/* Default */
+	.main-header .nav-outer .main-menu,
+	.sticky-header{
+		display: none !important;
+	}
+	.nav-outer .mobile-nav-toggler{
+		display: block;
+	}
+	.main-header.header-style-two .header-info-right {
+		display: none;
+	}
+	/*  */
+	.mobile-menu .navigation li>a span {
+		display: none;
+	}
+	.header-style-two .header-lower .inner-container {
+		padding-left: 0;
+	}
+	.banner-section-two .content-box .image {
+		position: relative;
+		bottom: 0;
+		margin-top: 50px;
+	}
+}
+
+@media only screen and (max-width: 991px){
+	.main-header .header-upper .search-box {
+		display: none;
+	}
+	.estimate-form {
+		position: relative;
+	}
+	.banner-section .content-box h1 {
+		font-size: 50px;
+		line-height: 60px;
+	}
+	.feature-block .image img {
+		width: auto;
+	}
+	.feature-block-three {
+		margin-top: 0;
+	}
+	.banner-section.style-two .estimate-form {
+		bottom: 100px;
+	}
+	.banner-section.style-two .content-box {
+		padding: 0 0 40px;
+		min-width: 610px;	
+	}
+	.tab-btn-style-one .nav-item {
+		-ms-flex: 0 0 33.333%;
+		flex: 0 0 33.333%;
+		max-width: 33.333%;
+	}
+	.feature-block-five {
+		margin-bottom: 40px;
+	}
+	.featured-products.style-two .tab-area .tab-btn-style-two {
+		justify-content: center;
+	}
+}
+
+@media only screen and (min-width: 768px){
+	.main-menu .navigation > li > ul,
+	.main-menu .navigation > li > ul > li > ul{
+		display:block !important;
+		visibility:hidden;
+		opacity:0;
+	}
+}
+
+@media only screen and (max-width: 767px){	
+	br {
+		display: none;
+	}
+	.banner-section .banner-slider-nav {
+		display: none;
+	}
+	.feature-block .image {
+		position: relative;
+		margin-top: 50px;
+		margin-right: -40px;
+		margin-bottom: -40px;
+	}
+	.features-section .auto-container {
+		padding: 0 15px;
+	}
+	.product-block-five.list-item .lower-content {
+		width: 100%;
+	}
+}
+
+@media only screen and (max-width: 650px){
+	.news-block-three .content {
+		width: 100%;
+	}
+	.news-block-three .image {
+		margin-bottom: 30px;
+	}
+	.news-section-two.style-two .news-block-three .content {
+		width: 100%;
+		padding: 30px;
+	}
+}
+
+@media only screen and (max-width: 575px){
+	.main-header .header-upper .inner-container {
+		padding-left: 20px;
+	}
+	.main-header .header-upper .right-info li .menu-bar {
+		display: block;
+	}
+	.main-header .header-upper .right-info li a {
+		display: none;
+	}
+	.main-header .header-upper .right-info li.search-toggler {
+		display: none;
+	}
+	.main-header .header-upper .right-info li .shopping-cart {
+		display: none;
+	}
+	.main-header .header-upper .logo-box .logo img {
+		width: 160px;
+	}
+	.news-block-two .content {
+		width: 100%;
+	}
+	.news-block-two .image {
+		margin-bottom: 30px;
+	}
+	.tab-btn-style-one .nav-item {
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+	.feature-block-two h4 {
+		width: 100%;
+		text-align: center;
+		margin-top: 20px;
+	}
+	.related-products .owl-theme .owl-nav,
+	.team-section .owl-theme .owl-nav,
+	.news-section-two .owl-theme .owl-nav {
+		display: none;
+	}
+}
+
+@media only screen and (max-width: 350px) {
+	.news-block .author-thumb {
+		width: 100%;
+		margin-bottom: 20px;
+	}
+	.main-header .header-upper .right-info {
+		display: none;
+	}
+}
+
+
+
+
+
+
+
+
+
