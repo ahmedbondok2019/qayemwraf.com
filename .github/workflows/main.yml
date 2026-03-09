@@ -1,0 +1,94 @@
+name: Deploy via SSH
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Changing directory..."
+            cd /home/u373210132/domains/egimedical.com/public_html/ || exit 1
+
+            # 1. تنظيف ملفات الـ PSR-4 المسببة للمشاكل
+            rm -f app/Http/CategoryCollection.php
+            rm -f app/oldordercontroller.php
+
+            # 2. تحديث الكود من Git
+            if [ ! -d ".git" ]; then
+              git init
+              git remote add origin git@github.com:egypt-vision/egimedical.com.git
+            fi
+            git fetch origin main
+            git reset --hard origin/main
+
+            COMPOSER_ALLOW_SUPERUSER=1 php composer2 update --optimize-autoloader --no-dev || {
+              echo "Warning: Composer install failed but continuing..."
+            }
+            # حمل Composer v2 بصيغة phar
+            php -r "copy('https://getcomposer.org/composer-stable.phar', 'composer2');"
+
+            php composer2 install --no-dev --optimize-autoloader
+            php artisan optimize:clear
+
+            echo "Installing dependencies..."
+            export APP_ENV=production
+            export APP_DEBUG=false
+
+            # التحقق من وجود ملف Admin.php وإنشائه إن لم يكن موجودًا
+            ADMIN_FILE="vendor/laravel/framework/src/Illuminate/Foundation/Auth/Admin.php"
+
+            if [ ! -f "$ADMIN_FILE" ]; then
+              echo "Admin.php not found. Creating it now..."
+              
+              mkdir -p "$(dirname "$ADMIN_FILE")"
+              
+              echo "${{ secrets.ADMIN_FILE }}" > "$ADMIN_FILE"
+
+              echo "✅ Admin.php created successfully."
+            else
+              echo "✅ Admin.php already exists. Skipping creation."
+            fi
+
+            # 8. تحديث قاعدة البيانات (اختياري)
+            # echo "Migrating database..."
+            # php artisan migrate:fresh --seed --force || exit 1
+            # php artisan migrate:fresh --seed || exit 1
+            # php artisan db:seed --force || exit 1
+            php artisan migrate --force || exit 1
+
+            echo "Fixing permissions..."
+            chmod -R 777 storage bootstrap/cache
+
+            echo "Clearing cache..."
+            php artisan optimize:clear
+            php artisan cache:clear || echo "Cache clear failed, skipping..."
+            php artisan view:clear || echo "View clear failed, skipping..."
+            php artisan config:clear || echo "Config clear failed, skipping..."
+
+            echo "Regenerating API documentation..."
+            php artisan scribe:generate --force
+
+            echo "Regenerating autoload files..."
+            php composer2 dump-autoload --optimize || exit 1
+
+            # ✅ Patch Joe Dixon Translation for PHP 8.2 compatibility
+            sed -i "s/function (\$value, &\$key)/function (\$value, \$key)/g" vendor/joedixon/laravel-translation/src/Drivers/Translation.php
+
+            echo "✅ Deployment completed successfully!"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
