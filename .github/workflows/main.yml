@@ -24,55 +24,53 @@ jobs:
             echo "Changing directory..."
             cd ~/domains/egimedical.com/public_html/ || exit 1
 
-            # إعداد المفتاح الصحيح (RSA) كما أكد الاختبار
+            # 1. إعداد هوية السحب من جيت هب (داخل السيرفر)
             export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
 
+            # 2. التأكد من وجود Composer
             if [ ! -f "composer2" ]; then
+              echo "Downloading Composer..."
               php -r "copy('https://getcomposer.org/composer-stable.phar', 'composer2');"
             fi
 
+            # 3. تحديث الكود
             if [ ! -d ".git" ]; then
               git init
               git remote add origin git@github.com:egypt-vision/egimedical.com.git
             fi
-
+            echo "Fetching latest code..."
             git fetch origin main
             git reset --hard origin/main
 
-            php composer2 install --no-dev --optimize-autoloader
-            php artisan optimize:clear
-            php artisan migrate --force || exit 1
-            
-            # Patch لملف الترجمة
-            if [ -f "vendor/joedixon/laravel-translation/src/Drivers/Translation.php" ]; then
-              sed -i "s/function (\$value, &\$key)/function (\$value, \$key)/g" vendor/joedixon/laravel-translation/src/Drivers/Translation.php
-            fi
-
-            echo "✅ Deployment completed successfully!"
-
-            # 4. تثبيت المكتبات (تم وضع التنزيل قبل الاستخدام)
+            # 4. تثبيت المكتبات (مرة واحدة فقط)
             echo "Installing dependencies..."
             export APP_ENV=production
             export APP_DEBUG=false
+            php composer2 install --no-dev --optimize-autoloader
 
-            # 5. التعامل مع ملف Admin (تنبيه: الأفضل نقله خارج الـ vendor مستقبلاً)
+            # 5. التعامل مع ملف Admin (يجب أن يكون هنا قبل الـ Optimize)
             ADMIN_FILE="vendor/laravel/framework/src/Illuminate/Foundation/Auth/Admin.php"
             if [ ! -f "$ADMIN_FILE" ]; then
               echo "Admin.php not found. Creating it now..."
               mkdir -p "$(dirname "$ADMIN_FILE")"
+              # إذا كان لديك محتوى للملف في الـ Secrets استخدمه هنا، وإلا سيظل فارغاً
               echo "${{ secrets.ADMIN_FILE }}" > "$ADMIN_FILE"
               echo "✅ Admin.php created successfully."
             fi
 
-            echo "Fixing permissions..."
-            chmod -R 775 storage bootstrap/cache
-            
-            echo "Regenerating API documentation..."
+            # 6. تحديث قاعدة البيانات وتهيئتها
+            echo "Migrating database and clearing cache..."
+            php artisan migrate --force || exit 1
+            php artisan optimize:clear
             php artisan scribe:generate --force
 
-            # 7. إصلاح التوافقية لمكتبة الترجمة (PHP 8.2 Patch)
+            # 7. إصلاح التوافقية (Patch) لمرة واحدة
             if [ -f "vendor/joedixon/laravel-translation/src/Drivers/Translation.php" ]; then
               sed -i "s/function (\$value, &\$key)/function (\$value, \$key)/g" vendor/joedixon/laravel-translation/src/Drivers/Translation.php
             fi
 
-            echo "✅ Deployment completed successfully!"
+            # 8. إصلاح الصلاحيات (آخر خطوة)
+            echo "Fixing permissions..."
+            chmod -R 775 storage bootstrap/cache
+
+            echo "✅ All steps completed successfully!"
