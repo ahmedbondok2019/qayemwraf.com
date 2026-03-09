@@ -55,9 +55,9 @@ jobs:
 
             # 5. تهيئة قاعدة البيانات والكاش
             echo "Optimizing Laravel..."
-            php artisan migrate --force || exit 1
-            php artisan optimize:clear
-            php artisan scribe:generate --force
+            /opt/alt/php81/usr/bin/php artisan migrate --force || exit 1
+            /opt/alt/php81/usr/bin/php artisan optimize:clear
+            /opt/alt/php81/usr/bin/php artisan scribe:generate --force
 
             # 6. إصلاح توافقية PHP 8.2 لملف الترجمة
             TRANS_FILE="vendor/joedixon/laravel-translation/src/Drivers/Translation.php"
