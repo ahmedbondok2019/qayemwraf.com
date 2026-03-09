@@ -24,9 +24,14 @@ jobs:
             echo "Changing directory..."
             cd /home/u373210132/domains/egimedical.com/public_html/ || exit 1
 
-            # 1. تنظيف ملفات الـ PSR-4 المسببة للمشاكل
-            rm -f app/Http/CategoryCollection.php
-            rm -f app/oldordercontroller.php
+            # تأكد من أن known_hosts فيه github.com
+            if ! grep -q "github.com" ~/.ssh/known_hosts; then
+              ssh-keyscan github.com >> ~/.ssh/known_hosts
+            fi
+
+            # استخدم المفتاح مباشرة في كل أمر git
+            export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+
 
             # 2. تحديث الكود من Git
             if [ ! -d ".git" ]; then
