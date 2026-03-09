@@ -22,12 +22,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "Changing directory..."
-            cd /home/u373210132/domains/egimedical.com/public_html/ || exit 1
-
-            # # تأكد من أن known_hosts فيه github.com
-            # if ! grep -q "github.com" ~/.ssh/known_hosts; then
-            #   ssh-keyscan github.com >> ~/.ssh/known_hosts
-            # fi
+            cd ~/domains/egimedical.com/public_html/ || exit 1
 
             # استخدم المفتاح مباشرة في كل أمر git
             export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
