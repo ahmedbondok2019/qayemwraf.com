@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ratings', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->tinyInteger('rating')->default(5);
-            $table->text('comment')->nullable();
-            $table->boolean('status')->default(true); // Auto-approve or pending
-            $table->softDeletes();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('ratings')) {
+            Schema::create('ratings', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+                $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+                $table->tinyInteger('rating')->default(5);
+                $table->text('comment')->nullable();
+                $table->boolean('status')->default(true); // Auto-approve or pending
+                $table->softDeletes();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
