@@ -286,4 +286,6 @@ return [
     'You must purchase and receive this product to rate it' => 'You must purchase and receive this product to rate it',
     'Rating submitted successfully' => 'Rating submitted successfully',
     'You have already rated this product' => 'You have already rated this product',
+    'New arrivals' => 'New arrivals',
+    'Best Seller' => 'Best Seller',
 ];
