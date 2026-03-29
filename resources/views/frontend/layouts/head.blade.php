@@ -1,7 +1,7 @@
 @php
-    $app_name = isset($Setting) ? $Setting->translate('app_name') : 'Mushaf Home';
+    $app_name = $Setting?->translate('app_name') ?? 'Mushaf Home';
     $meta_title = !empty($__env->yieldContent('meta_title')) ? $__env->yieldContent('meta_title') : (!empty($__env->yieldContent('title')) ? $__env->yieldContent('title') : $app_name);
-    $meta_description = !empty($__env->yieldContent('meta_description')) ? $__env->yieldContent('meta_description') : (isset($Setting) ? $Setting->translate('app_description') : '');
+    $meta_description = !empty($__env->yieldContent('meta_description')) ? $__env->yieldContent('meta_description') : ($Setting?->translate('app_description') ?? '');
     $meta_image = !empty($__env->yieldContent('meta_image')) ? $__env->yieldContent('meta_image') : (isset($Setting) && $Setting->logo ? asset($Setting->logo) : asset('/website/logo-to-share.png'));
     $current_url = url()->current();
 @endphp

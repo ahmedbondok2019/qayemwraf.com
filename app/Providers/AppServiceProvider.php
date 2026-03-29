@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
 
         if(Schema::hasTable('settings')){
-            $setting = Setting::first();
+            $setting = Setting::first() ?? new Setting();
             $popupAds = Schema::hasTable('advertisements') 
                 ? Advertisement::where('location', 'popup')->active()->get() 
                 : collect();

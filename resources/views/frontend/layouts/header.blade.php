@@ -3,8 +3,8 @@
         <div class="container">
             <div class="elegant-logo">
                 <a href="{{ route('frontend.index') }}">
-                    @if(isset($Setting) && $Setting->logo)
-                        <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting->translate('app_name') }}">
+                    @if(isset($Setting) && $Setting?->logo)
+                        <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting?->translate('app_name') }}">
                     @else
                         <img src="https://souqelmlabes.com/website/images/logo/souqelmlabes2024-08-31-19-55-37.png"
                             alt="Logo">
@@ -125,7 +125,7 @@
 
             <div class="elegant-mobile-menu" id="elegantMobileMenu">
                 <div class="elegant-mobile-header">
-                    <span class="mobile-logo-text">{{ $Setting->translate('app_name') ?? 'Mushaf Home' }}</span>
+                    <span class="mobile-logo-text">{{ $Setting?->translate('app_name') ?? 'Mushaf Home' }}</span>
                     <button class="elegant-mobile-close" id="elegantMobileClose">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
