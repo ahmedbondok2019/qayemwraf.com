@@ -59,6 +59,9 @@ jobs:
             if [ -f ".env" ]; then
               php artisan migrate --force || echo "Migration failed, check DB connection in .env"
               php artisan optimize:clear
+              echo "Linking storage..."
+              rm -rf public/storage
+              ln -sfn ../storage/app/public public/storage
               php artisan scribe:generate --force || echo "Scribe generation failed, skipping..."
             else
               echo "⚠️ .env file missing! Commands skipped. Please create it manually on Hostinger."
