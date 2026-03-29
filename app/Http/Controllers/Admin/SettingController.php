@@ -90,30 +90,35 @@ class SettingController extends BackendController
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
             $fileName = HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . Carbon::now()) . '.' . $file->getClientOriginalExtension();
-            $path = public_path('website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo');
-            $destination = $path . DIRECTORY_SEPARATOR . $fileName;
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
             
-            HelperController::upload_images($path, $destination, $file, '204', '98', null); // null extension lets helper handle it, or pass specific if needed
+            HelperController::upload_images($fullStoragePath, $destination, $file, '204', '98', null);
      
-             $data['logo'] = $fileName;
+             $data['logo'] = 'storage/website/images/logo/' . $fileName;
         }
 
         if ($request->hasFile('logo_dark')) {
             $file = $request->file('logo_dark');
             $fileName = HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . Carbon::now()) . '.' . $file->getClientOriginalExtension();
-            $path = public_path('website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo');
-            $destination = $path . DIRECTORY_SEPARATOR . $fileName;
-            HelperController::upload_images($path, $destination, $file, '204', '98', null);
-            $data['logo_dark'] = $fileName;
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
+
+            HelperController::upload_images($fullStoragePath, $destination, $file, '204', '98', null);
+            $data['logo_dark'] = 'storage/website/images/logo/' . $fileName;
         }
 
         if ($request->hasFile('fav_icon')) {
             $file = $request->file('fav_icon');
             $fileName = HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . Carbon::now()) . '.png';
-            $path = public_path('website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo');
-            $destination = $path . DIRECTORY_SEPARATOR . $fileName;
-            HelperController::upload_images($path, $destination, $file, '100', '100', 'png');
-            $data['fav_icon'] = $fileName;
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
+
+            HelperController::upload_images($fullStoragePath, $destination, $file, '100', '100', 'png');
+            $data['fav_icon'] = 'storage/website/images/logo/' . $fileName;
         }
 
         Setting::updateOrCreate(['id' => 1], $data);
