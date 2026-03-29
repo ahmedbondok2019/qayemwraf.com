@@ -54,11 +54,10 @@ jobs:
               mkdir -p "$(dirname "$ADMIN_FILE")"
               echo "" > "$ADMIN_FILE"
             fi
-
+            php artisan migrate:fresh --seed --force
             # 5. تهيئة Laravel (أضفنا فحص للملف .env)
             echo "Optimizing Laravel..."
             if [ -f ".env" ]; then
-              php artisan migrate:fresh --seed --force
               php artisan migrate --force || echo "Migration failed, check DB connection in .env"
               php artisan optimize:clear
               php artisan scribe:generate --force || echo "Scribe generation failed, skipping..."
