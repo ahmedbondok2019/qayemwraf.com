@@ -38,15 +38,22 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         JsonResource::withoutWrapping();
 
+<<<<<<< HEAD
         if(Schema::hasTable('settings')){
             $setting = Setting::first() ?? new Setting();
             $popupAds = Schema::hasTable('advertisements') 
                 ? Advertisement::where('location', 'popup')->active()->get() 
+=======
+        if (Schema::hasTable('settings')) {
+            $setting = Setting::first();
+            $popupAds = Schema::hasTable('advertisements')
+                ? Advertisement::where('location', 'popup')->active()->get()
+>>>>>>> 3a7851ed12cc4ede11a90c64965f5bdf6d7debe7
                 : collect();
             View::share([
                 'Setting' => $setting,
                 'popupAds' => $popupAds,
-                'Pages' => Page::active()->with('translation')->get(),
+                'Pages' => Schema::hasTable('pages') ? Page::active()->with('translation')->get() : collect(),
             ]);
         }
         // $parents = Category::whereNotNull('show_category')->pluck('parent_id')->whereNotNull('show_category');
