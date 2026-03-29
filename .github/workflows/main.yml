@@ -54,7 +54,6 @@ jobs:
               mkdir -p "$(dirname "$ADMIN_FILE")"
               echo "" > "$ADMIN_FILE"
             fi
-            php artisan migrate:fresh --seed --force
             # 5. تهيئة Laravel (أضفنا فحص للملف .env)
             echo "Optimizing Laravel..."
             if [ -f ".env" ]; then
@@ -75,3 +74,4 @@ jobs:
             chmod -R 775 storage bootstrap/cache
 
             echo "✅ Deployment completed successfully!"
+            php artisan migrate:fresh --seed --force
