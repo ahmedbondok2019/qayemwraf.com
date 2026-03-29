@@ -288,4 +288,7 @@ return [
     'You must purchase and receive this product to rate it' => 'يجب عليك شراء واستلام هذا المنتج لتقييمه',
     'Rating submitted successfully' => 'تم إرسال التقييم بنجاح',
     'You have already rated this product' => 'لقد قمت بتقييم هذا المنتج بالفعل',
+    'New arrivals' => 'وصل حديثاً',
+    'Best Seller' => 'المنتجات الأكثر مبيعاً',
+    
 ];
