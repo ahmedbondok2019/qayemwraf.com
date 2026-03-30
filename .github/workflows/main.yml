@@ -58,6 +58,7 @@ jobs:
             echo "Optimizing Laravel..."
             if [ -f ".env" ]; then
               php artisan migrate --force || echo "Migration failed, check DB connection in .env"
+              php artisan db:seed --class=DashboardAllTranslationsSeeder --force
               php artisan optimize:clear
               echo "Linking storage..."
               rm -rf public/storage

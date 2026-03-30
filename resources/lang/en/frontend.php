@@ -59,7 +59,7 @@ return [
     'Stay updated with our latest offers and products' => 'Stay updated with our latest offers and products',
     'Enter your email address' => 'Enter your email address',
     'Subscribe' => 'Subscribe',
-    'We strive to provide the best Islamic books and Mushafs with high quality service.' => 'We strive to provide the best Islamic books and Mushafs with high quality service.',
+    'We strive to provide the best Islamic books and Mushafs with high quality service.' => 'We strive to provide the best products with high quality service.',
     'Quick Links' => 'Quick Links',
     'Customer Care' => 'Customer Care',
     'Shop' => 'Shop',
