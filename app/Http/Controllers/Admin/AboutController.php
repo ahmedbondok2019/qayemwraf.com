@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class AboutController extends BackendController
 {
@@ -70,7 +71,7 @@ class AboutController extends BackendController
         }
 
         $input = Arr::except($request->all(), ['_token', 'image', 'cropped_image']);
-        $inputs = array_merge($input, ['image' => $image_name,
+        $inputs = array_merge($input, [
             'slug' => $request->slug,
             'video_link' => $request->video_link,
             'description' => $request->description,
@@ -201,8 +202,7 @@ class AboutController extends BackendController
 
             alert()->success(trans_db('dashboard.saved'), trans_db('dashboard.congratulation'));
 
-            return redirect(\LaravelLocalization::localizeUrl('admin-2023/about/all'));
-
+            return redirect(LaravelLocalization::localizeUrl('admin-2023/about/all'));
         } else {
             if ($aboutTrans->update([
                 'slug' => $request->slug,
@@ -217,11 +217,11 @@ class AboutController extends BackendController
             ])) {
                 alert()->success(trans_db('dashboard.saved'), trans_db('dashboard.congratulation'));
 
-                return redirect(\LaravelLocalization::localizeUrl('admin-2023/about/all'));
+                return redirect(LaravelLocalization::localizeUrl('admin-2023/about/all'));
             } else {
                 alert()->error(trans_db('dashboard.notsaved'), trans_db('dashboard.attention'));
 
-                return redirect(\LaravelLocalization::localizeUrl('admin-2023/about/all'));
+                return redirect(LaravelLocalization::localizeUrl('admin-2023/about/all'));
             }
         }
     }
@@ -233,16 +233,14 @@ class AboutController extends BackendController
                 $imageSlug = HelperController::make_slug($About_name.Str::random('8').'_'.str_replace(' ', '', Carbon::today()));
                 $image_name = str_replace(' ', '', $imageSlug).'.png';
 
+                $relativePath = self::UploadImagesAbout($image, $image_name, 'about', '382', '476');
+
                 AboutImage::create([
-                    'image' => $image_name,
+                    'image' => $relativePath,
                     'about_id' => $AboutId,
                     'translation_id' => $transId,
                     'lang_id' => $lang_id,
                 ]);
-
-                $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'about');
-                $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'about'.DIRECTORY_SEPARATOR.$image_name);
-                HelperController::upload_images($path, $destination, $image, '382', '476');
             }
         }
     }
@@ -255,8 +253,11 @@ class AboutController extends BackendController
             About::where('id', $request->id)->delete();
         }
         if (! empty($data->image)) {
-            if (file_exists(public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'About'.DIRECTORY_SEPARATOR.$data->image))) {
-                unlink('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'About'.DIRECTORY_SEPARATOR.$data->image);
+            $oldPath = str_replace('storage/', '', $data->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path('website/images/about/' . $data->image))) {
+                unlink(public_path('website/images/about/' . $data->image));
             }
         }
 
@@ -322,24 +323,30 @@ class AboutController extends BackendController
 
         if ($image) {
             if (isset($oldImage) && $oldImage != null) {
-                if (file_exists(public_path('website/images/about/'.$oldImage))) {
-                    unlink('website/images/about/'.$oldImage);
+                $oldPath = str_replace('storage/', '', $oldImage);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path('website/images/about/'.$oldImage))) {
+                    unlink(public_path('website/images/about/'.$oldImage));
                 }
             }
-            self::UploadImagesAbout($image, $image_name, 'about', $width, $height);
+            $relativePath = self::UploadImagesAbout($image, $image_name, 'about', $width, $height);
 
-            return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+            return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
         } else {
-            return ['image' => $image_name, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+            return ['image' => null, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
         }
     }
 
     public static function UploadImagesAbout($image, $name, $folder, $width = null, $height = null)
     {
-        $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder);
-        $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name);
+        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
+        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
 
-        return HelperController::upload_images($path, $destination, $image, $width, $height);
+        HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
+        
+        return 'storage/website/images/' . $folder . '/' . $name;
     }
 
     public function cropAbout(Request $request)
@@ -377,13 +384,18 @@ class AboutController extends BackendController
     public function delete_image(Request $request)
     {
         $data = AboutImage::find($request->id);
-        if (file_exists(public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'about'.DIRECTORY_SEPARATOR.$data->image))) {
-            unlink('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'about'.DIRECTORY_SEPARATOR.$data->image);
+        if ($data->image) {
+            $oldPath = str_replace('storage/', '', $data->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path('website/images/about/' . $data->image))) {
+                unlink(public_path('website/images/about/' . $data->image));
+            }
         }
         $data->delete();
 
         alert()->success(trans_db('dashboard.Deleted Successfully..'), trans_db('dashboard.congratulation'));
 
-        return redirect(\LaravelLocalization::localizeUrl('admin-2023/about/all'));
+        return redirect(LaravelLocalization::localizeUrl('admin-2023/about/all'));
     }
 }

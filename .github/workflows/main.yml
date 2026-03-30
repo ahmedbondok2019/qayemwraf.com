@@ -77,4 +77,4 @@ jobs:
             chmod -R 775 storage bootstrap/cache
 
             echo "✅ Deployment completed successfully!"
-            php artisan migrate:fresh --seed --force
+            # php artisan migrate:fresh --seed --force

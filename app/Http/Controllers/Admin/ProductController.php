@@ -160,8 +160,7 @@ class ProductController extends Controller
             // Main Image
             $imagePath = null;
             if ($request->hasFile('image')) {
-                 $filename = $this->uploadImage($request->file('image'), 'products');
-                 $imagePath = 'uploads/products/' . $filename;
+                 $imagePath = $this->uploadImage($request->file('image'), 'products');
             }
 
             $product = Product::create([
@@ -210,10 +209,10 @@ class ProductController extends Controller
             // Gallery Images
             if ($request->hasFile('gallery')) {
                 foreach ($request->file('gallery') as $key => $file) {
-                    $filename = $this->uploadImage($file, 'products/gallery');
+                    $imagePath = $this->uploadImage($file, 'products/gallery');
                     ProductImage::create([
                         'product_id' => $product->id,
-                        'image' => 'uploads/products/gallery/' . $filename,
+                        'image' => $imagePath,
                         'sort_order' => $key
                     ]);
                 }
@@ -282,8 +281,16 @@ class ProductController extends Controller
         DB::beginTransaction();
         try {
              if ($request->hasFile('image')) {
-                 $filename = $this->uploadImage($request->file('image'), 'products');
-                 $product->image = 'uploads/products/' . $filename;
+                  // Delete old image
+                  if ($product->image) {
+                      $oldPath = str_replace('storage/', '', $product->image);
+                      if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                          \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                      } elseif (file_exists(public_path($product->image))) {
+                          unlink(public_path($product->image));
+                      }
+                  }
+                  $product->image = $this->uploadImage($request->file('image'), 'products');
             }
 
             $product->update([
@@ -331,10 +338,10 @@ class ProductController extends Controller
             // Gallery Images (Add new)
             if ($request->hasFile('gallery')) {
                 foreach ($request->file('gallery') as $key => $file) {
-                    $filename = $this->uploadImage($file, 'products/gallery');
+                    $imagePath = $this->uploadImage($file, 'products/gallery');
                     ProductImage::create([
                         'product_id' => $product->id,
-                        'image' => 'uploads/products/gallery/' . $filename,
+                        'image' => $imagePath,
                         'sort_order' => $key
                     ]);
                 }
@@ -342,7 +349,18 @@ class ProductController extends Controller
             
             // Delete deleted images
             if ($request->has('deleted_images')) {
-                ProductImage::destroy($request->deleted_images);
+                $imagesToDelete = ProductImage::whereIn('id', $request->deleted_images)->get();
+                foreach ($imagesToDelete as $img) {
+                    if ($img->image) {
+                        $oldPath = str_replace('storage/', '', $img->image);
+                        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                            \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                        } elseif (file_exists(public_path($img->image))) {
+                            unlink(public_path($img->image));
+                        }
+                    }
+                    $img->delete();
+                }
             }
 
             // Options Update (Complex - simplest is delete all and recreate, but problematic for order details if linked by ID)
@@ -393,6 +411,29 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
+        
+        // Delete main image
+        if ($product->image) {
+            $oldPath = str_replace('storage/', '', $product->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($product->image))) {
+                unlink(public_path($product->image));
+            }
+        }
+
+        // Delete gallery images
+        foreach ($product->images as $img) {
+            if ($img->image) {
+                $oldPath = str_replace('storage/', '', $img->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($img->image))) {
+                    unlink(public_path($img->image));
+                }
+            }
+        }
+
         $product->delete();
         return response()->json(['success' => trans_db('dashboard.deleted_successfully')]);
     }

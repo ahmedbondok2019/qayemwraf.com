@@ -170,7 +170,7 @@
                                             <div class="col-lg-3 m-2">
                                                 <a onclick="return confirm('<?php echo trans_db('dashboard.AreYouSureToDelete'); ?>')" href="{{ \LaravelLocalization::localizeUrl('admin-2023/gallery/delete/image/' . $image->id) }}">
                                                     <i data-feather='trash'></i>
-                                                    <img src="{{ asset('website/images/gallery/' . $image->image) }}" alt="" style="{{ trans_db('dashboard.height') }}: 375px;width:500px;">
+                                                    <img src="{{ asset($image->image) }}" alt="" style="{{ trans_db('dashboard.height') }}: 375px;width:500px;">
                                                 </a>
                                             </div>
                                             @endforeach
@@ -208,7 +208,7 @@
                                                     <i class="fa fa-trash danger" aria-hidden="true"></i>
                                                     <div class="col-md-6">
                                                         <video controls width="300" height="300">
-                                                            <source src="{{ asset('website/uploads/videos/' . $video->video) }}" type="video/mp4" style="width: 150px; height: 150px">
+                                                            <source src="{{ asset($video->video) }}" type="video/mp4" style="width: 150px; height: 150px">
                                                         </video>
                                                     </div>
                                                 </a>

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductImage extends Model
 {
     use HasFactory;
+    use \App\Traits\HandleImageStorageTrait;
 
     protected $guarded = [];
 

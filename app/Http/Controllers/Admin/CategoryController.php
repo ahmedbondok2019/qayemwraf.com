@@ -42,9 +42,14 @@ class CategoryController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/category'), $imageName);
-            $imagePath = $imageName;
+            $file = $request->file('image');
+            $fileName = \App\Http\Controllers\helper\HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . \Illuminate\Support\Carbon::now()) . '.' . $file->getClientOriginalExtension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'category';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
+            
+            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
+            $imagePath = 'storage/website/images/category/' . $fileName;
         }
 
         $category = Category::create([
@@ -94,13 +99,24 @@ class CategoryController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($category->image && file_exists(public_path('website/images/category/' . $category->image))) {
-                unlink(public_path('website/images/category/' . $category->image));
+            if ($category->image) {
+                $oldImagePath = str_replace('storage/', '', $category->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldImagePath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldImagePath);
+                } elseif (file_exists(public_path('website/images/category/' . $category->image))) {
+                    // Fallback for old style paths
+                    unlink(public_path('website/images/category/' . $category->image));
+                }
             }
 
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/category'), $imageName);
-            $category->image = $imageName;
+            $file = $request->file('image');
+            $fileName = \App\Http\Controllers\helper\HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . \Illuminate\Support\Carbon::now()) . '.' . $file->getClientOriginalExtension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'category';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
+            
+            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
+            $category->image = 'storage/website/images/category/' . $fileName;
         }
 
         $category->parent_id = $request->parent_id;
@@ -132,8 +148,14 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        if ($category->image && file_exists(public_path('website/images/category/' . $category->image))) {
-            unlink(public_path('website/images/category/' . $category->image));
+        if ($category->image) {
+            $oldImagePath = str_replace('storage/', '', $category->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldImagePath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldImagePath);
+            } elseif (file_exists(public_path('website/images/category/' . $category->image))) {
+                // Fallback for old style paths
+                unlink(public_path('website/images/category/' . $category->image));
+            }
         }
         
         $category->translations()->delete();

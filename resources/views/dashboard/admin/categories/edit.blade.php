@@ -139,7 +139,7 @@
                                                     </div>
                                                     @if($category->image)
                                                         <div class="mt-1">
-                                                            <img src="{{ asset('website/images/category/' . $category->image) }}" alt="Current Image" width="100" class="rounded">
+                                                            <img src="{{ asset($category->image) }}" alt="Current Image" width="100" class="rounded">
                                                         </div>
                                                     @endif
                                                 </div>

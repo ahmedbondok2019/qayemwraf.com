@@ -101,13 +101,24 @@ class ProductsController extends BackendController
             $tempPath = public_path("website/images/temporary/{$tempName}");
             if (file_exists($tempPath)) {
                 $finalName = Str::random(15).'.jpg';
-                rename($tempPath, public_path("website/images/products/{$finalName}"));
-                $primaryImage = $finalName;
+                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                if (!file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                rename($tempPath, $fullStoragePath . DIRECTORY_SEPARATOR . $finalName);
+                $primaryImage = 'storage/website/images/products/' . $finalName;
             }
         } elseif ($request->hasFile('primary_image')) {
             $file = $request->file('primary_image');
-            $primaryImage = Str::random(15).'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('website/images/products'), $primaryImage);
+            $finalName = Str::random(15).'.'.$file->getClientOriginalExtension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $finalName);
+            $primaryImage = 'storage/website/images/products/' . $finalName;
         }
 
         // --- الصور الإضافية ---
@@ -115,16 +126,27 @@ class ProductsController extends BackendController
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $img) {
                 $name = Str::random(15).'.'.$img->getClientOriginalExtension();
-                $img->move(public_path('website/images/products'), $name);
-                $galleryImages[] = $name;
+                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                if (!file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                $img->move($fullStoragePath, $name);
+                $galleryImages[] = 'storage/website/images/products/' . $name;
             }
         }
 
         // --- الملف PDF ---
         if ($request->hasFile('pdf_file')) {
             $pdf = $request->file('pdf_file');
-            $pdfFile = Str::random(15).'.'.$pdf->getClientOriginalExtension();
-            $pdf->move(public_path('website/pdf'), $pdfFile);
+            $pdfName = Str::random(15).'.'.$pdf->getClientOriginalExtension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'pdf';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $pdf->move($fullStoragePath, $pdfName);
+            $pdfFile = 'storage/website/pdf/' . $pdfName;
         }
 
         $cat = array_filter(explode(',', $request->product_categories), fn ($value) => ! is_null($value) && $value !== '');
@@ -293,40 +315,75 @@ class ProductsController extends BackendController
                 // احذف الصورة القديمة
                 $oldTrans = $product->translation;
                 if ($oldTrans && $oldTrans->primary_image) {
-                    $oldPath = public_path("website/images/products/{$oldTrans->primary_image}");
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
+                    $oldImage = $oldTrans->primary_image;
+                    $oldPath = str_replace('storage/', '', $oldImage);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path($oldImage))) {
+                        unlink(public_path($oldImage));
+                    } elseif (file_exists(public_path('website/images/products/' . $oldImage))) {
+                        unlink(public_path('website/images/products/' . $oldImage));
                     }
                 }
 
                 $finalName = Str::random(15).'.jpg';
-                rename($tempPath, public_path("website/images/products/{$finalName}"));
-                $primaryImage = $finalName;
+                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                if (!file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                rename($tempPath, $fullStoragePath . DIRECTORY_SEPARATOR . $finalName);
+                $primaryImage = 'storage/website/images/products/' . $finalName;
             }
         } elseif ($request->hasFile('primary_image')) {
             // احذف الصورة القديمة
             $oldTrans = $product->translation;
             if ($oldTrans && $oldTrans->primary_image) {
-                $oldPath = public_path("website/images/products/{$oldTrans->primary_image}");
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
+                $oldImage = $oldTrans->primary_image;
+                $oldPath = str_replace('storage/', '', $oldImage);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($oldImage))) {
+                    unlink(public_path($oldImage));
+                } elseif (file_exists(public_path('website/images/products/' . $oldImage))) {
+                    unlink(public_path('website/images/products/' . $oldImage));
                 }
             }
 
             $file = $request->file('primary_image');
-            $primaryImage = Str::random(15).'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('website/images/products'), $primaryImage);
+            $finalName = Str::random(15).'.'.$file->getClientOriginalExtension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $finalName);
+            $primaryImage = 'storage/website/images/products/' . $finalName;
         }
 
         // --- الملف PDF ---
         if ($request->hasFile('pdf_file')) {
             // احذف الملف القديم
-            if ($product->pdf_file && file_exists(public_path("website/pdf/{$product->pdf_file}"))) {
-                unlink(public_path("website/pdf/{$product->pdf_file}"));
+            if ($product->pdf_file) {
+                 $oldPdf = $product->pdf_file;
+                 $oldPath = str_replace('storage/', '', $oldPdf);
+                 if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                     \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                 } elseif (file_exists(public_path($oldPdf))) {
+                     unlink(public_path($oldPdf));
+                 } elseif (file_exists(public_path("website/pdf/{$oldPdf}"))) {
+                     unlink(public_path("website/pdf/{$oldPdf}"));
+                 }
             }
             $pdf = $request->file('pdf_file');
-            $pdfFile = Str::random(15).'.'.$pdf->getClientOriginalExtension();
-            $pdf->move(public_path('website/pdf'), $pdfFile);
+            $pdfName = Str::random(15).'.'.$pdf->getClientOriginalExtension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'pdf';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $pdf->move($fullStoragePath, $pdfName);
+            $pdfFile = 'storage/website/pdf/' . $pdfName;
         }
 
         $cat = array_filter(explode(',', $request->product_categories), fn ($value) => ! is_null($value) && $value !== '');
@@ -412,10 +469,15 @@ class ProductsController extends BackendController
         if ($request->filled('delete_gallery')) {
             foreach ($request->delete_gallery as $imgId) {
                 $img = ProductImage::find($imgId);
-                if ($img) {
-                    $path = public_path("website/images/products/{$img->image}");
-                    if (file_exists($path)) {
-                        unlink($path);
+                if ($img && $img->image) {
+                    $oldImage = $img->image;
+                    $oldPath = str_replace('storage/', '', $oldImage);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path($oldImage))) {
+                        unlink(public_path($oldImage));
+                    } elseif (file_exists(public_path('website/images/products/' . $oldImage))) {
+                        unlink(public_path('website/images/products/' . $oldImage));
                     }
                     $img->delete();
                 }
@@ -425,8 +487,13 @@ class ProductsController extends BackendController
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $img) {
                 $name = Str::random(15).'.'.$img->getClientOriginalExtension();
-                $img->move(public_path('website/images/products'), $name);
-                ProductImage::create(['product_id' => $product->id, 'image' => $name]);
+                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                if (!file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                $img->move($fullStoragePath, $name);
+                ProductImage::create(['product_id' => $product->id, 'image' => 'storage/website/images/products/' . $name]);
             }
         }
 
@@ -896,31 +963,26 @@ class ProductsController extends BackendController
     {
         if (! empty($images)) {
             foreach ($images as $image) {
-                $imageSlug = HelperController::make_slug($product_price.rand(10, 100).'_'.str_replace(' ', '', Carbon::today()));
-                $image_name = str_replace(' ', '', $imageSlug).'.'.$image->getClientOriginalExtension();
+                if (! empty($image)) {
+                    $imageSlug = HelperController::make_slug($product_price.rand(10, 100).'_'.str_replace(' ', '', Carbon::today()));
+                    $image_name = str_replace(' ', '', $imageSlug).'.jpg';
 
-                ProductImage::create([
-                    'image' => $image_name,
-                    'product_id' => $productId,
-                    'translation_id' => $transId,
-                    'lang_id' => $lang_id,
-                ]);
+                    $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+                    $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                    if (!file_exists($fullStoragePath)) {
+                        mkdir($fullStoragePath, 0755, true);
+                    }
+                    $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+                    HelperController::upload_images($fullStoragePath, $destination, $image, '1000', '1000');
+                    $relativePath = 'storage/website/images/products/' . $image_name;
 
-                $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products');
-                $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR.$image_name);
-                HelperController::upload_images($path, $destination, $image, '576', '786');
-
-                // $watermark = Image::make(public_path('WATER MARK.png'))->resize(576 , 1000);
-                // $img = Image::make($destination)->insert($watermark);
-                // $img->save($destination, 100 , 'png');
-
-                $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR.'thumb');
-                $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR.'thumb'.DIRECTORY_SEPARATOR.$image_name);
-                HelperController::upload_images($path, $destination, $image, '576', '786');
-
-                // $watermark = Image::make(public_path('WATER MARK.png'))->resize(576 , 1000);
-                // $img = Image::make($destination)->insert($watermark);
-                // $img->save($destination, 100 , 'png');
+                    ProductImage::create([
+                        'image' => $relativePath,
+                        'product_id' => $productId,
+                        'translation_id' => $transId,
+                        'lang_id' => $lang_id,
+                    ]);
+                }
             }
         } else {
             return false;
@@ -1041,30 +1103,26 @@ class ProductsController extends BackendController
     public function readFiles(Request $request)
     {
         $images = ProductImage::where('product_id', $request->id)->get();
-        $directory = 'website/images/products';
-        $files_info = [];
         $file_ext = ['image/png', 'image/jpg', 'image/jpeg', 'image/avif', 'image/webp', 'image/jfif'];
+        $files_info = [];
 
         foreach ($images as $files) {
-            if (file_exists(public_path('website/images/products/'.$files->image))) {
-                if (file_get_contents('https://souqelmlabes.com/website/images/products/'.$files->image)) {
-                    $extension = strtolower(File::mimeType(public_path('website/images/products/'.$files->image)));
+            $path = str_replace('storage/', '', $files->image);
+            $fullPath = storage_path('app/public/' . $path);
 
-                    if (in_array($extension, $file_ext)) { // Check file extension
-                        $filename = File::name(public_path('website/images/products/'.$files->image));
-                        $size = File::size(public_path('website/images/products/'.$files->image)); // Bytes
-                        $sizeinMB = round($size / (1000 * 1024), 2); // MB
+            if (file_exists($fullPath)) {
+                $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+                if (in_array('image/' . $extension, $file_ext) || in_array($extension, ['png', 'jpg', 'jpeg', 'avif', 'webp', 'jfif'])) {
+                    $size = filesize($fullPath);
+                    $sizeinMB = round($size / (1024 * 1024), 2);
 
-                        if ($sizeinMB <= 2) { // Check file size is <= 2 MB
-                            $files_info[] = [
-                                'id' => $files->id,
-                                'name' => $filename,
-                                'size' => $size,
-                                'path' => 'data:'.$extension.';base64,'.base64_encode(file_get_contents('https://souqelmlabes.com/website/images/products/'.$files->image)),
-                            ];
-                        }
-                    } else {
-                        $files_info[] = $extension;
+                    if ($sizeinMB <= 5) {
+                        $files_info[] = [
+                            'id' => $files->id,
+                            'name' => basename($fullPath),
+                            'size' => $size,
+                            'path' => 'data:image/' . $extension . ';base64,' . base64_encode(file_get_contents($fullPath)),
+                        ];
                     }
                 }
             }
@@ -1075,18 +1133,24 @@ class ProductsController extends BackendController
 
     public static function uploadImages(Request $request)
     {
-        // dd($request->all());
         if (is_array($request->file)) {
             foreach ($request->file as $file) {
                 $name = $file->getClientOriginalName();
-                $imageSlug = HelperController::make_slug($name.rand(10, 100).'_'.str_replace(' ', '', Carbon::today()));
-                $image_name = str_replace(' ', '', $imageSlug).'.'.$file->getClientOriginalExtension();
+                $image_name = str_replace(' ', '', $name);
 
                 $productId = $request->random_id;
 
+                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                if (!file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+                HelperController::upload_images($fullStoragePath, $destination, $file);
+                $relativePath = 'storage/website/images/products/' . $image_name;
+
                 $data = [
-                    // 'image' => $image_name,
-                    'image' => str_replace(' ', '', $name),
+                    'image' => $relativePath,
                     'product_id' => $productId,
                     'translation_id' => $productId,
                     'lang_id' => app()->getLocale(),
@@ -1095,36 +1159,26 @@ class ProductsController extends BackendController
                 $test = ProductImage::where($data)->exists();
                 if ($test == false) {
                     ProductImage::create($data);
-
-                    $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products');
-                    // $destination = public_path('website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products' . DIRECTORY_SEPARATOR . $image_name);
-                    $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR.str_replace(' ', '', $name));
-                    HelperController::upload_images($path, $destination, $file, '576', '786');
-
-                    // $watermark = Image::make(public_path('WATER MARK.png'))->resize(576 , 1000);
-                    // $img = Image::make($destination)->insert($watermark);
-                    // $img->save($destination, 100 , 'png');
-
-                    $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR.'thumb');
-                    $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR.'thumb'.DIRECTORY_SEPARATOR.str_replace(' ', '', $name));
-                    HelperController::upload_images($path, $destination, $file, '300', '400');
-
-                    // $watermark = Image::make(public_path('WATER MARK.png'))->resize(576 , 1000);
-                    // $img = Image::make($destination)->insert($watermark);
-                    // $img->save($destination, 100 , 'png');
                 }
             }
         } else {
-            $name = $request->file('file')->getClientOriginalName();
-            $imageSlug = HelperController::make_slug($name.rand(10, 100).'_'.str_replace(' ', '', Carbon::today()));
-            $image_name = str_replace(' ', '', $imageSlug).'.'.$request->file('file')->getClientOriginalExtension();
+            $file = $request->file('file');
+            $name = $file->getClientOriginalName();
+            $image_name = str_replace(' ', '', $name);
 
-            // $productId = Str::random(80);
             $productId = $request->random_id;
 
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+            HelperController::upload_images($fullStoragePath, $destination, $file);
+            $relativePath = 'storage/website/images/products/' . $image_name;
+
             $data = [
-                // 'image' => $image_name,
-                'image' => $image_name,
+                'image' => $relativePath,
                 'product_id' => $productId,
                 'translation_id' => $productId,
                 'lang_id' => app()->getLocale(),

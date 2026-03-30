@@ -219,7 +219,7 @@
                                             <div class="col-lg-3 m-2">
                                                 <a onclick="return confirm('<?php echo trans_db('dashboard.AreYouSureToDelete'); ?>')" href="{{ \LaravelLocalization::localizeUrl('admin-2023/teams/delete/image/' . $image->id) }}">
                                                     <i class="fa fa-trash danger" aria-hidden="true"></i>
-                                                    <img src="{{ asset('website/images/teams/' . $image->image) }}" alt="">
+                                                    <img src="{{ asset($image->image) }}" alt="">
                                                 </a>
                                             </div>
                                             @endforeach

@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class VendorsController extends BackendController
 {
@@ -160,8 +160,14 @@ class VendorsController extends BackendController
         // }
 
         if (! empty($request->contract)) {
-            $pdf_contract = HelperController::make_slug($request->name).'.pdf';
-            $request->file('contract')->move(public_path('website/uploads/contract/'), $pdf_contract);
+            $pdf_contract_name = HelperController::make_slug($request->name).'-'.time().'.pdf';
+            $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'contract';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $request->file('contract')->move($fullStoragePath, $pdf_contract_name);
+            $pdf_contract = 'storage/website/uploads/contract/' . $pdf_contract_name;
         }
 
         $vendor = Vendor::find($request->id);
@@ -217,13 +223,36 @@ class VendorsController extends BackendController
         if (! in_array('12', Session::get('permissionData'))) {
             return redirect()->back();
         }
-        Vendor::where('id', $request->id)->delete();
-        // $images = VendorImage::where('vendor_id', $request->id)->get();
-        // foreach ($images as $image){
-        //     if (file_exists(public_path('website/images/vendor/' . $image->image))){
-        //         unlink('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'users'.DIRECTORY_SEPARATOR.$image->image);
-        //     }
-        // }
+        $vendor = Vendor::find($request->id);
+        if ($vendor) {
+            // Delete contract if exists
+            if ($vendor->contract) {
+                $oldPath = str_replace('storage/', '', $vendor->contract);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($vendor->contract))) {
+                    unlink(public_path($vendor->contract));
+                } elseif (file_exists(public_path('website/uploads/contract/' . $vendor->contract))) {
+                    unlink(public_path('website/uploads/contract/' . $vendor->contract));
+                }
+            }
+
+            // Delete images
+            $images = VendorImage::where('vendor_id', $request->id)->get();
+            foreach ($images as $image) {
+                if ($image->image) {
+                    $oldPath = str_replace('storage/', '', $image->image);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path($image->image))) {
+                        unlink(public_path($image->image));
+                    } elseif (file_exists(public_path('website/images/users/' . $image->image))) {
+                        unlink(public_path('website/images/users/' . $image->image));
+                    }
+                }
+            }
+            $vendor->delete();
+        }
 
         alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.deleted'));
 
@@ -234,8 +263,15 @@ class VendorsController extends BackendController
     public function delete_image(Request $request)
     {
         $data = VendorImage::find($request->id);
-        if (file_exists(public_path('website/images/users/'.$data->image))) {
-            unlink('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'users'.DIRECTORY_SEPARATOR.$data->image);
+        if ($data && $data->image) {
+            $oldPath = str_replace('storage/', '', $data->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($data->image))) {
+                unlink(public_path($data->image));
+            } elseif (file_exists(public_path('website/images/users/'.$data->image))) {
+                unlink(public_path('website/images/users/'.$data->image));
+            }
         }
         $data->delete();
 
@@ -251,12 +287,24 @@ class VendorsController extends BackendController
             return redirect()->back();
         }
 
+        $contractPath = $vendor->contract;
+        if (strpos($contractPath, 'storage/') === 0) {
+            $path = str_replace('storage/', '', $contractPath);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+                return \Illuminate\Support\Facades\Storage::disk('public')->download($path);
+            }
+        }
+        
         $file = public_path().'/website/uploads/contract/'.$vendor->contract;
-        $headers = [
-            'Content-Type: application/pdf',
-        ];
+        if (file_exists($file)) {
+            $headers = [
+                'Content-Type: application/pdf',
+            ];
+            return Response::download($file, 'contract_'.$vendor->contract, $headers);
+        }
 
-        return Response::download($file, 'contract_'.$vendor->contract, $headers);
+        alert()->error(trans_db('dashboard.not found'), trans_db('dashboard.attention'));
+        return redirect()->back();
     }
 
     public function vendorsOrderUp(Request $request)
@@ -303,42 +351,45 @@ class VendorsController extends BackendController
 
         if ($request->cropped_image != null && file_exists(public_path($request->cropped_image))) {
             self::UploadImagesVendor(public_path($request->cropped_image), $image_name, 'users'.DIRECTORY_SEPARATOR.'small', '181 ', '282');
-            self::UploadImagesVendor(public_path($request->cropped_image), $image_name, 'users', '334 ', '222');
+            $relativePath = self::UploadImagesVendor(public_path($request->cropped_image), $image_name, 'users', '334 ', '222');
             unlink(public_path($request->cropped_image));
 
-            return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+            return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
         }
         if (! empty($request->file('image'))) {
             $ex = $request->file('image')->getClientOriginalExtension();
             if (in_array($ex, ['png', 'jpeg', 'jpg', 'JPG', 'jfif'])) {
 
                 if (isset($oldImage) && $oldImage != null) {
-                    if (file_exists(public_path('website/images/users/small/'.$oldImage))) {
-                        unlink('website/images/users/'.$oldImage);
-                    }
-                    if (file_exists(public_path('website/images/users/'.$oldImage))) {
-                        unlink('website/images/users/'.$oldImage);
+                    $oldPath = str_replace('storage/', '', $oldImage);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path('website/images/users/'.$oldImage))) {
+                        unlink(public_path('website/images/users/'.$oldImage));
                     }
                 }
 
                 self::UploadImagesVendor($request->file('image'), $image_name, 'users'.DIRECTORY_SEPARATOR.'small', '181 ', '282');
-                self::UploadImagesVendor($request->file('image'), $image_name, 'users', '380 ', '290');
+                $relativePath = self::UploadImagesVendor($request->file('image'), $image_name, 'users', '380 ', '290');
 
-                return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+                return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
             } else {
-                return ['image' => $image_name, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+                return ['image' => null, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
             }
         } else {
-            return ['image' => $image_name, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+            return ['image' => null, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
         }
     }
 
     public static function UploadImagesVendor($image, $name, $folder, $width = null, $height = null)
     {
-        $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder);
-        $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name);
+        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
+        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
 
-        return HelperController::upload_images($path, $destination, $image, $width, $height);
+        HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
+        
+        return 'storage/website/images/' . $folder . '/' . $name;
     }
 
     public function cropSlider(Request $request)

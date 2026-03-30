@@ -53,9 +53,15 @@ class CountryController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/countries'), $imageName);
-            $data['image'] = 'website/images/countries/' . $imageName;
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'countries';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $data['image'] = 'storage/website/images/countries/' . $imageName;
         }
 
         $country = Country::create($data);
@@ -114,13 +120,26 @@ class CountryController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($country->image && file_exists(public_path($country->image))) {
-                unlink(public_path($country->image));
+            if ($country->image) {
+                $oldPath = str_replace('storage/', '', $country->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($country->image))) {
+                    unlink(public_path($country->image));
+                } elseif (file_exists(public_path('website/images/countries/' . $country->image))) {
+                    unlink(public_path('website/images/countries/' . $country->image));
+                }
             }
             
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/countries'), $imageName);
-            $data['image'] = 'website/images/countries/' . $imageName;
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'countries';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $data['image'] = 'storage/website/images/countries/' . $imageName;
         }
 
         $country->update($data);
@@ -150,8 +169,15 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
-         if ($country->image && file_exists(public_path($country->image))) {
-            unlink(public_path($country->image));
+         if ($country->image) {
+            $oldPath = str_replace('storage/', '', $country->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($country->image))) {
+                unlink(public_path($country->image));
+            } elseif (file_exists(public_path('website/images/countries/' . $country->image))) {
+                unlink(public_path('website/images/countries/' . $country->image));
+            }
         }
         $country->delete(); // Or forceDelete if soft deletes not used, I used standard model but let's check. Assuming standard delete is fine.
         return redirect()->route('admin.countries.index')->with('success', trans_db('dashboard.deleted successfully'));

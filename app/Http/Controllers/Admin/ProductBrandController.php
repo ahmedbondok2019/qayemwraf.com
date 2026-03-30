@@ -72,8 +72,7 @@ class ProductBrandController extends Controller
         $brand->sort_order = $request->sort_order ?? 0;
 
         if ($request->hasFile('image')) {
-            $filename = $this->uploadImage($request->file('image'), 'brand');
-            $brand->image = 'uploads/brand/' . $filename;
+            $brand->image = $this->uploadImage($request->file('image'), 'brand');
         }
 
         $brand->save();
@@ -117,16 +116,17 @@ class ProductBrandController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image
             if ($brand->image) {
-                // Check if it's a new path (uploads/brand/...) or old path (website/images/brand/...)
-                if (file_exists(public_path($brand->image))) {
-                     unlink(public_path($brand->image));
+                $oldPath = str_replace('storage/', '', $brand->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($brand->image))) {
+                    unlink(public_path($brand->image));
                 } elseif (file_exists(public_path('website/images/brand/' . $brand->image))) {
-                     unlink(public_path('website/images/brand/' . $brand->image));
+                    unlink(public_path('website/images/brand/' . $brand->image));
                 }
             }
 
-            $filename = $this->uploadImage($request->file('image'), 'brand');
-            $brand->image = 'uploads/brand/' . $filename;
+            $brand->image = $this->uploadImage($request->file('image'), 'brand');
         }
 
         $brand->save();

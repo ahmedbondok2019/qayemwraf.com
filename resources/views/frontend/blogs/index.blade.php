@@ -14,7 +14,7 @@
                 <div class="blog-card-modern h-100 shadow-sm rounded-20 overflow-hidden bg-white border-0 transition-hover">
                     <div class="blog-img-wrapper position-relative" style="height: 240px;">
                         @if($blog->BlogTranslation && $blog->BlogTranslation->image)
-                            <img src="{{ asset('website/images/blog/'.$blog->BlogTranslation->image) }}" class="w-100 h-100 object-fit-cover transition-img" alt="{{ $blog->BlogTranslation->title }}">
+                            <img src="{{ asset($blog->BlogTranslation->image) }}" class="w-100 h-100 object-fit-cover transition-img" alt="{{ $blog->BlogTranslation->title }}">
                         @else
                             <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
                                 <i class="fa-regular fa-image fa-4x opacity-25"></i>

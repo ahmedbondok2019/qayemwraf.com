@@ -56,9 +56,15 @@ class OfferController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/offers'), $imageName);
-            $data['image'] = 'website/images/offers/' . $imageName;
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'offers';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $data['image'] = 'storage/website/images/offers/' . $imageName;
         }
 
         $offer = Offer::create($data);
@@ -127,14 +133,27 @@ class OfferController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            // Delete old image?
-            // if ($offer->image && file_exists(public_path($offer->image))) {
-            //    unlink(public_path($offer->image));
-            // }
+            // Delete old image
+            if ($offer->image) {
+                $oldPath = str_replace('storage/', '', $offer->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($offer->image))) {
+                    unlink(public_path($offer->image));
+                } elseif (file_exists(public_path('website/images/offers/' . $offer->image))) {
+                    unlink(public_path('website/images/offers/' . $offer->image));
+                }
+            }
 
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/offers'), $imageName);
-            $data['image'] = 'website/images/offers/' . $imageName;
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'offers';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $data['image'] = 'storage/website/images/offers/' . $imageName;
         }
 
         $offer->update($data);
@@ -176,8 +195,15 @@ class OfferController extends Controller
      */
     public function destroy(Offer $offer)
     {
-        if ($offer->image && file_exists(public_path($offer->image))) {
-           unlink(public_path($offer->image));
+        if ($offer->image) {
+            $oldPath = str_replace('storage/', '', $offer->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($offer->image))) {
+                unlink(public_path($offer->image));
+            } elseif (file_exists(public_path('website/images/offers/' . $offer->image))) {
+                unlink(public_path('website/images/offers/' . $offer->image));
+            }
         }
         $offer->delete();
         return redirect()->route('admin.offers.index')->with('success', trans_db('dashboard.deleted successfully'));

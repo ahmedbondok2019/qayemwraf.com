@@ -223,16 +223,14 @@ class GalleryController extends BackendController
                 $imageSlug = HelperController::make_slug($gallery_price.Str::random('8').'_'.str_replace(' ', '', Carbon::today()));
                 $image_name = str_replace(' ', '', $imageSlug).'.jpg';
 
+                $relativePath = self::UploadImagesGallery($image, $image_name, 'gallery', '450', '450');
+
                 GalleryImage::create([
-                    'image' => $image_name,
+                    'image' => $relativePath,
                     'gallery_id' => $galleryId,
                     'translation_id' => $transId,
                     'lang_id' => $lang_id,
                 ]);
-
-                $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'gallery');
-                $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'gallery'.DIRECTORY_SEPARATOR.$image_name);
-                HelperController::upload_images($path, $destination, $image, '450', '450');
             }
         }
     }
@@ -243,14 +241,20 @@ class GalleryController extends BackendController
             foreach ($videos as $video) {
                 $video_file = HelperController::make_slug($gallery_price).Str::random('8').'_.mp4';
 
+                $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'videos';
+                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                if (!file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                $video->move($fullStoragePath, $video_file);
+                $relativePath = 'storage/website/uploads/videos/' . $video_file;
+
                 GalleryVideo::create([
-                    'video' => $video_file,
+                    'video' => $relativePath,
                     'gallery_id' => $galleryId,
                     'translation_id' => $transId,
                     'lang_id' => $lang_id,
                 ]);
-
-                $video->move(public_path('website/uploads/videos/'), $video_file);
             }
         }
     }
@@ -278,8 +282,13 @@ class GalleryController extends BackendController
         }
         $images = GalleryImage::where('gallery_id', $request->id)->get();
         foreach ($images as $image) {
-            if (file_exists(public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'gallery'.DIRECTORY_SEPARATOR.$image->image))) {
-                unlink('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'gallery'.DIRECTORY_SEPARATOR.$image->image);
+            if ($image->image) {
+                $oldPath = str_replace('storage/', '', $image->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path('website/images/gallery/' . $image->image))) {
+                    unlink(public_path('website/images/gallery/' . $image->image));
+                }
             }
         }
 
@@ -387,32 +396,35 @@ class GalleryController extends BackendController
             if (in_array($ex, ['png', 'jpeg', 'jpg', 'JPG', 'jfif'])) {
 
                 if (isset($oldImage) && $oldImage != null) {
-                    if (file_exists(public_path('website/images/gallery/small/'.$oldImage))) {
-                        unlink('website/images/gallery/'.$oldImage);
-                    }
-                    if (file_exists(public_path('website/images/gallery/'.$oldImage))) {
-                        unlink('website/images/gallery/'.$oldImage);
+                    $oldPath = str_replace('storage/', '', $oldImage);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path('website/images/gallery/'.$oldImage))) {
+                        unlink(public_path('website/images/gallery/'.$oldImage));
                     }
                 }
 
                 self::UploadImagesGallery($request->file('image'), $image_name, 'gallery'.DIRECTORY_SEPARATOR.'small', '181 ', '282');
-                self::UploadImagesGallery($request->file('image'), $image_name, 'gallery', '380 ', '290');
+                $relativePath = self::UploadImagesGallery($request->file('image'), $image_name, 'gallery', '380 ', '290');
 
-                return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+                return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
             } else {
-                return ['image' => $image_name, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+                return ['image' => null, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
             }
         } else {
-            return ['image' => $image_name, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+            return ['image' => null, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
         }
     }
 
     public static function UploadImagesGallery($image, $name, $folder, $width = null, $height = null)
     {
-        $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder);
-        $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name);
+        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
+        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
 
-        return HelperController::upload_images($path, $destination, $image, $width, $height);
+        HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
+        
+        return 'storage/website/images/' . $folder . '/' . $name;
     }
 
     public function cropSlider(Request $request)

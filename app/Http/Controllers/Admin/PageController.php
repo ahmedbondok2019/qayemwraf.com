@@ -51,9 +51,15 @@ class PageController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/pages'), $imageName);
-            $data['image'] = 'website/images/pages/' . $imageName;
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'pages';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $data['image'] = 'storage/website/images/pages/' . $imageName;
         }
 
         $page = Page::create($data);
@@ -114,13 +120,26 @@ class PageController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($page->image && file_exists(public_path($page->image))) {
-                unlink(public_path($page->image));
+            if ($page->image) {
+                $oldPath = str_replace('storage/', '', $page->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($page->image))) {
+                    unlink(public_path($page->image));
+                } elseif (file_exists(public_path('website/images/pages/' . $page->image))) {
+                    unlink(public_path('website/images/pages/' . $page->image));
+                }
             }
             
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/pages'), $imageName);
-            $data['image'] = 'website/images/pages/' . $imageName;
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'pages';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $data['image'] = 'storage/website/images/pages/' . $imageName;
         }
 
         $page->update($data);
@@ -157,8 +176,15 @@ class PageController extends Controller
      */
     public function destroy(Page $page)
     {
-         if ($page->image && file_exists(public_path($page->image))) {
-            unlink(public_path($page->image));
+         if ($page->image) {
+            $oldPath = str_replace('storage/', '', $page->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($page->image))) {
+                unlink(public_path($page->image));
+            } elseif (file_exists(public_path('website/images/pages/' . $page->image))) {
+                unlink(public_path('website/images/pages/' . $page->image));
+            }
         }
         $page->delete();
         return redirect()->route('admin.pages.index')->with('success', trans_db('dashboard.deleted successfully'));

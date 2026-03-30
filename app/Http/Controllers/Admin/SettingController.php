@@ -30,6 +30,8 @@ class SettingController extends BackendController
 
         $validator = Validator::make($request->all(), [
             'app_name' => 'nullable|array',
+            'app_meta_title' => 'nullable|array',
+            'app_meta_desc' => 'nullable|array',
             'contact_email' => 'nullable|email',
             'phone' => 'nullable|string',
             'address' => 'nullable|array',
@@ -49,6 +51,14 @@ class SettingController extends BackendController
             'google_client_id' => 'nullable|string',
             'google_client_secret' => 'nullable|string',
             'google_redirect' => 'nullable|string',
+            'facebook' => 'nullable|string',
+            'instagram' => 'nullable|string',
+            'twitter' => 'nullable|string',
+            'youtube' => 'nullable|string',
+            'whatsapp' => 'nullable|string',
+            'linkedin' => 'nullable|string',
+            'show_ratings' => 'nullable',
+            'enable_reviews' => 'nullable',
         ]);
 
         if ($validator->fails()) {
