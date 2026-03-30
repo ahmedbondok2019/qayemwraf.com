@@ -139,8 +139,8 @@
         --footer-bg: #111827;
         --footer-text: #9ca3af;
         --footer-title: #f3f4f6;
-        --primary-gradient: linear-gradient(135deg, #1E5631 0%, #4C825D 100%); /* Mushaf Green Gradient */
-        --hover-color: #C5A059; /* Gold */
+        --primary-gradient: linear-gradient(135deg, #1c4dad 0%, #3066d1 100%); /* New Blue Gradient */
+        --hover-color: #e98939; /* Orange */
     }
 
     .footer-modern-elegant {
@@ -377,7 +377,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #C5A059;
+        color: var(--secondary-color);
         flex-shrink: 0;
     }
 
@@ -405,7 +405,7 @@
         background: var(--primary-gradient);
         transform: translateY(-5px);
         border-color: transparent;
-        box-shadow: 0 10px 20px rgba(30, 86, 49, 0.3);
+        box-shadow: 0 10px 20px rgba(28, 77, 173, 0.3);
     }
 
     /* Footer Bottom Show */

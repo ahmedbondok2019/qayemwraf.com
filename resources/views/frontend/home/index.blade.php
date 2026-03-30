@@ -432,7 +432,7 @@
                             </div>
                             <div class="blog-content-wrapper p-4">
                                 @if($blog->category)
-                                <span class="badge mb-2" style="background: #f0f4ff; color: #667eea;">{{ $blog->category->translation->title ?? '' }}</span>
+                                <span class="badge mb-2" style="background: rgba(28, 77, 173, 0.1); color: #1c4dad;">{{ $blog->category->translation->title ?? '' }}</span>
                                 @endif
                                 <h4 class="blog-title font-weight-bold mb-3" style="line-height: 1.4; font-size: 1.25rem;">
                                     <a href="{{ url('ar/blog/' . $blog->id . '/' . ($blog->BlogTranslation->slug ?? '')) }}" class="text-dark text-decoration-none hover-primary">
@@ -442,7 +442,7 @@
                                 <p class="blog-excerpt text-muted mb-4" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                     {{ strip_tags($blog->BlogTranslation->description ?? '') }}
                                 </p>
-                                <a href="{{ url('ar/blog/' . $blog->id . '/' . ($blog->BlogTranslation->slug ?? '')) }}" class="read-more-btn font-weight-bold" style="color: #667eea; text-decoration: none;">
+                                <a href="{{ url('ar/blog/' . $blog->id . '/' . ($blog->BlogTranslation->slug ?? '')) }}" class="read-more-btn font-weight-bold" style="color: #e98939; text-decoration: none;">
                                     إقرأ المزيد <i class="fa-solid fa-arrow-left ml-1" style="font-size: 0.8rem;"></i>
                                 </a>
                             </div>

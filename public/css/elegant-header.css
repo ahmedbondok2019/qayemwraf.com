@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #1e5631; /* Deep Green */
-    --secondary-color: #fdfcf5; /* Cream */
+    --primary-color: #1c4dad; /* New Blue */
+    --secondary-color: #e98939; /* New Orange */
     --text-color: #333;
     --light-text: #666;
     --glass-bg: rgba(255, 255, 255, 0.95);
@@ -159,7 +159,7 @@
 
 /* Nav Bar Improvements */
 .elegant-nav-bar {
-    background: #447a55;
+    background: var(--primary-color);
     border-bottom: 1px solid #eee;
     padding: 0;
     transition: padding 0.3s ease;
@@ -199,13 +199,13 @@
 }
 
 .elegant-nav-link:hover {
-    color: #c5a059;
+    color: var(--secondary-color);
     font-weight: bold;
     background: linear-gradient(to top, rgba(14, 90, 167, 0.03), transparent);
 }
 
 .elegant-nav-link:hover i {
-    color: #c5a059;
+    color: var(--secondary-color);
     transform: translateY(-2px);
 }
 

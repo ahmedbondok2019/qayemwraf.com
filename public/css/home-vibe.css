@@ -1,10 +1,10 @@
 /* Premium Home Styling */
 
 :root {
-    --primary-color: #1E5631;
-    --secondary-color: #C5A059;
-    --primary-gradient: linear-gradient(135deg, #1E5631 0%, #276b3f 100%); /* Deep Green Gradient */
-    --gold-gradient: linear-gradient(135deg, #C5A059 0%, #DFC27D 100%); /* Gold Gradient */
+    --primary-color: #1c4dad;
+    --secondary-color: #e98939;
+    --primary-gradient: linear-gradient(135deg, #1c4dad 0%, #3066d1 100%); /* Blue Gradient */
+    --gold-gradient: linear-gradient(135deg, #e98939 0%, #f7a45e 100%); /* Orange Gradient */
 }
 input:focus{
     border: none !important;
@@ -141,7 +141,7 @@ input:focus{
     font-weight: 700;
     font-size: 16px;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 25px rgba(30, 86, 49, 0.25);
+    box-shadow: 0 10px 25px rgba(28, 77, 173, 0.25);
     opacity: 0;
     animation: fadeUp 0.8s ease forwards 0.7s; /* Staggered */
     text-decoration: none;
@@ -258,7 +258,7 @@ input:focus{
     padding: 5px; /* Increase padding slightly */
     background: var(--primary-gradient);
     transition: all 0.5s ease;
-    box-shadow: 0 10px 25px rgba(30, 86, 49, 0.1);
+    box-shadow: 0 10px 25px rgba(28, 77, 173, 0.1);
 }
 
 .vibe-offer-image::before {
@@ -289,7 +289,7 @@ input:focus{
 }
 
 .vibe-offer-item:hover .vibe-offer-image {
-    box-shadow: 0 15px 35px rgba(30, 86, 49, 0.25);
+    box-shadow: 0 15px 35px rgba(28, 77, 173, 0.25);
     background: var(--gold-gradient); /* Gold gradient on hover */
 }
 
@@ -475,7 +475,7 @@ input:focus{
     transform: translateY(-10px) rotate(1deg);
     background: #fff;
     border-color: var(--primary-color, #1E5631);
-    box-shadow: 0 15px 30px rgba(30, 86, 49, 0.1);
+    box-shadow: 0 15px 30px rgba(28, 77, 173, 0.1);
 }
 
 .vibe-subcat-parent {
@@ -607,7 +607,7 @@ input:focus{
 .vibe-brand-card:hover {
     transform: translateY(-3px);
     border-color: var(--primary-color, #1E5631);
-    box-shadow: 0 5px 15px rgba(30, 86, 49, 0.08); /* Colored shadow */
+    box-shadow: 0 5px 15px rgba(28, 77, 173, 0.08); /* Colored shadow */
 }
 
 .vibe-brand-card:hover::before {
@@ -659,7 +659,7 @@ input:focus{
 .vibe-feature-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-    border-color: rgba(30, 86, 49, 0.1);
+    border-color: rgba(28, 77, 173, 0.1);
 }
 
 .vibe-feature-icon {
@@ -668,7 +668,7 @@ input:focus{
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(30, 86, 49, 0.08);
+    background: rgba(28, 77, 173, 0.08);
     border-radius: 12px;
     margin-left: 20px;
     color: var(--primary-color, #1E5631);
