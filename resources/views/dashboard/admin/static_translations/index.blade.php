@@ -120,7 +120,7 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'key', name: 'key'},
                     @foreach($locales as $locale)
-                    {data: 'translations.{{ $locale }}', name: 'translations.{{ $locale }}', defaultContent: ''},
+                    {data: 'translations.{{ $locale }}', name: 'translations->{{ $locale }}', defaultContent: ''},
                     @endforeach
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
