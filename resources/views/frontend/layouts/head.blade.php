@@ -49,16 +49,16 @@
 <title>@hasSection('title') @yield('title') | @endif {{ $app_name }}</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/website/css/ar/normalize.css">
-<link rel="stylesheet" href="/website/css/ar/all.min.css">
-<link rel="stylesheet" href="/website/css/ar/swiper.css">
-<link rel="stylesheet" href="/website/css/ar/main.css">
-<link rel="stylesheet" href="{{ asset('css/elegant-header.css') }}">
-<link rel="stylesheet" href="{{ asset('css/home-vibe.css') }}">
-<link rel="stylesheet" href="{{ asset('css/elegant-dropdown.css') }}">
-<link rel="stylesheet" href="{{ asset('website/css/home_sections.css') }}">
+<link rel="stylesheet" href="/website/css/ar/normalize.css?v={{ $v ?? '1.0.3' }}">
+<link rel="stylesheet" href="/website/css/ar/all.min.css?v={{ $v ?? '1.0.3' }}">
+<link rel="stylesheet" href="/website/css/ar/swiper.css?v={{ $v ?? '1.0.3' }}">
+<link rel="stylesheet" href="/website/css/ar/main.css?v={{ $v ?? '1.0.3' }}">
+<link rel="stylesheet" href="{{ asset('css/elegant-header.css') }}?v={{ $v ?? '1.0.3' }}">
+<link rel="stylesheet" href="{{ asset('css/home-vibe.css') }}?v={{ $v ?? '1.0.3' }}">
+<link rel="stylesheet" href="{{ asset('css/elegant-dropdown.css') }}?v={{ $v ?? '1.0.3' }}">
+<link rel="stylesheet" href="{{ asset('website/css/home_sections.css') }}?v={{ $v ?? '1.0.3' }}">
 
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ $v ?? '1.0.3' }}">
 <!-- Font Awesome -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -1,8 +1,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" ></script>
-<script src="https://souqelmlabes.com/website/js/ar/swiper.js"></script>
-<script src="https://souqelmlabes.com/website/js/ar/main.js"></script>
+<script src="https://souqelmlabes.com/website/js/ar/swiper.js?v={{ $v ?? '1.0.3' }}"></script>
+<script src="https://souqelmlabes.com/website/js/ar/main.js?v={{ $v ?? '1.0.3' }}"></script>
 <script>
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.elegant-fixed-top');

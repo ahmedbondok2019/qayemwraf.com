@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+@php
+    $mainCssPath = public_path('website/css/ar/main.css');
+    $v = file_exists($mainCssPath) ? filemtime($mainCssPath) : time(); // Auto-update version when main.css changes
+@endphp
 <head>
     @include('frontend.layouts.head')
 
