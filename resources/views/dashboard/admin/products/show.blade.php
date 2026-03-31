@@ -77,7 +77,9 @@
                                                 </div>
                                                 <div class="row mb-1">
                                                     <div class="col-sm-3 font-weight-bold">{{ trans_db('dashboard.Meta Description') }}:</div>
-                                                    <div class="col-sm-9 small text-muted">{{ $translation->meta_description ?? '-' }}</div>
+                                                    <div class="col-sm-9 small text-muted border rounded p-1 bg-lighten-5">
+                                                        {!! $translation->meta_description ?? '-' !!}
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endforeach
