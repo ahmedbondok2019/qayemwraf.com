@@ -337,6 +337,7 @@
         .main-image-wrapper { height: 400px; }
     }
 </style>
+<style>
     .badge-custom {
         display: inline-block;
         padding: 5px 12px;
