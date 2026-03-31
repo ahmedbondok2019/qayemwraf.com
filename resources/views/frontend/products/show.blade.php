@@ -50,21 +50,20 @@
 <style>
     /* Product Details Page Specific Styles */
     .product-page-container {
-        padding-top: 50px;
-        padding-bottom: 100px;
-        background-color: #fcfcfc;
+        padding-top: 40px;
+        padding-bottom: 80px;
+        background-color: #f8f9fa;
     }
 
     /* Breadcrumbs */
     .custom-breadcrumb {
         background-color: #fff;
-        padding: 20px 0;
+        padding: 15px 0;
         border-bottom: 1px solid #eee;
-        margin-bottom: 40px;
     }
     .custom-breadcrumb ul {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 10px;
         list-style: none;
         padding: 0;
@@ -72,9 +71,10 @@
         align-items: center;
     }
     .custom-breadcrumb ul li a {
-        color: #777;
-        font-size: 14px;
+        color: #888;
+        font-size: 13px;
         transition: 0.3s;
+        text-decoration: none;
     }
     .custom-breadcrumb ul li a:hover {
         color: var(--main-color, #1cbcec);
@@ -82,7 +82,7 @@
     .custom-breadcrumb ul li:last-child {
         color: #333;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
     }
     .custom-breadcrumb ul li:not(:last-child)::after {
         content: "/";
@@ -90,244 +90,253 @@
         color: #ccc;
     }
 
-    /* Product Image Gallery */
+    /* Product Image Gallery - PRO Version */
     .product-gallery {
+        position: sticky;
+        top: 100px;
+    }
+    .gallery-main-container {
         background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    }
-    .main-image {
-        width: 100%;
-        border-radius: 8px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         overflow: hidden;
-        margin-bottom: 20px;
         border: 1px solid #f0f0f0;
-    }
-    .main-image img {
-        width: 100%;
-        height: auto;
-        display: block;
-        transition: transform 0.5s ease;
-    }
-    .main-image:hover img {
-        transform: scale(1.05);
-    }
-    .thumbs-slider .swiper-slide {
-        cursor: pointer;
-        border: 2px solid transparent;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    .thumbs-slider .swiper-slide.swiper-slide-thumb-active {
-        border-color: var(--main-color, #1cbcec);
-    }
-    .thumbs-slider img {
-        width: 100%;
-        display: block;
-        border-radius: 3px;
-    }
-
-    /* Product Info */
-    .product-info-wrapper {
-        padding: 10px 20px;
-    }
-    .product-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: #333;
         margin-bottom: 15px;
-        line-height: 1.4;
+        position: relative;
     }
-    .product-meta-top {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 20px;
-        font-size: 14px;
-        color: #666;
-    }
-    .rating-wrap {
-        color: #ffc107;
-        display: flex;
-        gap: 2px;
-    }
-    .reviews-count {
-        color: #999;
-        font-size: 13px;
-    }
-    .price-wrap {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-    .current-price {
-        font-size: 32px;
-        font-weight: 800;
-        color: var(--main-color, #1cbcec);
-    }
-    .old-price {
-        font-size: 20px;
-        color: #999;
-        text-decoration: line-through;
-    }
-    .stock-status {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 5px;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 25px;
-    }
-    .in-stock {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-    }
-    .out-stock {
-        background-color: #ffebee;
-        color: #c62828;
-    }
-
-    /* Quantity & Actions */
-    .actions-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-    }
-    .quantity-control {
-        display: flex;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        overflow: hidden;
-        height: 50px;
-    }
-    .quantity-control button {
-        width: 40px;
-        border: none;
-        background: #f8f8f8;
-        font-weight: bold;
-        color: #555;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .quantity-control button:hover {
-        background: #eee;
-    }
-    .quantity-control input {
-        width: 60px;
-        border: none;
-        text-align: center;
-        font-weight: 600;
-        font-size: 16px;
-        outline: none;
-    }
-    .add-to-cart-btn {
-        background-color: #333;
-        color: #fff;
-        border: none;
-        padding: 0 40px;
-        height: 50px;
-        border-radius: 5px;
-        font-weight: 600;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .add-to-cart-btn:hover {
-        background-color: var(--main-color, #1cbcec);
-        transform: translateY(-2px);
-    }
-    .wishlist-btn {
-        width: 50px;
-        height: 50px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+    .main-image-wrapper {
+        width: 100%;
+        height: 500px; /* FIXED HEIGHT */
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
-        color: #555;
         background: #fff;
-        transition: 0.3s;
+        padding: 20px;
     }
-    .wishlist-btn:hover, .wishlist-btn.active {
-        border-color: var(--secondary-color, #d31c44);
-        color: var(--secondary-color, #d31c44);
-        background: #e74c3c;
+    .main-image-wrapper img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* CRITICAL: Prevent distortion and overflow */
+        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .main-image-wrapper:hover img {
+        transform: scale(1.05);
     }
 
-    /* Meta Info */
-    .product-meta-list {
-        list-style: none;
-        padding: 20px 0;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
-        margin: 0 0 25px 0;
+    /* Thumbnails - Professional Grid/Slider */
+    .thumbs-slider {
+        margin-top: 15px;
     }
-    .product-meta-list li {
-        margin-bottom: 10px;
+    .thumbs-wrapper {
         display: flex;
         gap: 10px;
-        font-size: 15px;
+        overflow-x: auto;
+        padding-bottom: 5px;
+        scrollbar-width: thin;
     }
-    .product-meta-list li span.label {
-        font-weight: 600;
-        color: #333;
-        min-width: 120px;
+    .thumb-item {
+        flex: 0 0 80px;
+        height: 80px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.3s;
+        background: #fff;
+        padding: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
-    .product-meta-list li a {
-        color: #666;
-        transition: 0.2s;
+    .thumb-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
-    .product-meta-list li a:hover {
-        color: var(--main-color, #1cbcec);
-        text-decoration: underline;
+    .thumb-item:hover, .thumb-item.active {
+        border-color: var(--main-color, #1cbcec);
+        box-shadow: 0 5px 15px rgba(28, 188, 236, 0.2);
     }
 
-    /* Description */
-    .product-description {
-        color: #555;
-        line-height: 1.8;
+    /* Product Info Card */
+    .product-info-card {
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+    .product-title {
+        font-size: 32px;
+        font-weight: 800;
+        color: #222;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+    .price-container {
+        display: flex;
+        align-items: baseline;
+        gap: 15px;
+        margin-bottom: 25px;
+        background: #f8f9fa;
+        padding: 15px 20px;
+        border-radius: 8px;
+        width: fit-content;
+    }
+    .current-price {
+        font-size: 30px;
+        font-weight: 900;
+        color: var(--main-color, #1cbcec);
+    }
+    .old-price {
+        font-size: 18px;
+        color: #adb5bd;
+        text-decoration: line-through;
+    }
+    .badge-stock {
+        padding: 6px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .badge-in-stock { background: #e6fcf5; color: #0ca678; }
+    .badge-out-stock { background: #fff5f5; color: #fa5252; }
+
+    /* Action Buttons */
+    .qty-selector {
+        display: flex;
+        align-items: center;
+        background: #f1f3f5;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-right: 15px;
+    }
+    .qty-btn {
+        width: 45px;
+        height: 45px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        font-size: 20px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .qty-btn:hover { background: #e9ecef; }
+    .input-qty {
+        width: 50px;
+        border: none;
+        background: transparent;
+        text-align: center;
+        font-weight: 700;
         font-size: 16px;
     }
 
-    /* Related Products (Reuse Card Styles if possible or minimal fallback) */
-    .related-section {
-        margin-top: 80px;
-    }
-    .section-title {
-        text-align: center;
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 40px;
-        color: #333;
-    }
-    
-    /* Vibe Card (Mini recreate if missing) */
-    .v-card {
-        border: 1px solid #eee;
+    .btn-buy-now {
+        flex: 1;
+        height: 50px;
+        background: var(--main-color, #1cbcec);
+        color: #fff;
+        border: none;
         border-radius: 8px;
-        overflow: hidden;
+        font-weight: 700;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
         transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(28, 188, 236, 0.3);
+    }
+    .btn-buy-now:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(28, 188, 236, 0.4);
+        background: #15a9d6;
+    }
+
+    /* Meta Specs */
+    .product-specs {
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 25px;
+    }
+    .spec-item {
+        display: flex;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+    .spec-label {
+        width: 120px;
+        font-weight: 700;
+        color: #495057;
+    }
+    .spec-value {
+        color: #868e96;
+        flex: 1;
+    }
+
+    /* Description Content Fix */
+    .description-box {
+        margin-top: 20px;
+        color: #495057;
+        line-height: 1.8;
+    }
+    .description-box h2, .description-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #222;
+    }
+
+    /* Related Products Grid - Professional Fix */
+    .v-card {
+        border: none;
+        border-radius: 12px;
         background: #fff;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: 0.3s;
+        height: 100%;
     }
     .v-card:hover {
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     }
-    .v-card img {
-        width: 100%;
-        height: auto;
+    .v-card .product-img {
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        padding: 15px;
+    }
+    .v-card .product-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
     }
     .v-card-content {
-        padding: 15px;
+        padding: 20px;
         text-align: center;
     }
+    .v-card-content h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        height: 40px;
+        overflow: hidden;
+    }
+    .v-card-content h3 a {
+        color: #222;
+        text-decoration: none;
+    }
+
+    @media (max-width: 991px) {
+        .product-gallery { position: static; margin-bottom: 30px; }
+        .main-image-wrapper { height: 400px; }
+    }
+</style>
     .badge-custom {
         display: inline-block;
         padding: 5px 12px;
@@ -393,94 +402,109 @@
     <!-- Product Details Area -->
     <div class="product-page-container">
         <div class="container">
-            <div class="row gy-5">
+            <div class="row">
                 <!-- Image Gallery (Left Side) -->
                 <div class="col-lg-5">
                     <div class="product-gallery">
-                        <div class="main-image">
-                            @if($product->image)
-                                <img id="zoom_image" src="{{ asset($product->image) }}" alt="{{ $product->translation->name }}"/>
-                            @else
-                                <img src="{{ asset('assets/images/product/no-image.jpg') }}" alt="No Image"/>
-                            @endif
+                        <div class="gallery-main-container">
+                            <div class="main-image-wrapper">
+                                @if($product->image)
+                                    <img id="zoom_image" src="{{ asset($product->image) }}" alt="{{ $product->translation->name }}"/>
+                                @else
+                                    <img src="{{ asset('assets/images/product/no-image.jpg') }}" alt="No Image"/>
+                                @endif
+                            </div>
                         </div>
                         
-                        <!-- Thumbnails Slider -->
-                        <div class="thumbs-slider swiper-container">
-                            <div class="swiper-wrapper">
-                                @foreach($product->images as $image)
-                                    <div class="swiper-slide" onclick="changeImage('{{ asset($image->image) }}')">
-                                        <div class="thumb-img-wrap">
-                                            <img src="{{ asset($image->image) }}" alt="">
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
+                        <!-- Thumbnails slider (Native Scroll) -->
+                        <div class="thumbs-wrapper">
+                            @if($product->image)
+                                <div class="thumb-item active" onclick="changeImage('{{ asset($product->image) }}', this)">
+                                    <img src="{{ asset($product->image) }}" alt="">
+                                </div>
+                            @endif
+                            @foreach($product->images as $image)
+                                <div class="thumb-item" onclick="changeImage('{{ asset($image->image) }}', this)">
+                                    <img src="{{ asset($image->image) }}" alt="">
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
 
                 <!-- Product Info (Right Side) -->
                 <div class="col-lg-7">
-                    <div class="product-info-wrapper">
-                        <h1 class="product-title">{{ $product->translation->name }}</h1>
+                    <div class="product-info-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h1 class="product-title">{{ $product->translation->name }}</h1>
+                            <button class="wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}" onclick="toggleWishlist({{ $product->id }})" style="border:none; box-shadow:none;">
+                                <i class="{{ in_array($product->id, $wishlistIds) ? 'fas' : 'far' }} fa-heart" style="color: #666;"></i>
+                            </button>
+                        </div>
                         
-                        <div class="product-meta-top">
+                        <div class="product-meta-top border-bottom pb-2">
                             @include('frontend.products.partials.rating_display', ['product' => $product])
                         </div>
 
-                        <div class="price-wrap">
+                        <div class="price-container mt-3">
                            @if($product->special_price && $product->special_price_start <= now() && $product->special_price_end >= now())
                                 <span class="current-price">{{ format_price($product->special_price) }}</span>
                                 <span class="old-price">{{ format_price($product->price) }}</span>
                             @else
                                 <span class="current-price">{{ format_price($product->price) }}</span>
                             @endif
+                            
+                            <span class="badge-stock {{ ($product->quantity > 0 || $product->ignore_quantity) ? 'badge-in-stock' : 'badge-out-stock' }} ml-3">
+                                {{ ($product->quantity > 0 || $product->ignore_quantity) ? trans_db('frontend.in_stock') : trans_db('frontend.out_of_stock') }}
+                            </span>
                         </div>
 
-                        <div class="stock-status {{ ($product->quantity > 0 || $product->ignore_quantity) ? 'in-stock' : 'out-stock' }}">
-                            @if($product->quantity > 0 || $product->ignore_quantity)
-                                <i class="fas fa-check-circle"></i> {{ trans_db('frontend.in_stock') }}
-                            @else
-                                <i class="fas fa-times-circle"></i> {{ trans_db('frontend.out_of_stock') }}
-                            @endif
+                        <!-- Actions -->
+                        <div class="actions-wrapper d-flex align-items-center mt-4">
+                            <div class="qty-selector">
+                                <button type="button" class="qty-btn" onclick="decreaseQty()">-</button>
+                                <input type="text" class="input-qty" name="qtybutton" id="qtyInput" value="1" readonly>
+                                <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
+                            </div>
+                            
+                            <button class="btn-buy-now" onclick="addToCart({{ $product->id }})">
+                                <i class="fas fa-shopping-basket"></i>
+                                <span>{{ isset($cartProducts[$product->id]) ? (trans_db('frontend.in_cart') ?? 'In Cart') : trans_db('frontend.add_to_cart') }}</span>
+                            </button>
                         </div>
 
-                        <div class="product-description">
-                            <p>{!! $product->translation->description !!}</p>
+                        <div class="description-box mt-4 border-top pt-3">
+                            <h5 class="text-primary mb-2">{{ trans_db('frontend.description') }}</h5>
+                            <div class="product-description">
+                                {!! $product->translation->description !!}
+                            </div>
                         </div>
                         
-                        <!-- Dynamic Options -->
-                        <ul class="product-meta-list">
-                            <li>
-                                <span class="label">{{ trans_db('frontend.categories') }}:</span> 
-                                <div>
+                        <!-- Specs -->
+                        <div class="product-specs mt-4">
+                            <div class="spec-item">
+                                <span class="spec-label">{{ trans_db('frontend.brand') }}:</span>
+                                <span class="spec-value">{{ $product->brand->name ?? '-' }}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">{{ trans_db('frontend.categories') }}:</span>
+                                <div class="spec-value">
                                     @foreach($product->categories as $category)
-                                        @php
-                                            $catSlug = $category->translation->slug ?? $category->translations->first()->slug ?? null;
-                                        @endphp
-                                        <a href="{{ $catSlug ? route('frontend.products.category', $catSlug) : '#' }}" class="badge-custom">{{ $category->name }}</a>
+                                        <span class="badge-custom mr-1">{{ $category->name }}</span>
                                     @endforeach
                                 </div>
-                            </li>
-                            @if($product->brand)
-                            <li>
-                                <span class="label">{{ trans_db('frontend.brand') }}:</span> 
-                                <a href="{{ route('frontend.products.index', ['brands' => [$product->brand->id]]) }}" class="badge-custom">{{ $product->brand->name }}</a>
-                            </li>
-                            @endif
-
+                            </div>
                             @foreach($product->productOptions as $productOption)
-                                <li>
-                                    <span class="label">{{ $productOption->option->translation->name ?? '' }}:</span> 
-                                    <div>
-                                    @foreach($productOption->values as $value)
-                                        {{ $value->optionValue->translation->value ?? '' }}@if(!$loop->last), @endif
-                                    @endforeach
+                                <div class="spec-item">
+                                    <span class="spec-label">{{ $productOption->option->name ?? '' }}:</span> 
+                                    <div class="spec-value">
+                                        @foreach($productOption->values as $value)
+                                            {{ $value->optionValue->value ?? '' }}@if(!$loop->last), @endif
+                                        @endforeach
                                     </div>
-                                </li>
+                                </div>
                             @endforeach
-                        </ul>
+                        </div>
                         
                         <!-- Rating Form & Reviews -->
                         @if($Setting->show_ratings)
@@ -542,33 +566,7 @@
                         </div>
                         @endif
 
-                            <!-- Actions -->
-                        <div class="actions-wrapper">
-                            @if(isset($cartProducts[$product->id]))
-                                <div class="quantity-control">
-                                    <button type="button" onclick="decreaseQty()">-</button>
-                                    <input type="text" name="qtybutton" id="qtyInput" value="{{ $cartProducts[$product->id] }}" readonly>
-                                    <button type="button" onclick="increaseQty()">+</button>
-                                </div>
-                                <button class="add-to-cart-btn" style="background-color: var(--main-color, #1cbcec);" onclick="addToCart({{ $product->id }})">
-                                    <i class="fas fa-check"></i> {{ trans_db('frontend.in_cart') ?? 'In Cart' }}
-                                </button>
-                            @else
-                                <div class="quantity-control">
-                                    <button type="button" onclick="decreaseQty()">-</button>
-                                    <input type="text" name="qtybutton" id="qtyInput" value="1" readonly>
-                                    <button type="button" onclick="increaseQty()">+</button>
-                                </div>
-                                <button class="add-to-cart-btn" onclick="addToCart({{ $product->id }})">
-                                    <i class="fas fa-shopping-cart"></i> {{ trans_db('frontend.add_to_cart') }}
-                                </button>
-                            @endif
-
-                            <button class="wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}" onclick="toggleWishlist({{ $product->id }})">
-                                <i class="{{ in_array($product->id, $wishlistIds) ? 'fas' : 'far' }} fa-heart" style="color: #fff !important;"></i>
-                            </button>
-                        </div>
-
+        @endif
                     </div>
                 </div>
             </div>
@@ -577,26 +575,26 @@
     
     <!-- Related Products -->
      @if($relatedProducts->count() > 0)
-    <div class="related-section">
+    <div class="related-section pb-5">
         <div class="container">
             <h2 class="section-title">{{ trans_db('frontend.related_products') }}</h2>
             <div class="row">
                 @foreach($relatedProducts as $relProduct)
                     <div class="col-md-3 col-sm-6 mb-4">
-                        <div class="v-card"> <!-- Reusing existing card class if available, or using fallback style -->
+                        <div class="v-card">
                             <div class="product-img">
-                                <a href="{{ route('products.show', ['id' => $relProduct->id, 'slug' => $relProduct->translation->slug]) }}">
-                                    @if($relProduct->images->count() > 0)
-                                    <img src="{{ asset($relProduct->images->first()->image) }}" alt="">
+                                <a href="{{ route('frontend.products.show', ['id' => $relProduct->id, 'slug' => $relProduct->translation->slug ?? 'product']) }}">
+                                    @if($relProduct->image)
+                                        <img src="{{ asset($relProduct->image) }}" alt="{{ $relProduct->name }}">
                                     @else
-                                    <img src="{{ asset('assets/images/product/no-image.jpg') }}" alt="">
+                                        <img src="{{ asset('assets/images/product/no-image.jpg') }}" alt="">
                                     @endif
                                 </a>
                             </div>
                             <div class="v-card-content">
-                                <h3><a href="{{ route('products.show', ['id' => $relProduct->id, 'slug' => $relProduct->translation->slug]) }}">{{ $relProduct->translation->name }}</a></h3>
-                                <div class="product-price">
-                                    <span style="font-weight:bold; color:var(--main-color, #1cbcec);">{{ format_price($relProduct->price) }}</span>
+                                <h3><a href="{{ route('frontend.products.show', ['id' => $relProduct->id, 'slug' => $relProduct->translation->slug ?? 'product']) }}">{{ $relProduct->name }}</a></h3>
+                                <div class="product-price mb-2">
+                                    <span style="font-weight:900; font-size: 1.2rem; color:var(--main-color, #1cbcec);">{{ format_price($relProduct->price) }}</span>
                                 </div>
                                 @include('frontend.products.partials.rating_display', ['product' => $relProduct])
                             </div>
@@ -610,8 +608,14 @@
 
 
     <script>
-        function changeImage(src) {
+        function changeImage(src, element) {
             document.getElementById('zoom_image').src = src;
+            
+            // Update active state on thumbnails
+            document.querySelectorAll('.thumb-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if(element) element.classList.add('active');
         }
 
         function increaseQty() {
