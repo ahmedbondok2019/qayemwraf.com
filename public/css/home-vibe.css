@@ -62,7 +62,7 @@ input:focus{
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(6, 46, 13, 0.4) 0%, rgba(6, 46, 13, 0.8) 100%);
+    /* background: linear-gradient(to bottom, rgba(6, 46, 13, 0.4) 0%, rgba(6, 46, 13, 0.8) 100%); */
     z-index: 5;
     pointer-events: none;
 }
