@@ -402,11 +402,12 @@
                                         @error('gallery')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
-                                        @if($product->images->count() > 0)
-                                            <div class="row mt-1">
-                                                @foreach($product->images as $img)
-                                                    <div class="col-4 mb-1 text-center position-relative">
-                                                        <img src="{{ asset($img->image) }}" class="img-fluid rounded">
+                                         @if($product->images->count() > 0)
+                                            <div class="row mt-1" id="sortable-gallery">
+                                                @foreach($product->images->sortBy('sort_order') as $img)
+                                                    <div class="col-4 mb-2 text-center position-relative gallery-item" data-id="{{ $img->id }}" style="cursor: move;">
+                                                        <input type="hidden" name="image_sort[{{ $img->id }}]" class="sort-input" value="{{ $img->sort_order }}">
+                                                        <img src="{{ asset($img->image) }}" class="img-fluid rounded border" style="height: 120px; width: 100%; object-fit: cover;">
                                                         <div class="custom-control custom-checkbox mt-1">
                                                             <input type="checkbox" class="custom-control-input" id="del_img_{{ $img->id }}" name="deleted_images[]" value="{{ $img->id }}">
                                                             <label class="custom-control-label text-danger" for="del_img_{{ $img->id }}">{{ trans_db('dashboard.Delete') }}</label>
@@ -414,6 +415,7 @@
                                                     </div>
                                                 @endforeach
                                             </div>
+                                            <p class="text-muted small mt-1"><i data-feather="info" class="mr-50"></i>{{ trans_db('dashboard.drag_to_sort') ?? 'اسحب الصور لترتيبها' }}</p>
                                         @endif
                                     </div>
 
@@ -429,9 +431,31 @@
 @endsection
 
 @section('script')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2();
+        
+        // --- Image Sortable Logic ---
+        const galleryContainer = document.getElementById('sortable-gallery');
+        if (galleryContainer) {
+             new Sortable(galleryContainer, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: function() {
+                    // Update hidden sort indices if needed (currently we rely on order of inputs)
+                    updateSortOrders();
+                },
+            });
+        }
+
+        function updateSortOrders() {
+            $('#sortable-gallery .gallery-item').each(function(index) {
+                $(this).find('.sort-input').val(index);
+            });
+        }
+        // ---------------------------
+
         let optionIndex = {{ $product->productOptions->count() }};
 
         // Restore old options if they exist
@@ -656,5 +680,12 @@
 </script>
 <style>
     .d-flex { display: flex !important; }
+    .sortable-ghost {
+        opacity: 0.4;
+        background-color: #f0f0f0;
+    }
+    .gallery-item:hover {
+        border-color: #7367f0;
+    }
 </style>
 @endsection

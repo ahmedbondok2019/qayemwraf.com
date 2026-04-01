@@ -337,14 +337,22 @@ class ProductController extends Controller
                 $product->relatedProducts()->sync($request->related_products);
             }
             
+            // Gallery Images (Update sort order for existing)
+            if ($request->has('image_sort')) {
+                foreach ($request->image_sort as $imgId => $sortOrder) {
+                    ProductImage::where('id', $imgId)->update(['sort_order' => $sortOrder]);
+                }
+            }
+
             // Gallery Images (Add new)
             if ($request->hasFile('gallery')) {
+                $maxSort = ProductImage::where('product_id', $product->id)->max('sort_order') ?? -1;
                 foreach ($request->file('gallery') as $key => $file) {
                     $imagePath = $this->uploadImage($file, 'products/gallery');
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $imagePath,
-                        'sort_order' => $key
+                        'sort_order' => $maxSort + $key + 1
                     ]);
                 }
             }
