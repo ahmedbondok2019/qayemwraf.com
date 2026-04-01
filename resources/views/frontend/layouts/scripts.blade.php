@@ -429,6 +429,25 @@
         if (mobileOverlay) {
             mobileOverlay.addEventListener('click', closeMobileMenu);
         }
+
+        // Mobile Submenu Toggle
+        const submenuToggles = document.querySelectorAll('.mobile-submenu-toggle');
+        submenuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parent = this.closest('.mobile-has-submenu');
+                const submenu = parent.querySelector('.mobile-submenu');
+                const arrow = this.querySelector('.arrow-icon');
+                
+                if (submenu.style.display === 'none') {
+                    submenu.style.display = 'block';
+                    arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    submenu.style.display = 'none';
+                    arrow.style.transform = 'rotate(0)';
+                }
+            });
+        });
     });
 </script>
 

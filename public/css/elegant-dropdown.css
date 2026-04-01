@@ -52,8 +52,8 @@
 }
 
 .elegant-dropdown-item:hover {
-    background-color: #f7fafc;
-    color: #1E5631 !important;
+    background-color: #f0f7ff;
+    color: #1c4dad !important;
 }
 
 .elegant-dropdown-item i {
@@ -63,7 +63,7 @@
 }
 
 .elegant-dropdown-item:hover i {
-    color: #1E5631;
+    color: #1c4dad;
 }
 
 @keyframes fadeInDown {

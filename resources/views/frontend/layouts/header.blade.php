@@ -1,3 +1,7 @@
+@php
+    $main_categories = \App\Models\Category::whereNull('parent_id')->active()->take(10)->get();
+@endphp
+
 <div class="elegant-fixed-top">
     <header class="elegant-header">
         <div class="container">
@@ -171,6 +175,17 @@
                     <ul class="elegant-mobile-nav">
                         <li><a href="{{ route('frontend.index') }}"><i class="fa-solid fa-house-chimney"></i>
                                 الرئيسية</a></li>
+                        
+                        <li class="mobile-has-submenu">
+                            <a href="javascript:void(0)" class="mobile-submenu-toggle"><i class="fa-solid fa-list-ul"></i>
+                                الفئات <i class="fa-solid fa-chevron-down ms-auto arrow-icon"></i></a>
+                            <ul class="mobile-submenu" style="display: none; list-style: none; padding-right: 20px; background: #f9f9f9;">
+                                @foreach($main_categories ?? [] as $cat)
+                                    <li><a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" style="padding: 10px; font-size: 13px;">{{ $cat->name }}</a></li>
+                                @endforeach
+                            </ul>
+                        </li>
+
                         <li><a href="{{ route('frontend.products.index') }}"><i class="fa-solid fa-bag-shopping"></i>
                                 المنتجات</a></li>
                         <li><a
@@ -195,6 +210,24 @@
             <ul class="elegant-nav-list">
                 <li><a href="{{ route('frontend.index') }}" class="elegant-nav-link"><i
                             class="fa-solid fa-house-chimney"></i> الرئيسية</a></li>
+                
+                <li class="elegant-dropdown">
+                    <a href="javascript:void(0)" class="elegant-nav-link dropdown-toggle">
+                        <i class="fa-solid fa-list-ul"></i> الفئات <i class="fa-solid fa-chevron-down ms-1" style="font-size: 10px;"></i>
+                    </a>
+                    <div class="elegant-dropdown-menu">
+                        @foreach($main_categories as $cat)
+                            <a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" class="elegant-dropdown-item">
+                                <i class="fa-solid fa-angle-left"></i> {{ $cat->name }}
+                            </a>
+                        @endforeach
+                        <hr class="dropdown-divider">
+                        <a href="{{ route('frontend.products.index') }}" class="elegant-dropdown-item text-primary fw-bold">
+                            <i class="fa-solid fa-grid-2"></i> عرض كل الأقسام
+                        </a>
+                    </div>
+                </li>
+
                 <li><a href="{{ route('frontend.products.index') }}" class="elegant-nav-link"><i
                             class="fa-solid fa-bag-shopping"></i> المنتجات</a></li>
                 <li><a href="{{ route('frontend.products.index', ['best_seller' => 1, 'sort' => 'best_seller']) }}"

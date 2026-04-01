@@ -613,6 +613,35 @@
     padding-right: 20px; /* Slight slide effect */
 }
 
+.mobile-submenu {
+    list-style: none;
+    padding-right: 40px; /* Indent for RTL sub-items */
+    background: #f8fafc;
+    border-right: 2px solid var(--primary-color);
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.mobile-submenu li a {
+    padding: 10px 15px !important;
+    font-size: 13px !important;
+    color: #666;
+    border: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.mobile-submenu li:last-child a {
+    border-bottom: none !important;
+}
+
+.mobile-submenu li a:hover {
+    color: var(--primary-color) !important;
+    background: #fff !important;
+}
+
+.arrow-icon {
+    transition: transform 0.3s ease;
+}
 /* Responsive Adjustments */
 @media (max-width: 991px) {
     .elegant-header .container {
