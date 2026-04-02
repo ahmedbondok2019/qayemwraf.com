@@ -117,7 +117,7 @@
         max-width: 100%;
         max-height: 100%;
         object-fit: contain; /* CRITICAL: Prevent distortion and overflow */
-        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
     .main-image-wrapper:hover img {
         transform: scale(1.05);
@@ -607,15 +607,81 @@
 
 
     <script>
+        var currentThumbIndex = 0;
+        var thumbItems;
+        var autoChangeInterval;
+
         function changeImage(src, element) {
-            document.getElementById('zoom_image').src = src;
+            var mainImage = document.getElementById('zoom_image');
+            if (!mainImage) return;
+
+            // Fade out
+            mainImage.style.opacity = '0.4';
             
-            // Update active state on thumbnails
-            document.querySelectorAll('.thumb-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            if(element) element.classList.add('active');
+            setTimeout(function() {
+                mainImage.src = src;
+                
+                mainImage.onload = function() {
+                    mainImage.style.opacity = '1';
+                };
+                
+                if (!thumbItems) thumbItems = document.querySelectorAll('.thumb-item');
+                
+                // Update active state on thumbnails
+                thumbItems.forEach((item, index) => {
+                    item.classList.remove('active');
+                    if (item === element) {
+                        currentThumbIndex = index;
+                    }
+                });
+                
+                if(element) {
+                    element.classList.add('active');
+                    // Smoothly scroll the thumbnail into view
+                    element.parentElement.scrollTo({
+                        left: element.offsetLeft - (element.parentElement.offsetWidth / 2) + (element.offsetWidth / 2),
+                        behavior: 'smooth'
+                    });
+                }
+            }, 150);
         }
+
+        function startAutoChange() {
+            if (!thumbItems) thumbItems = document.querySelectorAll('.thumb-item');
+            if (thumbItems.length <= 1) return;
+            
+            clearInterval(autoChangeInterval);
+            autoChangeInterval = setInterval(function() {
+                currentThumbIndex++;
+                if (currentThumbIndex >= thumbItems.length) {
+                    currentThumbIndex = 0;
+                }
+                
+                var nextThumb = thumbItems[currentThumbIndex];
+                if (nextThumb) {
+                    var nextImg = nextThumb.querySelector('img');
+                    if (nextImg) {
+                        changeImage(nextImg.src, nextThumb);
+                    }
+                }
+            }, 4000); // Change every 4 seconds
+        }
+
+        function stopAutoChange() {
+            clearInterval(autoChangeInterval);
+        }
+
+        // Initialize auto-change
+        document.addEventListener('DOMContentLoaded', function() {
+            startAutoChange();
+            
+            // Pause on hover
+            const gallery = document.querySelector('.product-gallery');
+            if (gallery) {
+                gallery.addEventListener('mouseenter', stopAutoChange);
+                gallery.addEventListener('mouseleave', startAutoChange);
+            }
+        });
 
         function increaseQty() {
             var value = parseInt(document.getElementById('qtyInput').value, 10);
