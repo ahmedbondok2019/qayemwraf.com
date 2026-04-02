@@ -22,7 +22,7 @@
     "@type": "Offer",
     "url": "{{ url()->current() }}",
     "priceCurrency": "{{ session('currency_code', 'EGP') }}",
-    "price": "{{ $product->special_price ?: $product->price }}",
+    "price": "{{ $product->current_price }}",
     "itemCondition": "https://schema.org/NewCondition",
     "availability": "https://schema.org/{{ $product->quantity > 0 || $product->ignore_quantity ? 'InStock' : 'OutOfStock' }}"
   }
@@ -448,7 +448,7 @@
                         </div>
 
                         <div class="price-container mt-3">
-                           @if($product->special_price && $product->special_price_start <= now() && $product->special_price_end >= now())
+                           @if($product->has_special_price)
                                 <span class="current-price">{{ format_price($product->special_price) }}</span>
                                 <span class="old-price">{{ format_price($product->price) }}</span>
                             @else

@@ -239,7 +239,7 @@
                                     <span class="v-discount-badge" style="background-color: #e74c3c; color: #fff;">
                                         <i class="fa-solid fa-bolt"></i> {{ $flashSale->translation->name ?? 'عرض فلاش' }} (-{{ $discount }}%)
                                     </span>
-                                @elseif($product->special_price && $product->special_price > 0 && ($product->special_price_start <= now() && $product->special_price_end >= now()))
+                                @elseif($product->has_special_price)
                                     <span class="v-current-price">{{ format_price($product->special_price) }}</span>
                                     <span class="v-old-price">{{ format_price($product->price) }}</span>
                                     <span class="v-discount-badge">{{ round((($product->price - $product->special_price) / $product->price) * 100) }}% خصم</span>
@@ -344,7 +344,7 @@
                                     <span class="v-discount-badge" style="background-color: #e74c3c; color: #fff;">
                                         <i class="fa-solid fa-bolt"></i> {{ $flashSale->translation->name ?? 'عرض فلاش' }} (-{{ $discount }}%)
                                     </span>
-                                @elseif($product->special_price && $product->special_price > 0 && ($product->special_price_start <= now() && $product->special_price_end >= now()))
+                                @elseif($product->has_special_price)
                                     <span class="v-current-price">{{ format_price($product->special_price) }}</span>
                                     <span class="v-old-price">{{ format_price($product->price) }}</span>
                                     <span class="v-discount-badge">{{ round((($product->price - $product->special_price) / $product->price) * 100) }}% خصم</span>

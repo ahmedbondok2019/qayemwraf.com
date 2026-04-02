@@ -28,7 +28,7 @@
 
     <a href="{{ route('frontend.products.show', $routeParams) }}" class="v-card-img-link">
         <img src="{{ asset($product->image) }}" alt="{{ $productName }}" onerror="this.src='{{ asset('assets/images/placeholder.png') }}'">
-        @if($product->special_price && $product->special_price > 0 && ($product->special_price_start <= now() && $product->special_price_end >= now()))
+        @if($product->has_special_price)
             <span class="v-discount-badge-overlay">{{ round((($product->price - $product->special_price) / $product->price) * 100) }}% {{ trans_db('frontend.OFF') }}</span>
         @endif
     </a>
@@ -45,7 +45,7 @@
         @endif
 
         <div class="v-card-price-box">
-            @if($product->special_price && $product->special_price > 0 && ($product->special_price_start <= now() && $product->special_price_end >= now()))
+            @if($product->has_special_price)
                 <span class="v-current-price">{{ format_price($product->special_price) }}</span>
                 <span class="v-old-price">{{ format_price($product->price) }}</span>
             @else

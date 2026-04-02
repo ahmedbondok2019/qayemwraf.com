@@ -555,8 +555,8 @@
                         <h5 class="mb-0">${name}</h5>
                         <div>
                              <div class="custom-control custom-switch custom-control-inline">
-                                <input type="checkbox" class="custom-control-input" id="req_${id}" name="product_options[${optionIndex}][required]" checked>
-                                <label class="custom-control-label" for="req_${id}">{{ trans_db('dashboard.Required') }}</label>
+                                 <input type="checkbox" class="custom-control-input" id="req_${id}" name="product_options[${optionIndex}][required]" checked>
+                                 <label class="custom-control-label" for="req_${id}">{{ trans_db('dashboard.Required') }}</label>
                             </div>
                             <button type="button" class="btn btn-sm btn-danger remove-option-block" data-id="${id}"><i data-feather="trash"></i></button>
                         </div>
@@ -565,7 +565,7 @@
                         <input type="hidden" name="product_options[${optionIndex}][option_id]" value="${id}">
                         <table class="table table-bordered table-sm option-values-table" id="option-values-table-${id}">
                             <thead>
-                                <tr>
+                                <tr class="text-center bg-light">
                                     <th>{{ trans_db('dashboard.Value') }}</th>
                                     <th>{{ trans_db('dashboard.Quantity') }}</th>
                                     <th>{{ trans_db('dashboard.reduce quantity') }}</th>
@@ -577,20 +577,45 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <div class="mt-2">
-                            <select class="form-control d-inline-block w-auto" id="value-select-${id}">
+                        <div class="mt-2 d-flex align-items-center">
+                            <select class="form-control w-auto mr-1" id="value-select-${id}">
                                 ${valuesHtml}
                             </select>
-                            <button type="button" class="btn btn-sm btn-success add-value-row-btn" data-index="${optionIndex}" data-id="${id}"><i data-feather="plus"></i> {{ trans_db('dashboard.Add New Item') }}</button>
+                            <button type="button" class="btn btn-sm btn-success add-value-row-btn mr-1" data-index="${optionIndex}" data-id="${id}">
+                                <i data-feather="plus"></i> {{ trans_db('dashboard.Add New Item') }}
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-primary add-all-values-btn" data-index="${optionIndex}" data-id="${id}">
+                                {{ trans_db('dashboard.Add All Values') ?? 'إضافة كل القيم' }}
+                            </button>
                         </div>
                     </div>
                 </div>
             `;
             
             $('#product-options-container').append(block);
+            
+            // Automatically add all values on creation
+            values.forEach(val => {
+                addValueRow(optionIndex, id, val.id, val.name || val.translation?.name);
+            });
+
             if(feather) feather.replace();
             optionIndex++;
         }
+
+        $(document).on('click', '.add-all-values-btn', function() {
+            let id = $(this).data('id');
+            let idx = $(this).data('index');
+            let select = $(`#value-select-${id}`);
+            
+            select.find('option').each(function() {
+                let valId = $(this).val();
+                let valName = $(this).text();
+                if ($(`#val-row-${idx}-${valId}`).length === 0) {
+                    addValueRow(idx, id, valId, valName);
+                }
+            });
+        });
         
         function addValueRow(idx, id, valueId, valueName, data = null) {
              let qty = data ? data.quantity : 100;

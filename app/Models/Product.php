@@ -115,4 +115,20 @@ class Product extends Model
     {
         return $this->ratings()->where('status', 1)->count();
     }
+
+    public function getHasSpecialPriceAttribute()
+    {
+        if (!$this->special_price || $this->special_price <= 0) return false;
+        
+        $now = now();
+        $start = $this->special_price_start;
+        $end = $this->special_price_end;
+        
+        return (!$start || $start <= $now) && (!$end || $end >= $now);
+    }
+
+    public function getCurrentPriceAttribute()
+    {
+        return $this->has_special_price ? $this->special_price : $this->price;
+    }
 }

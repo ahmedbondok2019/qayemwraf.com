@@ -38,7 +38,7 @@ class ProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->translation->name ?? '',
                 'image' => asset($product->image),
-                'price' => number_format($product->special_price ?: $product->price, 2) . ' ج.م',
+                'price' => number_format($product->current_price, 2) . ' ج.م',
                 'url' => url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? ''))
             ];
         }
