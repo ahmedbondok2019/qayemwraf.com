@@ -990,5 +990,5 @@ return [
     'Translations List' => 'Translations List',
     'Front-end' => 'Front-end',
     'SKU' => 'SKU',
-
+// 
 ];
