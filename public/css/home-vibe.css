@@ -363,13 +363,27 @@ input:focus{
 
 /* Main Categories: Horizontal Elegant Style */
 .vibe-category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    display: flex;
+    overflow-x: auto;
     gap: 25px;
-    padding: 0 10px;
+    padding: 10px 10px 40px; /* Space for hover effects and shadow */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.vibe-category-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.vibe-category-grid:active {
+    cursor: grabbing;
 }
 
 .vibe-cat-card {
+    flex: 0 0 320px;
     display: flex;
     align-items: center;
     background: var(--primary-gradient);
@@ -761,7 +775,7 @@ input:focus{
     }
 
     .vibe-cat-card {
-        min-width: 280px; /* Fixed width for slider items */
+        min-width: 280px; /* Adjusted fixed width for slider items on mobile */
         flex: 0 0 auto;
     }
 

@@ -74,6 +74,16 @@ class ProductController extends Controller
         if ($request->ajax()) {
             $data = Product::with(['translation', 'categories'])->select('products.*');
             return DataTables::of($data)
+                ->filterColumn('name', function($query, $keyword) {
+                    $query->whereHas('translations', function($q) use ($keyword) {
+                        $q->where('product_translations.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('categories', function($query, $keyword) {
+                    $query->whereHas('categories.translations', function($q) use ($keyword) {
+                        $q->where('category_translations.title', 'like', "%{$keyword}%");
+                    });
+                })
                 ->addIndexColumn()
                 ->addColumn('name', function ($row) {
                     return $row->name;
@@ -99,6 +109,16 @@ class ProductController extends Controller
                                 </label>
                             </div>';
                 })
+                ->addColumn('show_on_home', function ($row) {
+                    $checked = $row->show_on_home ? 'checked' : '';
+                    return '<div class="custom-control custom-switch custom-switch-success text-center">
+                                <input type="checkbox" class="custom-control-input toggle-show-on-home" id="home_' . $row->id . '" data-id="' . $row->id . '" ' . $checked . '>
+                                <label class="custom-control-label" for="home_' . $row->id . '">
+                                    <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                    <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                </label>
+                            </div>';
+                })
                 ->addColumn('status', function ($row) {
                      return $row->status 
                         ? '<span class="badge badge-success">' . trans_db('dashboard.active') . '</span>' 
@@ -112,7 +132,7 @@ class ProductController extends Controller
                     $btn .= '</div>';
                     return $btn;
                 })
-                ->rawColumns(['image', 'categories', 'is_gift', 'status', 'action'])
+                ->rawColumns(['image', 'categories', 'is_gift', 'show_on_home', 'status', 'action'])
                 ->make(true);
         }
         return view('dashboard.admin.products.index');
@@ -177,6 +197,7 @@ class ProductController extends Controller
                 'ignore_quantity' => $request->has('ignore_quantity'),
                 'is_best_seller' => $request->has('is_best_seller'),
                 'is_gift' => $request->has('is_gift'),
+                'show_on_home' => $request->has('show_on_home') || !$request->has('_token') ? 1 : 0, // Default to true if not specified during import/etc
                 'best_seller_start' => $request->best_seller_start,
                 'best_seller_end' => $request->best_seller_end,
                 'weight' => $request->weight,
@@ -307,6 +328,7 @@ class ProductController extends Controller
                 'ignore_quantity' => $request->has('ignore_quantity'),
                 'is_best_seller' => $request->has('is_best_seller'),
                 'is_gift' => $request->has('is_gift'),
+                'show_on_home' => $request->has('show_on_home'),
                 'best_seller_start' => $request->best_seller_start,
                 'best_seller_end' => $request->best_seller_end,
                 'weight' => $request->weight,
@@ -451,6 +473,15 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->is_gift = !$product->is_gift;
+        $product->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function toggleShowOnHome($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->show_on_home = !$product->show_on_home;
         $product->save();
 
         return response()->json(['success' => true]);

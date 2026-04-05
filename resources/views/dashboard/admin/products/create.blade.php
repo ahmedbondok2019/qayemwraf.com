@@ -257,6 +257,17 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="show_on_home">{{ trans_db('dashboard.Front-end') }}</label>
+                                        <div class="custom-control custom-switch custom-switch-info">
+                                            <input type="checkbox" class="custom-control-input" id="show_on_home" name="show_on_home" checked />
+                                            <label class="custom-control-label" for="show_on_home">
+                                                <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                                <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="product_brand_id">{{ trans_db('dashboard.Brands') }}</label>
                                         <select class="form-control select2" name="product_brand_id" id="product_brand_id">
                                             <option value="">{{ trans_db('dashboard.Select') }}</option>

@@ -19,6 +19,7 @@ class Product extends Model
         'ignore_quantity' => 'boolean',
         'is_best_seller' => 'boolean',
         'is_gift' => 'boolean',
+        'show_on_home' => 'boolean',
         'special_price_start' => 'date',
         'special_price_end' => 'date',
         'best_seller_start' => 'date',
@@ -85,8 +86,7 @@ class Product extends Model
 
     public function scopeActive($query)
     {
-        // Simple active scope for now, can be expanded strictly for vendors later
-        return $query->where('status', 1);
+        return $query->where('status', 1)->where('show_on_home', 1);
     }
     
     public function getNameAttribute()

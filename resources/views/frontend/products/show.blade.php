@@ -233,6 +233,26 @@
         font-size: 16px;
     }
 
+    .btn-add-to-cart {
+        flex: 1;
+        height: 50px;
+        background: #f1f3f5;
+        color: #222;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: 0.3s;
+    }
+    .btn-add-to-cart:hover {
+        background: #e9ecef;
+        border-color: #ced4da;
+    }
+
     .btn-buy-now {
         flex: 1;
         height: 50px;
@@ -468,9 +488,14 @@
                                 <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
                             </div>
                             
-                            <button class="btn-buy-now" onclick="addToCart({{ $product->id }})">
+                            <button class="btn-add-to-cart add-to-cart-btn" onclick="addToCart({{ $product->id }})">
                                 <i class="fas fa-shopping-basket"></i>
-                                <span>{{ isset($cartProducts[$product->id]) ? (trans_db('frontend.in_cart') ?? 'In Cart') : trans_db('frontend.add_to_cart') }}</span>
+                                <span>{{ isset($cartProducts[$product->id]) ? (trans_db('frontend.in_cart') ?? 'In Cart') : (trans_db('frontend.add_to_cart') ?? 'Add to Cart') }}</span>
+                            </button>
+
+                            <button class="btn-buy-now ml-2" onclick="buyNow({{ $product->id }})">
+                                <i class="fas fa-bolt"></i>
+                                <span>{{ trans_db('frontend.buy_now') ?? 'Buy Now' }}</span>
                             </button>
                         </div>
 
@@ -713,7 +738,6 @@
                 success: function (response) {
                     // Update Button State
                     btn.html('<i class="fas fa-check"></i> {{ trans_db("frontend.in_cart") ?? "In Cart" }}');
-                    btn.css('background-color', 'var(--main-color, #1cbcec)');
                     
                     // Update Header Cart Count
                     if(response.cart_count !== undefined) {
@@ -727,6 +751,27 @@
                     } else {
                         $('#addToCartModal').modal('show');
                     }
+                },
+                error: function (response) {
+                    alert('Error adding to cart');
+                }
+            });
+        }
+
+        function buyNow(productId) {
+             var quantity = document.getElementById('qtyInput').value;
+             
+             $.ajax({
+                url: "{{ route('frontend.cart.add') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    product_id: productId,
+                    quantity: quantity
+                },
+                success: function (response) {
+                    // Redirect to checkout
+                    window.location.href = "{{ route('frontend.user.checkout.index') }}";
                 },
                 error: function (response) {
                     alert('Error adding to cart');

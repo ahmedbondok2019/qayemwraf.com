@@ -210,7 +210,5 @@ return [
     'Submit Review' => 'Submit Review',
     'Stars' => 'Stars',
     'Star' => 'Star',
-
-    'Load More' => 'Load More',
-    'Loading...' => 'Loading...',
+    'buy_now' => 'Buy Now',
 ];

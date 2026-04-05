@@ -123,35 +123,59 @@
             });
         }
 
-        // Drag to Scroll implementation for .subcat-grid
-        const slider = document.querySelector('.subcat-grid');
-        if(slider) {
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+        // Enhanced Drag to Scroll implementation for grids
+        const scrollSliders = document.querySelectorAll('.subcat-grid, .vibe-category-grid');
+        scrollSliders.forEach(slider => {
+            if(slider) {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+                let moved = false;
 
-            slider.addEventListener('mousedown', (e) => {
-                isDown = true;
-                slider.classList.add('active');
-                startX = e.pageX - slider.offsetLeft;
-                scrollLeft = slider.scrollLeft;
-            });
-            slider.addEventListener('mouseleave', () => {
-                isDown = false;
-                slider.classList.remove('active');
-            });
-            slider.addEventListener('mouseup', () => {
-                isDown = false;
-                slider.classList.remove('active');
-            });
-            slider.addEventListener('mousemove', (e) => {
-                if(!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 2; // scroll-fast
-                slider.scrollLeft = scrollLeft - walk;
-            });
-        }
+                slider.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    moved = false; // Reset movement flag
+                    slider.classList.add('active');
+                    startX = e.pageX - slider.offsetLeft;
+                    scrollLeft = slider.scrollLeft;
+                    slider.style.cursor = 'grabbing';
+                });
+
+                slider.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    slider.classList.remove('active');
+                    slider.style.cursor = 'grab';
+                });
+
+                slider.addEventListener('mouseup', (e) => {
+                    isDown = false;
+                    slider.classList.remove('active');
+                    slider.style.cursor = 'grab';
+                });
+
+                // Prevent click navigation if we actually moved the mouse during drag
+                slider.addEventListener('click', (e) => {
+                    if (moved) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }, true);
+
+                slider.addEventListener('mousemove', (e) => {
+                    if(!isDown) return;
+                    
+                    const x = e.pageX - slider.offsetLeft;
+                    const walk = (x - startX) * 2; // scroll-fast
+                    
+                    if (Math.abs(x - startX) > 5) {
+                        moved = true; // Flag that we are intentionally dragging
+                        e.preventDefault(); // Prevent default only when moving
+                    }
+                    
+                    slider.scrollLeft = scrollLeft - walk;
+                });
+            }
+        });
     });
 
 

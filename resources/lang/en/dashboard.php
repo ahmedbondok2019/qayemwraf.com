@@ -988,4 +988,7 @@ return [
     'Apple' => 'Apple',
     'Static Translations' => 'Static Translations',
     'Translations List' => 'Translations List',
+    'Front-end' => 'Front-end',
+    'SKU' => 'SKU',
+
 ];
