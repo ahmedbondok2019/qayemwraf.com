@@ -148,7 +148,7 @@
         font-weight: 700;
         color: #C5A059;
         margin-bottom: 0.5rem;
-        background: linear-gradient(120deg, #1E5631, #4C825D);
+        background: linear-gradient(120deg, #1c4dac, #4C825D);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -211,14 +211,14 @@
     }
 
     .input-wrapper input:focus {
-        border-color: #1E5631;
+        border-color: #1c4dac;
         background: #fff;
         box-shadow: 0 0 0 4px rgba(30, 86, 49, 0.1);
         outline: none;
     }
 
     .input-wrapper input:focus + i {
-        color: #1E5631;
+        color: #1c4dac;
     }
 
     .toggle-password {
@@ -242,7 +242,7 @@
     }
 
     .forgot-password {
-        color: #1E5631;
+        color: #1c4dac;
         text-decoration: none;
         transition: color 0.2s;
     }
@@ -255,7 +255,7 @@
     .auth-btn {
         width: 100%;
         padding: 1rem;
-        background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+        background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
         color: white;
         border: none;
         border-radius: 12px;
@@ -362,7 +362,7 @@
     }
 
     .auth-footer a {
-        color: #1E5631;
+        color: #1c4dac;
         font-weight: 600;
         text-decoration: none;
         transition: color 0.2s;

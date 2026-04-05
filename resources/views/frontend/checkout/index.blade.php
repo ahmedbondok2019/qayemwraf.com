@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('css/cart_wishlist.css') }}">
     <style>
         :root {
-            --main-color: #1E5631;
+            --main-color: #1c4dac;
             --main-color-rgb: 30, 86, 49;
             --text-dark: #1e293b;
             --text-gray: #64748b;
@@ -19,7 +19,7 @@
         }
         
         .premium-page-header {
-            background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+            background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
             padding: 60px 0 100px;
             color: white;
             margin-bottom: 0;
@@ -353,7 +353,7 @@
 
         .btn-place-order {
             width: 100%;
-            background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+            background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
             color: white;
             border: none;
             padding: 18px;

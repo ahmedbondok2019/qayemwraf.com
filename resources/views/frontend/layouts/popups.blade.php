@@ -244,3 +244,34 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addToCartModal" tabindex="-1" aria-hidden="true" style="z-index: 9999;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            <div class="modal-body p-5 text-center">
+                <div class="mb-4 text-center">
+                    <div class="mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: rgba(28, 188, 236, 0.1); border-radius: 50%;">
+                        <i class="fas fa-check-circle" style="font-size: 40px; color: var(--main-color, #1cbcec);"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold mb-2 text-dark text-center" style="font-size: 24px;">{{ trans_db('website.Added Successfully!') }}</h3>
+                <p class="text-muted mb-4 text-center">{{ trans_db('website.The product has been added to your shopping cart.') }}</p>
+                
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mt-4">
+                    <button type="button" class="btn btn-outline-secondary px-4 py-2" data-bs-dismiss="modal" style="border-radius: 12px; font-weight: 600; border: 2px solid #eee; transition: 0.3s; width: 100%;">
+                        {{ trans_db('website.Continue Shopping') }}
+                    </button>
+                    <a href="{{ route('frontend.user.checkout.index') }}" class="btn btn-primary px-4 py-2" style="background: var(--main-color, #1cbcec); border: none; border-radius: 12px; font-weight: 600; color: #fff; box-shadow: 0 4px 15px rgba(28, 188, 236, 0.3); transition: 0.3s; width: 100%;">
+                        {{ trans_db('website.Complete Order') }}
+                    </a>
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="{{ route('frontend.cart.index') }}" class="text-secondary text-decoration-underline" style="font-size: 14px; font-weight: 500;">
+                        {{ trans_db('website.Go to Cart') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

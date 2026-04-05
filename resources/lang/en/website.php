@@ -150,7 +150,7 @@ return [
     'Saved Successfully' => 'Saved Successfully',
     'SavedToFavorite' => 'Saved To Favorite',
     'Search' => 'Search',
-    'Search in Jumlah Dictionaries' => 'Search in website',
+    'Search in Website' => 'Search in website',
     'Search products…' => 'Search products…',
     'Sell your products on souqelmlabes and create marketing on us!' => 'Sell your products on souqelmlabes and create marketing on us!',
     'Seller status' => 'Seller Center',
@@ -288,4 +288,8 @@ return [
     'You have already rated this product' => 'You have already rated this product',
     'New arrivals' => 'New arrivals',
     'Best Seller' => 'Best Seller',
+    'Added Successfully!' => 'Added Successfully!',
+    'The product has been added to your shopping cart.' => 'The product has been added to your shopping cart.',
+    'Complete Order' => 'Complete Order',
+    'Go to Cart' => 'Go to Cart',
 ];

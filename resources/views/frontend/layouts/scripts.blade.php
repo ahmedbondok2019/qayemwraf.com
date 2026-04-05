@@ -234,6 +234,14 @@
                     if(response.cart_total !== undefined) {
                         $('.subtotal-display, .total-display').text(response.cart_total);
                     }
+
+                    // Show confirmation modal
+                    if (typeof bootstrap !== 'undefined') {
+                        var myModal = new bootstrap.Modal(document.getElementById('addToCartModal'));
+                        myModal.show();
+                    } else {
+                        $('#addToCartModal').modal('show');
+                    }
                 },
                 error: function(xhr) {
                     console.error(xhr);

@@ -218,7 +218,7 @@ input:focus{
 
 .vibe-offers-header a {
     font-size: 14px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     text-decoration: none;
 }
 
@@ -312,7 +312,7 @@ input:focus{
 }
 
 .vibe-offer-item:hover .vibe-offer-name {
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     transform: scale(1.05);
 }
 
@@ -345,7 +345,7 @@ input:focus{
     right: 0;
     width: 40px;
     height: 4px;
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     border-radius: 2px;
 }
 
@@ -358,7 +358,7 @@ input:focus{
 }
 
 .vibe-section-header .view-all:hover {
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
 }
 
 /* Main Categories: Horizontal Elegant Style */
@@ -474,7 +474,7 @@ input:focus{
 .vibe-subcat-card:hover {
     transform: translateY(-10px) rotate(1deg);
     background: #fff;
-    border-color: var(--primary-color, #1E5631);
+    border-color: var(--primary-color, #1c4dac);
     box-shadow: 0 15px 30px rgba(28, 77, 173, 0.1);
 }
 
@@ -540,7 +540,7 @@ input:focus{
 .vibe-subcat-section .swiper-button-next::after,
 .vibe-subcat-section .swiper-button-prev::after {
     font-size: 14px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
 }
 
 /* Brands Section: Elegant Typography Style */
@@ -570,7 +570,7 @@ input:focus{
 
 .vibe-brands-header a {
     font-size: 13px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     text-decoration: none;
     font-weight: 600;
 }
@@ -598,7 +598,7 @@ input:focus{
     left: 0;
     width: 0%;
     height: 100%;
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     opacity: 0.05;
     transition: width 0.3s ease;
     z-index: 1;
@@ -606,7 +606,7 @@ input:focus{
 
 .vibe-brand-card:hover {
     transform: translateY(-3px);
-    border-color: var(--primary-color, #1E5631);
+    border-color: var(--primary-color, #1c4dac);
     box-shadow: 0 5px 15px rgba(28, 77, 173, 0.08); /* Colored shadow */
 }
 
@@ -624,7 +624,7 @@ input:focus{
 }
 
 .vibe-brand-card:hover .vibe-brand-name {
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
 }
 
 /* Add a decorative dot */
@@ -671,13 +671,13 @@ input:focus{
     background: rgba(28, 77, 173, 0.08);
     border-radius: 12px;
     margin-left: 20px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     font-size: 24px;
     transition: all 0.3s ease;
 }
 
 .vibe-feature-card:hover .vibe-feature-icon {
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     color: #fff;
     transform: scale(1.1) rotate(5deg);
 }
@@ -962,9 +962,9 @@ input:focus{
 
 .view-toggles .btn-view-toggle.active,
 .view-toggles .btn-view-toggle:hover {
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     color: #fff;
-    border-color: var(--primary-color, #1E5631);
+    border-color: var(--primary-color, #1c4dac);
 }
 
 /* Horizontal Scroll View for Products */

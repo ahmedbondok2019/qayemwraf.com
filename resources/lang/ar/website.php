@@ -290,5 +290,8 @@ return [
     'You have already rated this product' => 'لقد قمت بتقييم هذا المنتج بالفعل',
     'New arrivals' => 'وصل حديثاً',
     'Best Seller' => 'المنتجات الأكثر مبيعاً',
-    
+    'Added Successfully!' => 'تمت الإضافة بنجاح!',
+    'The product has been added to your shopping cart.' => 'تم إضافة المنتج إلى عربة التسوق بنجاح.',
+    'Complete Order' => 'إتمام الطلب',
+    'Go to Cart' => 'الذهاب إلى السلة',
 ];
