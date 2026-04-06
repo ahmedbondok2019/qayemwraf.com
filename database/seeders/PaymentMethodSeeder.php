@@ -87,15 +87,22 @@ class PaymentMethodSeeder extends Seeder
             $translations = $methodData['translations'];
             unset($methodData['translations']);
 
-            $method = PaymentMethod::create($methodData);
+            $method = PaymentMethod::updateOrCreate(
+                ['keyword' => $methodData['keyword']],
+                $methodData
+            );
 
             foreach ($translations as $translation) {
-                PaymentMethodTranslation::create([
-                    'payment_method_id' => $method->id,
-                    'locale' => $translation['locale'],
-                    'name' => $translation['name'],
-                    'description' => $translation['description'],
-                ]);
+                PaymentMethodTranslation::updateOrCreate(
+                    [
+                        'payment_method_id' => $method->id,
+                        'locale' => $translation['locale'],
+                    ],
+                    [
+                        'name' => $translation['name'],
+                        'description' => $translation['description'],
+                    ]
+                );
             }
         }
     }
