@@ -98,6 +98,7 @@
 
 
 
+        @if(isset($categories) && $categories->count() > 0)
         <!-- Elegant Categories Section -->
         <section class="vibe-categories-section">
             <div class="container">
@@ -131,11 +132,13 @@
                 </div>
             </div>
         </section>
+        @endif
 
         
         
    
 
+        @if(isset($subcategories) && $subcategories->count() > 0)
         <!-- Subcategories Slider Section -->
         <section class="vibe-subcat-section">
             <div class="container">
@@ -169,8 +172,10 @@
                 </div>
             </div>
         </section>
+        @endif
 
         <!-- Product Slider  -->
+        @if(isset($bestSellers) && $bestSellers->count() > 0)
         <!-- Best Sellers Section -->
         <div class="container">
             <div class="best-seller-section">
@@ -272,10 +277,12 @@
                 </div>
             </div>
         </div>
+        @endif
                
                 
 
         <!-- Product Slider  -->
+        @if(isset($latestProducts) && $latestProducts->count() > 0)
         <!-- Latest Products Section -->
         <div class="container">
             <div class="latest-products-section">
@@ -377,11 +384,13 @@
                 </div>
             </div>
         </div>
+        @endif
               
 
         
                 <!-- Product Slider  -->
-               <!-- Brands Section -->
+               @if(isset($brands) && $brands->count() > 0)
+        <!-- Brands Section -->
         <div class="container">
             <div class="vibe-brands-section">
                 <div class="vibe-brands-header">
@@ -403,10 +412,12 @@
                 </div>
             </div>
         </div>
+        @endif
 
         
 
 
+        @if(isset($blogs) && $blogs->count() > 0)
         <!-- Blogs Section -->
         <section class="home-blogs-section py-5">
             <div class="container">
@@ -452,6 +463,7 @@
                 </div>
             </div>
         </section>
+        @endif
 
         <!-- Extra Features -->
   <div class="container features">

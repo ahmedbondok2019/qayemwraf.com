@@ -717,7 +717,13 @@ input:focus{
 /* Mobile Responsive Slider Text */
 @media (max-width: 768px) {
     .vibe-slide-image-wrapper {
-        height: 250px; /* Reduce height on mobile */
+        height: auto;
+        aspect-ratio: 16 / 9;
+        min-height: 180px;
+    }
+
+    .vibe-slide-image-wrapper img {
+        object-fit: cover; /* Keeps it filling the space */
     }
 
     .vibe-slider-content {
