@@ -723,7 +723,7 @@ input:focus{
     }
 
     .vibe-slide-image-wrapper img {
-        object-fit: cover; /* Keeps it filling the space */
+        object-fit: fill; /* Keeps it filling the space */
     }
 
     .vibe-slider-content {
