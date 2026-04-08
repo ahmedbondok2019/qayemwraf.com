@@ -99,16 +99,7 @@ class ProductController extends Controller
                         return '<span class="badge badge-info">' . $cat->name . '</span>';
                     })->implode(' ');
                 })
-                ->addColumn('is_gift', function ($row) {
-                    $checked = $row->is_gift ? 'checked' : '';
-                    return '<div class="custom-control custom-switch custom-switch-primary text-center">
-                                <input type="checkbox" class="custom-control-input toggle-gift" id="gift_' . $row->id . '" data-id="' . $row->id . '" ' . $checked . '>
-                                <label class="custom-control-label" for="gift_' . $row->id . '">
-                                    <span class="switch-icon-left"><i data-feather="check"></i></span>
-                                    <span class="switch-icon-right"><i data-feather="x"></i></span>
-                                </label>
-                            </div>';
-                })
+
                 ->addColumn('show_on_home', function ($row) {
                     $checked = $row->show_on_home ? 'checked' : '';
                     return '<div class="custom-control custom-switch custom-switch-success text-center">
@@ -132,7 +123,7 @@ class ProductController extends Controller
                     $btn .= '</div>';
                     return $btn;
                 })
-                ->rawColumns(['image', 'categories', 'is_gift', 'show_on_home', 'status', 'action'])
+                ->rawColumns(['image', 'categories', 'show_on_home', 'status', 'action'])
                 ->make(true);
         }
         return view('dashboard.admin.products.index');
