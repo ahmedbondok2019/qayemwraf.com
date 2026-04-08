@@ -83,6 +83,32 @@
             font-size: 1rem;
         }
 
+        .btn-add-address-shortcut {
+            margin-right: auto;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--main-color);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(var(--main-color-rgb), 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="ltr"] .btn-add-address-shortcut {
+            margin-right: 0;
+            margin-left: auto;
+        }
+
+        .btn-add-address-shortcut:hover {
+            background: var(--main-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
         /* Address Cards */
         .address-list {
             display: grid;
@@ -407,6 +433,9 @@
                     <div class="premium-card mb-4">
                         <h2 class="checkout-section-title">
                             <i class="fa-solid fa-location-dot"></i> {{ trans_db('frontend.Shipping Address') }}
+                            <a href="{{ route('frontend.user.addresses.index') }}" class="btn-add-address-shortcut">
+                                <i class="fa-solid fa-plus"></i> {{ trans_db('frontend.Add New Address') }}
+                            </a>
                         </h2>
                         
                         <div class="address-list">
