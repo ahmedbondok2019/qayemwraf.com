@@ -237,7 +237,7 @@
                                     </div>
                                     @include('frontend.products.partials.rating_display', ['product' => $product])
                                 </div>
-                                {{--  --}}
+                              
                                 <div class="v-card-actions">
                                     @php $qtyInCart = $cartProducts[$product->id] ?? 0; @endphp
                                     
