@@ -99,7 +99,15 @@
                                                     </tr>
                                                     <tr>
                                                         <th class="pl-0">{{ trans_db('dashboard.Price') }}:</th>
-                                                        <td class="text-success font-weight-bold">{{ number_format($product->price, 2) }} {{ $product->currency_symbol }}</td>
+                                                        <td class="text-success font-weight-bold">
+                                                            @if($product->has_special_price)
+                                                                <span class="text-muted mr-1" style="text-decoration: line-through;">{{ number_format($product->price, 2) }}</span>
+                                                                <span class="text-success">{{ number_format($product->special_price, 2) }}</span>
+                                                            @else
+                                                                <span>{{ number_format($product->price, 2) }}</span>
+                                                            @endif
+                                                            {{ $product->currency_symbol }}
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <th class="pl-0">{{ trans_db('dashboard.Quantity') }}:</th>

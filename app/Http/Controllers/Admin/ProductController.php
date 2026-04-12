@@ -110,6 +110,15 @@ class ProductController extends Controller
                                 </label>
                             </div>';
                 })
+                ->editColumn('price', function ($row) {
+                    if ($row->has_special_price) {
+                        return '<div class="d-flex flex-column">' .
+                               '<span class="text-muted" style="text-decoration: line-through; font-size: 0.85rem;">' . number_format($row->price, 2) . '</span>' .
+                               '<span class="text-success font-weight-bold">' . number_format($row->special_price, 2) . '</span>' .
+                               '</div>';
+                    }
+                    return number_format($row->price, 2);
+                })
                 ->addColumn('status', function ($row) {
                      return $row->status 
                         ? '<span class="badge badge-success">' . trans_db('dashboard.active') . '</span>' 
@@ -123,7 +132,7 @@ class ProductController extends Controller
                     $btn .= '</div>';
                     return $btn;
                 })
-                ->rawColumns(['image', 'categories', 'show_on_home', 'status', 'action'])
+                ->rawColumns(['image', 'categories', 'show_on_home', 'status', 'action', 'price'])
                 ->make(true);
         }
         return view('dashboard.admin.products.index');
