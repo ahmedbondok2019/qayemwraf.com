@@ -165,6 +165,22 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
+
+                                                            <div class="col-md-4 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="primary_color">{{ trans_db('dashboard.Primary Color') ?: 'اللون الرئيسي' }}</label>
+                                                                    <input type="color" class="form-control" id="primary_color" name="primary_color" value="{{ old('primary_color', $Setting->primary_color ?? '#28c76f') }}">
+                                                                    <small class="text-muted">هذا اللون سيتحكم في هوية الموقع الرئيسية</small>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="primary_color_to">{{ trans_db('dashboard.Gradient Color') ?: 'لون التدرج' }}</label>
+                                                                    <input type="color" class="form-control" id="primary_color_to" name="primary_color_to" value="{{ old('primary_color_to', $Setting->primary_color_to ?? '#3066d1') }}">
+                                                                    <small class="text-muted">هذا اللون يستخدم لنهاية تدرج الألوان</small>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 

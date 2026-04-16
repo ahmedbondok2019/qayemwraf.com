@@ -66,8 +66,15 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
 <style>
+    /* Dynamic Theme Overrides */
+    :root {
+        --primary-color: {{ $Setting->primary_color ?? '#1c4dad' }};
+        --primary-color-to: {{ $Setting->primary_color_to ?? '#3066d1' }};
+        --primary-gradient: linear-gradient(135deg, {{ $Setting->primary_color ?? '#1c4dad' }} 0%, {{ $Setting->primary_color_to ?? '#3066d1' }} 100%) !important;
+    }
+
     .modal .close {
-        background: #E91E63;
+        background: var(--primary-color) !important;
         border: none;
         padding: 10px 20px;
         margin-bottom: 10px;
@@ -76,5 +83,16 @@
         font-size: 24px;
         border-radius: 5px;
     }
+
+    /* Override categories and other elements to ensure they use the dynamic gradient */
+    .vibe-cat-card, .vibe-subcat-card, .vibe-slider-btn, .vibe-offer-image {
+        background: var(--primary-gradient) !important;
+    }
+
+    /* Override some specific hardcoded colors */
+    .elegant-search-btn:hover {
+        background: color-mix(in srgb, var(--primary-color), black 20%) !important;
+    }
 </style>
+<!-- Primary: {{ $Setting->primary_color }} | Gradient To: {{ $Setting->primary_color_to }} -->
 @stack('css')

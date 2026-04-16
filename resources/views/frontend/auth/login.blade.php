@@ -1,79 +1,91 @@
 @extends('frontend.layouts.master')
 
 @section('content')
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="auth-header">
-            <h3>{{ trans_db('frontend.Welcome Back') }}</h3>
-            <p>{{ trans_db('frontend.Please login to your account') }}</p>
+<div class="auth-wrapper">
+    <div class="auth-container">
+        <!-- Visual Column -->
+        <div class="auth-visual">
+            <div class="visual-content">
+                <div class="brand-badge">{{ $Setting->translate('app_name') ?? 'إيجي ميديكال' }}</div>
+                <h1>{{ trans_db('frontend.Welcome Back') }}</h1>
+                <p>سعدنا بعودتك! قم بتسجيل الدخول لمتابعة مشترياتك وخدماتك الطبية.</p>
+                <div class="visual-features">
+                    <div class="feature-item">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>حماية كاملة لبياناتك</span>
+                    </div>
+                   <div class="feature-item">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>متابعة دقيقة للشحنات</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
-        <form method="POST" action="{{ route('login') }}" class="auth-form">
-            @csrf
-            
-            <div class="form-group">
-                <label for="login">{{ trans_db('frontend.Email or Phone') }}</label>
-                <div class="input-wrapper">
-                    <i class="fa-regular fa-user"></i>
-                    <input id="login" type="text" class="@error('login') is-invalid @enderror" name="login" value="{{ old('login') }}" required autocomplete="login" autofocus placeholder="{{ trans_db('frontend.Enter your email or phone') }}">
-                </div>
-                @error('login')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
+        <!-- Form Column -->
+        <div class="auth-form-side">
+            <div class="form-header">
+                <h3>{{ trans_db('frontend.Login') }}</h3>
+                <p>{{ trans_db('frontend.Please login to your account') }}</p>
             </div>
 
-            <div class="form-group">
-                <label for="password">{{ trans_db('frontend.Password') }}</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-lock"></i>
-                    <input id="password" type="password" class="@error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="{{ trans_db('frontend.Enter your password') }}">
-                    <i class="fa-regular fa-eye toggle-password"></i>
+            @if ($errors->any())
+                <div class="premium-alert error">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                @error('password')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
+            @endif
 
-            <div class="form-actions">
-                <div class="remember-me">
-                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="remember">
-                        {{ trans_db('frontend.Remember Me') }}
-                    </label>
-                </div>
+            <form method="POST" action="{{ route('login') }}" class="premium-form">
+                @csrf
                 
-                @if (Route::has('password.request'))
-                    <a class="forgot-password" href="{{ route('password.request') }}">
-                        {{ trans_db('frontend.Forgot Your Password?') }}
-                    </a>
-                @endif
-            </div>
+                <div class="premium-input-group">
+                    <label for="login">{{ trans_db('frontend.Email or Phone') }}</label>
+                    <div class="input-container">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input id="login" type="text" name="login" value="{{ old('login') }}" required autofocus placeholder="{{ trans_db('frontend.Enter your email or phone') }}">
+                    </div>
+                </div>
 
-            <button type="submit" class="auth-btn">
-                {{ trans_db('frontend.Login') }} <i class="fa-solid fa-arrow-right-to-bracket"></i>
-            </button>
-            
-            <div class="social-login">
-                <div class="divider">
+                <div class="premium-input-group">
+                    <label for="password">{{ trans_db('frontend.Password') }}</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-lock"></i>
+                        <input id="password" type="password" name="password" required placeholder="{{ trans_db('frontend.Enter your password') }}">
+                        <i class="fa-regular fa-eye toggle-password"></i>
+                    </div>
+                </div>
+
+                <div class="form-extra">
+                    <label class="premium-checkbox">
+                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <span class="checkmark"></span>
+                        <span class="label-text">{{ trans_db('frontend.Remember Me') }}</span>
+                    </label>
+                    
+                    @if (Route::has('password.request'))
+                        <a class="forgot-link" href="{{ route('password.request') }}">
+                            {{ trans_db('frontend.Forgot Your Password?') }}
+                        </a>
+                    @endif
+                </div>
+
+                <button type="submit" class="premium-btn">
+                    <span>{{ trans_db('frontend.Login') }}</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                
+                <div class="auth-divider">
                     <span>{{ trans_db('frontend.Or login with') }}</span>
                 </div>
-                <div class="social-buttons">
+
+                <div class="social-grid">
                     <a href="{{ url('login/google') }}" class="social-btn google">
-                        <i class="fa-brands fa-google"></i>
+                        <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google">
                         <span>Google</span>
                     </a>
                     <a href="{{ url('login/facebook') }}" class="social-btn facebook">
@@ -81,240 +93,323 @@
                         <span>Facebook</span>
                     </a>
                 </div>
-            </div>
 
-            <div class="auth-footer">
-                <p>{{ trans_db('frontend.Don\'t have an account?') }} <a href="{{ route('register') }}">{{ trans_db('frontend.Create Account') }}</a></p>
-            </div>
-        </form>
+                <div class="form-footer">
+                    <p>{{ trans_db('frontend.Don\'t have an account?') }} <a href="{{ route('register') }}">{{ trans_db('frontend.Create Account') }}</a></p>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <style>
-    /* Premium Auth Styling */
-    .auth-container {
-        min-height: 80vh;
+    /* Premium Redesign for Auth */
+    .auth-wrapper {
+        min-height: 100vh;
+        background: #fbfbfd;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #FDFCF5 0%, #E8F5E9 100%);
-        padding: 2rem;
+        padding: 40px 20px;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .auth-container {
+        width: 100%;
+        max-width: 1050px;
+        background: #fff;
+        border-radius: 32px;
+        display: flex;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        min-height: 650px;
+    }
+
+    /* Left Visual Side */
+    .auth-visual {
+        flex: 1.1;
+        background: var(--primary-gradient);
         position: relative;
+        padding: 60px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         overflow: hidden;
     }
 
-    .auth-container::before {
+    .auth-visual::before {
         content: '';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-        animation: rotate 20s linear infinite;
-        z-index: 0;
+        width: 150%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        top: -25%;
+        left: -25%;
     }
 
-    .auth-card {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(20px);
-        border-radius: 24px;
-        padding: 3rem;
-        width: 100%;
-        max-width: 480px;
-        box-shadow: 
-            0 20px 40px rgba(0,0,0,0.1),
-            0 0 0 1px rgba(255,255,255,0.5) inset;
-        transform: translateY(0);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        z-index: 1;
+    .visual-content {
         position: relative;
-    }
-
-    .auth-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 
-            0 30px 60px rgba(0,0,0,0.12),
-            0 0 0 1px rgba(255,255,255,0.6) inset;
-    }
-
-    .auth-header {
+        z-index: 2;
         text-align: center;
-        margin-bottom: 2.5rem;
     }
 
-    .auth-header h3 {
-        font-size: 2rem;
+    .brand-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 14px;
         font-weight: 700;
-        color: #C5A059;
-        margin-bottom: 0.5rem;
-        background: linear-gradient(120deg, #1c4dac, #4C825D);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    .auth-header p {
-        color: #718096;
-        font-size: 1rem;
+    .auth-visual h1 {
+        font-size: 38px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        line-height: 1.2;
     }
 
-    .form-group {
-        margin-bottom: 1.5rem;
+    .auth-visual p {
+        font-size: 16px;
+        opacity: 0.9;
+        margin-bottom: 40px;
+        line-height: 1.8;
     }
 
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        color: #4a5568;
+    .visual-features {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px 24px;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: 0.3s;
+    }
+
+    .feature-item:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(10px);
+    }
+
+    .feature-item i {
+        font-size: 20px;
+    }
+
+    /* Right Form Side */
+    .auth-form-side {
+        flex: 1;
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-header {
+        margin-bottom: 32px;
+    }
+
+    .form-header h3 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+
+    .form-header p {
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    .premium-alert {
+        padding: 16px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 12px;
+        font-size: 14px;
         font-weight: 600;
-        font-size: 0.9rem;
+        align-items: flex-start;
     }
 
-    .input-wrapper {
+    .premium-alert.error {
+        background: #fff1f2;
+        color: #be123c;
+        border: 1px solid #fecdd3;
+    }
+
+    .premium-alert ul { margin: 0; padding: 0; list-style: none; }
+
+    .premium-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .premium-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .premium-input-group label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #475569;
+    }
+
+    .input-container {
         position: relative;
         display: flex;
         align-items: center;
     }
 
-    .input-wrapper i {
+    .input-container i {
         position: absolute;
-        left: 1rem; /* Adjust based on RTL/LTR */
-        color: #a0aec0;
-        transition: color 0.3s ease;
-        z-index: 2;
-    }
-    
-    html[dir="rtl"] .input-wrapper i.fa-envelope, 
-    html[dir="rtl"] .input-wrapper i.fa-lock,
-    html[dir="rtl"] .input-wrapper i.fa-user {
-        right: 1rem;
-        left: auto;
-    }
-    
-    html[dir="rtl"] .input-wrapper i.toggle-password {
-        left: 1rem;
-        right: auto;
+        right: 16px;
+        color: #94a3b8;
+        transition: 0.3s;
     }
 
-    .input-wrapper input {
+    .input-container input {
         width: 100%;
-        padding: 1rem 1rem 1rem 3rem; /* Adjust based on RTL/LTR */
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        padding: 14px 48px 14px 16px;
+        border: 2px solid #f1f5f9;
+        border-radius: 14px;
+        font-size: 16px;
         background: #f8fafc;
-    }
-    
-    html[dir="rtl"] .input-wrapper input {
-        padding: 1rem 3rem 1rem 1rem;
+        transition: all 0.3s;
+        color: #1e293b;
     }
 
-    .input-wrapper input:focus {
-        border-color: #1c4dac;
+    .input-container input:focus {
+        border-color: var(--primary-color);
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(30, 86, 49, 0.1);
         outline: none;
+        box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.1);
     }
 
-    .input-wrapper input:focus + i {
-        color: #1c4dac;
+    .input-container input:focus + i {
+        color: var(--primary-color);
     }
 
-    .toggle-password {
-        right: 1rem;
-        left: auto;
+    .input-container i.toggle-password {
+        right: auto;
+        left: 16px;
         cursor: pointer;
     }
 
-    .form-actions {
+    .form-extra {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
-        font-size: 0.9rem;
+        font-size: 14px;
     }
 
-    .remember-me {
+    .premium-checkbox {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-    }
-
-    .forgot-password {
-        color: #1c4dac;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-
-    .forgot-password:hover {
-        color: #C5A059;
-        text-decoration: underline;
-    }
-
-    .auth-btn {
-        width: 100%;
-        padding: 1rem;
-        background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 1.1rem;
+        gap: 8px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .premium-checkbox input { display: none; }
+
+    .checkmark {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #cbd5e1;
+        border-radius: 6px;
+        position: relative;
+        transition: 0.2s;
+    }
+
+    .premium-checkbox input:checked + .checkmark {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .premium-checkbox input:checked + .checkmark::after {
+        content: '\2713';
+        position: absolute;
+        color: #fff;
+        font-size: 14px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .forgot-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .premium-btn {
+        width: 100%;
+        padding: 16px;
+        background: var(--primary-gradient);
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.8rem;
-        box-shadow: 0 4px 6px rgba(30, 86, 49, 0.25);
+        gap: 12px;
+        transition: 0.3s;
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
     }
 
-    .auth-btn:hover {
+    .premium-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 7px 14px rgba(30, 86, 49, 0.3);
-    }
-    
-    .auth-btn:active {
-        transform: translateY(0);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+        filter: brightness(1.05);
     }
 
-    .social-login {
-        margin-top: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .divider {
+    .auth-divider {
         position: relative;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin: 10px 0;
     }
 
-    .divider::before {
+    .auth-divider::before {
         content: '';
         position: absolute;
-        left: 0;
         top: 50%;
+        left: 0;
         width: 100%;
         height: 1px;
-        background: #e2e8f0;
-        z-index: 0;
+        background: #f1f5f9;
     }
 
-    .divider span {
-        background: #fff; /* Matches card background roughly or transparent if blurred, but needs text bg to hide line */
-        background: rgba(255, 255, 255, 0.9); /* Match card bg */
-        padding: 0 1rem;
-        color: #a0aec0;
-        font-size: 0.9rem;
+    .auth-divider span {
         position: relative;
-        z-index: 1;
+        background: #fff;
+        padding: 0 16px;
+        color: #94a3b8;
+        font-size: 14px;
     }
 
-    .social-buttons {
+    .social-grid {
         display: flex;
-        gap: 1rem;
-        justify-content: center;
+        gap: 16px;
     }
 
     .social-btn {
@@ -322,76 +417,52 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.8rem;
-        padding: 0.8rem;
-        border-radius: 12px;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 14px;
+        border: 2px solid #f1f5f9;
         text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
+        color: #475569;
+        font-weight: 700;
+        transition: 0.3s;
     }
 
-    .social-btn.google {
-        background: #fff;
-        color: #4a5568;
-        border-color: #e2e8f0;
-    }
+    .social-btn img { width: 20px; }
 
-    .social-btn.google:hover {
+    .social-btn:hover {
         background: #f8fafc;
-        border-color: #cbd5e0;
+        border-color: #e2e8f0;
         transform: translateY(-2px);
     }
 
     .social-btn.facebook {
         background: #1877f2;
-        color: white;
+        border-color: #1877f2;
+        color: #fff;
     }
 
     .social-btn.facebook:hover {
         background: #166fe5;
-        box-shadow: 0 4px 6px rgba(24, 119, 242, 0.3);
-        transform: translateY(-2px);
+        border-color: #166fe5;
     }
 
-    .auth-footer {
-        margin-top: 2rem;
+    .form-footer {
         text-align: center;
-        color: #718096;
-        font-size: 0.95rem;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #64748b;
     }
 
-    .auth-footer a {
-        color: #1c4dac;
-        font-weight: 600;
+    .form-footer a {
+        color: var(--primary-color);
         text-decoration: none;
-        transition: color 0.2s;
+        font-weight: 700;
     }
 
-    .auth-footer a:hover {
-        color: #C5A059;
-    }
-
-    .invalid-feedback {
-        display: block;
-        color: #e53e3e;
-        font-size: 0.875rem;
-        margin-top: 0.5rem;
-    }
-
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    
-    @media (max-width: 640px) {
-        .auth-container {
-            padding: 1rem;
-        }
-        
-        .auth-card {
-            padding: 2rem;
-        }
+    @media (max-width: 992px) {
+        .auth-container { flex-direction: column; max-width: 500px; }
+        .auth-visual { padding: 40px; }
+        .auth-form-side { padding: 40px; }
     }
 </style>
 

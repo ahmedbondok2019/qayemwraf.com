@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #1c4dad; /* New Blue */
+    --primary-color: var(--primary-color); /* New Blue */
     --secondary-color: #e98939; /* New Orange */
     --text-color: #333;
     --light-text: #666;

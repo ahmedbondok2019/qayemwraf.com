@@ -59,6 +59,8 @@ class SettingController extends BackendController
             'linkedin' => 'nullable|string',
             'show_ratings' => 'nullable',
             'enable_reviews' => 'nullable',
+            'primary_color' => 'nullable|string',
+            'primary_color_to' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -94,6 +96,8 @@ class SettingController extends BackendController
             'google_redirect' => $request->google_redirect,
             'show_ratings' => $request->has('show_ratings'),
             'enable_reviews' => $request->has('enable_reviews'),
+            'primary_color' => $request->primary_color,
+            'primary_color_to' => $request->primary_color_to,
         ];
 
         // Handle Images

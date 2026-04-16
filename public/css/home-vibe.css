@@ -1,9 +1,9 @@
 /* Premium Home Styling */
 
 :root {
-    --primary-color: #1c4dad;
+    --primary-color: var(--primary-color);
     --secondary-color: #e98939;
-    --primary-gradient: linear-gradient(135deg, #1c4dad 0%, #3066d1 100%); /* Blue Gradient */
+    --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, #3066d1 100%); /* Blue Gradient */
     --gold-gradient: linear-gradient(135deg, #e98939 0%, #f7a45e 100%); /* Orange Gradient */
 }
 input:focus{
