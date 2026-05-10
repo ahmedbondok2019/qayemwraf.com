@@ -80,7 +80,7 @@ class SocialLoginController extends Controller
             Auth::login($userData, true);
 
             $CurrentUrl = Session::pull('CurrentUrl'); // Use pull to remove after use
-            $targetUrl = $CurrentUrl ? $CurrentUrl : route('frontend.user.home');
+            $targetUrl = $CurrentUrl ? $CurrentUrl : route('frontend.index');
 
             return redirect($targetUrl);
         } catch (\Throwable $th) {
