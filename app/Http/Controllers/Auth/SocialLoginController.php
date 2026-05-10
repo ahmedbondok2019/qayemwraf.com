@@ -43,7 +43,12 @@ class SocialLoginController extends Controller
             }
 
             // Determine the column name based on provider
-            $idColumn = $provider === 'google' ? 'google_id' : 'facebook_id';
+            $idColumn = match($provider) {
+                'google' => 'google_id',
+                'facebook' => 'facebook_id',
+                'apple' => 'apple_id',
+                default => 'google_id'
+            };
 
             // Check if user exists with this social ID
             $userData = User::where($idColumn, $socialUser->getId())->first();
@@ -83,7 +88,7 @@ class SocialLoginController extends Controller
                 'provider' => $provider,
                 'exception' => $th
             ]);
-            return redirect('/login')->withErrors(['msg' => __('website.Login Failed') . ' (' . $th->getMessage() . ')']);
+            return redirect('/login')->withErrors(['msg' => __('website.Login Failed')]);
         }
     }
 }
