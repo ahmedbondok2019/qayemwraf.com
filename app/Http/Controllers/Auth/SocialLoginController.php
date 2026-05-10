@@ -79,8 +79,11 @@ class SocialLoginController extends Controller
 
             return redirect($targetUrl);
         } catch (\Throwable $th) {
-            // Log::error($th); // Good practice to log error
-            return redirect('/login')->withErrors(['msg' => __('website.Login Failed')]);
+            \Illuminate\Support\Facades\Log::error('Social Login Error: ' . $th->getMessage(), [
+                'provider' => $provider,
+                'exception' => $th
+            ]);
+            return redirect('/login')->withErrors(['msg' => __('website.Login Failed') . ' (' . $th->getMessage() . ')']);
         }
     }
 }

@@ -88,6 +88,7 @@ return [
     'Legal Stuff' => 'Legal Stuff',
     'Log in' => 'Log in',
     'Login' => 'Login',
+    'Login Failed' => 'Login failed, please check your account settings',
     'LoginFirstToSaveWord' => 'Login First To Save Word',
     'Low Price' => 'Low Price',
     'Message' => 'Message',

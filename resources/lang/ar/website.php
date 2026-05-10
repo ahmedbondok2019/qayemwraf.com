@@ -85,6 +85,7 @@ return [
     'Legal Stuff' => 'الفريق القانونى',
     'Log in' => 'تسجيل الدخول',
     'Login' => 'دخول',
+    'Login Failed' => 'فشل تسجيل الدخول، يرجى التحقق من إعدادات الحساب',
     'Low Price' => 'ترتيب حسب السعر الاقل',
     'Message' => 'الرسالة',
     'Messages to be sent by Website to your mobile phone via Email method' => 'استقبال ايميلات دعائية من الموقع',

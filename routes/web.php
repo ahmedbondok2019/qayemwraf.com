@@ -12,6 +12,10 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\Web\SitemapController::class, 'index']);
 
+// Social Login Routes (Outside localization group for consistent callback URL)
+Route::get('/login/{provider}', [App\Http\Controllers\Auth\SocialLoginController::class, 'redirectToProvider']);
+Route::get('/login/{provider}/callback', [App\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback']);
+
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'last_url','logVisits'],
@@ -25,9 +29,6 @@ Route::group([
         Route::post('/login', [LoginController::class, 'login']);
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-        Route::get('/login/{provider}', [App\Http\Controllers\Auth\SocialLoginController::class, 'redirectToProvider']);
-        Route::get('/login/{provider}/callback', [App\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback']);
-            
         // Registration
         Route::get('/register/user', [RegisterController::class, 'showRegistrationForm'])->name('register');
         Route::post('/register', [RegisterController::class, 'register']);
@@ -37,6 +38,7 @@ Route::group([
         Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
         Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+        
         // User Profile & Checkout Routes
         Route::group(['as' => 'user.', 'middleware' => ['auth']], function () {
             Route::get('/home', [App\Http\Controllers\Web\ProfileController::class, 'index'])->name('home');
@@ -111,4 +113,3 @@ Route::group([
 });
 
 Route::get('/test-jnt-order', [App\Http\Controllers\TestJntController::class, 'testOrder']);
-
