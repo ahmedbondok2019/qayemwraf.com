@@ -22,7 +22,8 @@ Route::group([
 ], function () {
     Route::middleware(['Language'])->as("frontend.")->group(function () {
         Route::get("/", [HomeController::class, 'index'])->name("index");
-        //
+        
+        // 
         // Auth Routes
         // Login
         Route::get('/login/user', [LoginController::class, 'showLoginForm'])->name('login');
