@@ -215,6 +215,7 @@ class ProductController extends Controller
                     'slug' => $request->input("slug_$localeCode") ?: Str::slug($request->input("name_$localeCode")),
                     'meta_title' => $request->input("meta_title_$localeCode"),
                     'meta_description' => $request->input("meta_description_$localeCode"),
+                    'meta_keywords' => $request->input("meta_keywords_$localeCode"),
                 ]);
             }
 
@@ -345,6 +346,7 @@ class ProductController extends Controller
                         'slug' => $request->input("slug_$localeCode") ?: Str::slug($request->input("name_$localeCode")),
                         'meta_title' => $request->input("meta_title_$localeCode"),
                         'meta_description' => $request->input("meta_description_$localeCode"),
+                        'meta_keywords' => $request->input("meta_keywords_$localeCode"),
                     ]
                 );
             }

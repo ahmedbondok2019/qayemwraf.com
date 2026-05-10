@@ -84,6 +84,15 @@
                                                             @enderror
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label for="meta_keywords_{{ $localeCode }}">{{ trans_db('dashboard.Meta Keywords') }} ({{ $properties['native'] }})</label>
+                                                            <textarea id="meta_keywords_{{ $localeCode }}" class="form-control" name="meta_keywords_{{ $localeCode }}">{{ old('meta_keywords_' . $localeCode) }}</textarea>
+                                                            @error('meta_keywords_' . $localeCode)
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
