@@ -1054,7 +1054,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Categories Swiper
         new Swiper('.medical-categories-swiper', {
-            slidesPerView: 2,
+            slidesPerView: 2.5,
             spaceBetween: 20,
             rtl: true,
             navigation: {
@@ -1062,9 +1062,9 @@
                 prevEl: '.medical-categories-section .swiper-button-prev',
             },
             breakpoints: {
-                640: { slidesPerView: 3 },
                 768: { slidesPerView: 4 },
-                1024: { slidesPerView: 6 },
+                1024: { slidesPerView: 5 },
+                1200: { slidesPerView: 6 },
             }
         });
 
@@ -1072,7 +1072,7 @@
         document.querySelectorAll('.medical-products-swiper').forEach(function(el) {
             const section = el.closest('section');
             new Swiper(el, {
-                slidesPerView: 1.2,
+                slidesPerView: 1.5,
                 spaceBetween: 20,
                 rtl: true,
                 navigation: {
@@ -1080,15 +1080,17 @@
                     prevEl: section.querySelector('.swiper-button-prev'),
                 },
                 breakpoints: {
-                    480: { slidesPerView: 2 },
+                    480: { slidesPerView: 2.2 },
                     768: { slidesPerView: 3 },
                     1024: { slidesPerView: 4 },
                     1200: { slidesPerView: 5 },
                 }
             });
+        });
+
         // Brands Swiper
         new Swiper('.medical-brands-swiper', {
-            slidesPerView: 2,
+            slidesPerView: 3,
             spaceBetween: 20,
             rtl: true,
             autoplay: {
@@ -1096,7 +1098,6 @@
                 disableOnInteraction: false,
             },
             breakpoints: {
-                640: { slidesPerView: 3 },
                 768: { slidesPerView: 4 },
                 1024: { slidesPerView: 6 },
             }
