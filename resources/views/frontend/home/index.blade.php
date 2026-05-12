@@ -302,29 +302,6 @@
         box-shadow: 0 5px 15px rgba(28, 77, 173, 0.3);
     }
 
-    @media (max-width: 991px) {
-        .feature-item {
-            border-left: none;
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-        }
-        .feature-item:last-child {
-            border-bottom: none;
-        }
-        .medical-features-bar {
-            margin-top: 20px;
-        }
-    }
-</style>
-
-            display: none; /* We can implement a drawer or click-based for mobile if needed */
-        }
-        
-        .vibe-cat-wrapper {
-            flex: 0 0 280px;
-        }
-    }
-
     /* Medical Slider Styles - Full Width Cover */
     .medical-hero {
         padding: 0;
@@ -427,6 +404,17 @@
     }
 
     @media (max-width: 991px) {
+        .feature-item {
+            border-left: none;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        .medical-features-bar {
+            margin-top: 20px;
+        }
         .medical-slider .swiper-slide {
             height: 450px;
         }
@@ -440,8 +428,9 @@
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
 @endpush
+
+
 
 @section('content')
 
