@@ -567,90 +567,12 @@
         opacity: 1;
     }
 
-    /* Newsletter Section */
-    .medical-newsletter {
-        background: #1c4dad;
-        padding: 40px 0;
-        margin-top: 50px;
-        direction: rtl;
-    }
-
-    .newsletter-box {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 30px;
-    }
-
-    .newsletter-text {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        color: #fff;
-    }
-
-    .newsletter-icon {
-        font-size: 40px;
-    }
-
-    .newsletter-text h3 {
-        font-size: 24px;
-        font-weight: 800;
-        margin: 0;
-    }
-
-    .newsletter-text p {
-        font-size: 14px;
-        margin: 0;
-        opacity: 0.8;
-    }
-
-    .newsletter-form {
-        flex: 1;
-        max-width: 500px;
-        display: flex;
-        gap: 10px;
-        background: #fff;
-        padding: 5px;
-        border-radius: 50px;
-    }
-
-    .newsletter-form input {
-        flex: 1;
-        border: none;
-        padding: 10px 25px;
-        border-radius: 50px;
-        outline: none;
-        font-size: 14px;
-    }
-
-    .newsletter-form button {
-        background: #e98939;
-        color: #fff;
-        border: none;
-        padding: 10px 30px;
-        border-radius: 50px;
-        font-weight: 700;
-        transition: all 0.3s;
-    }
-
-    .newsletter-form button:hover {
-        background: #d37628;
-    }
-
     @media (max-width: 991px) {
         .why-us-stats {
             grid-template-columns: repeat(2, 1fr);
         }
         .stat-item:nth-child(2) {
             border-left: none;
-        }
-        .newsletter-box {
-            flex-direction: column;
-            text-align: center;
-        }
-        .newsletter-text {
-            flex-direction: column;
         }
     }
 </style>
@@ -1022,26 +944,6 @@
         </section>
         @endif
 
-        <!-- Newsletter Section -->
-        <section class="medical-newsletter">
-            <div class="container">
-                <div class="newsletter-box">
-                    <div class="newsletter-text">
-                        <div class="newsletter-icon">
-                            <i class="fa-regular fa-envelope-open"></i>
-                        </div>
-                        <div>
-                            <h3>اشترك في نشرتنا البريدية</h3>
-                            <p>احصل على أحدث العروض والمنتجات الجديدة مباشرة على بريدك</p>
-                        </div>
-                    </div>
-                    <form action="#" class="newsletter-form">
-                        <input type="email" placeholder="أدخل بريدك الإلكتروني..." required>
-                        <button type="submit">اشترك الآن</button>
-                    </form>
-                </div>
-            </div>
-        </section>
 
 
 
