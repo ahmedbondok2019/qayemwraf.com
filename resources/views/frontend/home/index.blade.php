@@ -2,182 +2,321 @@
 
 @push('css')
 <style>
-    .vibe-category-grid {
-        overflow: visible !important;
-        flex-wrap: wrap;
-        justify-content: center;
+    /* Medical Theme Design System */
+    :root {
+        --medical-bg: #f8fbff;
+        --medical-card-shadow: 0 10px 30px rgba(138, 149, 158, 0.1);
+        --medical-border-radius: 20px;
     }
 
-    .vibe-cat-wrapper {
-        position: relative;
-        flex: 0 0 420px;
-        perspective: 1000px;
-    }
-
-    .vibe-cat-img-wrapper {
-        flex: 0 0 160px !important;
-        height: 160px !important;
-    }
-
-    .vibe-cat-title {
-        font-size: 22px !important;
-    }
-
-    .vibe-cat-card {
-        width: 100%;
-        margin-bottom: 0;
-        z-index: 2;
-    }
-
-    .vibe-cat-stats {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-top: 5px;
-    }
-
-    .vibe-cat-has-children {
-        font-size: 11px;
-        color: rgba(255,255,255,0.8);
-        background: rgba(255,255,255,0.1);
-        padding: 2px 10px;
-        border-radius: 50px;
-        display: inline-block;
-        width: fit-content;
-    }
-
-    /* Mega Menu Styling */
-    .vibe-cat-mega-menu {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        width: 450px;
-        background: #fff;
-        border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-        padding: 25px;
-        z-index: 100;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(20px) rotateX(-10deg);
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        transform-origin: top right;
-        border: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .vibe-cat-wrapper:hover .vibe-cat-mega-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(10px) rotateX(0);
-    }
-
-    .vibe-mega-header {
+    .medical-section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px dashed #eee;
+        margin-bottom: 30px;
+        direction: rtl;
     }
 
-    .vibe-mega-header h4 {
-        font-size: 16px;
+    .medical-section-header h2, .medical-section-header h3 {
+        font-size: 28px;
         font-weight: 800;
-        color: var(--primary-color);
-        margin: 0;
+        color: #2c3e50;
+        position: relative;
+        padding-right: 15px;
     }
 
-    .vibe-mega-header a {
-        font-size: 12px;
-        color: #888;
-        text-decoration: none;
-        transition: color 0.3s;
-    }
-
-    .vibe-mega-header a:hover {
-        color: var(--secondary-color);
-    }
-
-    .vibe-mega-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        max-height: 350px;
-        overflow-y: auto;
-        padding-left: 5px;
-    }
-
-    .vibe-mega-grid::-webkit-scrollbar {
+    .medical-section-header h2::before, .medical-section-header h3::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
         width: 4px;
-    }
-
-    .vibe-mega-grid::-webkit-scrollbar-thumb {
-        background: #eee;
+        height: 24px;
+        background: var(--primary-gradient);
         border-radius: 10px;
     }
 
-    .vibe-mega-item {
+    .medical-section-header .view-all {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: all 0.3s;
+    }
+
+    .medical-section-header .view-all:hover {
+        padding-left: 10px;
+    }
+
+    /* Features Bar */
+    .medical-features-bar {
+        background: #fff;
+        padding: 30px 0;
+        border-radius: var(--medical-border-radius);
+        box-shadow: var(--medical-card-shadow);
+        margin: -40px auto 50px;
+        position: relative;
+        z-index: 10;
+        direction: rtl;
+    }
+
+    .feature-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 10px;
-        background: #f9f9f9;
+        gap: 15px;
+        padding: 0 20px;
+        border-left: 1px solid #eee;
+    }
+
+    .feature-item:last-child {
+        border-left: none;
+    }
+
+    .feature-icon-box {
+        width: 50px;
+        height: 50px;
+        background: #f0f7ff;
         border-radius: 12px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-    }
-
-    .vibe-mega-item:hover {
-        background: #fff;
-        border-color: var(--primary-color);
-        transform: translateX(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    .vibe-mega-img {
-        width: 45px;
-        height: 45px;
-        background: #fff;
-        border-radius: 10px;
-        padding: 5px;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        color: var(--primary-color);
+        font-size: 24px;
     }
 
-    .vibe-mega-img img {
-        max-width: 100%;
-        max-height: 100%;
+    .feature-text h4 {
+        font-size: 16px;
+        font-weight: 800;
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    .feature-text p {
+        font-size: 13px;
+        color: #7f8c8d;
+        margin: 0;
+    }
+
+    /* Category Cards */
+    .medical-cat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 25px;
+        direction: rtl;
+    }
+
+    .medical-cat-card {
+        background: #fff;
+        border-radius: var(--medical-border-radius);
+        padding: 25px 15px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+        border: 1px solid #f1f1f1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .medical-cat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--medical-card-shadow);
+        border-color: var(--primary-color);
+    }
+
+    .medical-cat-icon-wrapper {
+        width: 100px;
+        height: 100px;
+        background: #f4f9ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        position: relative;
+        transition: all 0.3s;
+    }
+
+    .medical-cat-card:hover .medical-cat-icon-wrapper {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+    .medical-cat-icon-wrapper img {
+        max-width: 60%;
+        max-height: 60%;
         object-fit: contain;
     }
 
-    .vibe-mega-info {
-        display: flex;
-        flex-direction: column;
+    .medical-cat-title {
+        font-size: 16px;
+        font-weight: 800;
+        color: #2c3e50;
+        margin-bottom: 8px;
     }
 
-    .vibe-mega-title {
-        font-size: 13px;
+    .medical-cat-count {
+        font-size: 12px;
+        color: var(--primary-color);
+        background: #eff6ff;
+        padding: 4px 12px;
+        border-radius: 50px;
         font-weight: 700;
-        color: #333;
     }
 
-    .vibe-mega-count {
+    /* Product Cards */
+    .medical-products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 30px;
+        direction: rtl;
+    }
+
+    .medical-product-card {
+        background: #fff;
+        border-radius: var(--medical-border-radius);
+        padding: 15px;
+        position: relative;
+        transition: all 0.4s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+        border: 1px solid #f1f1f1;
+    }
+
+    .medical-product-card:hover {
+        box-shadow: var(--medical-card-shadow);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #ff7e5f;
+        color: #fff;
         font-size: 11px;
-        color: #999;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-weight: 700;
+        z-index: 2;
     }
 
-    @media (max-width: 768px) {
-        .vibe-category-grid {
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            overflow-x: auto !important;
-        }
+    .product-image-box {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        overflow: hidden;
+        border-radius: 12px;
+    }
 
-        .vibe-cat-mega-menu {
+    .product-image-box img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s;
+    }
+
+    .medical-product-card:hover .product-image-box img {
+        transform: scale(1.1);
+    }
+
+    .product-info-box {
+        text-align: center;
+    }
+
+    .product-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        display: block;
+        text-decoration: none;
+        height: 40px;
+        overflow: hidden;
+    }
+
+    .product-price-box {
+        margin-bottom: 15px;
+    }
+
+    .current-price {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--primary-color);
+    }
+
+    .old-price {
+        font-size: 14px;
+        color: #bdc3c7;
+        text-decoration: line-through;
+        margin-right: 8px;
+    }
+
+    .product-rating {
+        color: #f1c40f;
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-view-details {
+        flex: 1;
+        background: #f4f9ff;
+        color: var(--primary-color);
+        padding: 10px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 13px;
+        text-decoration: none;
+        transition: all 0.3s;
+        text-align: center;
+    }
+
+    .btn-view-details:hover {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+    .btn-add-cart {
+        width: 42px;
+        height: 42px;
+        background: var(--primary-gradient);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .btn-add-cart:hover {
+        transform: rotate(90deg);
+        box-shadow: 0 5px 15px rgba(28, 77, 173, 0.3);
+    }
+
+    @media (max-width: 991px) {
+        .feature-item {
+            border-left: none;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        .medical-features-bar {
+            margin-top: 20px;
+        }
+    }
+</style>
+
             display: none; /* We can implement a drawer or click-based for mobile if needed */
         }
         
@@ -347,126 +486,82 @@
         </div>
 
 
-                <!-- Offers Horizontal Scroll -->
-                @if(isset($offers) && $offers->count() > 0)
-                <div class="vibe-offers-container">
-                    <div class="vibe-offers-header">
-                        <h3>أقوى العروض</h3>
-                        <a href="{{ url('ar/siteMap') }}">{{ trans_db('website.View') }} {{ trans_db('website.All') }} <i class="fa-solid fa-angle-left"></i></a>
-                    </div>
-                    <div class="vibe-offers-slider">
-                        @foreach($offers as $offer)
-                        <div class="vibe-offer-item">
-                            <a href="{{ $offer->category_id ? url('ar/products/' . ($offer->category->translation->slug ?? '')) . '?flash_sale=1' : url('ar/products?flash_sale=1') }}">
-                                <div class="vibe-offer-image">
-                                    <img src="{{ asset($offer->image) }}" alt="{{ $offer->name }}" />
-                                </div>
-                                <span class="vibe-offer-name">{{ $offer->name }}</span>
-                            </a>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-
-                {{-- Home Advertisements Slider --}}
-                {{-- Home Advertisements Slider --}}
-                @if(isset($homeAds) && $homeAds->count() > 0)
-                <div class="row mt-4 mb-4">
-                    <div class="col-12">
-                        <div class="swiper-container home-ads-swiper" style="overflow: hidden; border-radius: 8px;">
-                            <div class="swiper-wrapper">
-                                @foreach($homeAds as $ad)
-                                    <div class="swiper-slide position-relative">
-                                        @if($ad->image)
-                                            <a href="{{ $ad->link ?? '#' }}" class="d-block w-100 h-100 text-decoration-none">
-                                                <div style="position: relative; width: 100%; height: 350px;">
-                                                    <img src="{{ asset($ad->image) }}" alt="Advertisement" style="width: 100%; height: 100%; object-fit: cover;">
-                                                </div>
-                                            </a>
-                                        @endif
-                                    </div>
-                                @endforeach
+        <!-- Medical Features Bar -->
+        <div class="container">
+            <div class="medical-features-bar">
+                <div class="row m-0">
+                    <div class="col-lg-3 col-md-6 p-0">
+                        <div class="feature-item">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-truck-fast"></i>
                             </div>
-                            <!-- Add Pagination -->
-                            <div class="swiper-pagination"></div>
+                            <div class="feature-text">
+                                <h4>شحن سريع</h4>
+                                <p>لكل المحافظات</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 p-0">
+                        <div class="feature-item">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-shield-check"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>ضمان حقيقي</h4>
+                                <p>على جميع المنتجات</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 p-0">
+                        <div class="feature-item">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-medal"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>جودة عالية</h4>
+                                <p>معايير عالمية</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 p-0">
+                        <div class="feature-item">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>دعم فني</h4>
+                                <p>خدمة ما بعد البيع</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                
-                @endif
             </div>
         </div>
 
-
-
         @if(isset($categories) && $categories->count() > 0)
-        <!-- Elegant Categories Section -->
-        <section class="vibe-categories-section">
+        <!-- Medical Categories Section -->
+        <section class="medical-categories-section py-5">
             <div class="container">
-                <div class="vibe-section-header">
+                <div class="medical-section-header">
                     <h2>أهم الفئات</h2>
-                    <a href="{{ url('ar/products') }}" class="view-all">{{ trans_db('website.View') }} {{ trans_db('website.All') }} <i class="fa-solid fa-arrow-left"></i></a>
+                    <a href="{{ url('ar/products') }}" class="view-all">عرض كل الفئات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
-                <!-- Mobile Category Search -->
-                <div class="vibe-mobile-cat-search">
-                    <input type="text" id="catSearchInput" placeholder="ابحث عن {{ trans_db('website.Category') }}...">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
-
-                <div class="vibe-category-grid" id="vibeCategoryGrid">
-                    <div id="no-categories-message" class="vibe-no-results" style="display: none;">
-                        <i class="fa-regular fa-folder-open"></i>
-                        <p>لا توجد فئات مطابقة للبحث</p>
-                    </div>
-                    @foreach($categories as $category)
-                    <div class="vibe-cat-wrapper">
-                        <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}" class="vibe-cat-card">
-                            <div class="vibe-cat-img-wrapper">
-                                <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
-                            </div>
-                            <div class="vibe-cat-info">
-                                <span class="vibe-cat-title">{{ $category->name }}</span>
-                                <div class="vibe-cat-stats">
-                                    <span class="vibe-cat-count">{{ $category->products_count }} {{ trans_db('website.book') }}</span>
-                                    @if($category->children->count() > 0)
-                                        <span class="vibe-cat-has-children"><i class="fa-solid fa-layer-group"></i> {{ $category->children->count() }} {{ trans_db('website.Section') }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                        </a>
-                        
-                        @if($category->children->count() > 0)
-                        <div class="vibe-cat-mega-menu">
-                            <div class="vibe-mega-inner">
-                                <div class="vibe-mega-header">
-                                    <h4>{{ trans_db('website.Sub Sections') }} : {{ $category->name }}</h4>
-                                    <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}">{{ trans_db('website.View All') }} <i class="fa-solid fa-arrow-left"></i></a>
-                                </div>
-                                <div class="vibe-mega-grid">
-                                    @foreach($category->children as $child)
-                                    <a href="{{ url('ar/products/' . ($child->translation->slug ?? '')) }}" class="vibe-mega-item">
-                                        <div class="vibe-mega-img">
-                                            <img src="{{ asset($child->image) }}" alt="{{ $child->name }}">
-                                        </div>
-                                        <div class="vibe-mega-info">
-                                            <span class="vibe-mega-title">{{ $child->name }}</span>
-                                            <span class="vibe-mega-count">{{ $child->products_count }} {{ trans_db('website.Product') }}</span>
-                                        </div>
-                                    </a>
-                                    @endforeach
-                                </div>
-                            </div>
+                <div class="medical-cat-grid">
+                    @foreach($categories->take(6) as $category)
+                    <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}" class="medical-cat-card">
+                        <div class="medical-cat-icon-wrapper">
+                            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
                         </div>
-                        @endif
-                    </div>
+                        <span class="medical-cat-title">{{ $category->name }}</span>
+                        <span class="medical-cat-count">{{ $category->products_count }} منتج</span>
+                    </a>
                     @endforeach
                 </div>
             </div>
         </section>
         @endif
+
 
         
         
@@ -508,217 +603,116 @@
         </section>
         @endif
 
-        <!-- Product Slider  -->
-        @if(isset($bestSellers) && $bestSellers->count() > 0)
-        <!-- Best Sellers Section -->
-        <div class="container">
-            <div class="best-seller-section">
-                <div class="section-header">
+        <!-- Product Slider  -->        @if(isset($bestSellers) && $bestSellers->count() > 0)
+        <!-- Medical Best Sellers Section -->
+        <section class="medical-best-sellers py-5" style="background: var(--medical-bg);">
+            <div class="container">
+                <div class="medical-section-header">
                     <h3>الأفضل مبيعاً</h3>
-                    <div class="d-flex align-items-center gap-2">
-                        <!-- Mobile View Toggles -->
-                        <div class="view-toggles d-md-none" style="display: flex; gap: 5px;">
-                           <button class="btn-view-toggle active" data-target=".best-seller-section .products-grid" data-view="grid" title="{{ trans_db('website.View') }} قائمة"><i class="fa-solid fa-list-ul"></i></button>
-                           <button class="btn-view-toggle" data-target=".best-seller-section .products-grid" data-view="horizontal" title="{{ trans_db('website.View') }} شريط"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
-                        </div>
-                        <a href="{{ url('ar/best-sellers') }}">{{ trans_db('website.View') }} {{ trans_db('website.All') }} <i class="fa-solid fa-arrow-left"></i></a>
-                    </div>
+                    <a href="{{ url('ar/best-sellers') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
-                <!-- Search Input -->
-                <div class="vibe-mobile-cat-search d-md-none" style="display: block; margin-bottom: 15px;">
-                    <div class="vibe-cat-search-box">
-                        <input type="text" id="bestSellersSearch" class="vibe-cat-search-input" placeholder="بحث...">
-                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    </div>
-                </div>
-                
-                <div id="best-sellers-no-results" class="vibe-no-results" style="display: none;">
-                    <i class="fa-regular fa-folder-open"></i>
-                    <p>لا توجد منتجات مطابقة للبحث</p>
-                </div>
-                
-                <div class="products-grid">
-                    @foreach($bestSellers as $product)
-                    <div class="v-card">
-                        <!-- Status Indicators (Always visible) -->
-                        <div class="v-status-indicators">
-                            @if(isset($cartProducts[$product->id]))
-                                <span class="v-status-dot cart-dot" title="{{ trans_db('website.In Cart') }}"><i class="fa-solid fa-check"></i></span>
-                            @endif
-                            @if(in_array($product->id, $wishlistIds))
-                                <span class="v-status-dot wish-dot" title="{{ trans_db('website.In Wishlist') }}"><i class="fa-solid fa-heart"></i></span>
-                            @endif
-                        </div>
+                <div class="medical-products-grid">
+                    @foreach($bestSellers->take(8) as $product)
+                    <div class="medical-product-card">
+                        @if($product->flashSales->isNotEmpty() || $product->has_special_price)
+                            <span class="product-badge">خصم مميز</span>
+                        @else
+                            <span class="product-badge" style="background: var(--primary-color);">الأكثر مبيعاً</span>
+                        @endif
 
-                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="v-card-img-link">
+                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-image-box">
                             <img src="{{ asset($product->image) }}" alt="{{ $product->translation->name ?? 'Product' }}">
                         </a>
-                        <div class="v-card-content">
-                            <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="v-card-title" title="{{ $product->translation->name ?? '' }}">
-                                {{ $product->translation->name ?? trans_db('website.Untitled product') }}
-                            </a>
-                            
-                            @if($product->brand)
-                            <div class="v-card-author">
-                                <i class="fa-solid fa-pen-nib" style="color: #95a5a6; font-size: 11px;"></i> {{ $product->brand->translation->title ?? '' }}
-                            </div>
-                            @endif
 
-                            <div class="v-card-price-box">
-                                @if($product->flashSales->isNotEmpty())
-                                    @php 
-                                        $flashSale = $product->flashSales->first();
-                                        $flashPrice = $flashSale->pivot->price;
-                                        $originalPrice = $product->price;
-                                        $discount = $originalPrice > 0 ? round((($originalPrice - $flashPrice) / $originalPrice) * 100) : 0;
-                                    @endphp
-                                    <span class="v-current-price">{{ format_price($flashPrice) }}</span>
-                                    <span class="v-old-price">{{ format_price($originalPrice) }}</span>
-                                    <span class="v-discount-badge" style="background-color: #e74c3c; color: #fff;">
-                                        <i class="fa-solid fa-bolt"></i> {{ $flashSale->translation->name ?? 'عرض فلاش' }} (-{{ $discount }}%)
-                                    </span>
-                                @elseif($product->has_special_price)
-                                    <span class="v-current-price">{{ format_price($product->special_price) }}</span>
-                                    <span class="v-old-price">{{ format_price($product->price) }}</span>
-                                    <span class="v-discount-badge">{{ round((($product->price - $product->special_price) / $product->price) * 100) }}% خصم</span>
+                        <div class="product-info-box">
+                            <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-title">
+                                {{ $product->translation->name ?? 'منتج طبي' }}
+                            </a>
+
+                            <div class="product-price-box">
+                                @if($product->has_special_price)
+                                    <span class="current-price">{{ format_price($product->special_price) }}</span>
+                                    <span class="old-price">{{ format_price($product->price) }}</span>
                                 @else
-                                    <span class="v-current-price">{{ format_price($product->price) }}</span>
+                                    <span class="current-price">{{ format_price($product->price) }}</span>
                                 @endif
                             </div>
-                            @include('frontend.products.partials.rating_display', ['product' => $product])
-                        </div>
-                        <div class="v-card-actions">
-                            <button class="v-wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}" 
-                                    data-id="{{ $product->id }}" title="{{ trans_db('website.In Wishlist') }}">
-                                <i class="{{ in_array($product->id, $wishlistIds) ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
-                            </button>
-                            
-                            @if(isset($cartProducts[$product->id]))
-                                <div class="qty-control" data-id="{{ $product->id }}">
-                                    <button class="qty-btn plus" data-id="{{ $product->id }}">+</button>
-                                    <span class="qty-display">{{ $cartProducts[$product->id] }}</span>
-                                    <button class="qty-btn minus" data-id="{{ $product->id }}">-</button>
-                                </div>
-                            @else
-                                <button class="v-add-btn" data-id="{{ $product->id }}" title="{{ trans_db('website.Add to Cart') }}">
+
+                            <div class="product-rating">
+                                @php $rating = $product->ratings_avg_rating ?? 5; @endphp
+                                @for($i = 0; $i < 5; $i++)
+                                    <i class="{{ $i < $rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                @endfor
+                            </div>
+
+                            <div class="product-actions">
+                                <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
+                                <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
                                     <i class="fa-solid fa-cart-plus"></i>
                                 </button>
-                            @endif
+                            </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
             </div>
-        </div>
+        </section>
         @endif
-               
-                
 
-        <!-- Product Slider  -->
         @if(isset($latestProducts) && $latestProducts->count() > 0)
-        <!-- Latest Products Section -->
-        <div class="container">
-            <div class="latest-products-section">
-                <div class="section-header">
+        <!-- Medical Latest Products Section -->
+        <section class="medical-latest-products py-5">
+            <div class="container">
+                <div class="medical-section-header">
                     <h3>أحدث المنتجات</h3>
-                    <div class="d-flex align-items-center gap-2">
-                         <!-- Mobile View Toggles -->
-                         <div class="view-toggles d-md-none" style="display: flex; gap: 5px;">
-                            <button class="btn-view-toggle active" data-target=".latest-products-section .products-grid" data-view="grid" title="{{ trans_db('website.View') }} قائمة"><i class="fa-solid fa-list-ul"></i></button>
-                            <button class="btn-view-toggle" data-target=".latest-products-section .products-grid" data-view="horizontal" title="{{ trans_db('website.View') }} شريط"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
-                         </div>
-                        <a href="{{ url('ar/latest-products') }}">{{ trans_db('website.View') }} {{ trans_db('website.All') }} <i class="fa-solid fa-arrow-left"></i></a>
-                    </div>
+                    <a href="{{ url('ar/latest-products') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
-                
-                <!-- Search Input -->
-                <div class="vibe-mobile-cat-search d-md-none" style="display: block; margin-bottom: 15px;">
-                    <div class="vibe-cat-search-box">
-                        <input type="text" id="latestProductsSearch" class="vibe-cat-search-input" placeholder="بحث...">
-                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    </div>
-                </div>
-                
-                <div id="latest-products-no-results" class="vibe-no-results" style="display: none;">
-                    <i class="fa-regular fa-folder-open"></i>
-                    <p>لا توجد منتجات مطابقة للبحث</p>
-                </div>
-                
-                <div class="products-grid">
-                    @foreach($latestProducts as $product)
-                    <div class="v-card">
-                        <!-- Status Indicators (Always visible) -->
-                        <div class="v-status-indicators">
-                            @if(isset($cartProducts[$product->id]))
-                                <span class="v-status-dot cart-dot" title="{{ trans_db('website.In Cart') }}"><i class="fa-solid fa-check"></i></span>
-                            @endif
-                            @if(in_array($product->id, $wishlistIds))
-                                <span class="v-status-dot wish-dot" title="{{ trans_db('website.In Wishlist') }}"><i class="fa-solid fa-heart"></i></span>
-                            @endif
-                        </div>
-                        
-                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="v-card-img-link">
+
+                <div class="medical-products-grid">
+                    @foreach($latestProducts->take(8) as $product)
+                    <div class="medical-product-card">
+                        <span class="product-badge" style="background: #2ecc71;">وصل حديثاً</span>
+
+                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-image-box">
                             <img src="{{ asset($product->image) }}" alt="{{ $product->translation->name ?? 'Product' }}">
                         </a>
-                        <div class="v-card-content">
-                            <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="v-card-title" title="{{ $product->translation->name ?? '' }}">
-                                {{ $product->translation->name ?? trans_db('website.Untitled product') }}
-                            </a>
-                            
-                            @if($product->brand)
-                            <div class="v-card-author">
-                                <i class="fa-solid fa-pen-nib" style="color: #95a5a6; font-size: 11px;"></i> {{ $product->brand->translation->title ?? '' }}
-                            </div>
-                            @endif
 
-                            <div class="v-card-price-box">
-                                @if($product->flashSales->isNotEmpty())
-                                    @php 
-                                        $flashSale = $product->flashSales->first();
-                                        $flashPrice = $flashSale->pivot->price;
-                                        $originalPrice = $product->price;
-                                        $discount = $originalPrice > 0 ? round((($originalPrice - $flashPrice) / $originalPrice) * 100) : 0;
-                                    @endphp
-                                    <span class="v-current-price">{{ format_price($flashPrice) }}</span>
-                                    <span class="v-old-price">{{ format_price($originalPrice) }}</span>
-                                    <span class="v-discount-badge" style="background-color: #e74c3c; color: #fff;">
-                                        <i class="fa-solid fa-bolt"></i> {{ $flashSale->translation->name ?? 'عرض فلاش' }} (-{{ $discount }}%)
-                                    </span>
-                                @elseif($product->has_special_price)
-                                    <span class="v-current-price">{{ format_price($product->special_price) }}</span>
-                                    <span class="v-old-price">{{ format_price($product->price) }}</span>
-                                    <span class="v-discount-badge">{{ round((($product->price - $product->special_price) / $product->price) * 100) }}% خصم</span>
+                        <div class="product-info-box">
+                            <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-title">
+                                {{ $product->translation->name ?? 'منتج طبي' }}
+                            </a>
+
+                            <div class="product-price-box">
+                                @if($product->has_special_price)
+                                    <span class="current-price">{{ format_price($product->special_price) }}</span>
+                                    <span class="old-price">{{ format_price($product->price) }}</span>
                                 @else
-                                    <span class="v-current-price">{{ format_price($product->price) }}</span>
+                                    <span class="current-price">{{ format_price($product->price) }}</span>
                                 @endif
                             </div>
-                            @include('frontend.products.partials.rating_display', ['product' => $product])
-                        </div>
-                        <div class="v-card-actions">
-                            <button class="v-wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}" 
-                                    data-id="{{ $product->id }}" title="{{ trans_db('website.In Wishlist') }}">
-                                <i class="{{ in_array($product->id, $wishlistIds) ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
-                            </button>
-                            
-                            @if(isset($cartProducts[$product->id]))
-                                <div class="qty-control" data-id="{{ $product->id }}">
-                                    <button class="qty-btn plus" data-id="{{ $product->id }}">+</button>
-                                    <span class="qty-display">{{ $cartProducts[$product->id] }}</span>
-                                    <button class="qty-btn minus" data-id="{{ $product->id }}">-</button>
-                                </div>
-                            @else
-                                <button class="v-add-btn" data-id="{{ $product->id }}" title="{{ trans_db('website.Add to Cart') }}">
+
+                            <div class="product-rating">
+                                @php $rating = $product->ratings_avg_rating ?? 5; @endphp
+                                @for($i = 0; $i < 5; $i++)
+                                    <i class="{{ $i < $rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                @endfor
+                            </div>
+
+                            <div class="product-actions">
+                                <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
+                                <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
                                     <i class="fa-solid fa-cart-plus"></i>
                                 </button>
-                            @endif
+                            </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
             </div>
-        </div>
+        </section>
         @endif
+
               
 
         
