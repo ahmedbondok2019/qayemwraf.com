@@ -403,6 +403,32 @@
         background: var(--primary-color);
     }
 
+    /* Slider Navigation Custom Styles */
+    .cat-nav, .prod-nav {
+        background: #fff !important;
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 50% !important;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+        color: var(--primary-color) !important;
+        transition: all 0.3s !important;
+    }
+
+    .cat-nav::after, .prod-nav::after {
+        font-size: 18px !important;
+        font-weight: bold !important;
+    }
+
+    .cat-nav:hover, .prod-nav:hover {
+        background: var(--primary-color) !important;
+        color: #fff !important;
+    }
+
+    .medical-categories-swiper, .medical-products-swiper {
+        padding: 20px 5px !important;
+        margin: 0 -10px !important;
+    }
+
     @media (max-width: 991px) {
         .feature-item {
             border-left: none;
@@ -423,6 +449,208 @@
         }
         .slide-subtitle {
             font-size: 18px;
+        }
+    }
+    /* Why Choose Us Section */
+    .medical-why-us {
+        background: #fff;
+        border-radius: 30px;
+        padding: 60px 0;
+        margin: 50px 0;
+        box-shadow: var(--medical-card-shadow);
+        direction: rtl;
+        overflow: hidden;
+    }
+
+    .why-us-content {
+        padding: 20px 40px;
+    }
+
+    .why-us-tag {
+        color: var(--primary-color);
+        font-weight: 800;
+        font-size: 24px;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .why-us-title {
+        font-size: 32px;
+        font-weight: 900;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .why-us-desc {
+        font-size: 16px;
+        color: #7f8c8d;
+        line-height: 1.8;
+        margin-bottom: 40px;
+    }
+
+    .why-us-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        text-align: center;
+    }
+
+    .stat-item {
+        padding: 20px 10px;
+        border-left: 1px solid #f1f1f1;
+    }
+
+    .stat-item:last-child {
+        border-left: none;
+    }
+
+    .stat-icon {
+        font-size: 28px;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .stat-number {
+        font-size: 24px;
+        font-weight: 800;
+        color: #2c3e50;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        color: #95a5a6;
+    }
+
+    .why-us-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    /* Medical Brands Section */
+    .medical-brands-section {
+        padding: 50px 0;
+        background: #f8fbff;
+        direction: rtl;
+    }
+
+    .brand-item {
+        background: #fff;
+        padding: 20px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        transition: all 0.3s;
+        border: 1px solid #f1f1f1;
+    }
+
+    .brand-item:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transform: translateY(-5px);
+    }
+
+    .brand-item img {
+        max-width: 100%;
+        max-height: 100%;
+        filter: grayscale(1);
+        opacity: 0.6;
+        transition: all 0.3s;
+    }
+
+    .brand-item:hover img {
+        filter: grayscale(0);
+        opacity: 1;
+    }
+
+    /* Newsletter Section */
+    .medical-newsletter {
+        background: #1c4dad;
+        padding: 40px 0;
+        margin-top: 50px;
+        direction: rtl;
+    }
+
+    .newsletter-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+    }
+
+    .newsletter-text {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: #fff;
+    }
+
+    .newsletter-icon {
+        font-size: 40px;
+    }
+
+    .newsletter-text h3 {
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .newsletter-text p {
+        font-size: 14px;
+        margin: 0;
+        opacity: 0.8;
+    }
+
+    .newsletter-form {
+        flex: 1;
+        max-width: 500px;
+        display: flex;
+        gap: 10px;
+        background: #fff;
+        padding: 5px;
+        border-radius: 50px;
+    }
+
+    .newsletter-form input {
+        flex: 1;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 50px;
+        outline: none;
+        font-size: 14px;
+    }
+
+    .newsletter-form button {
+        background: #e98939;
+        color: #fff;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: all 0.3s;
+    }
+
+    .newsletter-form button:hover {
+        background: #d37628;
+    }
+
+    @media (max-width: 991px) {
+        .why-us-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-item:nth-child(2) {
+            border-left: none;
+        }
+        .newsletter-box {
+            flex-direction: column;
+            text-align: center;
+        }
+        .newsletter-text {
+            flex-direction: column;
         }
     }
 </style>
@@ -536,16 +764,22 @@
                     <a href="{{ url('ar/products') }}" class="view-all">عرض كل الفئات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
-                <div class="medical-cat-grid">
-                    @foreach($categories->take(6) as $category)
-                    <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}" class="medical-cat-card">
-                        <div class="medical-cat-icon-wrapper">
-                            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
+                <div class="swiper medical-categories-swiper">
+                    <div class="swiper-wrapper">
+                        @foreach($categories as $category)
+                        <div class="swiper-slide">
+                            <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}" class="medical-cat-card">
+                                <div class="medical-cat-icon-wrapper">
+                                    <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
+                                </div>
+                                <span class="medical-cat-title">{{ $category->name }}</span>
+                                <span class="medical-cat-count">{{ $category->products_count }} منتج</span>
+                            </a>
                         </div>
-                        <span class="medical-cat-title">{{ $category->name }}</span>
-                        <span class="medical-cat-count">{{ $category->products_count }} منتج</span>
-                    </a>
-                    @endforeach
+                        @endforeach
+                    </div>
+                    <div class="swiper-button-prev cat-nav"></div>
+                    <div class="swiper-button-next cat-nav"></div>
                 </div>
             </div>
         </section>
@@ -601,49 +835,55 @@
                     <a href="{{ url('ar/best-sellers') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
-                <div class="medical-products-grid">
-                    @foreach($bestSellers->take(8) as $product)
-                    <div class="medical-product-card">
-                        @if($product->flashSales->isNotEmpty() || $product->has_special_price)
-                            <span class="product-badge">خصم مميز</span>
-                        @else
-                            <span class="product-badge" style="background: var(--primary-color);">الأكثر مبيعاً</span>
-                        @endif
-
-                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-image-box">
-                            <img src="{{ asset($product->image) }}" alt="{{ $product->translation->name ?? 'Product' }}">
-                        </a>
-
-                        <div class="product-info-box">
-                            <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-title">
-                                {{ $product->translation->name ?? 'منتج طبي' }}
-                            </a>
-
-                            <div class="product-price-box">
-                                @if($product->has_special_price)
-                                    <span class="current-price">{{ format_price($product->special_price) }}</span>
-                                    <span class="old-price">{{ format_price($product->price) }}</span>
+                <div class="swiper medical-products-swiper">
+                    <div class="swiper-wrapper">
+                        @foreach($bestSellers as $product)
+                        <div class="swiper-slide">
+                            <div class="medical-product-card">
+                                @if($product->flashSales->isNotEmpty() || $product->has_special_price)
+                                    <span class="product-badge">خصم مميز</span>
                                 @else
-                                    <span class="current-price">{{ format_price($product->price) }}</span>
+                                    <span class="product-badge" style="background: var(--primary-color);">الأكثر مبيعاً</span>
                                 @endif
-                            </div>
 
-                            <div class="product-rating">
-                                @php $rating = $product->ratings_avg_rating ?? 5; @endphp
-                                @for($i = 0; $i < 5; $i++)
-                                    <i class="{{ $i < $rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
-                                @endfor
-                            </div>
+                                <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-image-box">
+                                    <img src="{{ asset($product->image) }}" alt="{{ $product->translation->name ?? 'Product' }}">
+                                </a>
 
-                            <div class="product-actions">
-                                <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
-                                <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
-                                    <i class="fa-solid fa-cart-plus"></i>
-                                </button>
+                                <div class="product-info-box">
+                                    <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-title">
+                                        {{ $product->translation->name ?? 'منتج طبي' }}
+                                    </a>
+
+                                    <div class="product-price-box">
+                                        @if($product->has_special_price)
+                                            <span class="current-price">{{ format_price($product->special_price) }}</span>
+                                            <span class="old-price">{{ format_price($product->price) }}</span>
+                                        @else
+                                            <span class="current-price">{{ format_price($product->price) }}</span>
+                                        @endif
+                                    </div>
+
+                                    <div class="product-rating">
+                                        @php $rating = $product->ratings_avg_rating ?? 5; @endphp
+                                        @for($i = 0; $i < 5; $i++)
+                                            <i class="{{ $i < $rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                        @endfor
+                                    </div>
+
+                                    <div class="product-actions">
+                                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
+                                        <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
+                                            <i class="fa-solid fa-cart-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    <div class="swiper-button-prev prod-nav"></div>
+                    <div class="swiper-button-next prod-nav"></div>
                 </div>
             </div>
         </section>
@@ -658,45 +898,51 @@
                     <a href="{{ url('ar/latest-products') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
-                <div class="medical-products-grid">
-                    @foreach($latestProducts->take(8) as $product)
-                    <div class="medical-product-card">
-                        <span class="product-badge" style="background: #2ecc71;">وصل حديثاً</span>
+                <div class="swiper medical-products-swiper">
+                    <div class="swiper-wrapper">
+                        @foreach($latestProducts as $product)
+                        <div class="swiper-slide">
+                            <div class="medical-product-card">
+                                <span class="product-badge" style="background: #2ecc71;">وصل حديثاً</span>
 
-                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-image-box">
-                            <img src="{{ asset($product->image) }}" alt="{{ $product->translation->name ?? 'Product' }}">
-                        </a>
+                                <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-image-box">
+                                    <img src="{{ asset($product->image) }}" alt="{{ $product->translation->name ?? 'Product' }}">
+                                </a>
 
-                        <div class="product-info-box">
-                            <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-title">
-                                {{ $product->translation->name ?? 'منتج طبي' }}
-                            </a>
+                                <div class="product-info-box">
+                                    <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-title">
+                                        {{ $product->translation->name ?? 'منتج طبي' }}
+                                    </a>
 
-                            <div class="product-price-box">
-                                @if($product->has_special_price)
-                                    <span class="current-price">{{ format_price($product->special_price) }}</span>
-                                    <span class="old-price">{{ format_price($product->price) }}</span>
-                                @else
-                                    <span class="current-price">{{ format_price($product->price) }}</span>
-                                @endif
-                            </div>
+                                    <div class="product-price-box">
+                                        @if($product->has_special_price)
+                                            <span class="current-price">{{ format_price($product->special_price) }}</span>
+                                            <span class="old-price">{{ format_price($product->price) }}</span>
+                                        @else
+                                            <span class="current-price">{{ format_price($product->price) }}</span>
+                                        @endif
+                                    </div>
 
-                            <div class="product-rating">
-                                @php $rating = $product->ratings_avg_rating ?? 5; @endphp
-                                @for($i = 0; $i < 5; $i++)
-                                    <i class="{{ $i < $rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
-                                @endfor
-                            </div>
+                                    <div class="product-rating">
+                                        @php $rating = $product->ratings_avg_rating ?? 5; @endphp
+                                        @for($i = 0; $i < 5; $i++)
+                                            <i class="{{ $i < $rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                        @endfor
+                                    </div>
 
-                            <div class="product-actions">
-                                <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
-                                <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
-                                    <i class="fa-solid fa-cart-plus"></i>
-                                </button>
+                                    <div class="product-actions">
+                                        <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
+                                        <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
+                                            <i class="fa-solid fa-cart-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    <div class="swiper-button-prev prod-nav"></div>
+                    <div class="swiper-button-next prod-nav"></div>
                 </div>
             </div>
         </section>
@@ -705,189 +951,100 @@
               
 
         
-                <!-- Product Slider  -->
-               @if(isset($brands) && $brands->count() > 0)
-        <!-- Brands Section -->
-        <div class="container">
-            <div class="vibe-brands-section">
-                <div class="vibe-brands-header">
-                    <h3>شركاء النجاح</h3>
-                    <a href="{{ url('ar/brands') }}">{{ trans_db('website.View') }} {{ trans_db('website.All') }} <i class="fa-solid fa-arrow-left"></i></a>
+        <!-- Why Choose Us Section -->
+        <section class="container">
+            <div class="medical-why-us">
+                <div class="row m-0 align-items-center">
+                    <div class="col-lg-5 p-0 d-none d-lg-block">
+                        <div class="why-us-image h-100">
+                            <img src="{{ asset('brain/d978b83b-87ff-4ee2-9a7f-5151734344dd/medical_building_modern_1778594759726.png') }}" alt="Medical Center">
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="why-us-content">
+                            <span class="why-us-tag">لماذا نحن؟</span>
+                            <h2 class="why-us-title">إيجي ميديكال مؤسسة رائدة في مجال الأجهزة والمستلزمات الطبية</h2>
+                            <p class="why-us-desc">نقدم منتجات عالية الجودة وحلول متكاملة تلبي احتياجات المستشفيات والعيادات في جميع أنحاء مصر، مع الالتزام بأعلى المعايير العالمية في الخدمة والضمان.</p>
+                            
+                            <div class="why-us-stats">
+                                <div class="stat-item">
+                                    <i class="fa-solid fa-box-open stat-icon"></i>
+                                    <span class="stat-number">+2000</span>
+                                    <span class="stat-label">منتج متنوع</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fa-solid fa-award stat-icon"></i>
+                                    <span class="stat-number">+10</span>
+                                    <span class="stat-label">سنين خبرة</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fa-solid fa-hospital stat-icon"></i>
+                                    <span class="stat-number">+500</span>
+                                    <span class="stat-label">مستشفى وعيادة</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fa-solid fa-headset stat-icon"></i>
+                                    <span class="stat-number">24/7</span>
+                                    <span class="stat-label">خدمة عملاء</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="swiper brands-swiper">
+            </div>
+        </section>
+
+        @if(isset($brands) && $brands->count() > 0)
+        <!-- Medical Brands Section -->
+        <section class="medical-brands-section py-5">
+            <div class="container">
+                <div class="medical-section-header">
+                    <h3>شركاؤنا في النجاح</h3>
+                    <a href="{{ url('ar/brands') }}" class="view-all">عرض كل الشركات <i class="fa-solid fa-angle-left"></i></a>
+                </div>
+
+                <div class="swiper medical-brands-swiper">
                     <div class="swiper-wrapper">
                         @foreach($brands as $brand)
-                        <div class="swiper-slide" style="width: auto;">
-                            <!-- Using text only as requested -->
-                            <a href="{{ route('frontend.products.index', ['brands[]' => $brand->id]) }}" class="vibe-brand-card">
-                                <span class="vibe-brand-name">{{ $brand->translation->title ?? 'Brand' }}</span>
-                                <span class="vibe-brand-dot"></span>
+                        <div class="swiper-slide">
+                            <a href="{{ route('frontend.products.index', ['brands[]' => $brand->id]) }}" class="brand-item">
+                                @if($brand->image)
+                                    <img src="{{ asset($brand->image) }}" alt="{{ $brand->translation->title ?? 'Brand' }}">
+                                @else
+                                    <span class="font-weight-bold text-muted">{{ $brand->translation->title ?? 'LOGO' }}</span>
+                                @endif
                             </a>
                         </div>
                         @endforeach
                     </div>
                 </div>
             </div>
-        </div>
-        @endif
-
-        
-
-
-        @if(isset($blogs) && $blogs->count() > 0)
-        <!-- Blogs Section -->
-        <section class="home-blogs-section py-5">
-            <div class="container">
-                <div class="vibe-section-header mb-4">
-                    <h2>أحدث المقالات</h2>
-                    <a href="{{ url('ar/blogs') }}" class="view-all">{{ trans_db('website.View') }} {{ trans_db('website.All') }} <i class="fa-solid fa-arrow-left"></i></a>
-                </div>
-                <div class="row">
-                    @foreach($blogs as $blog)
-                    <div class="col-6 col-lg-4 col-md-6 mb-4">
-                        <div class="blog-card-modern h-100 shadow-sm rounded-20 overflow-hidden bg-white">
-                            <div class="blog-img-wrapper position-relative" style="height: 220px;">
-                                @if($blog->BlogTranslation && $blog->BlogTranslation->image)
-                                    <img src="{{ asset($blog->BlogTranslation->image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $blog->BlogTranslation->title }}">
-                                @else
-                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fa-regular fa-image fa-3x"></i>
-                                    </div>
-                                @endif
-                                <div class="blog-date-badge position-absolute" style="top: 15px; right: 15px; background: rgba(0,0,0,0.6); color: white; padding: 5px 12px; border-radius: 50px; font-size: 0.8rem;">
-                                    {{ $blog->created_at->format('d M, Y') }}
-                                </div>
-                            </div>
-                            <div class="blog-content-wrapper p-4">
-                                @if($blog->category)
-                                <span class="badge mb-2" style="background: rgba(28, 77, 173, 0.1); color: #1c4dad;">{{ $blog->category->translation->title ?? '' }}</span>
-                                @endif
-                                <h4 class="blog-title font-weight-bold mb-3" style="line-height: 1.4; font-size: 1.25rem;">
-                                    <a href="{{ url('ar/blog/' . $blog->id . '/' . ($blog->BlogTranslation->slug ?? '')) }}" class="text-dark text-decoration-none hover-primary">
-                                        {{ $blog->BlogTranslation->title ?? 'بدون عنوان' }}
-                                    </a>
-                                </h4>
-                                <p class="blog-excerpt text-muted mb-4" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                    {{ strip_tags($blog->BlogTranslation->description ?? '') }}
-                                </p>
-                                <a href="{{ url('ar/blog/' . $blog->id . '/' . ($blog->BlogTranslation->slug ?? '')) }}" class="read-more-btn font-weight-bold" style="color: #e98939; text-decoration: none;">
-                                    إقرأ المزيد <i class="fa-solid fa-arrow-left ml-1" style="font-size: 0.8rem;"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
         </section>
         @endif
 
-        <!-- Extra Features -->
-  <div class="container features">
-    <div class="icon_boxes">
-     
-      <div class="details">
-        <!-- Extra Features: Vibe Style -->
-        <div class="container">
-            <!-- Desktop Layout -->
-            <div class="vibe-features-section d-none d-lg-flex">
-                <div class="vibe-feature-card">
-                    <div class="vibe-feature-icon">
-                        <i class="fa-solid fa-truck-fast"></i>
+        <!-- Newsletter Section -->
+        <section class="medical-newsletter">
+            <div class="container">
+                <div class="newsletter-box">
+                    <div class="newsletter-text">
+                        <div class="newsletter-icon">
+                            <i class="fa-regular fa-envelope-open"></i>
+                        </div>
+                        <div>
+                            <h3>اشترك في نشرتنا البريدية</h3>
+                            <p>احصل على أحدث العروض والمنتجات الجديدة مباشرة على بريدك</p>
+                        </div>
                     </div>
-                    <div class="vibe-feature-info">
-                        <h5 class="vibe-feature-title">شحن لحد البيت</h5>
-                        <p class="vibe-feature-desc">توصيل سريع وآ{{ trans_db('website.From') }} لباب {{ trans_db('website.From') }}زلك</p>
-                    </div>
-                </div>
-                
-                <div class="vibe-feature-card">
-                    <div class="vibe-feature-icon">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <div class="vibe-feature-info">
-                        <h5 class="vibe-feature-title">مدفوعات مضمونة</h5>
-                        <p class="vibe-feature-desc">استرجاع خلال 14 يوم (تطبق الشروط)</p>
-                    </div>
-                </div>
-                
-                <div class="vibe-feature-card">
-                    <div class="vibe-feature-icon">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
-                    <div class="vibe-feature-info">
-                        <h5 class="vibe-feature-title">دعم فنى متواصل</h5>
-                        <p class="vibe-feature-desc">خدمة عملاء مميزة على مدار الساعة</p>
-                    </div>
-                </div>
-                
-                <div class="vibe-feature-card">
-                    <div class="vibe-feature-icon">
-                        <i class="fa-regular fa-credit-card"></i>
-                    </div>
-                    <div class="vibe-feature-info">
-                        <h5 class="vibe-feature-title">طرق دفع متعددة</h5>
-                        <p class="vibe-feature-desc">ادفع كاش أو بالبطاقة أو تقسيط</p>
-                    </div>
+                    <form action="#" class="newsletter-form">
+                        <input type="email" placeholder="أدخل بريدك الإلكتروني..." required>
+                        <button type="submit">اشترك الآن</button>
+                    </form>
                 </div>
             </div>
+        </section>
 
-            <!-- Mobile Layout (Swiper Ticker) -->
-            <div class="vibe-features-section swiper icon-boxes-swiper d-lg-none">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide" style="width: auto;">
-                        <div class="vibe-feature-card">
-                            <div class="vibe-feature-icon">
-                                <i class="fa-solid fa-truck-fast"></i>
-                            </div>
-                            <div class="vibe-feature-info">
-                                <h5 class="vibe-feature-title">شحن لحد البيت</h5>
-                                <p class="vibe-feature-desc">توصيل سريع وآ{{ trans_db('website.From') }} لباب {{ trans_db('website.From') }}زلك</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="swiper-slide" style="width: auto;">
-                        <div class="vibe-feature-card">
-                            <div class="vibe-feature-icon">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
-                            <div class="vibe-feature-info">
-                                <h5 class="vibe-feature-title">مدفوعات مضمونة</h5>
-                                <p class="vibe-feature-desc">استرجاع خلال 14 يوم (تطبق الشروط)</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="swiper-slide" style="width: auto;">
-                        <div class="vibe-feature-card">
-                            <div class="vibe-feature-icon">
-                                <i class="fa-solid fa-headset"></i>
-                            </div>
-                            <div class="vibe-feature-info">
-                                <h5 class="vibe-feature-title">دعم فنى متواصل</h5>
-                                <p class="vibe-feature-desc">خدمة عملاء مميزة على مدار الساعة</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="swiper-slide" style="width: auto;">
-                        <div class="vibe-feature-card">
-                            <div class="vibe-feature-icon">
-                                <i class="fa-regular fa-credit-card"></i>
-                            </div>
-                            <div class="vibe-feature-info">
-                                <h5 class="vibe-feature-title">طرق دفع متعددة</h5>
-                                <p class="vibe-feature-desc">ادفع كاش أو بالبطاقة أو تقسيط</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
+
+
 
 
 @endsection
@@ -895,59 +1052,55 @@
 @push('js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('catSearchInput');
-        const grid = document.getElementById('vibeCategoryGrid');
-        const noResultsMsg = document.getElementById('no-categories-message');
+        // Categories Swiper
+        new Swiper('.medical-categories-swiper', {
+            slidesPerView: 2,
+            spaceBetween: 20,
+            rtl: true,
+            navigation: {
+                nextEl: '.medical-categories-section .swiper-button-next',
+                prevEl: '.medical-categories-section .swiper-button-prev',
+            },
+            breakpoints: {
+                640: { slidesPerView: 3 },
+                768: { slidesPerView: 4 },
+                1024: { slidesPerView: 6 },
+            }
+        });
 
-        if(searchInput) {
-            searchInput.addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                let hasResults = false;
-                const wrappers = grid.querySelectorAll('.vibe-cat-wrapper');
-
-                wrappers.forEach(wrapper => {
-                    const title = wrapper.querySelector('.vibe-cat-title').textContent.toLowerCase();
-                    if(title.includes(term)) {
-                        wrapper.style.display = 'block';
-                        hasResults = true;
-                    } else {
-                        wrapper.style.display = 'none';
-                    }
-                });
-
-                if(noResultsMsg) {
-                    noResultsMsg.style.display = hasResults ? 'none' : 'flex';
+        // Products Swipers
+        document.querySelectorAll('.medical-products-swiper').forEach(function(el) {
+            const section = el.closest('section');
+            new Swiper(el, {
+                slidesPerView: 1.2,
+                spaceBetween: 20,
+                rtl: true,
+                navigation: {
+                    nextEl: section.querySelector('.swiper-button-next'),
+                    prevEl: section.querySelector('.swiper-button-prev'),
+                },
+                breakpoints: {
+                    480: { slidesPerView: 2 },
+                    768: { slidesPerView: 3 },
+                    1024: { slidesPerView: 4 },
+                    1200: { slidesPerView: 5 },
                 }
             });
-        }
-
-        // Subcategory Search Logic
-        const subcatSearchInput = document.getElementById('subcatSearchInput');
-        const subcatGrid = document.getElementById('vibeSubcatGrid');
-        
-        if(subcatSearchInput && subcatGrid) {
-            const subcatCards = subcatGrid.querySelectorAll('.vibe-subcat-card');
-            const noSubcatsMsg = document.getElementById('no-subcats-message');
-
-            subcatSearchInput.addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                let hasResults = false;
-
-                subcatCards.forEach(card => {
-                    const title = card.querySelector('.vibe-subcat-title').textContent.toLowerCase();
-                    if(title.includes(term)) {
-                        card.style.display = 'flex';
-                        hasResults = true;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                if(noSubcatsMsg) {
-                    noSubcatsMsg.style.display = hasResults ? 'none' : 'flex';
-                }
-            });
-        }
+        // Brands Swiper
+        new Swiper('.medical-brands-swiper', {
+            slidesPerView: 2,
+            spaceBetween: 20,
+            rtl: true,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                640: { slidesPerView: 3 },
+                768: { slidesPerView: 4 },
+                1024: { slidesPerView: 6 },
+            }
+        });
     });
 </script>
 @endpush
