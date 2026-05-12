@@ -331,7 +331,8 @@
                                         @if($slider->translation && $slider->translation->button_text)
                                             <a href="{{ $slider->link ?? '#' }}" class="btn-primary-medical">{{ $slider->translation->button_text }}</a>
                                         @endif
-                                        <a href="{{ route('frontend.products.index') }}" class="btn-outline-medical">{{ trans_db('website.Products') }}</a>
+                                        <a href="{{ route('frontend.products.index') }}" class="btn-outline-medical">{{ trans_db('frontend.products') }}</a>
+
                                     </div>
                                 </div>
                             </div>

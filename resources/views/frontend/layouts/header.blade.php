@@ -25,16 +25,17 @@
         <div class="container d-flex justify-content-between align-items-center">
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-phone"></i>
-                <span>{{ trans_db('frontend.Customer Service') }}: {{ $Setting->phone ?? '01061734557' }}</span>
+                <span>{{ trans_db('frontend.Customer Care') }}: {{ $Setting->phone ?? '01061734557' }}</span>
             </div>
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-truck-fast"></i>
-                <span>{{ trans_db('website.Shipping to all governorates') }}</span>
+                <span>{{ trans_db('frontend.Shipping') }} لجميع المحافظات</span>
             </div>
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-shield-halved"></i>
-                <span>{{ trans_db('website.Real guarantee on all products') }}</span>
+                <span>ضمان حقيقي على جميع المنتجات</span>
             </div>
+
         </div>
     </div>
 
@@ -61,7 +62,7 @@
                         <li><a href="{{ route('frontend.index') }}" class="nav-link-custom active">{{ trans_db('frontend.Home') }}</a></li>
                         <li class="position-relative category-dropdown mega-dropdown">
                             <a href="javascript:void(0)" class="nav-link-custom d-flex align-items-center gap-1">
-                                {{ trans_db('website.Products') }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                                {{ trans_db('frontend.products') }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
                             </a>
                             <div class="elegant-dropdown-menu mega-menu">
                                 <div class="mega-menu-container">
@@ -84,10 +85,11 @@
                                 </div>
                             </div>
                         </li>
-                        <li><a href="{{ route('frontend.brands') }}" class="nav-link-custom">{{ trans_db('website.Sections') }}</a></li>
-                        <li><a href="{{ url('blogs') }}" class="nav-link-custom">{{ trans_db('website.Blog') }}</a></li>
-                        <li><a href="{{ url('about-us') }}" class="nav-link-custom">{{ trans_db('website.About Us') }}</a></li>
-                        <li><a href="{{ route('frontend.contact') }}" class="nav-link-custom">{{ trans_db('website.Contact Us') }}</a></li>
+                        <li><a href="{{ route('frontend.brands') }}" class="nav-link-custom">{{ trans_db('frontend.categories') }}</a></li>
+                        <li><a href="{{ url('blogs') }}" class="nav-link-custom">{{ trans_db('frontend.Blog') }}</a></li>
+                        <li><a href="{{ url('about-us') }}" class="nav-link-custom">{{ trans_db('website.About us') }}</a></li>
+                        <li><a href="{{ route('frontend.contact') }}" class="nav-link-custom">{{ trans_db('frontend.Contact Us') }}</a></li>
+
                     </ul>
                 </nav>
 
