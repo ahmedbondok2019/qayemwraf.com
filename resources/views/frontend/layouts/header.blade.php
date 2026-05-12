@@ -231,35 +231,41 @@
                 <li><a href="{{ route('frontend.index') }}" class="elegant-nav-link"><i
                             class="fa-solid fa-house-chimney"></i> الرئيسية</a></li>
                 
-                <li class="elegant-dropdown category-dropdown">
+                <li class="elegant-dropdown category-dropdown mega-dropdown">
                     <a href="javascript:void(0)" class="elegant-nav-link dropdown-toggle">
                         <i class="fa-solid fa-list-ul"></i> الفئات <i class="fa-solid fa-chevron-down ms-1" style="font-size: 10px;"></i>
                     </a>
-                    <div class="elegant-dropdown-menu">
-                        @foreach($main_categories as $cat)
-                            <div class="elegant-dropdown-item-wrapper">
-                                <a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" class="elegant-dropdown-item {{ $cat->children->count() > 0 ? 'has-children' : '' }}">
-                                    <i class="fa-solid fa-angle-left"></i> {{ $cat->name }}
-                                    @if($cat->children->count() > 0)
-                                        <i class="fa-solid fa-chevron-left ms-auto child-arrow"></i>
-                                    @endif
-                                </a>
-                                @if($cat->children->count() > 0)
-                                    <div class="elegant-child-menu">
-                                        <div class="elegant-child-menu-header">{{ $cat->name }}</div>
-                                        @foreach($cat->children as $child)
-                                            <a href="{{ route('frontend.products.index', ['category' => $child->translation->slug ?? 'category']) }}" class="elegant-child-item">
-                                                {{ $child->name }}
-                                            </a>
+                    <div class="elegant-dropdown-menu mega-menu">
+                        <div class="mega-menu-container">
+                            @foreach($main_categories as $cat)
+                                <div class="mega-column">
+                                    <a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" class="mega-title">
+                                        <i class="fa-solid fa-circle-chevron-left me-1"></i> {{ $cat->name }}
+                                    </a>
+                                    <ul class="mega-links">
+                                        @foreach($cat->children->take(12) as $child)
+                                            <li>
+                                                <a href="{{ route('frontend.products.index', ['category' => $child->translation->slug ?? 'category']) }}">
+                                                    {{ $child->name }}
+                                                </a>
+                                            </li>
                                         @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                        <hr class="dropdown-divider">
-                        <a href="{{ route('frontend.products.index') }}" class="elegant-dropdown-item text-primary fw-bold">
-                            <i class="fa-solid fa-grid-2"></i> عرض كل الأقسام
-                        </a>
+                                        @if($cat->children->count() > 12)
+                                            <li>
+                                                <a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" class="view-more">
+                                                    عرض الكل...
+                                                </a>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="mega-menu-footer">
+                            <a href="{{ route('frontend.products.index') }}" class="btn-all-categories">
+                                <i class="fa-solid fa-grid-2"></i> تصفح جميع الأقسام والمنتجات
+                            </a>
+                        </div>
                     </div>
                 </li>
 
