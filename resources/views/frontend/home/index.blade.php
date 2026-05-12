@@ -185,7 +185,123 @@
             flex: 0 0 280px;
         }
     }
+
+    /* Medical Slider Styles - Full Width Cover */
+    .medical-hero {
+        padding: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .medical-slider .swiper-slide {
+        height: 600px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #000;
+    }
+
+    .medical-slide-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.6;
+        z-index: 1;
+    }
+
+    .medical-slide-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: #fff;
+        max-width: 800px;
+        padding: 0 20px;
+    }
+
+    .slide-title {
+        font-size: 56px;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .slide-subtitle {
+        font-size: 22px;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+
+    .slide-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .btn-primary-medical {
+        background: var(--primary-gradient);
+        color: #fff !important;
+        padding: 15px 45px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 10px 25px rgba(28, 77, 173, 0.4);
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .btn-outline-medical {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        color: #fff !important;
+        padding: 15px 45px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        border: 2px solid #fff;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary-medical:hover, .btn-outline-medical:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .custom-nav {
+        color: #fff !important;
+        width: 60px;
+        height: 60px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(5px);
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+
+    .custom-nav:hover {
+        background: var(--primary-color);
+    }
+
+    @media (max-width: 991px) {
+        .medical-slider .swiper-slide {
+            height: 450px;
+        }
+        .slide-title {
+            font-size: 36px;
+        }
+        .slide-subtitle {
+            font-size: 18px;
+        }
+    }
 </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 @endpush
 
 @section('content')
@@ -194,44 +310,41 @@
     <div class="home-page">
         
         
-        <div class="vibe-hero-section">
-            <div class="container">
-                <!-- Hero Slider -->
-                <div class="vibe-main-slider">
-                    <div class="swiper main-swiper">
-                        <div class="swiper-wrapper">
-                            @foreach($sliders as $slider)
-                            <div class="swiper-slide">
-                                <a href="{{ $slider->link ?? url('/') }}" class="vibe-slider-link">
-                                    <div class="vibe-slide-image-wrapper">
-                                        <img src="{{ asset($slider->image) }}" alt="{{ $slider->translation->title ?? '' }}" />
-                                        <div class="vibe-overlay"></div>
-                                    </div>
-                                    
-                                    @if($slider->translation && ($slider->translation->title || $slider->translation->subtitle || $slider->translation->button_text))
-                                    <div class="vibe-slider-content">
-                                        @if($slider->translation->title)
-                                        <h2 class="vibe-slider-title">{{ $slider->translation->title }}</h2>
-                                        @endif
-                                        
-                                        @if($slider->translation->subtitle)
-                                        <p class="vibe-slider-subtitle">{{ $slider->translation->subtitle }}</p>
-                                        @endif
-                                        
-                                        @if($slider->translation->button_text)
-                                        <span class="vibe-slider-btn">{{ $slider->translation->button_text }} <i class="fa-solid fa-arrow-left"></i></span>
-                                        @endif
-                                    </div>
+        <div class="vibe-hero-section medical-hero">
+            <div class="vibe-main-slider medical-slider">
+                <div class="swiper main-swiper">
+                    <div class="swiper-wrapper">
+                        @foreach($sliders as $slider)
+                        <div class="swiper-slide">
+                            <img src="{{ asset($slider->image) }}" alt="{{ $slider->translation->title ?? '' }}" class="medical-slide-bg" />
+                            <div class="container position-relative" style="z-index: 2;">
+                                <div class="medical-slide-content mx-auto">
+                                    @if($slider->translation && $slider->translation->title)
+                                        <h2 class="slide-title animate__animated animate__fadeInUp">{{ $slider->translation->title }}</h2>
                                     @endif
-                                </a>
+                                    
+                                    @if($slider->translation && $slider->translation->subtitle)
+                                        <p class="slide-subtitle animate__animated animate__fadeInUp animate__delay-1s">{{ $slider->translation->subtitle }}</p>
+                                    @endif
+                                    
+                                    <div class="slide-actions animate__animated animate__fadeInUp animate__delay-2s">
+                                        @if($slider->translation && $slider->translation->button_text)
+                                            <a href="{{ $slider->link ?? '#' }}" class="btn-primary-medical">{{ $slider->translation->button_text }}</a>
+                                        @endif
+                                        <a href="{{ route('frontend.products.index') }}" class="btn-outline-medical">{{ trans_db('website.Products') }}</a>
+                                    </div>
+                                </div>
                             </div>
-                            @endforeach
                         </div>
-                        <div class="swiper-pagination"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
+                        @endforeach
                     </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev custom-nav"></div>
+                    <div class="swiper-button-next custom-nav"></div>
                 </div>
+            </div>
+        </div>
+
 
                 <!-- Offers Horizontal Scroll -->
                 @if(isset($offers) && $offers->count() > 0)
