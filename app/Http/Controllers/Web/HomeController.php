@@ -61,6 +61,7 @@ class HomeController extends Controller
         $brands = ProductBrand::active()->orderBy('sort_order')->get();
 
         $bestSellers = \App\Models\Product::active()
+            ->where('show_on_home', 1)
             ->where('is_best_seller', true)
             ->where(function($q) {
                 $q->whereNull('best_seller_start')
@@ -80,6 +81,7 @@ class HomeController extends Controller
             ->get();
 
         $latestProducts = \App\Models\Product::active()
+            ->where('show_on_home', 1)
             ->latest()
             ->with(['translation', 'flashSales' => function($q) {
                 $q->where('start_at', '<=', now())

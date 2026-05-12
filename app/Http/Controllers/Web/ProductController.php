@@ -52,13 +52,19 @@ class ProductController extends Controller
 
         // Filter by Category Slug
         $category = null;
+        if (!$category_slug && $request->filled('category')) {
+            $category_slug = $request->category;
+        }
+
         if ($category_slug) {
             $category = \App\Models\Category::whereHas('translations', function ($q) use ($category_slug) {
                 $q->where('slug', $category_slug);
-            })->with('translation')->firstOrFail();
+            })->with('translation', 'children')->firstOrFail();
 
-            $query->whereHas('categories', function ($q) use ($category) {
-                $q->where('categories.id', $category->id);
+            $categoryIds = $category->children->pluck('id')->push($category->id)->toArray();
+
+            $query->whereHas('categories', function ($q) use ($categoryIds) {
+                $q->whereIn('id', $categoryIds);
             });
         }
 
