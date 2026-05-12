@@ -47,6 +47,9 @@ class HomeController extends Controller
         
         $categories = Category::active()
             ->whereNull('parent_id')
+            ->with(['children' => function($q) {
+                $q->active()->with(['translation'])->withCount('products');
+            }])
             ->withCount('products')
             ->orderBy('sort_order')
             ->get();

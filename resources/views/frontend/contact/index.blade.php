@@ -22,7 +22,7 @@
                                     <i class="fa-solid fa-location-dot"></i>
                                     <div>
                                         <h5>{{ trans_db('frontend.Address') }}</h5>
-                                        <p>{{ $Setting->address ?? 'Cairo, Egypt' }}</p>
+                                        <p>{{ $Setting->translate('address') ?? 'Cairo, Egypt' }}</p>
                                     </div>
                                 </div>
 

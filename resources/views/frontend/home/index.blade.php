@@ -1,4 +1,193 @@
 @extends('frontend.layouts.master')
+
+@push('css')
+<style>
+    .vibe-category-grid {
+        overflow: visible !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .vibe-cat-wrapper {
+        position: relative;
+        flex: 0 0 420px;
+        perspective: 1000px;
+    }
+
+    .vibe-cat-img-wrapper {
+        flex: 0 0 160px !important;
+        height: 160px !important;
+    }
+
+    .vibe-cat-title {
+        font-size: 22px !important;
+    }
+
+    .vibe-cat-card {
+        width: 100%;
+        margin-bottom: 0;
+        z-index: 2;
+    }
+
+    .vibe-cat-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 5px;
+    }
+
+    .vibe-cat-has-children {
+        font-size: 11px;
+        color: rgba(255,255,255,0.8);
+        background: rgba(255,255,255,0.1);
+        padding: 2px 10px;
+        border-radius: 50px;
+        display: inline-block;
+        width: fit-content;
+    }
+
+    /* Mega Menu Styling */
+    .vibe-cat-mega-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 450px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        padding: 25px;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px) rotateX(-10deg);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transform-origin: top right;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .vibe-cat-wrapper:hover .vibe-cat-mega-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(10px) rotateX(0);
+    }
+
+    .vibe-mega-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed #eee;
+    }
+
+    .vibe-mega-header h4 {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin: 0;
+    }
+
+    .vibe-mega-header a {
+        font-size: 12px;
+        color: #888;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .vibe-mega-header a:hover {
+        color: var(--secondary-color);
+    }
+
+    .vibe-mega-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        max-height: 350px;
+        overflow-y: auto;
+        padding-left: 5px;
+    }
+
+    .vibe-mega-grid::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .vibe-mega-grid::-webkit-scrollbar-thumb {
+        background: #eee;
+        border-radius: 10px;
+    }
+
+    .vibe-mega-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .vibe-mega-item:hover {
+        background: #fff;
+        border-color: var(--primary-color);
+        transform: translateX(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .vibe-mega-img {
+        width: 45px;
+        height: 45px;
+        background: #fff;
+        border-radius: 10px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .vibe-mega-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .vibe-mega-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .vibe-mega-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .vibe-mega-count {
+        font-size: 11px;
+        color: #999;
+    }
+
+    @media (max-width: 768px) {
+        .vibe-category-grid {
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            overflow-x: auto !important;
+        }
+
+        .vibe-cat-mega-menu {
+            display: none; /* We can implement a drawer or click-based for mobile if needed */
+        }
+        
+        .vibe-cat-wrapper {
+            flex: 0 0 280px;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 
     
@@ -119,15 +308,46 @@
                         <p>لا توجد فئات مطابقة للبحث</p>
                     </div>
                     @foreach($categories as $category)
-                    <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}" class="vibe-cat-card">
-                        <div class="vibe-cat-img-wrapper">
-                            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
+                    <div class="vibe-cat-wrapper">
+                        <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}" class="vibe-cat-card">
+                            <div class="vibe-cat-img-wrapper">
+                                <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
+                            </div>
+                            <div class="vibe-cat-info">
+                                <span class="vibe-cat-title">{{ $category->name }}</span>
+                                <div class="vibe-cat-stats">
+                                    <span class="vibe-cat-count">{{ $category->products_count }} {{ trans_db('website.book') }}</span>
+                                    @if($category->children->count() > 0)
+                                        <span class="vibe-cat-has-children"><i class="fa-solid fa-layer-group"></i> {{ $category->children->count() }} {{ trans_db('website.Section') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                        
+                        @if($category->children->count() > 0)
+                        <div class="vibe-cat-mega-menu">
+                            <div class="vibe-mega-inner">
+                                <div class="vibe-mega-header">
+                                    <h4>{{ trans_db('website.Sub Sections') }} : {{ $category->name }}</h4>
+                                    <a href="{{ url('ar/products/' . ($category->translation->slug ?? '')) }}">{{ trans_db('website.View All') }} <i class="fa-solid fa-arrow-left"></i></a>
+                                </div>
+                                <div class="vibe-mega-grid">
+                                    @foreach($category->children as $child)
+                                    <a href="{{ url('ar/products/' . ($child->translation->slug ?? '')) }}" class="vibe-mega-item">
+                                        <div class="vibe-mega-img">
+                                            <img src="{{ asset($child->image) }}" alt="{{ $child->name }}">
+                                        </div>
+                                        <div class="vibe-mega-info">
+                                            <span class="vibe-mega-title">{{ $child->name }}</span>
+                                            <span class="vibe-mega-count">{{ $child->products_count }} {{ trans_db('website.Product') }}</span>
+                                        </div>
+                                    </a>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
-                        <div class="vibe-cat-info">
-                            <span class="vibe-cat-title">{{ $category->name }}</span>
-                            <span class="vibe-cat-count">{{ $category->products_count }} {{ trans_db('website.book') }}</span>
-                        </div>
-                    </a>
+                        @endif
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -580,21 +800,21 @@
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('catSearchInput');
         const grid = document.getElementById('vibeCategoryGrid');
-        const cards = grid.querySelectorAll('.vibe-cat-card');
         const noResultsMsg = document.getElementById('no-categories-message');
 
         if(searchInput) {
             searchInput.addEventListener('input', function(e) {
                 const term = e.target.value.toLowerCase();
                 let hasResults = false;
+                const wrappers = grid.querySelectorAll('.vibe-cat-wrapper');
 
-                cards.forEach(card => {
-                    const title = card.querySelector('.vibe-cat-title').textContent.toLowerCase();
+                wrappers.forEach(wrapper => {
+                    const title = wrapper.querySelector('.vibe-cat-title').textContent.toLowerCase();
                     if(title.includes(term)) {
-                        card.style.display = 'flex';
+                        wrapper.style.display = 'block';
                         hasResults = true;
                     } else {
-                        card.style.display = 'none';
+                        wrapper.style.display = 'none';
                     }
                 });
 

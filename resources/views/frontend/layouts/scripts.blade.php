@@ -480,6 +480,27 @@
                 }
             });
         });
+
+        // Mobile Inner Submenu Toggle
+        const innerSubmenuToggles = document.querySelectorAll('.mobile-inner-toggle');
+        innerSubmenuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                const submenu = this.nextElementSibling;
+                if (submenu && submenu.classList.contains('mobile-inner-submenu')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const arrow = this.querySelector('i.fa-chevron-down');
+                    
+                    if (submenu.style.display === 'none') {
+                        submenu.style.display = 'block';
+                        if (arrow) arrow.style.transform = 'rotate(180deg)';
+                    } else {
+                        submenu.style.display = 'none';
+                        if (arrow) arrow.style.transform = 'rotate(0)';
+                    }
+                }
+            });
+        });
     });
 </script>
 

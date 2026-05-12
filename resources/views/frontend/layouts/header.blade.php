@@ -1,5 +1,11 @@
 @php
-    $main_categories = \App\Models\Category::whereNull('parent_id')->active()->take(10)->get();
+    $main_categories = \App\Models\Category::whereNull('parent_id')
+        ->active()
+        ->with(['children' => function($q) {
+            $q->active()->with('translation');
+        }])
+        ->take(10)
+        ->get();
 @endphp
 
 <div class="elegant-fixed-top">
@@ -181,7 +187,21 @@
                                 الفئات <i class="fa-solid fa-chevron-down ms-auto arrow-icon"></i></a>
                             <ul class="mobile-submenu" style="display: none; list-style: none; padding-right: 20px; background: #f9f9f9;">
                                 @foreach($main_categories ?? [] as $cat)
-                                    <li><a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" style="padding: 10px; font-size: 13px;">{{ $cat->name }}</a></li>
+                                    <li class="{{ $cat->children->count() > 0 ? 'mobile-has-inner-submenu' : '' }}">
+                                        <a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" class="{{ $cat->children->count() > 0 ? 'mobile-inner-toggle' : '' }}" style="padding: 10px; font-size: 13px; display: flex; align-items: center;">
+                                            {{ $cat->name }}
+                                            @if($cat->children->count() > 0)
+                                                <i class="fa-solid fa-chevron-down ms-auto" style="font-size: 10px; transition: transform 0.3s;"></i>
+                                            @endif
+                                        </a>
+                                        @if($cat->children->count() > 0)
+                                            <ul class="mobile-inner-submenu" style="display: none; list-style: none; padding-right: 15px; border-right: 1px solid #eee;">
+                                                @foreach($cat->children as $child)
+                                                    <li><a href="{{ route('frontend.products.index', ['category' => $child->translation->slug ?? 'category']) }}" style="padding: 8px; font-size: 12px; color: #777;">{{ $child->name }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
                                 @endforeach
                             </ul>
                         </li>
@@ -211,15 +231,30 @@
                 <li><a href="{{ route('frontend.index') }}" class="elegant-nav-link"><i
                             class="fa-solid fa-house-chimney"></i> الرئيسية</a></li>
                 
-                <li class="elegant-dropdown">
+                <li class="elegant-dropdown category-dropdown">
                     <a href="javascript:void(0)" class="elegant-nav-link dropdown-toggle">
                         <i class="fa-solid fa-list-ul"></i> الفئات <i class="fa-solid fa-chevron-down ms-1" style="font-size: 10px;"></i>
                     </a>
                     <div class="elegant-dropdown-menu">
                         @foreach($main_categories as $cat)
-                            <a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" class="elegant-dropdown-item">
-                                <i class="fa-solid fa-angle-left"></i> {{ $cat->name }}
-                            </a>
+                            <div class="elegant-dropdown-item-wrapper">
+                                <a href="{{ route('frontend.products.index', ['category' => $cat->translation->slug ?? 'category']) }}" class="elegant-dropdown-item {{ $cat->children->count() > 0 ? 'has-children' : '' }}">
+                                    <i class="fa-solid fa-angle-left"></i> {{ $cat->name }}
+                                    @if($cat->children->count() > 0)
+                                        <i class="fa-solid fa-chevron-left ms-auto child-arrow"></i>
+                                    @endif
+                                </a>
+                                @if($cat->children->count() > 0)
+                                    <div class="elegant-child-menu">
+                                        <div class="elegant-child-menu-header">{{ $cat->name }}</div>
+                                        @foreach($cat->children as $child)
+                                            <a href="{{ route('frontend.products.index', ['category' => $child->translation->slug ?? 'category']) }}" class="elegant-child-item">
+                                                {{ $child->name }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
                         @endforeach
                         <hr class="dropdown-divider">
                         <a href="{{ route('frontend.products.index') }}" class="elegant-dropdown-item text-primary fw-bold">
