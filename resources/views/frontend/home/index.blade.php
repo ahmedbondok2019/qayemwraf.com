@@ -602,7 +602,7 @@
             </div>
         </section>
         @endif
-
+{{--  --}}
         <!-- Product Slider  -->        @if(isset($bestSellers) && $bestSellers->count() > 0)
         <!-- Medical Best Sellers Section -->
         <section class="medical-best-sellers py-5" style="background: var(--medical-bg);">
