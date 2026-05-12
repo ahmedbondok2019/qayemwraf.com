@@ -879,7 +879,7 @@
                 <div class="row m-0 align-items-center">
                     <div class="col-lg-5 p-0 d-none d-lg-block">
                         <div class="why-us-image h-100">
-                            <img src="{{ asset('brain/d978b83b-87ff-4ee2-9a7f-5151734344dd/medical_building_modern_1778594759726.png') }}" alt="Medical Center">
+                            <img src="{{ asset('frontend/images/medical_building.png') }}" alt="Medical Center">
                         </div>
                     </div>
                     <div class="col-lg-7">
