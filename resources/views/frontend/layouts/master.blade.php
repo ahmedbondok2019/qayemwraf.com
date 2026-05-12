@@ -20,7 +20,7 @@
     <div class="overlay"></div>
 
     <div class="icons-social-media-global">
-        <a href="https://api.whatsapp.com/send/?phone=&text=السلام عليكم" class="whats"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://api.whatsapp.com/send/?phone={{ $Setting->whatsapp }}&text=السلام عليكم" class="whats"><i class="fa-brands fa-whatsapp"></i></a>
     </div>
     
     @include('frontend.layouts.header')
