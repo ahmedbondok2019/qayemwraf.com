@@ -20,7 +20,15 @@
     <div class="overlay"></div>
 
     <div class="icons-social-media-global">
-        <a href="https://api.whatsapp.com/send/?phone={{ $Setting->whatsapp }}&text=السلام عليكم" class="whats"><i class="fa-brands fa-whatsapp"></i></a>
+        @php
+            $wa_phone = preg_replace('/[^0-9]/', '', $Setting->whatsapp ?? '');
+            if (strpos($wa_phone, '0') === 0 && strpos($wa_phone, '20') !== 0) {
+                $wa_phone = '20' . substr($wa_phone, 1);
+            }
+        @endphp
+        <a href="https://wa.me/{{ $wa_phone }}?text={{ urlencode('السلام عليكم') }}" class="whats" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
     </div>
     
     @include('frontend.layouts.header')
