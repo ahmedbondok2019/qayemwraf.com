@@ -21,7 +21,7 @@
 
 <div class="elegant-fixed-top">
     <!-- Top Bar -->
-    <div class="elegant-top-bar">
+    <div class="elegant-top-bar" style="background: var(--primary-color); color: #fff; padding: 5px 0; font-size: 13px;">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-phone"></i>
@@ -40,7 +40,7 @@
     </div>
 
     <header class="elegant-header">
-        <div class="container d-flex align-items-center justify-content-between py-1">
+        <div class="container d-flex align-items-center justify-content-between py-2">
             
             <!-- Logo Right -->
             <div class="header-right d-flex align-items-center gap-3">
@@ -93,7 +93,7 @@
                     </ul>
                 </nav>
 
-                <form action="{{ route('frontend.products.index') }}" method="get" class="elegant-search-form position-relative flex-grow-1" style="max-width: 250px;">
+                <form action="{{ route('frontend.products.index') }}" method="get" class="elegant-search-form position-relative flex-grow-1" style="max-width: 400px;">
                     <input type="search" name="search" id="headerSearch" class="elegant-search-input"
                         placeholder="ابحث هنا..." autocomplete="off" required 
                         style="padding-left: 40px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; height: 40px; font-size: 13px;">
