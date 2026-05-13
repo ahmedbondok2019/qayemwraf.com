@@ -331,6 +331,10 @@
 
 
 
+    .medical-slider .swiper-pagination {
+        bottom: 60px !important;
+    }
+
     .medical-slide-content {
         position: relative;
         z-index: 10;
@@ -446,6 +450,9 @@
         }
         .medical-slider .swiper-slide {
             height: 400px;
+        }
+        .medical-slider .swiper-pagination {
+            bottom: 30px !important;
         }
         .slide-title {
             font-size: 36px;
