@@ -310,12 +310,12 @@
     }
 
     .medical-slider .swiper-slide {
-        height: 600px;
+        height: 480px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #000;
+        background-color: #fff;
     }
 
     .medical-slide-bg {
@@ -325,13 +325,24 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.6;
+        opacity: 1;
         z-index: 1;
+    }
+
+    .medical-slider .swiper-slide::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+        z-index: 2;
     }
 
     .medical-slide-content {
         position: relative;
-        z-index: 2;
+        z-index: 10;
         text-align: center;
         color: #fff;
         max-width: 800px;
@@ -442,7 +453,7 @@
             margin-top: 20px;
         }
         .medical-slider .swiper-slide {
-            height: 450px;
+            height: 350px;
         }
         .slide-title {
             font-size: 36px;
@@ -595,7 +606,7 @@
                         @foreach($sliders as $slider)
                         <div class="swiper-slide">
                             <img src="{{ asset($slider->image) }}" alt="{{ $slider->translation->title ?? '' }}" class="medical-slide-bg" />
-                            <div class="container position-relative" style="z-index: 2;">
+                            <div class="container position-relative" style="z-index: 10;">
                                 <div class="medical-slide-content mx-auto">
                                     @if($slider->translation && $slider->translation->title)
                                         <h2 class="slide-title animate__animated animate__fadeInUp">{{ $slider->translation->title }}</h2>
