@@ -127,17 +127,19 @@ class CategoryController extends Controller
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $title = $request->input("title_$localeCode");
             
-            CategoryTranslation::updateOrCreate(
-                ['category_id' => $category->id, 'locale' => $localeCode],
-                [
-                    'title' => $title,
-                    'slug' => Str::slug($title ?? ''),
-                    'description' => $request->input("description_$localeCode"),
-                    'meta_title' => $request->input("meta_title_$localeCode"),
-                    'meta_description' => $request->input("meta_description_$localeCode"),
-                    'meta_keywords' => $request->input("meta_keywords_$localeCode"),
-                ]
-            );
+            if ($title) {
+                CategoryTranslation::updateOrCreate(
+                    ['category_id' => $category->id, 'locale' => $localeCode],
+                    [
+                        'title' => $title,
+                        'slug' => Str::slug($title),
+                        'description' => $request->input("description_$localeCode"),
+                        'meta_title' => $request->input("meta_title_$localeCode"),
+                        'meta_description' => $request->input("meta_description_$localeCode"),
+                        'meta_keywords' => $request->input("meta_keywords_$localeCode"),
+                    ]
+                );
+            }
         }
 
         return redirect()->route('admin.categories.index')->with('success', trans_db('dashboard.Category updated successfully.'));
