@@ -329,16 +329,7 @@
         z-index: 1;
     }
 
-    .medical-slider .swiper-slide::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
-        z-index: 2;
-    }
+
 
     .medical-slide-content {
         position: relative;
@@ -355,14 +346,15 @@
         color: #fff;
         margin-bottom: 20px;
         line-height: 1.2;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        text-shadow: 0 4px 15px rgba(0,0,0,0.6);
     }
 
     .slide-subtitle {
         font-size: 22px;
-        color: rgba(255,255,255,0.9);
+        color: #fff;
         margin-bottom: 40px;
         line-height: 1.6;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
 
     .slide-actions {
