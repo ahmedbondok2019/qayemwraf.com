@@ -7,7 +7,7 @@
     $emptyStars = 5 - $fullStars - $halfStar;
 @endphp
 
-<div class="rating-display" style="color: #f1c40f; font-size: 12px;" title="{{ $average }} / 5">
+<div class="rating-display" style="color: #ff9800; font-size: 12px;" title="{{ $average }} / 5">
     @for($i = 0; $i < $fullStars; $i++)
         <i class="fa-solid fa-star"></i>
     @endfor

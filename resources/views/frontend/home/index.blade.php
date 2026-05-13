@@ -256,7 +256,7 @@
     }
 
     .product-rating {
-        color: #f1c40f;
+        color: #ff9800;
         font-size: 12px;
         margin-bottom: 15px;
     }

@@ -402,7 +402,7 @@
     .rating-input label:hover,
     .rating-input label:hover ~ label,
     .rating-input input:checked ~ label {
-        color: #ffc107;
+        color: #ff9800;
     }
 </style>
 @endpush
