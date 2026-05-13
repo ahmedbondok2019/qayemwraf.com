@@ -274,6 +274,15 @@
         box-shadow: 0 8px 25px rgba(28, 188, 236, 0.4);
         background: #15a9d6;
     }
+    
+    .btn-add-to-cart:disabled, .btn-buy-now:disabled {
+        background: #e9ecef !important;
+        color: #adb5bd !important;
+        border-color: #dee2e6 !important;
+        cursor: not-allowed !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
 
     /* Meta Specs */
     .product-specs {
@@ -488,12 +497,12 @@
                                 <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
                             </div>
                             
-                            <button class="btn-add-to-cart add-to-cart-btn" onclick="addToCart({{ $product->id }})">
+                            <button class="btn-add-to-cart add-to-cart-btn" onclick="addToCart({{ $product->id }})" {{ !($product->quantity > 0 || $product->ignore_quantity) ? 'disabled' : '' }}>
                                 <i class="fas fa-shopping-basket"></i>
                                 <span>{{ isset($cartProducts[$product->id]) ? (trans_db('frontend.in_cart') ?? 'In Cart') : (trans_db('frontend.add_to_cart') ?? 'Add to Cart') }}</span>
                             </button>
 
-                            <button class="btn-buy-now ml-2" onclick="buyNow({{ $product->id }})">
+                            <button class="btn-buy-now ml-2" onclick="buyNow({{ $product->id }})" {{ !($product->quantity > 0 || $product->ignore_quantity) ? 'disabled' : '' }}>
                                 <i class="fas fa-bolt"></i>
                                 <span>{{ trans_db('frontend.buy_now') ?? 'Buy Now' }}</span>
                             </button>

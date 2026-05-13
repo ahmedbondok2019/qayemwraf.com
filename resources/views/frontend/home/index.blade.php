@@ -805,7 +805,7 @@
 
                                     <div class="product-actions">
                                         <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
-                                        <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
+                                        <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}" {{ !($product->quantity > 0 || $product->ignore_quantity) ? 'disabled title="غير متوفر"' : '' }}>
                                             <i class="fa-solid fa-cart-plus"></i>
                                         </button>
                                     </div>
@@ -864,7 +864,7 @@
 
                                     <div class="product-actions">
                                         <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">عرض التفاصيل</a>
-                                        <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}">
+                                        <button class="btn-add-cart add-to-cart" data-id="{{ $product->id }}" {{ !($product->quantity > 0 || $product->ignore_quantity) ? 'disabled title="غير متوفر"' : '' }}>
                                             <i class="fa-solid fa-cart-plus"></i>
                                         </button>
                                     </div>
