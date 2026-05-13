@@ -159,8 +159,8 @@
 
     .medical-cat-count {
         font-size: 12px;
-        color: var(--primary-color);
-        background: #eff6ff;
+        color: #ff9800;
+        background: #fff5e6;
         padding: 4px 12px;
         border-radius: 50px;
         font-weight: 700;
