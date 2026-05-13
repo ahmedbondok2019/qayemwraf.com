@@ -310,7 +310,7 @@
     }
 
     .medical-slider .swiper-slide {
-        height: 480px;
+        height: 550px;
         position: relative;
         display: flex;
         align-items: center;
@@ -445,7 +445,7 @@
             margin-top: 20px;
         }
         .medical-slider .swiper-slide {
-            height: 350px;
+            height: 400px;
         }
         .slide-title {
             font-size: 36px;
