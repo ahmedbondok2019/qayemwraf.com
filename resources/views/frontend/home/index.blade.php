@@ -835,7 +835,7 @@
                         @foreach($latestProducts as $product)
                         <div class="swiper-slide">
                             <div class="medical-product-card">
-                                <span class="product-badge" style="background: #2ecc71;">وصل حديثاً</span>
+                                <span class="product-badge" style="background: #ff9800;">وصل حديثاً</span>
 
                                 <a href="{{ url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="product-image-box">
                                     <img src="{{ asset($product->image) }}" alt="{{ $product->translation->name ?? 'Product' }}">
