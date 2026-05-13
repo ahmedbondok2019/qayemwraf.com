@@ -48,6 +48,13 @@ class ProductController extends Controller
 
     public function index(Request $request, $category_slug = null)
     {
+        // Handle named routes for filtering
+        if (Route::currentRouteName() == 'frontend.latest-products') {
+            $request->merge(['sort' => 'latest']);
+        } elseif (Route::currentRouteName() == 'frontend.best-sellers') {
+            $request->merge(['best_seller' => 1]);
+        }
+
         $query = Product::active()->with(['translation', 'brand.translation']);
 
         // Filter by Category Slug

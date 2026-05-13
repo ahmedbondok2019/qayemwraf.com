@@ -693,7 +693,7 @@
             <div class="container">
                 <div class="medical-section-header">
                     <h2>أهم الفئات</h2>
-                    <a href="{{ url('ar/products') }}" class="view-all">عرض كل الفئات <i class="fa-solid fa-angle-left"></i></a>
+                    <a href="{{ route('frontend.products.index') }}" class="view-all">عرض كل الفئات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
                 <div class="swiper medical-categories-swiper">
@@ -764,7 +764,7 @@
             <div class="container">
                 <div class="medical-section-header">
                     <h3>الأفضل مبيعاً</h3>
-                    <a href="{{ url('ar/best-sellers') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
+                    <a href="{{ route('frontend.best-sellers') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
                 <div class="swiper medical-products-swiper">
@@ -827,7 +827,7 @@
             <div class="container">
                 <div class="medical-section-header">
                     <h3>أحدث المنتجات</h3>
-                    <a href="{{ url('ar/latest-products') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
+                    <a href="{{ route('frontend.latest-products') }}" class="view-all">عرض كل المنتجات <i class="fa-solid fa-angle-left"></i></a>
                 </div>
 
                 <div class="swiper medical-products-swiper">

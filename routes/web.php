@@ -103,6 +103,8 @@ Route::group([
 
         // Static Pages
         Route::get('/about-us', [App\Http\Controllers\Web\PageController::class, 'show'])->defaults('slug', 'about-us')->name('about-us');
+        Route::get('/latest-products', [App\Http\Controllers\Web\ProductController::class, 'index'])->name('latest-products');
+        Route::get('/best-sellers', [App\Http\Controllers\Web\ProductController::class, 'index'])->name('best-sellers');
         Route::get('/page/{slug}', [App\Http\Controllers\Web\PageController::class, 'show'])->name('page.show');
 
         // Blog Routes
