@@ -21,7 +21,7 @@
 
 <div class="elegant-fixed-top">
     <!-- Top Bar -->
-    <div class="elegant-top-bar" style="background: var(--primary-color); color: #fff; padding: 8px 0; font-size: 13px;">
+    <div class="elegant-top-bar">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-phone"></i>
@@ -40,16 +40,16 @@
     </div>
 
     <header class="elegant-header">
-        <div class="container d-flex align-items-center justify-content-between py-2">
+        <div class="container d-flex align-items-center justify-content-between py-1">
             
             <!-- Logo Right -->
             <div class="header-right d-flex align-items-center gap-3">
                 <div class="elegant-logo">
                     <a href="{{ route('frontend.index') }}">
                         @if(isset($Setting) && $Setting?->logo)
-                            <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting?->translate('app_name') }}" style="height: 65px; width: auto;">
+                            <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting?->translate('app_name') }}" style="height: 50px; width: auto;">
                         @else
-                            <img src="https://souqelmlabes.com/website/images/logo/souqelmlabes2024-08-31-19-55-37.png" alt="Logo" style="height: 65px; width: auto;">
+                            <img src="https://souqelmlabes.com/website/images/logo/souqelmlabes2024-08-31-19-55-37.png" alt="Logo" style="height: 50px; width: auto;">
                         @endif
                     </a>
                 </div>
