@@ -102,6 +102,7 @@ Route::group([
         Route::post('/wishlist/toggle', [App\Http\Controllers\Web\WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
         // Static Pages
+        Route::get('/about-us', [App\Http\Controllers\Web\PageController::class, 'show'])->defaults('slug', 'about-us')->name('about-us');
         Route::get('/page/{slug}', [App\Http\Controllers\Web\PageController::class, 'show'])->name('page.show');
 
         // Blog Routes

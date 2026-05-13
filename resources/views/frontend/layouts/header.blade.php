@@ -87,7 +87,7 @@
                         </li>
                         <li><a href="{{ route('frontend.brands') }}" class="nav-link-custom">{{ trans_db('frontend.categories') }}</a></li>
                         <li><a href="{{ url('blogs') }}" class="nav-link-custom">{{ trans_db('frontend.Blog') }}</a></li>
-                        <li><a href="{{ url('about-us') }}" class="nav-link-custom">{{ trans_db('website.About us') }}</a></li>
+                        <li><a href="{{ route('frontend.about-us') }}" class="nav-link-custom">{{ trans_db('website.About us') }}</a></li>
                         <li><a href="{{ route('frontend.contact') }}" class="nav-link-custom">{{ trans_db('frontend.Contact Us') }}</a></li>
 
                     </ul>
@@ -160,7 +160,7 @@
                 <li><a href="{{ route('frontend.products.index') }}"><i class="fa-solid fa-bag-shopping"></i> المنتجات</a></li>
                 <li><a href="{{ route('frontend.brands') }}"><i class="fa-solid fa-layer-group"></i> الأقسام</a></li>
                 <li><a href="{{ url('blogs') }}"><i class="fa-solid fa-newspaper"></i> المدونة</a></li>
-                <li><a href="{{ url('about-us') }}"><i class="fa-solid fa-info-circle"></i> من نحن</a></li>
+                <li><a href="{{ route('frontend.about-us') }}"><i class="fa-solid fa-info-circle"></i> من نحن</a></li>
                 <li><a href="{{ route('frontend.contact') }}"><i class="fa-solid fa-phone"></i> تواصل معنا</a></li>
             </ul>
         </div>
