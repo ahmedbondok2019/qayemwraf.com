@@ -310,12 +310,13 @@
     }
 
     .medical-slider .swiper-slide {
-        height: 600px;
+        height: 720px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: #fff;
+        padding-top: 80px; /* Space for fixed header */
     }
 
     .medical-slide-bg {
@@ -345,7 +346,7 @@
     }
 
     .slide-title {
-        font-size: 56px;
+        font-size: clamp(32px, 5vw, 56px);
         font-weight: 800;
         color: #fff;
         margin-bottom: 20px;
@@ -449,7 +450,8 @@
             margin-top: 20px;
         }
         .medical-slider .swiper-slide {
-            height: 400px;
+            height: 520px;
+            padding-top: 60px;
         }
         .medical-slider .swiper-pagination {
             bottom: 30px !important;
