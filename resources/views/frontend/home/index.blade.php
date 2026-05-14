@@ -310,7 +310,7 @@
     }
 
     .medical-slider .swiper-slide {
-        height: 550px;
+        height: 600px;
         position: relative;
         display: flex;
         align-items: center;
