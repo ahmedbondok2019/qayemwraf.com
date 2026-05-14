@@ -11,7 +11,7 @@
     <style>
         html .content.app-content
         {
-                padding: calc(2rem + 4.45rem + 1.3rem) 0rem 0 !important;
+                padding: calc(1rem + 3.5rem + 1rem) 0rem 0 !important;
         }
       
     </style>

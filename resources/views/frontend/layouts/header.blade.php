@@ -21,7 +21,7 @@
 
 <div class="elegant-fixed-top">
     <!-- Top Bar -->
-    <div class="elegant-top-bar" style="background: var(--primary-color); color: #fff; padding: 5px 0; font-size: 13px;">
+    <div class="elegant-top-bar" style="background: var(--primary-color); color: #fff; padding: 3px 0; font-size: 12px;">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-phone"></i>
@@ -40,16 +40,16 @@
     </div>
 
     <header class="elegant-header">
-        <div class="container d-flex align-items-center justify-content-between py-2">
+        <div class="container d-flex align-items-center justify-content-between py-1">
             
             <!-- Logo Right -->
             <div class="header-right d-flex align-items-center gap-3">
                 <div class="elegant-logo">
                     <a href="{{ route('frontend.index') }}">
                         @if(isset($Setting) && $Setting?->logo)
-                            <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting?->translate('app_name') }}" style="height: 50px; width: auto;">
+                            <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting?->translate('app_name') }}" style="height: 40px; width: auto;">
                         @else
-                            <img src="https://souqelmlabes.com/website/images/logo/souqelmlabes2024-08-31-19-55-37.png" alt="Logo" style="height: 50px; width: auto;">
+                            <img src="https://souqelmlabes.com/website/images/logo/souqelmlabes2024-08-31-19-55-37.png" alt="Logo" style="height: 40px; width: auto;">
                         @endif
                     </a>
                 </div>
@@ -96,7 +96,7 @@
                 <form action="{{ route('frontend.products.index') }}" method="get" class="elegant-search-form position-relative flex-grow-1" style="max-width: 400px;">
                     <input type="search" name="search" id="headerSearch" class="elegant-search-input"
                         placeholder="ابحث هنا..." autocomplete="off" required 
-                        style="padding-left: 40px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; height: 40px; font-size: 13px;">
+                        style="padding-left: 40px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; height: 36px; font-size: 13px;">
                     <button type="submit" class="elegant-search-btn" style="left: 0; background: transparent; color: var(--primary-color); position: absolute; height: 100%; padding: 0 12px; border: none;">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
@@ -107,13 +107,13 @@
             <!-- Actions Left -->
             <div class="header-left d-flex align-items-center gap-3">
                 @guest
-                    <a href="{{ route('frontend.login') }}" class="elegant-action-item p-2" style="background: #f8f9fa; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
-                        <i class="fa-regular fa-user" style="font-size: 18px;"></i>
+                    <a href="{{ route('frontend.login') }}" class="elegant-action-item p-2" style="background: #f8f9fa; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                        <i class="fa-regular fa-user" style="font-size: 16px;"></i>
                     </a>
                 @else
                     <div class="elegant-dropdown">
-                        <a href="javascript:void(0)" class="elegant-action-item p-2" style="background: #f8f9fa; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
-                            <i class="fa-regular fa-user" style="font-size: 18px;"></i>
+                        <a href="javascript:void(0)" class="elegant-action-item p-2" style="background: #f8f9fa; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                            <i class="fa-regular fa-user" style="font-size: 16px;"></i>
                         </a>
                         <div class="elegant-dropdown-menu">
                             <a href="{{ route('frontend.user.home') }}" class="elegant-dropdown-item">
@@ -130,8 +130,8 @@
                     </div>
                 @endguest
 
-                <a href="{{ route('frontend.cart.index') }}" class="elegant-action-item position-relative p-2" style="background: #f8f9fa; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
-                    <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i>
+                <a href="{{ route('frontend.cart.index') }}" class="elegant-action-item position-relative p-2" style="background: #f8f9fa; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 16px;"></i>
                     <span class="elegant-badge cart-count" style="top: -5px; right: -5px;">
                         {{ $c_count ?? 0 }}
                     </span>
@@ -172,9 +172,9 @@
         text-decoration: none;
         color: #333;
         font-weight: 600;
-        font-size: 15px;
+        font-size: 14px;
         transition: all 0.3s ease;
-        padding: 10px 0;
+        padding: 5px 0;
         position: relative;
     }
     .nav-link-custom:hover, .nav-link-custom.active {
