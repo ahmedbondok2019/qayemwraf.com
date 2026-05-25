@@ -173,6 +173,17 @@
                                         @enderror
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="mobile_image">صورة الجوال (Mobile Image)</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="mobile_image" name="mobile_image">
+                                            <label class="custom-file-label" for="mobile_image">{{ trans_db('dashboard.Choose file') }}</label>
+                                        </div>
+                                         @error('mobile_image')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
                                     <button type="submit" class="btn btn-primary btn-block">{{ trans_db('dashboard.Submit') }}</button>
                                 </div>
                             </div>

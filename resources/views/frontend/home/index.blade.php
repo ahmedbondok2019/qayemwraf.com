@@ -606,7 +606,12 @@
                     <div class="swiper-wrapper">
                         @foreach($sliders as $slider)
                         <div class="swiper-slide">
-                            <img src="{{ asset($slider->image) }}" alt="{{ $slider->translation->title ?? '' }}" class="medical-slide-bg" />
+                            <picture>
+                                @if($slider->mobile_image)
+                                    <source media="(max-width: 768px)" srcset="{{ asset($slider->mobile_image) }}">
+                                @endif
+                                <img src="{{ asset($slider->image) }}" alt="{{ $slider->translation->title ?? '' }}" class="medical-slide-bg" />
+                            </picture>
                             <div class="container position-relative" style="z-index: 10;">
                                 <div class="medical-slide-content mx-auto">
                                     @if($slider->translation && $slider->translation->title)
