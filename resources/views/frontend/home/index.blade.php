@@ -1,6 +1,6 @@
 @extends('frontend.layouts.master')
 
-@section('title', __('website.Home'))
+@section('title', trans_db('website.Home'))
 
 @push('css')
 <style>
@@ -578,7 +578,7 @@
                                 <div class="slide-actions animate__animated animate__fadeInUp animate__delay-2s">
                                     @if($slider->link)
                                     <a href="{{ $slider->link }}" class="btn-outline-medical">
-                                        {{ $slider->translation->button_text ?? $slider->translation->title ?? $slider->name ?? __('website.Products') }}
+                                        {{ $slider->translation->button_text ?? $slider->translation->title ?? $slider->name ?? trans_db('website.Products') }}
                                     </a>
                                     @endif
                                 </div>
@@ -589,7 +589,7 @@
                     @empty
                     <div class="swiper-slide" style="background: var(--primary-color);">
                         <div class="medical-slide-content mx-auto" style="text-align:center;">
-                            <h2 class="slide-title">{{ __('website.app_name') }}</h2>
+                            <h2 class="slide-title">{{ trans_db('website.app_name') }}</h2>
                         </div>
                     </div>
                     @endforelse
@@ -609,8 +609,8 @@
                     <div class="feature-item">
                         <div class="feature-icon-box"><i class="fa-solid fa-truck-fast"></i></div>
                         <div class="feature-text">
-                            <h4>{{ __('frontend.Fast Shipping') }}</h4>
-                            <p>{{ __('frontend.To all governorates') }}</p>
+                            <h4>{{ trans_db('frontend.Fast Shipping') }}</h4>
+                            <p>{{ trans_db('frontend.To all governorates') }}</p>
                         </div>
                     </div>
                 </div>
@@ -618,8 +618,8 @@
                     <div class="feature-item">
                         <div class="feature-icon-box"><i class="fa-solid fa-shield-halved"></i></div>
                         <div class="feature-text">
-                            <h4>{{ __('frontend.Real guarantee') }}</h4>
-                            <p>{{ __('frontend.On all products') }}</p>
+                            <h4>{{ trans_db('frontend.Real guarantee') }}</h4>
+                            <p>{{ trans_db('frontend.On all products') }}</p>
                         </div>
                     </div>
                 </div>
@@ -627,8 +627,8 @@
                     <div class="feature-item">
                         <div class="feature-icon-box"><i class="fa-solid fa-medal"></i></div>
                         <div class="feature-text">
-                            <h4>{{ __('frontend.High quality') }}</h4>
-                            <p>{{ __('frontend.Global standards') }}</p>
+                            <h4>{{ trans_db('frontend.High quality') }}</h4>
+                            <p>{{ trans_db('frontend.Global standards') }}</p>
                         </div>
                     </div>
                 </div>
@@ -636,8 +636,8 @@
                     <div class="feature-item">
                         <div class="feature-icon-box"><i class="fa-solid fa-headset"></i></div>
                         <div class="feature-text">
-                            <h4>{{ __('frontend.Technical support') }}</h4>
-                            <p>{{ __('frontend.After sales service') }}</p>
+                            <h4>{{ trans_db('frontend.Technical support') }}</h4>
+                            <p>{{ trans_db('frontend.After sales service') }}</p>
                         </div>
                     </div>
                 </div>
@@ -650,9 +650,9 @@
     <section class="medical-categories-section py-5">
         <div class="container">
             <div class="medical-section-header">
-                <h2>{{ __('frontend.Top Categories') }}</h2>
+                <h2>{{ trans_db('frontend.Top Categories') }}</h2>
                 <a href="{{ route('frontend.products.index') }}" class="view-all">
-                    {{ __('frontend.View all categories') }} <i class="fa-solid fa-angle-left"></i>
+                    {{ trans_db('frontend.View all categories') }} <i class="fa-solid fa-angle-left"></i>
                 </a>
             </div>
 
@@ -669,7 +669,7 @@
                                 @endif
                             </div>
                             <span class="medical-cat-title">{{ $category->name }}</span>
-                            <span class="medical-cat-count">{{ $category->products_count ?? 0 }} {{ __('website.book') }}</span>
+                            <span class="medical-cat-count">{{ $category->products_count ?? 0 }} {{ trans_db('website.book') }}</span>
                         </a>
                     </div>
                     @endforeach
@@ -686,9 +686,9 @@
     <section class="medical-best-sellers py-5" style="background: var(--medical-bg)">
         <div class="container">
             <div class="medical-section-header">
-                <h3>{{ __('frontend.Best Sellers') }}</h3>
+                <h3>{{ trans_db('frontend.Best Sellers') }}</h3>
                 <a href="{{ url(app()->getLocale() . '/best-sellers') }}" class="view-all">
-                    {{ __('frontend.View all products') }} <i class="fa-solid fa-angle-left"></i>
+                    {{ trans_db('frontend.View all products') }} <i class="fa-solid fa-angle-left"></i>
                 </a>
             </div>
 
@@ -698,11 +698,11 @@
                     <div class="swiper-slide">
                         <div class="medical-product-card v-card">
                             @if($product->flashSales->isNotEmpty() || ($product->special_price && $product->special_price > 0 && ($product->special_price_start <= now() && $product->special_price_end >= now())))
-                            <span class="product-badge">{{ __('frontend.Special Discount') }}</span>
+                            <span class="product-badge">{{ trans_db('frontend.Special Discount') }}</span>
                             @endif
 
                             {{-- Wishlist Button --}}
-                            <button class="v-wishlist-btn {{ in_array($product->id, $wishlistIds ?? []) ? 'active' : '' }}" data-id="{{ $product->id }}" title="{{ __('website.Favorite') }}">
+                            <button class="v-wishlist-btn {{ in_array($product->id, $wishlistIds ?? []) ? 'active' : '' }}" data-id="{{ $product->id }}" title="{{ trans_db('website.Favorite') }}">
                                 <i class="fa-{{ in_array($product->id, $wishlistIds ?? []) ? 'solid' : 'regular' }} fa-heart"></i>
                             </button>
 
@@ -739,7 +739,7 @@
 
                                 <div class="product-actions v-card-actions">
                                     <a href="{{ url(app()->getLocale() . '/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">
-                                        {{ __('frontend.View Details') }}
+                                        {{ trans_db('frontend.View Details') }}
                                     </a>
                                     
                                     @if(isset($cartProducts[$product->id]))
@@ -772,9 +772,9 @@
     <section class="medical-latest-products py-5">
         <div class="container">
             <div class="medical-section-header">
-                <h3>{{ __('frontend.Latest Products') }}</h3>
+                <h3>{{ trans_db('frontend.Latest Products') }}</h3>
                 <a href="{{ url(app()->getLocale() . '/latest-products') }}" class="view-all">
-                    {{ __('frontend.View all products') }} <i class="fa-solid fa-angle-left"></i>
+                    {{ trans_db('frontend.View all products') }} <i class="fa-solid fa-angle-left"></i>
                 </a>
             </div>
 
@@ -783,10 +783,10 @@
                     @foreach($latestProducts as $product)
                     <div class="swiper-slide">
                         <div class="medical-product-card v-card">
-                            <span class="product-badge" style="background: #ff9800">{{ __('frontend.New Arrival') }}</span>
+                            <span class="product-badge" style="background: #ff9800">{{ trans_db('frontend.New Arrival') }}</span>
 
                             {{-- Wishlist Button --}}
-                            <button class="v-wishlist-btn {{ in_array($product->id, $wishlistIds ?? []) ? 'active' : '' }}" data-id="{{ $product->id }}" title="{{ __('website.Favorite') }}">
+                            <button class="v-wishlist-btn {{ in_array($product->id, $wishlistIds ?? []) ? 'active' : '' }}" data-id="{{ $product->id }}" title="{{ trans_db('website.Favorite') }}">
                                 <i class="fa-{{ in_array($product->id, $wishlistIds ?? []) ? 'solid' : 'regular' }} fa-heart"></i>
                             </button>
 
@@ -823,7 +823,7 @@
 
                                 <div class="product-actions v-card-actions">
                                     <a href="{{ url(app()->getLocale() . '/product/' . $product->id . '/' . ($product->translation->slug ?? '')) }}" class="btn-view-details">
-                                        {{ __('frontend.View Details') }}
+                                        {{ trans_db('frontend.View Details') }}
                                     </a>
                                     
                                     @if(isset($cartProducts[$product->id]))
@@ -866,33 +866,33 @@
                 </div>
                 <div class="col-lg-7">
                     <div class="why-us-content">
-                        <span class="why-us-tag">{{ __('frontend.Why Us?') }}</span>
+                        <span class="why-us-tag">{{ trans_db('frontend.Why Us?') }}</span>
                         <h2 class="why-us-title">
-                            {{ __('frontend.Egi Medical is a leading enterprise in medical equipment and supplies') }}
+                            {{ trans_db('frontend.Egi Medical is a leading enterprise in medical equipment and supplies') }}
                         </h2>
                         <p class="why-us-desc">
-                            {{ __('frontend.We offer high-quality products and integrated solutions that meet the needs of hospitals and clinics across Egypt, with a commitment to the highest global standards in service and warranty.') }}
+                            {{ trans_db('frontend.We offer high-quality products and integrated solutions that meet the needs of hospitals and clinics across Egypt, with a commitment to the highest global standards in service and warranty.') }}
                         </p>
                         <div class="why-us-stats">
                             <div class="stat-item">
                                 <i class="fa-solid fa-box-open stat-icon"></i>
                                 <span class="stat-number">+2000</span>
-                                <span class="stat-label">{{ __('frontend.Diverse products') }}</span>
+                                <span class="stat-label">{{ trans_db('frontend.Diverse products') }}</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fa-solid fa-award stat-icon"></i>
                                 <span class="stat-number">+10</span>
-                                <span class="stat-label">{{ __('frontend.Years of experience') }}</span>
+                                <span class="stat-label">{{ trans_db('frontend.Years of experience') }}</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fa-solid fa-hospital stat-icon"></i>
                                 <span class="stat-number">+500</span>
-                                <span class="stat-label">{{ __('frontend.Hospitals and clinics') }}</span>
+                                <span class="stat-label">{{ trans_db('frontend.Hospitals and clinics') }}</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fa-solid fa-headset stat-icon"></i>
                                 <span class="stat-number">24/7</span>
-                                <span class="stat-label">{{ __('frontend.Customer service') }}</span>
+                                <span class="stat-label">{{ trans_db('frontend.Customer service') }}</span>
                             </div>
                         </div>
                     </div>

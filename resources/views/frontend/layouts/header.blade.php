@@ -25,15 +25,15 @@
         <div class="container d-flex justify-content-between align-items-center">
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-phone"></i>
-                <span>{{ __('frontend.Customer Service') }}: {{ $Setting->phone ?? '01203036736' }}</span>
+                <span>{{ trans_db('frontend.Customer Service') }}: {{ $Setting->phone ?? '01203036736' }}</span>
             </div>
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-truck-fast"></i>
-                <span>{{ __('frontend.Shipping to all governorates') }}</span>
+                <span>{{ trans_db('frontend.Shipping to all governorates') }}</span>
             </div>
             <div class="top-bar-item d-flex align-items-center gap-2">
                 <i class="fa-solid fa-shield-halved"></i>
-                <span>{{ __('frontend.Real guarantee on all products') }}</span>
+                <span>{{ trans_db('frontend.Real guarantee on all products') }}</span>
             </div>
         </div>
     </div>
@@ -59,11 +59,11 @@
                 <nav class="elegant-main-nav d-none d-lg-block">
                     <ul class="d-flex align-items-center gap-4 list-unstyled m-0">
                         <li>
-                            <a href="{{ route('frontend.index') }}" class="nav-link-custom {{ request()->routeIs('frontend.index') ? 'active' : '' }}">{{ __('frontend.Home') }}</a>
+                            <a href="{{ route('frontend.index') }}" class="nav-link-custom {{ request()->routeIs('frontend.index') ? 'active' : '' }}">{{ trans_db('frontend.Home') }}</a>
                         </li>
                         <li class="position-relative category-dropdown mega-dropdown">
                             <a href="javascript:void(0)" class="nav-link-custom d-flex align-items-center gap-1">
-                                {{ __('frontend.Products') }}
+                                {{ trans_db('frontend.Products') }}
                                 <i class="fa-solid fa-chevron-down" style="font-size: 10px"></i>
                             </a>
                             <div class="elegant-dropdown-menu mega-menu">
@@ -89,23 +89,23 @@
                                 <div class="mega-menu-footer">
                                     <a href="{{ route('frontend.products.index') }}" class="btn-all-categories">
                                         <i class="fa-solid fa-th-large"></i>
-                                        {{ __('frontend.Show all products') }}
+                                        {{ trans_db('frontend.Show all products') }}
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </a>
                                 </div>
                             </div>
                         </li>
                         <li>
-                            <a href="{{ route('frontend.brands') }}" class="nav-link-custom">{{ __('frontend.Brands') }}</a>
+                            <a href="{{ route('frontend.brands') }}" class="nav-link-custom">{{ trans_db('frontend.Brands') }}</a>
                         </li>
                         <li>
-                            <a href="{{ url(app()->getLocale() . '/blogs') }}" class="nav-link-custom">{{ __('frontend.Blog') }}</a>
+                            <a href="{{ url(app()->getLocale() . '/blogs') }}" class="nav-link-custom">{{ trans_db('frontend.Blog') }}</a>
                         </li>
                         <li>
-                            <a href="{{ url(app()->getLocale() . '/about-us') }}" class="nav-link-custom">{{ __('frontend.About Us') }}</a>
+                            <a href="{{ url(app()->getLocale() . '/about-us') }}" class="nav-link-custom">{{ trans_db('frontend.About Us') }}</a>
                         </li>
                         <li>
-                            <a href="{{ route('frontend.contact') }}" class="nav-link-custom">{{ __('frontend.Contact Us') }}</a>
+                            <a href="{{ route('frontend.contact') }}" class="nav-link-custom">{{ trans_db('frontend.Contact Us') }}</a>
                         </li>
                     </ul>
                 </nav>
@@ -113,7 +113,7 @@
                 <form action="{{ route('frontend.products.index') }}" method="get"
                     class="elegant-search-form position-relative flex-grow-1" style="max-width: 400px">
                     <input type="search" name="search" id="headerSearch" class="elegant-search-input"
-                        placeholder="{{ __('frontend.Search here...') }}"
+                        placeholder="{{ trans_db('frontend.Search here...') }}"
                         autocomplete="off" required
                         style="padding-left: 40px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; height: 36px; font-size: 13px;" />
                     <button type="submit" class="elegant-search-btn"
@@ -139,11 +139,11 @@
                         </a>
                         <div class="elegant-dropdown-menu">
                             <a href="{{ route('frontend.user.home') }}" class="elegant-dropdown-item">
-                                <i class="fa-regular fa-user"></i> {{ __('frontend.Profile') }}
+                                <i class="fa-regular fa-user"></i> {{ trans_db('frontend.Profile') }}
                             </a>
                             <a href="{{ route('frontend.logout') }}" class="elegant-dropdown-item"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('frontend.Logout') }}
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ trans_db('frontend.Logout') }}
                             </a>
                             <form id="logout-form" action="{{ route('frontend.logout') }}" method="POST" class="d-none">
                                 @csrf
@@ -210,7 +210,7 @@
             <div class="elegant-mobile-actions">
                 @guest
                     <a href="{{ route('frontend.login') }}" class="mobile-action-item">
-                        <i class="fa-regular fa-user"></i> {{ __('frontend.Login') }}
+                        <i class="fa-regular fa-user"></i> {{ trans_db('frontend.Login') }}
                     </a>
                 @else
                     <div class="mobile-user-info">
@@ -218,11 +218,11 @@
                         <span>{{ Auth::user()->name }}</span>
                     </div>
                     <a href="{{ route('frontend.user.home') }}" class="mobile-action-item">
-                        <i class="fa-solid fa-gauge-high"></i> {{ __('frontend.Profile') }}
+                        <i class="fa-solid fa-gauge-high"></i> {{ trans_db('frontend.Profile') }}
                     </a>
                     <a href="{{ route('frontend.logout') }}" class="mobile-action-item"
                         onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('frontend.Logout') }}
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ trans_db('frontend.Logout') }}
                     </a>
                     <form id="logout-form-mobile" action="{{ route('frontend.logout') }}" method="POST" class="d-none">
                         @csrf
@@ -230,11 +230,11 @@
                 @endguest
 
                 <a href="{{ route('frontend.wishlist.index') }}" class="mobile-action-item">
-                    <i class="fa-regular fa-heart"></i> {{ __('website.Favorite') }}
+                    <i class="fa-regular fa-heart"></i> {{ trans_db('website.Favorite') }}
                     <span class="mobile-badge">{{ $w_count ?? 0 }}</span>
                 </a>
                 <a href="{{ route('frontend.cart.index') }}" class="mobile-action-item">
-                    <i class="fa-solid fa-bag-shopping"></i> {{ __('frontend.Cart') }}
+                    <i class="fa-solid fa-bag-shopping"></i> {{ trans_db('frontend.Cart') }}
                     <span class="mobile-badge">{{ $c_count ?? 0 }}</span>
                 </a>
             </div>
@@ -242,12 +242,12 @@
             <hr class="mobile-divider">
 
             <ul class="elegant-mobile-nav">
-                <li><a href="{{ route('frontend.index') }}"><i class="fa-solid fa-house"></i> {{ __('frontend.Home') }}</a></li>
-                <li><a href="{{ route('frontend.products.index') }}"><i class="fa-solid fa-bag-shopping"></i> {{ __('frontend.Products') }}</a></li>
-                <li><a href="{{ route('frontend.brands') }}"><i class="fa-solid fa-layer-group"></i> {{ __('frontend.Brands') }}</a></li>
-                <li><a href="{{ url(app()->getLocale() . '/blogs') }}"><i class="fa-solid fa-newspaper"></i> {{ __('frontend.Blog') }}</a></li>
-                <li><a href="{{ url(app()->getLocale() . '/about-us') }}"><i class="fa-solid fa-info-circle"></i> {{ __('frontend.About Us') }}</a></li>
-                <li><a href="{{ route('frontend.contact') }}"><i class="fa-solid fa-phone"></i> {{ __('frontend.Contact Us') }}</a></li>
+                <li><a href="{{ route('frontend.index') }}"><i class="fa-solid fa-house"></i> {{ trans_db('frontend.Home') }}</a></li>
+                <li><a href="{{ route('frontend.products.index') }}"><i class="fa-solid fa-bag-shopping"></i> {{ trans_db('frontend.Products') }}</a></li>
+                <li><a href="{{ route('frontend.brands') }}"><i class="fa-solid fa-layer-group"></i> {{ trans_db('frontend.Brands') }}</a></li>
+                <li><a href="{{ url(app()->getLocale() . '/blogs') }}"><i class="fa-solid fa-newspaper"></i> {{ trans_db('frontend.Blog') }}</a></li>
+                <li><a href="{{ url(app()->getLocale() . '/about-us') }}"><i class="fa-solid fa-info-circle"></i> {{ trans_db('frontend.About Us') }}</a></li>
+                <li><a href="{{ route('frontend.contact') }}"><i class="fa-solid fa-phone"></i> {{ trans_db('frontend.Contact Us') }}</a></li>
             </ul>
         </div>
     </div>
