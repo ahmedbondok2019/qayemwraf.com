@@ -570,15 +570,15 @@
                             @if($slider->mobile_image)
                             <source media="(max-width: 768px)" srcset="{{ asset($slider->mobile_image) }}" />
                             @endif
-                            <img src="{{ asset($slider->image) }}" alt="{{ $slider->translate('title') }}" class="medical-slide-bg" />
+                            <img src="{{ asset($slider->image) }}" alt="{{ $slider->translation->title ?? $slider->name }}" class="medical-slide-bg" />
                         </picture>
                         <div class="container position-relative" style="z-index: 10">
                             <div class="medical-slide-content mx-auto">
-                                @if($slider->translate('title') || $slider->translate('desc'))
+                                @if(($slider->translation->title ?? null) || ($slider->translation->subtitle ?? null))
                                 <div class="slide-actions animate__animated animate__fadeInUp animate__delay-2s">
                                     @if($slider->link)
                                     <a href="{{ $slider->link }}" class="btn-outline-medical">
-                                        {{ $slider->translate('title') ?? __('website.Products') }}
+                                        {{ $slider->translation->button_text ?? $slider->translation->title ?? $slider->name ?? __('website.Products') }}
                                     </a>
                                     @endif
                                 </div>
