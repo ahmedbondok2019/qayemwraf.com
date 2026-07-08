@@ -241,4 +241,11 @@ return [
     'Continue shopping' => 'Continue shopping',
     'Checkout' => 'Checkout',
     'Go to cart' => 'Go to cart',
+    'About Us' => 'About Us',
+    'Best Sellers' => 'Best Sellers',
+    'Latest Products' => 'Latest Products',
+    'View all products' => 'View all products',
+    'Blog' => 'Blog',
+    'Load More' => 'Load More',
+    'Loading...' => 'Loading...',
 ];

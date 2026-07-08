@@ -241,4 +241,11 @@ return [
     'Continue shopping' => 'استمر فى التسوق',
     'Checkout' => 'إتمام الطلب',
     'Go to cart' => 'الذهاب إلى السلة',
+    'About Us' => 'من نحن',
+    'Best Sellers' => 'الأكثر مبيعاً',
+    'Latest Products' => 'أحدث المنتجات',
+    'View all products' => 'عرض جميع المنتجات',
+    'Blog' => 'المدونة',
+    'Load More' => 'تحميل المزيد',
+    'Loading...' => 'جاري التحميل...',
 ];
