@@ -1,66 +1,128 @@
 <div class="elegant-fixed-top">
+    {{-- Top Bar --}}
+    <div class="elegant-top-bar" style="background: var(--primary-color); color: #fff; padding: 5px 0; font-size: 12px;">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="top-bar-item d-flex align-items-center gap-2">
+                <i class="fa-solid fa-phone"></i>
+                <span>{{ __('frontend.Customer Service') }}: {{ $Setting->phone ?? '01203036736' }}</span>
+            </div>
+            <div class="top-bar-item d-flex align-items-center gap-2">
+                <i class="fa-solid fa-truck-fast"></i>
+                <span>{{ __('frontend.Shipping to all governorates') }}</span>
+            </div>
+            <div class="top-bar-item d-flex align-items-center gap-2">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>{{ __('frontend.Real guarantee on all products') }}</span>
+            </div>
+        </div>
+    </div>
+
     <header class="elegant-header">
-        <div class="container">
-            <div class="elegant-logo">
-                <a href="{{ route('frontend.index') }}">
-                    @if(isset($Setting) && $Setting->logo)
-                        <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting->translate('app_name') }}">
-                    @else
-                        <img src="https://souqelmlabes.com/website/images/logo/souqelmlabes2024-08-31-19-55-37.png"
-                            alt="Logo">
-                    @endif
-                </a>
+        <div class="container d-flex align-items-center justify-content-between py-1">
+
+            {{-- Logo Right --}}
+            <div class="header-right d-flex align-items-center gap-3">
+                <div class="elegant-logo">
+                    <a href="{{ route('frontend.index') }}">
+                        @if(isset($Setting) && $Setting->logo)
+                            <img src="{{ asset($Setting->logo) }}" alt="{{ $Setting->translate('app_name') }}" style="height: 40px; width: auto">
+                        @else
+                            <img src="/website/images/logo/logo.png" alt="Logo" style="height: 40px; width: auto">
+                        @endif
+                    </a>
+                </div>
             </div>
 
-            <form action="{{ route('frontend.products.index') }}" method="get"
-                class="elegant-search-form position-relative">
-                <input type="search" name="search" id="headerSearch" class="elegant-search-input"
-                    placeholder="ابحث عن منتجاتك {{ trans_db('website.Favorite') }}..." autocomplete="off" required>
-                <button type="submit" class="elegant-search-btn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-                <div id="liveSearchResults" class="search-results-dropdown"></div>
-            </form>
+            {{-- Search and Nav Center --}}
+            <div class="header-center d-flex align-items-center flex-grow-1 mx-4 gap-4">
+                <nav class="elegant-main-nav d-none d-lg-block">
+                    <ul class="d-flex align-items-center gap-4 list-unstyled m-0">
+                        <li>
+                            <a href="{{ route('frontend.index') }}" class="nav-link-custom {{ request()->routeIs('frontend.index') ? 'active' : '' }}">{{ __('frontend.Home') }}</a>
+                        </li>
+                        <li class="position-relative category-dropdown mega-dropdown">
+                            <a href="javascript:void(0)" class="nav-link-custom d-flex align-items-center gap-1">
+                                {{ __('frontend.Products') }}
+                                <i class="fa-solid fa-chevron-down" style="font-size: 10px"></i>
+                            </a>
+                            <div class="elegant-dropdown-menu mega-menu">
+                                <div class="mega-menu-container">
+                                    @foreach($categories as $category)
+                                    <div class="mega-column">
+                                        <a href="{{ url(app()->getLocale() . '/products/' . ($category->translation->slug ?? '')) }}" class="mega-title">
+                                            <i class="fa-solid fa-layer-group"></i>
+                                            {{ $category->name }}
+                                        </a>
+                                        <ul class="mega-links">
+                                            @foreach($category->children ?? [] as $sub)
+                                            <li>
+                                                <a href="{{ url(app()->getLocale() . '/products/' . ($sub->translation->slug ?? '')) }}">
+                                                    {{ $sub->name }}
+                                                </a>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <div class="mega-menu-footer">
+                                    <a href="{{ route('frontend.products.index') }}" class="btn-all-categories">
+                                        <i class="fa-solid fa-th-large"></i>
+                                        {{ __('frontend.Show all products') }}
+                                        <i class="fa-solid fa-arrow-left"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{{ route('frontend.brands') }}" class="nav-link-custom">{{ __('frontend.Brands') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ url(app()->getLocale() . '/blogs') }}" class="nav-link-custom">{{ __('frontend.Blog') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ url(app()->getLocale() . '/about-us') }}" class="nav-link-custom">{{ __('frontend.About Us') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('frontend.contact') }}" class="nav-link-custom">{{ __('frontend.Contact Us') }}</a>
+                        </li>
+                    </ul>
+                </nav>
 
-            <div class="elegant-actions">
+                <form action="{{ route('frontend.products.index') }}" method="get"
+                    class="elegant-search-form position-relative flex-grow-1" style="max-width: 400px">
+                    <input type="search" name="search" id="headerSearch" class="elegant-search-input"
+                        placeholder="{{ __('frontend.Search here...') }}"
+                        autocomplete="off" required
+                        style="padding-left: 40px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; height: 36px; font-size: 13px;" />
+                    <button type="submit" class="elegant-search-btn"
+                        style="left: 0; background: transparent; color: var(--primary-color); position: absolute; height: 100%; padding: 0 12px; border: none;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <div id="liveSearchResults" class="search-results-dropdown"></div>
+                </form>
+            </div>
+
+            {{-- Actions Left --}}
+            <div class="header-left d-flex align-items-center gap-3">
                 @guest
-                    <a href="{{ route('frontend.login') }}" class="elegant-action-item">
-                        <svg data-testid="UserInverse" viewBox="0 0 24 24">
-                            <g stroke-width="2" transform="translate(0, 0)">
-                                <path fill="none" stroke="currentColor" stroke-width="2"
-                                    d="M19,20.486v-0.745 c0-1.077-0.577-2.071-1.512-2.605l-3.219-1.842"></path>
-                                <path fill="none" stroke="currentColor" stroke-width="2"
-                                    d="M9.727,15.292l-3.215,1.844 C5.577,17.67,5,18.664,5,19.741v0.745"></path>
-                                <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="10" r="4"></circle>
-                                <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="11"></circle>
-                            </g>
-                        </svg>
-                        <span>{{ trans_db('frontend.Login') }}</span>
+                    <a href="{{ route('frontend.login') }}" class="elegant-action-item p-2"
+                        style="background: #f8f9fa; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                        <i class="fa-regular fa-user" style="font-size: 16px"></i>
                     </a>
                 @else
                     <div class="elegant-dropdown">
-                        <a href="javascript:void(0)" class="elegant-action-item dropdown-toggle">
-                            <svg data-testid="UserInverse" viewBox="0 0 24 24">
-                                <g stroke-width="2" transform="translate(0, 0)">
-                                    <path fill="none" stroke="currentColor" stroke-width="2"
-                                        d="M19,20.486v-0.745 c0-1.077-0.577-2.071-1.512-2.605l-3.219-1.842"></path>
-                                    <path fill="none" stroke="currentColor" stroke-width="2"
-                                        d="M9.727,15.292l-3.215,1.844 C5.577,17.67,5,18.664,5,19.741v0.745"></path>
-                                    <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="10" r="4">
-                                    </circle>
-                                    <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="11">
-                                    </circle>
-                                </g>
-                            </svg>
-                            <span>{{ Auth::user()->name }}</span>
+                        <a href="javascript:void(0)" class="elegant-action-item p-2 dropdown-toggle"
+                            style="background: #f8f9fa; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                            <i class="fa-regular fa-user" style="font-size: 16px"></i>
                         </a>
                         <div class="elegant-dropdown-menu">
                             <a href="{{ route('frontend.user.home') }}" class="elegant-dropdown-item">
-                                <i class="fa-regular fa-user"></i> {{ trans_db('frontend.Profile') }}
+                                <i class="fa-regular fa-user"></i> {{ __('frontend.Profile') }}
                             </a>
                             <a href="{{ route('frontend.logout') }}" class="elegant-dropdown-item"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ trans_db('frontend.Logout') }}
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('frontend.Logout') }}
                             </a>
                             <form id="logout-form" action="{{ route('frontend.logout') }}" method="POST" class="d-none">
                                 @csrf
@@ -69,15 +131,10 @@
                     </div>
                 @endguest
 
-
-                <a href="{{ route('frontend.wishlist.index') }}" class="elegant-action-item wishlist-toggle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path
-                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                        </path>
-                    </svg>
-                    <span class="elegant-badge wishlist-count">
+                <a href="{{ route('frontend.wishlist.index') }}" class="elegant-action-item wishlist-toggle p-2 position-relative"
+                    style="background: #f8f9fa; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                    <i class="fa-regular fa-heart" style="font-size: 16px"></i>
+                    <span class="elegant-badge wishlist-count" style="top: -5px; right: -5px">
                         @php
                             $w_user = \Illuminate\Support\Facades\Auth::user();
                             $w_userId = $w_user ? $w_user->id : null;
@@ -91,16 +148,12 @@
                         @endphp
                         {{ $w_count }}
                     </span>
-                    <span>{{ trans_db('website.Favorite') }}</span>
                 </a>
 
-                <a href="{{ route('frontend.cart.index') }}" class="elegant-action-item cart-toggle">
-                    <svg data-testid="CartInverse" viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                            d="M5.75 20C6.7165 20 7.5 20.7835 7.5 21.75C7.5 22.7165 6.7165 23.5 5.75 23.5C4.7835 23.5 4 22.7165 4 21.75C4 20.7835 4.7835 20 5.75 20ZM19.75 20C20.7165 20 21.5 20.7835 21.5 21.75C21.5 22.7165 20.7165 23.5 19.75 23.5C18.7835 23.5 18 22.7165 18 21.75C18 20.7835 18.7835 20 19.75 20ZM4.5 0V4H21.7106L19.3356 13.5H4.5V14.75C4.5 15.3972 4.99187 15.9295 5.62219 15.9935L5.75 16H22.5V17.5H5.75C4.28747 17.5 3.0916 16.3583 3.00502 14.9175L3 14.75V1.5H0V0H4.5ZM19.789 5.5H4.5V12H18.164L19.789 5.5Z">
-                        </path>
-                    </svg>
-                    <span class="elegant-badge cart-count">
+                <a href="{{ route('frontend.cart.index') }}" class="elegant-action-item cart-toggle position-relative p-2"
+                    style="background: #f8f9fa; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 16px"></i>
+                    <span class="elegant-badge cart-count" style="top: -5px; right: -5px">
                         @php
                             $c_user = \Illuminate\Support\Facades\Auth::user();
                             $c_userId = $c_user ? $c_user->id : null;
@@ -114,100 +167,106 @@
                         @endphp
                         {{ $c_count }}
                     </span>
-                    <span>السلة</span>
                 </a>
-            </div>
-            <button class="elegant-mobile-toggle" id="elegantMobileToggle">
-                <i class="fa-solid fa-bars"></i>
-            </button>
 
-            <div class="elegant-mobile-overlay" id="elegantMobileOverlay"></div>
-
-            <div class="elegant-mobile-menu" id="elegantMobileMenu">
-                <div class="elegant-mobile-header">
-                    <span class="mobile-logo-text">{{ $Setting->translate('app_name') ?? 'Mushaf Home' }}</span>
-                    <button class="elegant-mobile-close" id="elegantMobileClose">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-
-                <div class="elegant-mobile-body">
-                    <div class="elegant-mobile-actions">
-                        @guest
-                            <a href="{{ route('frontend.login') }}" class="mobile-action-item">
-                                <i class="fa-regular fa-user"></i> {{ trans_db('frontend.Login') }}
-                            </a>
-                        @else
-                            <div class="mobile-user-info">
-                                <i class="fa-regular fa-user-circle"></i>
-                                <span>{{ Auth::user()->name }}</span>
-                            </div>
-                            <a href="{{ route('frontend.user.home') }}" class="mobile-action-item">
-                                <i class="fa-solid fa-gauge-high"></i> {{ trans_db('frontend.Profile') }}
-                            </a>
-                            <a href="{{ route('frontend.logout') }}" class="mobile-action-item"
-                                onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ trans_db('frontend.Logout') }}
-                            </a>
-                            <form id="logout-form-mobile" action="{{ route('frontend.logout') }}" method="POST"
-                                class="d-none">
-                                @csrf
-                            </form>
-                        @endguest
-
-                        <a href="{{ route('frontend.wishlist.index') }}" class="mobile-action-item">
-                            <i class="fa-regular fa-heart"></i> {{ trans_db('website.Favorite') }}
-                            <span class="mobile-badge">{{ $w_count ?? 0 }}</span>
-                        </a>
-
-                        <a href="{{ route('frontend.cart.index') }}" class="mobile-action-item">
-                            <i class="fa-solid fa-bag-shopping"></i> السلة
-                            <span class="mobile-badge">{{ $c_count ?? 0 }}</span>
-                        </a>
-                    </div>
-
-                    <hr class="mobile-divider">
-
-                    <ul class="elegant-mobile-nav">
-                        <li><a href="{{ route('frontend.index') }}"><i class="fa-solid fa-house-chimney"></i>
-                                الرئيسية</a></li>
-                        <li><a href="{{ route('frontend.products.index') }}"><i class="fa-solid fa-bag-shopping"></i>
-                                المنتجات</a></li>
-                        <li><a
-                                href="{{ route('frontend.products.index', ['best_seller' => 1, 'sort' => 'best_seller']) }}"><i
-                                    class="fa-solid fa-fire-flame-curved"></i> {{ trans_db('website.Best Seller') }}</a></li>
-                        <li><a href="{{ route('frontend.products.index', ['sort' => 'latest']) }}"><i
-                                    class="fa-solid fa-bolt"></i> {{ trans_db('website.New arrivals') }}</a></li>
-                        <li><a href="{{ route('frontend.products.index', ['flash_sale' => 1]) }}"><i
-                                    class="fa-solid fa-stopwatch"></i> عروض فلاش</a></li>
-                        <li><a href="{{ route('frontend.brands') }}"><i class="fa-solid fa-award"></i> العلامات
-                                التجارية</a></li>
-                        <li><a href="{{ route('frontend.contact') }}"><i class="fa-solid fa-headset"></i> اتصل بنا</a>
-                        </li>
-                    </ul>
-                </div>
+                <button class="elegant-mobile-toggle d-lg-none" id="elegantMobileToggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <nav class="elegant-nav-bar">
-        <div class="container">
-            <ul class="elegant-nav-list">
-                <li><a href="{{ route('frontend.index') }}" class="elegant-nav-link"><i
-                            class="fa-solid fa-house-chimney"></i> الرئيسية</a></li>
-                <li><a href="{{ route('frontend.products.index') }}" class="elegant-nav-link"><i
-                            class="fa-solid fa-bag-shopping"></i> المنتجات</a></li>
-                <li><a href="{{ route('frontend.products.index', ['best_seller' => 1, 'sort' => 'best_seller']) }}"
-                        class="elegant-nav-link"><i class="fa-solid fa-fire-flame-curved"></i> {{ trans_db('website.Best Seller') }}</a></li>
-                <li><a href="{{ route('frontend.products.index', ['sort' => 'latest']) }}" class="elegant-nav-link"><i
-                            class="fa-solid fa-bolt"></i> {{ trans_db('website.New arrivals') }}</a></li>
-                <li><a href="{{ route('frontend.products.index', ['flash_sale' => 1]) }}" class="elegant-nav-link"><i
-                            class="fa-solid fa-stopwatch"></i> عروض فلاش</a></li>
-                <li><a href="{{ route('frontend.brands') }}" class="elegant-nav-link"><i class="fa-solid fa-award"></i>
-                        {{ trans_db('website.Brands') }}</a></li>
-                <li><a href="{{ route('frontend.contact') }}" class="elegant-nav-link"><i
-                            class="fa-solid fa-headset"></i> اتصل بنا</a></li>
+    {{-- Mobile Menu --}}
+    <div class="elegant-mobile-overlay" id="elegantMobileOverlay"></div>
+    <div class="elegant-mobile-menu" id="elegantMobileMenu">
+        <div class="elegant-mobile-header">
+            <span class="mobile-logo-text">{{ $Setting->translate('app_name') ?? 'Egi Medical' }}</span>
+            <button class="elegant-mobile-close" id="elegantMobileClose">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="elegant-mobile-body">
+            <div class="elegant-mobile-actions">
+                @guest
+                    <a href="{{ route('frontend.login') }}" class="mobile-action-item">
+                        <i class="fa-regular fa-user"></i> {{ __('frontend.Login') }}
+                    </a>
+                @else
+                    <div class="mobile-user-info">
+                        <i class="fa-regular fa-user-circle"></i>
+                        <span>{{ Auth::user()->name }}</span>
+                    </div>
+                    <a href="{{ route('frontend.user.home') }}" class="mobile-action-item">
+                        <i class="fa-solid fa-gauge-high"></i> {{ __('frontend.Profile') }}
+                    </a>
+                    <a href="{{ route('frontend.logout') }}" class="mobile-action-item"
+                        onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('frontend.Logout') }}
+                    </a>
+                    <form id="logout-form-mobile" action="{{ route('frontend.logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                @endguest
+
+                <a href="{{ route('frontend.wishlist.index') }}" class="mobile-action-item">
+                    <i class="fa-regular fa-heart"></i> {{ __('website.Favorite') }}
+                    <span class="mobile-badge">{{ $w_count ?? 0 }}</span>
+                </a>
+                <a href="{{ route('frontend.cart.index') }}" class="mobile-action-item">
+                    <i class="fa-solid fa-bag-shopping"></i> {{ __('frontend.Cart') }}
+                    <span class="mobile-badge">{{ $c_count ?? 0 }}</span>
+                </a>
+            </div>
+
+            <hr class="mobile-divider">
+
+            <ul class="elegant-mobile-nav">
+                <li><a href="{{ route('frontend.index') }}"><i class="fa-solid fa-house"></i> {{ __('frontend.Home') }}</a></li>
+                <li><a href="{{ route('frontend.products.index') }}"><i class="fa-solid fa-bag-shopping"></i> {{ __('frontend.Products') }}</a></li>
+                <li><a href="{{ route('frontend.brands') }}"><i class="fa-solid fa-layer-group"></i> {{ __('frontend.Brands') }}</a></li>
+                <li><a href="{{ url(app()->getLocale() . '/blogs') }}"><i class="fa-solid fa-newspaper"></i> {{ __('frontend.Blog') }}</a></li>
+                <li><a href="{{ url(app()->getLocale() . '/about-us') }}"><i class="fa-solid fa-info-circle"></i> {{ __('frontend.About Us') }}</a></li>
+                <li><a href="{{ route('frontend.contact') }}"><i class="fa-solid fa-phone"></i> {{ __('frontend.Contact Us') }}</a></li>
             </ul>
         </div>
-    </nav>
+    </div>
 </div>
+
+<style>
+    .nav-link-custom {
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        padding: 5px 0;
+        position: relative;
+    }
+    .nav-link-custom:hover,
+    .nav-link-custom.active {
+        color: var(--primary-color);
+    }
+    .nav-link-custom::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+    }
+    .nav-link-custom:hover::after,
+    .nav-link-custom.active::after {
+        width: 100%;
+    }
+    .elegant-header {
+        background: #fff;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    }
+    @media (max-width: 991px) {
+        .header-center {
+            display: none !important;
+        }
+    }
+</style>
