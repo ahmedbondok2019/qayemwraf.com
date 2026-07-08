@@ -1,10 +1,10 @@
 /* Premium Home Styling */
 
 :root {
-    --primary-color: #1E5631;
-    --secondary-color: #C5A059;
-    --primary-gradient: linear-gradient(135deg, #1E5631 0%, #276b3f 100%); /* Deep Green Gradient */
-    --gold-gradient: linear-gradient(135deg, #C5A059 0%, #DFC27D 100%); /* Gold Gradient */
+    --primary-color: var(--primary-color);
+    --secondary-color: #e98939;
+    --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, #3066d1 100%); /* Blue Gradient */
+    --gold-gradient: linear-gradient(135deg, #e98939 0%, #f7a45e 100%); /* Orange Gradient */
 }
 input:focus{
     border: none !important;
@@ -62,7 +62,7 @@ input:focus{
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(6, 46, 13, 0.4) 0%, rgba(6, 46, 13, 0.8) 100%);
+    /* background: linear-gradient(to bottom, rgba(6, 46, 13, 0.4) 0%, rgba(6, 46, 13, 0.8) 100%); */
     z-index: 5;
     pointer-events: none;
 }
@@ -141,7 +141,7 @@ input:focus{
     font-weight: 700;
     font-size: 16px;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 25px rgba(30, 86, 49, 0.25);
+    box-shadow: 0 10px 25px rgba(28, 77, 173, 0.25);
     opacity: 0;
     animation: fadeUp 0.8s ease forwards 0.7s; /* Staggered */
     text-decoration: none;
@@ -218,7 +218,7 @@ input:focus{
 
 .vibe-offers-header a {
     font-size: 14px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     text-decoration: none;
 }
 
@@ -258,7 +258,7 @@ input:focus{
     padding: 5px; /* Increase padding slightly */
     background: var(--primary-gradient);
     transition: all 0.5s ease;
-    box-shadow: 0 10px 25px rgba(30, 86, 49, 0.1);
+    box-shadow: 0 10px 25px rgba(28, 77, 173, 0.1);
 }
 
 .vibe-offer-image::before {
@@ -289,7 +289,7 @@ input:focus{
 }
 
 .vibe-offer-item:hover .vibe-offer-image {
-    box-shadow: 0 15px 35px rgba(30, 86, 49, 0.25);
+    box-shadow: 0 15px 35px rgba(28, 77, 173, 0.25);
     background: var(--gold-gradient); /* Gold gradient on hover */
 }
 
@@ -312,7 +312,7 @@ input:focus{
 }
 
 .vibe-offer-item:hover .vibe-offer-name {
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     transform: scale(1.05);
 }
 
@@ -345,7 +345,7 @@ input:focus{
     right: 0;
     width: 40px;
     height: 4px;
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     border-radius: 2px;
 }
 
@@ -358,18 +358,32 @@ input:focus{
 }
 
 .vibe-section-header .view-all:hover {
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
 }
 
 /* Main Categories: Horizontal Elegant Style */
 .vibe-category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    display: flex;
+    overflow-x: auto;
     gap: 25px;
-    padding: 0 10px;
+    padding: 10px 10px 40px; /* Space for hover effects and shadow */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.vibe-category-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.vibe-category-grid:active {
+    cursor: grabbing;
 }
 
 .vibe-cat-card {
+    flex: 0 0 320px;
     display: flex;
     align-items: center;
     background: var(--primary-gradient);
@@ -474,8 +488,8 @@ input:focus{
 .vibe-subcat-card:hover {
     transform: translateY(-10px) rotate(1deg);
     background: #fff;
-    border-color: var(--primary-color, #1E5631);
-    box-shadow: 0 15px 30px rgba(30, 86, 49, 0.1);
+    border-color: var(--primary-color, #1c4dac);
+    box-shadow: 0 15px 30px rgba(28, 77, 173, 0.1);
 }
 
 .vibe-subcat-parent {
@@ -521,8 +535,8 @@ input:focus{
 
 .vibe-subcat-count {
      font-size: 12px;
-    color: #5d4c25 !important;
-    background: #f4f6f8;
+    color: #ff9800 !important;
+    background: #fff5e6;
     padding: 2px 8px;
     border-radius: 10px;
 }
@@ -540,7 +554,7 @@ input:focus{
 .vibe-subcat-section .swiper-button-next::after,
 .vibe-subcat-section .swiper-button-prev::after {
     font-size: 14px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
 }
 
 /* Brands Section: Elegant Typography Style */
@@ -570,7 +584,7 @@ input:focus{
 
 .vibe-brands-header a {
     font-size: 13px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     text-decoration: none;
     font-weight: 600;
 }
@@ -598,7 +612,7 @@ input:focus{
     left: 0;
     width: 0%;
     height: 100%;
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     opacity: 0.05;
     transition: width 0.3s ease;
     z-index: 1;
@@ -606,8 +620,8 @@ input:focus{
 
 .vibe-brand-card:hover {
     transform: translateY(-3px);
-    border-color: var(--primary-color, #1E5631);
-    box-shadow: 0 5px 15px rgba(30, 86, 49, 0.08); /* Colored shadow */
+    border-color: var(--primary-color, #1c4dac);
+    box-shadow: 0 5px 15px rgba(28, 77, 173, 0.08); /* Colored shadow */
 }
 
 .vibe-brand-card:hover::before {
@@ -624,7 +638,7 @@ input:focus{
 }
 
 .vibe-brand-card:hover .vibe-brand-name {
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
 }
 
 /* Add a decorative dot */
@@ -659,7 +673,7 @@ input:focus{
 .vibe-feature-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-    border-color: rgba(30, 86, 49, 0.1);
+    border-color: rgba(28, 77, 173, 0.1);
 }
 
 .vibe-feature-icon {
@@ -668,16 +682,16 @@ input:focus{
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(30, 86, 49, 0.08);
+    background: rgba(28, 77, 173, 0.08);
     border-radius: 12px;
     margin-left: 20px;
-    color: var(--primary-color, #1E5631);
+    color: var(--primary-color, #1c4dac);
     font-size: 24px;
     transition: all 0.3s ease;
 }
 
 .vibe-feature-card:hover .vibe-feature-icon {
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     color: #fff;
     transform: scale(1.1) rotate(5deg);
 }
@@ -703,7 +717,13 @@ input:focus{
 /* Mobile Responsive Slider Text */
 @media (max-width: 768px) {
     .vibe-slide-image-wrapper {
-        height: 250px; /* Reduce height on mobile */
+        height: auto;
+        aspect-ratio: 16 / 9;
+        min-height: 180px;
+    }
+
+    .vibe-slide-image-wrapper img {
+        object-fit: fill; /* Keeps it filling the space */
     }
 
     .vibe-slider-content {
@@ -761,7 +781,7 @@ input:focus{
     }
 
     .vibe-cat-card {
-        min-width: 280px; /* Fixed width for slider items */
+        min-width: 280px; /* Adjusted fixed width for slider items on mobile */
         flex: 0 0 auto;
     }
 
@@ -962,9 +982,9 @@ input:focus{
 
 .view-toggles .btn-view-toggle.active,
 .view-toggles .btn-view-toggle:hover {
-    background: var(--primary-color, #1E5631);
+    background: var(--primary-color, #1c4dac);
     color: #fff;
-    border-color: var(--primary-color, #1E5631);
+    border-color: var(--primary-color, #1c4dac);
 }
 
 /* Horizontal Scroll View for Products */

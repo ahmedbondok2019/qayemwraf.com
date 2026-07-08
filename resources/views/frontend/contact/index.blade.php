@@ -22,7 +22,7 @@
                                     <i class="fa-solid fa-location-dot"></i>
                                     <div>
                                         <h5>{{ trans_db('frontend.Address') }}</h5>
-                                        <p>{{ $Setting->address ?? 'Cairo, Egypt' }}</p>
+                                        <p>{{ $Setting->translate('address') ?? 'Cairo, Egypt' }}</p>
                                     </div>
                                 </div>
 
@@ -189,7 +189,7 @@
     .page-contact-us-premium .contact-sidebar {
         width: 40%;
         flex: 0 0 40%;
-        background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+        background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
         color: #fff;
         position: relative;
     }
@@ -335,7 +335,7 @@
     }
 
     .page-contact-us-premium .custom-input:focus {
-        border-color: #1E5631;
+        border-color: #1c4dac;
         box-shadow: 0 0 0 4px rgba(30, 86, 49, 0.1);
         background-color: #fff;
         outline: none;
@@ -348,7 +348,7 @@
 
     /* Button */
     .page-contact-us-premium .auth-btn {
-        background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+        background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
         color: white;
         border: none;
         padding: 1rem 2rem;

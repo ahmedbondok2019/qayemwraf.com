@@ -59,7 +59,7 @@ return [
     'Stay updated with our latest offers and products' => 'ابقى على اطلاع بأحدث العروض والمنتجات',
     'Enter your email address' => 'أدخل بريدك الإلكتروني',
     'Subscribe' => 'اشتراك',
-    'We strive to provide the best Islamic books and Mushafs with high quality service.' => 'نسعى جاهدين لتقديم أفضل الكتب الإسلامية والمصاحف بخدمة عالية الجودة.',
+    'We strive to provide the best Islamic books and Mushafs with high quality service.' => 'نسعى جاهدين لتقديم أفضل المنتجات بخدمة عالية الجودة.',
     'Quick Links' => 'روابط سريعة',
     'Customer Care' => 'خدمة العملاء',
     'Shop' => 'المتجر',
@@ -210,4 +210,5 @@ return [
     'Submit Review' => 'أرسل المراجعة',
     'Stars' => 'نجوم',
     'Star' => 'نجمة',
+    'buy_now' => 'اشتري الآن',
 ];

@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('css/cart_wishlist.css') }}">
     <style>
         :root {
-            --main-color: #1E5631;
+            --main-color: #1c4dac;
             --main-color-rgb: 30, 86, 49;
             --text-dark: #1e293b;
             --text-gray: #64748b;
@@ -19,7 +19,7 @@
         }
         
         .premium-page-header {
-            background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+            background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
             padding: 60px 0 100px;
             color: white;
             margin-bottom: 0;
@@ -81,6 +81,32 @@
             justify-content: center;
             border-radius: 10px;
             font-size: 1rem;
+        }
+
+        .btn-add-address-shortcut {
+            margin-right: auto;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--main-color);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(var(--main-color-rgb), 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        html[dir="ltr"] .btn-add-address-shortcut {
+            margin-right: 0;
+            margin-left: auto;
+        }
+
+        .btn-add-address-shortcut:hover {
+            background: var(--main-color);
+            color: white;
+            transform: translateY(-1px);
         }
 
         /* Address Cards */
@@ -353,7 +379,7 @@
 
         .btn-place-order {
             width: 100%;
-            background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+            background: linear-gradient(135deg, #1c4dac 0%, #4C825D 100%);
             color: white;
             border: none;
             padding: 18px;
@@ -407,6 +433,9 @@
                     <div class="premium-card mb-4">
                         <h2 class="checkout-section-title">
                             <i class="fa-solid fa-location-dot"></i> {{ trans_db('frontend.Shipping Address') }}
+                            <a href="{{ route('frontend.user.addresses.index') }}" class="btn-add-address-shortcut">
+                                <i class="fa-solid fa-plus"></i> {{ trans_db('frontend.Add New Address') }}
+                            </a>
                         </h2>
                         
                         <div class="address-list">

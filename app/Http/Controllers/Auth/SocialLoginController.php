@@ -43,7 +43,12 @@ class SocialLoginController extends Controller
             }
 
             // Determine the column name based on provider
-            $idColumn = $provider === 'google' ? 'google_id' : 'facebook_id';
+            $idColumn = match($provider) {
+                'google' => 'google_id',
+                'facebook' => 'facebook_id',
+                'apple' => 'apple_id',
+                default => 'google_id'
+            };
 
             // Check if user exists with this social ID
             $userData = User::where($idColumn, $socialUser->getId())->first();
@@ -75,11 +80,14 @@ class SocialLoginController extends Controller
             Auth::login($userData, true);
 
             $CurrentUrl = Session::pull('CurrentUrl'); // Use pull to remove after use
-            $targetUrl = $CurrentUrl ? $CurrentUrl : LaravelLocalization::localizeUrl('user/home');
+            $targetUrl = $CurrentUrl ? $CurrentUrl : route('frontend.index');
 
             return redirect($targetUrl);
         } catch (\Throwable $th) {
-            // Log::error($th); // Good practice to log error
+            \Illuminate\Support\Facades\Log::error('Social Login Error: ' . $th->getMessage(), [
+                'provider' => $provider,
+                'exception' => $th
+            ]);
             return redirect('/login')->withErrors(['msg' => __('website.Login Failed')]);
         }
     }

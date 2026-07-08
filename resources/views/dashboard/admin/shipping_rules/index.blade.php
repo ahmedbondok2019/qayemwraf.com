@@ -102,7 +102,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ url('admin/shipping_rules') }}/" + id,
+                        url: "{{ route('admin.shipping_rules.destroy', '') }}/" + id,
                         type: 'DELETE',
                         data: {
                             _token: "{{ csrf_token() }}"

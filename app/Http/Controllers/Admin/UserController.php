@@ -126,8 +126,7 @@ class UserController extends Controller
             $data['status'] = $request->has('status') ? 1 : 0;
 
             if ($request->hasFile('image')) {
-                $filename = $this->uploadImage($request->file('image'), 'users');
-                $data['image'] = 'uploads/users/' . $filename;
+                $data['image'] = $this->uploadImage($request->file('image'), 'users');
             }
 
             $user = User::create($data);
@@ -206,11 +205,15 @@ class UserController extends Controller
             $data['status'] = $request->has('status') ? 1 : 0;
 
             if ($request->hasFile('image')) {
-                if ($user->image && file_exists(public_path($user->image))) {
-                    unlink(public_path($user->image));
+                if ($user->image) {
+                    $oldPath = str_replace('storage/', '', $user->image);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path($user->image))) {
+                        unlink(public_path($user->image));
+                    }
                 }
-                $filename = $this->uploadImage($request->file('image'), 'users');
-                $data['image'] = 'uploads/users/' . $filename;
+                $data['image'] = $this->uploadImage($request->file('image'), 'users');
             }
 
             $user->update($data);
@@ -245,8 +248,13 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if ($user->image && file_exists(public_path($user->image))) {
-            unlink(public_path($user->image));
+        if ($user->image) {
+            $oldPath = str_replace('storage/', '', $user->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($user->image))) {
+                unlink(public_path($user->image));
+            }
         }
         $user->delete();
         return response()->json(['success' => trans_db('dashboard.deleted')]);

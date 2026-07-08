@@ -45,8 +45,8 @@
         margin-top: 30px;
     }
     .btn-primary {
-        background: #1E5631;
-        border-color: #1E5631;
+        background: #1c4dac;
+        border-color: #1c4dac;
     }
     .btn-outline {
         border: 2px solid #e5e7eb;

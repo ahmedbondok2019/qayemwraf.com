@@ -50,7 +50,7 @@
                                     <label class="custom-file-label" for="image">{{ trans_db('dashboard.Choose file') }}</label>
                                 </div>
                                 @if($blog->BlogTranslation && $blog->BlogTranslation->image)
-                                    <img src="{{ asset('website/images/blog/'.$blog->BlogTranslation->image) }}" width="100" class="mt-1">
+                                    <img src="{{ asset($blog->BlogTranslation->image) }}" width="100" class="mt-1">
                                 @endif
                             </div>
                             <div class="col-md-12 form-group">

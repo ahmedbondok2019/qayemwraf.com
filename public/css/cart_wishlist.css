@@ -1,6 +1,6 @@
 /* Premium Cart & Wishlist Pages Styling */
 .premium-page-header {
-    background: linear-gradient(135deg, #1e5631 0%, #4c825d 100%);
+    background: linear-gradient(135deg, #1c4dad 0%, #153a85 100%);
     padding: 60px 0;
     margin-bottom: 40px;
     color: #fff;
@@ -174,7 +174,7 @@
 .btn-checkout {
     display: block;
     width: 100%;
-    background: #1e5631;
+    background: #1c4dac;
     color: #fff;
     text-align: center;
     padding: 15px;
@@ -215,7 +215,7 @@
 .btn-shop-now {
     display: inline-block;
     padding: 12px 30px;
-    background: #1e5631;
+    background: #1c4dac;
     color: #fff;
     border-radius: 10px;
     text-decoration: none;

@@ -7,6 +7,7 @@ use App\Models\StaticTranslation;
 
 class DashboardAllTranslationsSeeder extends Seeder
 {
+    // php artisan db:seed --class=DashboardAllTranslationsSeeder
     /**
      * Run the database seeds.
      *
@@ -45,12 +46,12 @@ class DashboardAllTranslationsSeeder extends Seeder
             'dashboard.Total Sent' => ['ar' => 'إجمالى المرسلة', 'en' => 'Total Sent'],
             // Frontend keys
             'website.Search results for:' => ['ar' => 'نتائج البحث عن: ', 'en' => 'Search results for: '],
-            'website.Book Editions' => ['ar' => 'إصدارات الكتب', 'en' => 'Book Editions'],
-            'website.Books' => ['ar' => 'الكتب', 'en' => 'Books'],
+            'website.Book Editions' => ['ar' => 'إصدارات المنتجات', 'en' => 'Book Editions'],
+            'website.Books' => ['ar' => 'المنتجات', 'en' => 'Books'],
             'website.Category' => ['ar' => 'القسم', 'en' => 'Category'],
             'website.Filter Products' => ['ar' => 'تصفية المنتجات', 'en' => 'Filter Products'],
-            'website.Search by book name' => ['ar' => 'البحث باسم الكتاب', 'en' => 'Search by book name'],
-            'website.Type book name...' => ['ar' => 'اكتب اسم الكتاب...', 'en' => 'Type book name...'],
+            'website.Search by book name' => ['ar' => 'البحث باسم المنتج', 'en' => 'Search by book name'],
+            'website.Type book name...' => ['ar' => 'اكتب اسم المنتج...', 'en' => 'Type book name...'],
             'website.Price' => ['ar' => 'السعر', 'en' => 'Price'],
             'website.From' => ['ar' => 'من', 'en' => 'From'],
             'website.To' => ['ar' => 'إلى', 'en' => 'To'],
@@ -83,7 +84,7 @@ class DashboardAllTranslationsSeeder extends Seeder
             'website.View Cart' => ['ar' => 'عرض السلة', 'en' => 'View Cart'],
             'website.Add to Cart' => ['ar' => 'أضف للسلة', 'en' => 'Add to Cart'],
             'website.Discover Products' => ['ar' => 'اكتشف المنتجات', 'en' => 'Discover Products'],
-            'website.Search for books, authors...' => ['ar' => 'ابحث عن الكتب، المؤلفين...', 'en' => 'Search for books, authors...'],
+            'website.Search for books, authors...' => ['ar' => 'ابحث عن المنتجات، المؤلفين...', 'en' => 'Search for books, authors...'],
             'website.Translation Settings' => ['ar' => 'اعدادات الترجمة', 'en' => 'Translation Settings'],
             'website.Choose Country' => ['ar' => 'اختر الدولة', 'en' => 'Choose Country'],
             'website.Egypt' => ['ar' => 'مصر', 'en' => 'Egypt'],

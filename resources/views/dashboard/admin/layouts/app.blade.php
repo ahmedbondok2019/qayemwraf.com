@@ -45,6 +45,20 @@
                 .main-menu.menu-light .navigation > li.active > a span{
                     color:#fff !important;
                 }
+                  .main-menu.menu-light .navigation>li ul .active{
+           background: linear-gradient(-118deg, #1c4dad, #1c4dad) !important;
+           box-shadow: none;
+        }
+          .main-menu.menu-light .navigation>li ul .active span{
+           color:#fff !important;
+          }
+          a.btn-primary{
+            border-color: #1c4dad !important;
+            background-color: #1c4dad !important;
+          }
+          .main-menu.menu-light .navigation > li.active > a{
+                background: #1c4dad !important;
+          }
         </style>
         @include('dashboard.admin.layouts.style')
 

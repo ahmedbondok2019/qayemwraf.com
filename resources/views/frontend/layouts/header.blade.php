@@ -1,3 +1,24 @@
+@php
+    $main_categories = \App\Models\Category::whereNull('parent_id')
+        ->active()
+        ->with(['children' => function($q) {
+            $q->active()->with('translation');
+        }])
+        ->take(10)
+        ->get();
+
+    $c_user = \Illuminate\Support\Facades\Auth::user();
+    $c_userId = $c_user ? $c_user->id : null;
+    $c_tempId = \Illuminate\Support\Facades\Cookie::get('temp_user_id');
+    $c_count = 0;
+    if ($c_userId) {
+        $c_count = \App\Models\Cart::where('user_id', $c_userId)->sum('quantity');
+    } elseif ($c_tempId) {
+        $c_count = \App\Models\Cart::where('temp_user_id', $c_tempId)->sum('quantity');
+    }
+@endphp
+
+
 <div class="elegant-fixed-top">
     {{-- Top Bar --}}
     <div class="elegant-top-bar" style="background: var(--primary-color); color: #fff; padding: 5px 0; font-size: 12px;">

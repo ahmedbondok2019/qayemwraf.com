@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+@php
+    $mainCssPath = public_path('website/css/ar/main.css');
+    $v = file_exists($mainCssPath) ? filemtime($mainCssPath) : time(); // Auto-update version when main.css changes
+@endphp
 <head>
     @include('frontend.layouts.head')
 
@@ -7,15 +11,24 @@
     <style>
         html .content.app-content
         {
-                padding: calc(2rem + 4.45rem + 1.3rem) 0rem 0 !important;
+                padding: calc(1rem + 3.5rem + 1rem) 0rem 0 !important;
         }
+      
     </style>
 </head>
 <body>
     <div class="overlay"></div>
 
     <div class="icons-social-media-global">
-        <a href="https://api.whatsapp.com/send/?phone=&text=السلام عليكم" class="whats"><i class="fa-brands fa-whatsapp"></i></a>
+        @php
+            $wa_phone = preg_replace('/[^0-9]/', '', $Setting->whatsapp ?? '');
+            if (strpos($wa_phone, '0') === 0 && strpos($wa_phone, '20') !== 0) {
+                $wa_phone = '20' . substr($wa_phone, 1);
+            }
+        @endphp
+        <a href="https://wa.me/{{ $wa_phone }}?text={{ urlencode('السلام عليكم') }}" class="whats" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
     </div>
     
     @include('frontend.layouts.header')
@@ -103,18 +116,5 @@
                     });
     </script>
     @endif
-   <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/69722e3f3b7a2c19815fff82/1jfj09b7g';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
 </body>
 </html>

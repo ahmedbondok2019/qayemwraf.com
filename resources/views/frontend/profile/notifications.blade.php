@@ -76,7 +76,7 @@
         width: 40px;
         height: 40px;
         background-color: #E8F5E9;
-        color: #1E5631;
+        color: #1c4dac;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -90,6 +90,6 @@
     .notification-action { margin-left: 1rem; }
     html[dir="rtl"] .notification-action { margin-left: 0; margin-right: 1rem; }
     
-    .badge-primary { background-color: #1E5631; color: white; padding: 0.25em 0.6em; border-radius: 10rem; font-size: 75%; }
+    .badge-primary { background-color: #1c4dac; color: white; padding: 0.25em 0.6em; border-radius: 10rem; font-size: 75%; }
 </style>
 @endsection

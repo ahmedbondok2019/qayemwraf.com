@@ -28,8 +28,11 @@ class RedirectIfAuthenticated
                 if ($guard === 'vendor') {
                     return redirect()->route('vendor.home');
                 }
+                if ($guard === 'web' || $guard === null) {
+                    return redirect()->route('frontend.index');
+                }
                 if ($guard === 'user') {
-                    return redirect()->route('frontend.user.home');
+                    return redirect()->route('frontend.index');
                 }
             }
         }

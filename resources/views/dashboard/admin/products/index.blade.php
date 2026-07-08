@@ -48,8 +48,11 @@
                                             <th>#</th>
                                             <th>{{ trans_db('dashboard.Image') }}</th>
                                             <th>{{ trans_db('dashboard.Name') }}</th>
+                                            <th>{{ trans_db('dashboard.SKU') }}</th>
                                             <th>{{ trans_db('dashboard.Categories') }}</th>
-                                            <th>{{ trans_db('dashboard.gift') }}</th>
+                                            <th>{{ trans_db('dashboard.Price') }}</th>
+                                            <th>{{ trans_db('dashboard.Quantity') }}</th>
+                                            <th>{{ trans_db('dashboard.Front-end') }}</th>
                                             <th>{{ trans_db('dashboard.Status') }}</th>
                                             <th>{{ trans_db('dashboard.Actions') }}</th>
                                         </tr>
@@ -93,14 +96,26 @@
                         name: 'name'
                     },
                     {
+                        data: 'sku',
+                        name: 'sku'
+                    },
+                    {
                         data: 'categories',
                         name: 'categories',
                         orderable: false,
-                        searchable: false
+                        searchable: true
                     },
                     {
-                        data: 'is_gift',
-                        name: 'is_gift'
+                        data: 'price',
+                        name: 'price'
+                    },
+                    {
+                        data: 'quantity',
+                        name: 'quantity'
+                    },
+                    {
+                        data: 'show_on_home',
+                        name: 'show_on_home'
                     },
                     {
                         data: 'status',
@@ -120,10 +135,11 @@
                 }
             });
 
-            $(document).on('change', '.toggle-gift', function() {
+
+            $(document).on('change', '.toggle-show-on-home', function() {
                 let id = $(this).data('id');
                 $.ajax({
-                    url: "{{ route('admin.products.toggle_gift', '') }}/" + id,
+                    url: "{{ route('admin.products.toggle_home', '') }}/" + id,
                     type: 'POST',
                     data: {
                         _token: "{{ csrf_token() }}"

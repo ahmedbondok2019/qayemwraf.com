@@ -38,7 +38,7 @@
                 <div class="col-lg-4 col-md-6 mb-5">
                     <div class="footer-widget brand-widget">
                         <a href="{{ route('frontend.index') }}" class="footer-logo">
-                            <img src="{{ isset($Setting) && $Setting->logo ? asset($Setting->logo) : '/website/images/logo/logo.png' }}" alt="{{ $Setting->translate('app_name') ?? 'Mushaf Home' }}">
+                            <img src="{{ isset($Setting) && $Setting?->logo ? asset($Setting->logo) : '/website/images/logo/logo.png' }}" alt="{{ $Setting?->translate('app_name') ?? 'Mushaf Home' }}">
                         </a>
                         <p class="mt-4 mb-4 text-white-muted">
                             {{ trans_db('frontend.Explore our trusted partners and publishers') }}. 
@@ -91,7 +91,7 @@
                         <ul class="contact-list">
                             <li>
                                 <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
-                                <div class="text">{{ $Setting->translate('address') ?? 'Cairo, Egypt' }}</div>
+                                <div class="text">{{ $Setting?->translate('address') ?? 'Cairo, Egypt' }}</div>
                             </li>
                             <li>
                                 <div class="icon"><i class="fa-solid fa-phone"></i></div>
@@ -99,7 +99,7 @@
                             </li>
                             <li>
                                 <div class="icon"><i class="fa-regular fa-envelope"></i></div>
-                                <div class="text">{{ $Setting->contact_email ?? 'info@mushafhome.com' }}</div>
+                                <div class="text">{{ $Setting?->contact_email ?? 'info@mushafhome.com' }}</div>
                             </li>
                         </ul>
                     </div>
@@ -114,7 +114,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-start">
                     <p class="copyright-text">
-                        &copy; {{ date('Y') }} <strong>{{ $Setting->translate('app_name') ?? 'Mushaf Home' }}</strong>. {{ trans_db('frontend.All Rights Reserved') }}
+                        &copy; {{ date('Y') }} <strong>{{ $Setting?->translate('app_name') ?? 'Mushaf Home' }}</strong>. {{ trans_db('frontend.All Rights Reserved') }}
                     </p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
@@ -139,8 +139,8 @@
         --footer-bg: #111827;
         --footer-text: #9ca3af;
         --footer-title: #f3f4f6;
-        --primary-gradient: linear-gradient(135deg, #1E5631 0%, #4C825D 100%); /* Mushaf Green Gradient */
-        --hover-color: #C5A059; /* Gold */
+        --primary-gradient: linear-gradient(135deg, #1c4dad 0%, #3066d1 100%); /* New Blue Gradient */
+        --hover-color: #e98939; /* Orange */
     }
 
     .footer-modern-elegant {
@@ -377,7 +377,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #C5A059;
+        color: var(--secondary-color);
         flex-shrink: 0;
     }
 
@@ -405,7 +405,7 @@
         background: var(--primary-gradient);
         transform: translateY(-5px);
         border-color: transparent;
-        box-shadow: 0 10px 20px rgba(30, 86, 49, 0.3);
+        box-shadow: 0 10px 20px rgba(28, 77, 173, 0.3);
     }
 
     /* Footer Bottom Show */

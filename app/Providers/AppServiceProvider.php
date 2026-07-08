@@ -32,16 +32,17 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+    // 
     public function boot(): void
     {
         Schema::defaultStringLength(191);
         Paginator::useBootstrap();
         JsonResource::withoutWrapping();
 
-        if (Schema::hasTable('settings')) {
-            $setting = Setting::first();
-            $popupAds = Schema::hasTable('advertisements')
-                ? Advertisement::where('location', 'popup')->active()->get()
+        if(Schema::hasTable('settings')){
+            $setting = Setting::first() ?? new Setting();
+            $popupAds = Schema::hasTable('advertisements') 
+                ? Advertisement::where('location', 'popup')->active()->get() 
                 : collect();
             View::share([
                 'Setting' => $setting,

@@ -226,7 +226,7 @@
                                             <span class="v-current-price">{{ format_price($flashSalePrice) }}</span>
                                             <span class="v-old-price">{{ format_price($originalPrice) }}</span>
                                             <span class="v-discount-badge">-{{ $discount }}%</span>
-                                        @elseif($product->special_price)
+                                        @elseif($product->has_special_price)
                                             <span class="v-current-price">{{ format_price($product->special_price) }}</span>
                                             <span class="v-old-price">{{ format_price($product->price) }}</span>
                                             @php $discount = round((($product->price - $product->special_price) / $product->price) * 100); @endphp
@@ -237,6 +237,8 @@
                                     </div>
                                     @include('frontend.products.partials.rating_display', ['product' => $product])
                                 </div>
+                                {{--  --}}
+                                {{--  --}}
                                 <div class="v-card-actions">
                                     @php $qtyInCart = $cartProducts[$product->id] ?? 0; @endphp
                                     

@@ -140,15 +140,15 @@
 @include('frontend.profile.partials.styles')
 <style>
     /* Address Specific Styles */
-    .add-address-btn { background: #1E5631; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .add-address-btn { background: #1c4dac; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
     .add-address-btn:hover { background: #4C825D; }
 
     .addresses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
     .address-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; position: relative; transition: all 0.3s; background: white; }
     .address-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .address-card.is-main { border-color: #1E5631; background: rgba(30, 86, 49, 0.02); }
+    .address-card.is-main { border-color: #1c4dac; background: rgba(30, 86, 49, 0.02); }
     
-    .badge-main { position: absolute; top: 1rem; right: 1rem; background: #1E5631; color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-main { position: absolute; top: 1rem; right: 1rem; background: #1c4dac; color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
     html[dir="rtl"] .badge-main { right: auto; left: 1rem; }
 
     .address-details h5 { margin: 0 0 1rem; color: #2d3748; font-weight: 700; }
@@ -168,7 +168,7 @@
     .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
 
     .form-control { border: 2px solid #e2e8f0; border-radius: 10px; padding: 0.75rem; }
-    .form-control:focus { border-color: #1E5631; box-shadow: none; }
+    .form-control:focus { border-color: #1c4dac; box-shadow: none; }
     .cancel-btn { background: #e2e8f0; color: #4a5568; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 600; cursor: pointer; }
 </style>
 

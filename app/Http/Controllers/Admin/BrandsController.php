@@ -157,11 +157,15 @@ class BrandsController extends BackendController
             'status' => $request->status,
         ]);
 
-        $data = self::imageUpload($request);
-        $image_name = $data['image'];
-
         $Trans = BrandTranslation::where('brand_id', $request->brand_id)
             ->where('lang_id', app()->getLocale());
+        
+        $oldTrans = $Trans->first();
+        $oldImage = $oldTrans ? $oldTrans->image : null;
+
+        $data = self::imageUpload($request, $oldImage);
+        $image_name = $data['image'] ?? $oldImage;
+
         $Trans->update([
             'title' => strip_tags($request->title),
             'image' => $image_name,
@@ -177,7 +181,21 @@ class BrandsController extends BackendController
         if (! in_array('36', Session::get('permissionData'))) {
             return redirect()->back();
         }
-        Brand::where('id', $request->id)->delete();
+        $brand = Brand::where('id', $request->id)->first();
+        if ($brand) {
+            $translations = $brand->BrandTranslations;
+            foreach ($translations as $trans) {
+                if ($trans->image) {
+                    $oldPath = str_replace('storage/', '', $trans->image);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path('website/images/brands/'.$trans->image))) {
+                        unlink(public_path('website/images/brands/'.$trans->image));
+                    }
+                }
+            }
+            $brand->delete();
+        }
 
         alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.congratulation'));
 
@@ -190,38 +208,49 @@ class BrandsController extends BackendController
         $image_name = str_replace(' ', '', $image_nam).'.png';
 
         if ($request->cropped_image != null && file_exists(public_path($request->cropped_image))) {
-            self::UploadImagesBrand(public_path($request->cropped_image), $image_name, 'brands', '300 ', '300');
+            $relativePath = self::UploadImagesBrand(public_path($request->cropped_image), $image_name, 'brands', '300 ', '300');
             unlink(public_path($request->cropped_image));
 
-            return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+            return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
         }
-        if (! empty($request->file('image')) && $request->cropped_image == null && ! file_exists(public_path($request->cropped_image))) {
+        if ($request->hasFile('image')) {
             $ex = $request->file('image')->getClientOriginalExtension();
             if (in_array($ex, ['png', 'jpeg', 'jpg', 'JPG', 'jfif'])) {
 
                 if (isset($oldImage) && $oldImage != null) {
-                    if (file_exists(public_path('website/images/brands/'.$oldImage))) {
-                        unlink('website/images/brands/'.$oldImage);
+                    $oldPath = str_replace('storage/', '', $oldImage);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path('website/images/brands/'.$oldImage))) {
+                        unlink(public_path('website/images/brands/'.$oldImage));
                     }
                 }
 
-                self::UploadImagesBrand($request->file('image'), $image_name, 'brands', '300 ', '300');
+                $relativePath = self::UploadImagesBrand($request->file('image'), $image_name, 'brands', '300 ', '300');
 
-                return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+                return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
             } else {
-                return ['image' => $image_name, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+                return ['image' => null, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
             }
         } else {
-            return ['image' => $image_name, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+            return ['image' => null, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
         }
     }
 
     public static function UploadImagesBrand($image, $name, $folder, $width = null, $height = null)
     {
-        $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder);
-        $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name);
+        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
+        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+        
+        if (!file_exists($fullStoragePath)) {
+            mkdir($fullStoragePath, 0755, true);
+        }
 
-        return HelperController::upload_images($path, $destination, $image, $width, $height);
+        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+
+        HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
+        
+        return 'storage/website/images/' . $folder . '/' . $name;
     }
 
     public function cropBrand(Request $request)

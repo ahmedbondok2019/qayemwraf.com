@@ -429,10 +429,6 @@
     }
     .medical-categories-swiper,
     .medical-products-swiper {
-        padding: 20px 5px !important;
-        margin: 0 -10px !important;
-    }
-
     /* ==============================
        Why Choose Us
     ============================== */

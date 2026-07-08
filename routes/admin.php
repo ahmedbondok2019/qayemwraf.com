@@ -88,6 +88,7 @@ Route::group([
         Route::get('products/stock/download-template', [ProductStockController::class, 'downloadTemplate'])->name('products.stock.download_template');
         Route::get('products/option/values/{id}', [ProductController::class, 'getOptionValues'])->name('products.option.values'); // API/Ajax route
         Route::post('products/toggle-gift/{id}', [ProductController::class, 'toggleGift'])->name('products.toggle_gift');
+        Route::post('products/toggle-home/{id}', [ProductController::class, 'toggleShowOnHome'])->name('products.toggle_home');
 
         // Options
         Route::resource('options', OptionController::class);

@@ -125,6 +125,16 @@ class BlogController extends BackendController
         ]);
 
         if ($request->hasFile('image')) {
+            $oldImage = $blog->BlogTranslation->image;
+            if ($oldImage) {
+                $oldPath = str_replace('storage/', '', $oldImage);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path('website/images/blog/' . $oldImage))) {
+                    unlink(public_path('website/images/blog/' . $oldImage));
+                }
+            }
+
             $data = self::imageUpload($request);
             $image_name = $data['image'];
         } else {
@@ -159,6 +169,15 @@ class BlogController extends BackendController
     public function delete($id)
     {
         $blog = Blog::findOrFail($id);
+        $oldImage = $blog->BlogTranslation->image ?? null;
+        if ($oldImage) {
+            $oldPath = str_replace('storage/', '', $oldImage);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path('website/images/blog/' . $oldImage))) {
+                unlink(public_path('website/images/blog/' . $oldImage));
+            }
+        }
         $blog->delete();
         alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.congratulation'));
         return redirect()->route('admin.blogs.index');
@@ -201,8 +220,14 @@ class BlogController extends BackendController
 
     public static function imageUpload(Request $request)
     {
-        $image_name = Str::slug($request->title) . '-' . time() . '.' . $request->image->extension();
-        $request->image->move(public_path('website/images/blog'), $image_name);
-        return ['image' => $image_name];
+        $file = $request->file('image');
+        $fileName = \Illuminate\Support\Str::slug($request->title) . '-' . time() . '.' . $file->getClientOriginalExtension();
+        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'blog';
+        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
+
+        \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
+
+        return ['image' => 'storage/website/images/blog/' . $fileName];
     }
 }

@@ -18,7 +18,7 @@
                     <div class="brand-info">
                         <h3 class="brand-name">{{ $brand->name }}</h3>
                         {{-- Add a link to filter products by this brand later if needed --}}
-                        <a href="{{ route('products.index', ['brands[]' => $brand->id]) }}" class="view-products-btn">
+                        <a href="{{ route('frontend.products.index', ['brands[]' => $brand->id]) }}" class="view-products-btn">
                             {{ trans_db('frontend.View Products') }} <i class="fa-solid fa-arrow-right ml-2"></i>
                         </a>
                     </div>

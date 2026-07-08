@@ -25,7 +25,7 @@
         padding: 2rem;
         text-align: center;
         border-bottom: 1px solid #E8F5E9;
-        background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+        background: linear-gradient(135deg, #1c4dad 0%, #3066d1 100%);
         color: white;
     }
 
@@ -92,8 +92,8 @@
     .profile-menu li.active a,
     .profile-menu li a:hover {
         background-color: #E8F5E9;
-        color: #1E5631;
-        border-color: #1E5631;
+        color: #1c4dad;
+        border-color: #1c4dad;
     }
 
     /* Content Styling */
@@ -164,13 +164,13 @@
     }
     
     .input-wrapper input:focus {
-        border-color: #1E5631;
+        border-color: #1c4dad;
         outline: none;
-        box-shadow: 0 0 0 3px rgba(30, 86, 49, 0.1);
+        box-shadow: 0 0 0 3px rgba(28, 77, 173, 0.1);
     }
 
     .save-btn {
-        background: linear-gradient(135deg, #1E5631 0%, #4C825D 100%);
+        background: linear-gradient(135deg, #1c4dad 0%, #3066d1 100%);
         color: white;
         border: none;
         padding: 0.8rem 2rem;
@@ -183,7 +183,7 @@
 
     .save-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(30, 86, 49, 0.25);
+        box-shadow: 0 4px 6px rgba(28, 77, 173, 0.25);
     }
 
     @media (max-width: 900px) {
@@ -236,19 +236,19 @@
         border-radius: .25rem;
     }
     
-    .text-primary { color: #1E5631 !important; }
+    .text-primary { color: #1c4dad !important; }
 
     /* Shared Profile Button Styles */
-    .btn-outline-primary { color: #1E5631; border-color: #1E5631; }
-    .btn-outline-primary:hover { background-color: #1E5631; border-color: #1E5631; color: white; }
-    .btn-primary { background-color: #1E5631; border-color: #1E5631; color: white; }
-    .btn-primary:hover { background-color: #4C825D; border-color: #4C825D; }
+    .btn-outline-primary { color: #1c4dad; border-color: #1c4dad; }
+    .btn-outline-primary:hover { background-color: #1c4dad; border-color: #1c4dad; color: white; }
+    .btn-primary { background-color: #1c4dad; border-color: #1c4dad; color: white; }
+    .btn-primary:hover { background-color: #3066d1; border-color: #3066d1; }
 
     /* Shared Badge Styles */
     .badge-status { padding: 0.5em 1em; font-size: 0.75em; letter-spacing: 0.5px; }
     .badge-status.pending { background-color: #fffaf0; color: #b7791f; border: 1px solid #fbd38d; }
     .badge-status.processing { background-color: #e6fffa; color: #319795; border: 1px solid #81e6d9; }
-    .badge-status.completed, .badge-status.delivered { background-color: #f0fff4; color: #1E5631; border: 1px solid #9ae6b4; }
+    .badge-status.completed, .badge-status.delivered { background-color: #f0fff4; color: #1c4dad; border: 1px solid #9ae6b4; }
     .badge-status.cancelled { background-color: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
-    .badge-status.shipped { background-color: #E8F5E9; color: #143d23; border: 1px solid #4C825D; } /* Updated from blue */
+    .badge-status.shipped { background-color: #E8F5E9; color: #143d23; border: 1px solid #3066d1; } /* Updated from blue */
 </style>

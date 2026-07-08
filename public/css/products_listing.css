@@ -51,7 +51,7 @@
 }
 
 .filter-checkbox:hover {
-    color: #1E5631;
+    color: #1c4dac;
 }
 
 .filter-checkbox input {
@@ -79,7 +79,7 @@
 }
 
 .price-input:focus {
-    border-color: #1E5631;
+    border-color: #1c4dac;
 }
 
 /* Sorting Header */
@@ -129,8 +129,8 @@
 }
 
 .page-item.active .page-link {
-    background: #1E5631;
-    border-color: #1E5631;
+    background: #1c4dac;
+    border-color: #1c4dac;
     color: #fff;
     box-shadow: 0 4px 10px rgba(30, 86, 49, 0.3);
 }

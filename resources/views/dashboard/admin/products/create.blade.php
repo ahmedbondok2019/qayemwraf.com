@@ -84,6 +84,15 @@
                                                             @enderror
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label for="meta_keywords_{{ $localeCode }}">{{ trans_db('dashboard.Meta Keywords') }} ({{ $properties['native'] }})</label>
+                                                            <textarea id="meta_keywords_{{ $localeCode }}" class="form-control" name="meta_keywords_{{ $localeCode }}">{{ old('meta_keywords_' . $localeCode) }}</textarea>
+                                                            @error('meta_keywords_' . $localeCode)
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -250,6 +259,17 @@
                                         <div class="custom-control custom-switch custom-switch-success">
                                             <input type="checkbox" class="custom-control-input" id="status" name="status" checked />
                                             <label class="custom-control-label" for="status">
+                                                <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                                <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="show_on_home">{{ trans_db('dashboard.Front-end') }}</label>
+                                        <div class="custom-control custom-switch custom-switch-info">
+                                            <input type="checkbox" class="custom-control-input" id="show_on_home" name="show_on_home" checked />
+                                            <label class="custom-control-label" for="show_on_home">
                                                 <span class="switch-icon-left"><i data-feather="check"></i></span>
                                                 <span class="switch-icon-right"><i data-feather="x"></i></span>
                                             </label>
@@ -429,10 +449,6 @@
                valuesHtml += `<option value="${val.id}">${val.name || val.translation?.name}</option>`;
             });
 
-            // Check if it was required in old input (we can't easily pass it here without changing signature, 
-            // but we can default to checked as per UI, or check DOM after)
-            // Ideally we'd pass 'required' status, but for simplicity we rely on default or user can re-check.
-            
             let block = `
                 <div class="card border mb-2" id="option-block-${id}">
                     <div class="card-header d-flex justify-content-between align-items-center bg-light">
@@ -449,7 +465,7 @@
                         <input type="hidden" name="product_options[${optionIndex}][option_id]" value="${id}">
                         <table class="table table-bordered table-sm option-values-table" id="option-values-table-${id}">
                             <thead>
-                                <tr>
+                                <tr class="text-center bg-light">
                                     <th>{{ trans_db('dashboard.Value') }}</th>
                                     <th>{{ trans_db('dashboard.Quantity') }}</th>
                                     <th>{{ trans_db('dashboard.reduce quantity') }}</th>
@@ -461,25 +477,45 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <div class="mt-2">
-                            <select class="form-control d-inline-block w-auto" id="value-select-${id}">
+                        <div class="mt-2 d-flex align-items-center">
+                            <select class="form-control w-auto mr-1" id="value-select-${id}">
                                 ${valuesHtml}
                             </select>
-                            <button type="button" class="btn btn-sm btn-success add-value-row-btn" data-index="${optionIndex}" data-id="${id}"><i data-feather="plus"></i> {{ trans_db('dashboard.Add New Item') }}</button>
+                            <button type="button" class="btn btn-sm btn-success add-value-row-btn mr-1" data-index="${optionIndex}" data-id="${id}">
+                                <i data-feather="plus"></i> {{ trans_db('dashboard.Add New Item') }}
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-primary add-all-values-btn" data-index="${optionIndex}" data-id="${id}">
+                                {{ trans_db('dashboard.Add All Values') ?? 'إضافة كل القيم' }}
+                            </button>
                         </div>
                     </div>
                 </div>
             `;
             
             $('#product-options-container').append(block);
+            
+            // Automatically add all values on creation
+            values.forEach(val => {
+                addValueRow(optionIndex, id, val.id, val.name || val.translation?.name);
+            });
+
             if(feather) feather.replace();
-            // We increment optionIndex ONLY if we are adding fresh. 
-            // If restoring, logic handles index. 
-            // But this function increments. Let's handle index outside or synced.
-            // For restoration, we manually updated optionIndex. 
-            // For new adds, we use current optionIndex.
-             optionIndex++;
+            optionIndex++;
         }
+
+        $(document).on('click', '.add-all-values-btn', function() {
+            let id = $(this).data('id');
+            let idx = $(this).data('index');
+            let select = $(`#value-select-${id}`);
+            
+            select.find('option').each(function() {
+                let valId = $(this).val();
+                let valName = $(this).text();
+                if ($(`#val-row-${idx}-${valId}`).length === 0) {
+                    addValueRow(idx, id, valId, valName);
+                }
+            });
+        });
         
         function addValueRow(idx, id, valueId, valueName, data = null) {
              let qty = data ? data.quantity : 100;

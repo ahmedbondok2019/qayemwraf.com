@@ -87,8 +87,13 @@ class FlashSaleController extends Controller
             if ($request->hasFile('image')) {
                  $file = $request->file('image');
                  $filename = time() . '.' . $file->getClientOriginalExtension();
-                 $file->move(public_path('uploads/flash_sales'), $filename);
-                 $imagePath = 'uploads/flash_sales/' . $filename;
+                 $path = 'uploads' . DIRECTORY_SEPARATOR . 'flash_sales';
+                 $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                 if (!file_exists($fullStoragePath)) {
+                     mkdir($fullStoragePath, 0755, true);
+                 }
+                 $file->move($fullStoragePath, $filename);
+                 $imagePath = 'storage/uploads/flash_sales/' . $filename;
             }
 
             $flashSale = FlashSale::create([
@@ -144,11 +149,28 @@ class FlashSaleController extends Controller
         try {
             
              if ($request->hasFile('image')) {
+                 // Delete old image
+                 if ($flashSale->image) {
+                     $oldPath = str_replace('storage/', '', $flashSale->image);
+                     if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                         \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                     } elseif (file_exists(public_path($flashSale->image))) {
+                         unlink(public_path($flashSale->image));
+                     } elseif (file_exists(public_path('uploads/flash_sales/' . $flashSale->image))) {
+                         unlink(public_path('uploads/flash_sales/' . $flashSale->image));
+                     }
+                 }
+
                  $file = $request->file('image');
                  $filename = time() . '.' . $file->getClientOriginalExtension();
-                 $file->move(public_path('uploads/flash_sales'), $filename);
-                 $imagePath = 'uploads/flash_sales/' . $filename;
-                  $flashSale->image = $imagePath;
+                 $path = 'uploads' . DIRECTORY_SEPARATOR . 'flash_sales';
+                 $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+                 if (!file_exists($fullStoragePath)) {
+                     mkdir($fullStoragePath, 0755, true);
+                 }
+                 $file->move($fullStoragePath, $filename);
+                 $imagePath = 'storage/uploads/flash_sales/' . $filename;
+                 $flashSale->image = $imagePath;
             }
 
             $flashSale->update([
@@ -187,6 +209,16 @@ class FlashSaleController extends Controller
     public function destroy($id)
     {
         $flashSale = FlashSale::findOrFail($id);
+        if ($flashSale->image) {
+            $oldPath = str_replace('storage/', '', $flashSale->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($flashSale->image))) {
+                unlink(public_path($flashSale->image));
+            } elseif (file_exists(public_path('uploads/flash_sales/' . $flashSale->image))) {
+                unlink(public_path('uploads/flash_sales/' . $flashSale->image));
+            }
+        }
         $flashSale->delete();
         return response()->json(['success' => trans_db('dashboard.deleted_successfully')]);
     }

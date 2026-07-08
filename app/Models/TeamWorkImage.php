@@ -10,6 +10,7 @@ class TeamWorkImage extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use \App\Traits\HandleImageStorageTrait;
 
     protected $guarded = [];
 }

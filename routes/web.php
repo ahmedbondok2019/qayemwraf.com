@@ -12,22 +12,24 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::get('/sitemap.xml', [App\Http\Controllers\Web\SitemapController::class, 'index']);
 
+// Social Login Routes (Outside localization group for consistent callback URL)
+Route::get('/login/{provider}', [App\Http\Controllers\Auth\SocialLoginController::class, 'redirectToProvider']);
+Route::get('/login/{provider}/callback', [App\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback']);
+
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'last_url','logVisits'],
 ], function () {
     Route::middleware(['Language'])->as("frontend.")->group(function () {
         Route::get("/", [HomeController::class, 'index'])->name("index");
-        //
+        
+        // 
         // Auth Routes
         // Login
         Route::get('/login/user', [LoginController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [LoginController::class, 'login']);
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-        Route::get('/login/{provider}', [App\Http\Controllers\Auth\SocialLoginController::class, 'redirectToProvider']);
-        Route::get('/login/{provider}/callback', [App\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback']);
-            
         // Registration
         Route::get('/register/user', [RegisterController::class, 'showRegistrationForm'])->name('register');
         Route::post('/register', [RegisterController::class, 'register']);
@@ -37,6 +39,7 @@ Route::group([
         Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
         Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+        
         // User Profile & Checkout Routes
         Route::group(['as' => 'user.', 'middleware' => ['auth']], function () {
             Route::get('/home', [App\Http\Controllers\Web\ProfileController::class, 'index'])->name('home');
@@ -99,6 +102,9 @@ Route::group([
         Route::post('/wishlist/toggle', [App\Http\Controllers\Web\WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
         // Static Pages
+        Route::get('/about-us', [App\Http\Controllers\Web\PageController::class, 'show'])->defaults('slug', 'about-us')->name('about-us');
+        Route::get('/latest-products', [App\Http\Controllers\Web\ProductController::class, 'index'])->name('latest-products');
+        Route::get('/best-sellers', [App\Http\Controllers\Web\ProductController::class, 'index'])->name('best-sellers');
         Route::get('/page/{slug}', [App\Http\Controllers\Web\PageController::class, 'show'])->name('page.show');
 
         // Blog Routes
@@ -111,4 +117,3 @@ Route::group([
 });
 
 Route::get('/test-jnt-order', [App\Http\Controllers\TestJntController::class, 'testOrder']);
-

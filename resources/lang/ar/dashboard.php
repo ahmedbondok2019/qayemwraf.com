@@ -1003,4 +1003,6 @@ return [
     'Apple' => 'آبل',
     'Static Translations' => 'الترجمات الثابتة',
     'Translations List' => 'قائمة الترجمات',
+    'Front-end' => 'عرض في الواجهة الأمامية',
+    'SKU' => 'رمز المنتج',
 ];

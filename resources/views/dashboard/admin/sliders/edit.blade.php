@@ -183,6 +183,22 @@
                                         @endif
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="mobile_image">صورة الجوال (Mobile Image)</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="mobile_image" name="mobile_image">
+                                            <label class="custom-file-label" for="mobile_image">{{ trans_db('dashboard.Choose file') }}</label>
+                                        </div>
+                                         @error('mobile_image')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        @if($slider->mobile_image)
+                                            <div class="mt-2 text-center">
+                                                <img src="{{ asset($slider->mobile_image) }}" alt="Mobile Slider Image" class="img-fluid rounded border p-1" style="max-height: 150px;">
+                                            </div>
+                                        @endif
+                                    </div>
+
                                     <button type="submit" class="btn btn-primary btn-block">{{ trans_db('dashboard.Save') }}</button>
                                 </div>
                             </div>

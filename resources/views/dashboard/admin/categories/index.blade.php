@@ -55,7 +55,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
                                                         @if($category->image)
-                                                            <img src="{{ asset('website/images/category/' . $category->image) }}" alt="img" width="50" class="rounded">
+                                                            <img src="{{ asset($category->image) }}" alt="img" width="50" class="rounded">
                                                         @else
                                                             <span class="badge badge-light-secondary">{{ trans_db('dashboard.No Image') }}</span>
                                                         @endif

@@ -54,12 +54,16 @@ jobs:
               mkdir -p "$(dirname "$ADMIN_FILE")"
               echo "" > "$ADMIN_FILE"
             fi
-
             # 5. تهيئة Laravel (أضفنا فحص للملف .env)
             echo "Optimizing Laravel..."
             if [ -f ".env" ]; then
               php artisan migrate --force || echo "Migration failed, check DB connection in .env"
+              # php artisan db:seed --class=DashboardAllTranslationsSeeder --force
+              # php artisan db:seed --class=PaymentMethodSeeder --force
               php artisan optimize:clear
+              echo "Linking storage..."
+              rm -rf public/storage
+              ln -sfn ../storage/app/public public/storage
               php artisan scribe:generate --force || echo "Scribe generation failed, skipping..."
             else
               echo "⚠️ .env file missing! Commands skipped. Please create it manually on Hostinger."

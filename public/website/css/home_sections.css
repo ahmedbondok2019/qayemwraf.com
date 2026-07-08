@@ -25,7 +25,7 @@
     right: 0; /* RTL */
     width: 60px;
     height: 2px;
-    background: #1e5631;
+    background: var(--primary-color);
 }
 .section-header a {
     font-size: 14px;
@@ -34,7 +34,7 @@
     transition: 0.3s;
 }
 .section-header a:hover {
-    color: #1e5631;
+    color: var(--primary-color);
 }
 
 .products-grid {
@@ -140,7 +140,7 @@
     position: absolute;
     top: -5px;
     right: -5px;
-    background: #c5a059;
+    background: #e98939;
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -160,12 +160,12 @@
     align-items: center;
     justify-content: space-between;
     background: #fff;
-    border: 2px solid #1e5631;
+    border: 2px solid var(--primary-color);
     border-radius: 20px;
     padding: 0 5px;
     height: 40px;
     min-width: 100px;
-    box-shadow: 0 4px 6px rgba(30, 86, 49, 0.2);
+    box-shadow: 0 4px 6px rgba(28, 77, 173, 0.2);
 }
 
 .qty-btn {
@@ -174,7 +174,7 @@
     border-radius: 50%;
     border: none;
     background: transparent;
-    color: #1e5631;
+    color: var(--primary-color);
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
@@ -237,7 +237,7 @@
 .vibe-subcat-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    border-color: #1e5631;
+    border-color: var(--primary-color);
 }
 .vibe-subcat-img-wrapper {
     width: 80px;
@@ -265,7 +265,7 @@
     transition: 0.3s;
 }
 .vibe-subcat-card:hover .vibe-subcat-title {
-    color: #1e5631;
+    color: var(--primary-color);
 }
 .vibe-subcat-count {
     font-size: 12px;
@@ -348,20 +348,20 @@
 }
 
 .v-add-btn:hover {
-    background: #1e5631; /* Deep Green */
+    background: var(--primary-color); /* Deep Blue */
     color: #fff;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(30, 86, 49, 0.4);
+    box-shadow: 0 8px 20px rgba(28, 77, 173, 0.4);
 }
 
 .v-wishlist-btn:hover {
     background: #e74c3c; /* Red */
     color: #fff;
     backdrop-filter: blur(5px);
-    border: 1px solid #1e5631;
+    border: 1px solid var(--primary-color);
     border-radius: 10px;
     height: 36px;
-    box-shadow: 0 4px 12px rgba(30, 86, 49, 0.15);
+    box-shadow: 0 4px 12px rgba(28, 77, 173, 0.15);
     z-index: 20; 
     position: relative;
 }
@@ -378,7 +378,7 @@
     border-radius: 6px;
     border: none;
     background: #f3f4f6;
-    color: #1e5631;
+    color: var(--primary-color);
     font-size: 12px;
     font-weight: 800;
     cursor: pointer;
@@ -386,7 +386,7 @@
 }
 
 .qty-btn:hover {
-    background: #1e5631;
+    background: var(--primary-color);
     color: #fff;
 }
 
@@ -506,7 +506,7 @@
 }
 
 .cart-dot {
-    background: #1e5631; /* Green */
+    background: var(--primary-color); /* Blue */
 }
 
 .wish-dot {

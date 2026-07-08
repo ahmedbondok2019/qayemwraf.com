@@ -183,23 +183,20 @@ class SlidersController extends BackendController
 
     public static function updateSlider(Request $request)
     {
-        if ($request->has('image')) {
-            $data = self::imageUpload($request);
-            $image_name = $data['image'];
-        }
-
-        // if ($request->has('image')) {
-        //     $imageSlug = HelperController::make_slug($request->title . Str::random('8').'_'.str_replace(' ', '' ,Carbon::today()));
-        //     $image_name = str_replace(' ', '', $imageSlug). '.jpg';
-        //     $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'sliders');
-        //     $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'sliders'.DIRECTORY_SEPARATOR. $image_name);
-        //     HelperController::upload_images($path,$destination,$request->file('image'), null, null);
-        // }
-
         $slider = Slider::find($request->id);
 
         $pos = array_filter(explode(',', $request->position), fn ($value) => ! is_null($value) && $value !== '');
         $position = array_unique($pos);
+
+        $sliderupdate = SliderTranslation::where('slider_id', $slider->id);
+        
+        $oldTrans = $sliderupdate->first();
+        $oldImage = $oldTrans ? $oldTrans->image : null;
+
+        if ($request->has('image')) {
+            $data = self::imageUpload($request, $oldImage);
+            $image_name = $data['image'];
+        }
 
         $slider->update([
             'view_index' => optional(Slider::select('view_index')->max('view_index'))->view_index,
@@ -209,15 +206,13 @@ class SlidersController extends BackendController
             'lang_id' => app()->getLocale(),
         ]);
 
-        $sliderupdate = SliderTranslation::where('slider_id', $slider->id);
-
         $inputs = [
             'title' => $request->title,
             'link' => $request->link,
             'category' => $request->category,
             'slug' => $request->slug,
             'position' => collect($position)->implode(','),
-            'image' => isset($image_name) ? $image_name : $slider->SliderTranslation->image,
+            'image' => isset($image_name) ? $image_name : ($oldImage),
         ];
 
         if ($sliderupdate->update($inputs)) {
@@ -277,9 +272,13 @@ class SlidersController extends BackendController
         }
         $data = Slider::where('id', $request->id)->first();
         if ($data) {
-            if ($data->image != null) {
-                if (file_exists(public_path('website/images/sliders/'.$data->image))) {
-                    unlink('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'sliders'.DIRECTORY_SEPARATOR.$data->image);
+            $trans = SliderTranslation::where('slider_id', $request->id)->first();
+            if ($trans && $trans->image != null) {
+                $oldPath = str_replace('storage/', '', $trans->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path('website/images/sliders/'.$trans->image))) {
+                    unlink(public_path('website/images/sliders/'.$trans->image));
                 }
             }
             SliderTranslation::where('slider_id', $request->id)->delete();
@@ -297,17 +296,19 @@ class SlidersController extends BackendController
     {
         $data = Slider::find($request->id);
         if ($data && $data->image != null) {
-            if (file_exists(public_path('website/images/sliders/'.$data->image))) {
-                unlink('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'sliders'.DIRECTORY_SEPARATOR.$data->image);
+            $oldPath = str_replace('storage/', '', $data->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path('website/images/sliders/'.$data->image))) {
+                unlink(public_path('website/images/sliders/'.$data->image));
             }
-            $data->delete();
+            $data->update(['image' => null]);
             alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.deleted'));
         } else {
             alert()->warning(trans_db('dashboard.not found'), trans_db('dashboard.attention'));
         }
 
         return redirect()->back();
-        //        ->with('msg', trans_db('dashboard.deleted successfully'));
     }
 
     public function slidersOrderUp(Request $request)
@@ -353,43 +354,44 @@ class SlidersController extends BackendController
         $image_name = str_replace(' ', '', $image_nam).'.png';
 
         if ($request->cropped_image != null && file_exists(public_path($request->cropped_image))) {
-            // self::UploadImagesSlider(public_path($request->cropped_image) , $image_name , 'sliders' . DIRECTORY_SEPARATOR . 'small' , '1279 ','970');
-            self::UploadImagesSlider(public_path($request->cropped_image), $image_name, 'sliders', '1280 ', '605');
+            $relativePath = self::UploadImagesSlider(public_path($request->cropped_image), $image_name, 'sliders', '1280 ', '605');
             unlink(public_path($request->cropped_image));
 
-            return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+            return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
         }
         if (! empty($request->file('image'))) {
             $ex = $request->file('image')->getClientOriginalExtension();
             if (in_array($ex, ['png', 'jpeg', 'jpg', 'JPG', 'jfif'])) {
 
                 if (isset($oldImage) && $oldImage != null) {
-                    if (file_exists(public_path('website/images/sliders/small/'.$oldImage))) {
-                        unlink('website/images/sliders/'.$oldImage);
-                    }
-                    if (file_exists(public_path('website/images/sliders/'.$oldImage))) {
-                        unlink('website/images/sliders/'.$oldImage);
+                    $oldPath = str_replace('storage/', '', $oldImage);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path('website/images/sliders/'.$oldImage))) {
+                        unlink(public_path('website/images/sliders/'.$oldImage));
                     }
                 }
 
-                // self::UploadImagesSlider($request->file('image') , $image_name , 'sliders' . DIRECTORY_SEPARATOR . 'small' , '1279 ','970');
-                self::UploadImagesSlider($request->file('image'), $image_name, 'sliders', '1280 ', '605');
+                $relativePath = self::UploadImagesSlider($request->file('image'), $image_name, 'sliders', '1280 ', '605');
 
-                return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+                return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
             } else {
-                return ['image' => $image_name, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+                return ['image' => null, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
             }
         } else {
-            return ['image' => $image_name, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+            return ['image' => null, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
         }
     }
 
     public static function UploadImagesSlider($image, $name, $folder, $width = null, $height = null)
     {
-        $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder);
-        $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name);
+        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
+        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
 
-        return HelperController::upload_images($path, $destination, $image, $width, $height);
+        HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
+        
+        return 'storage/website/images/' . $folder . '/' . $name;
     }
 
     public function cropSlider(Request $request)

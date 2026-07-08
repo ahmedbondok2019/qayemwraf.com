@@ -10,6 +10,7 @@ class Product extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use \App\Traits\HandleImageStorageTrait;
 
     protected $guarded = [];
 
@@ -18,6 +19,7 @@ class Product extends Model
         'ignore_quantity' => 'boolean',
         'is_best_seller' => 'boolean',
         'is_gift' => 'boolean',
+        'show_on_home' => 'boolean',
         'special_price_start' => 'date',
         'special_price_end' => 'date',
         'best_seller_start' => 'date',
@@ -84,7 +86,6 @@ class Product extends Model
 
     public function scopeActive($query)
     {
-        // Simple active scope for now, can be expanded strictly for vendors later
         return $query->where('status', 1);
     }
     
@@ -113,5 +114,21 @@ class Product extends Model
     public function ratingCount()
     {
         return $this->ratings()->where('status', 1)->count();
+    }
+
+    public function getHasSpecialPriceAttribute()
+    {
+        if (!$this->special_price || $this->special_price <= 0) return false;
+        
+        $now = now();
+        $start = $this->special_price_start;
+        $end = $this->special_price_end;
+        
+        return (!$start || $start <= $now) && (!$end || $end >= $now);
+    }
+
+    public function getCurrentPriceAttribute()
+    {
+        return $this->has_special_price ? $this->special_price : $this->price;
     }
 }

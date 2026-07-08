@@ -105,7 +105,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ url('admin/options') }}/" + id,
+                        url: "{{ route('admin.options.destroy', '') }}/" + id,
                         type: 'DELETE',
                         data: {
                             _token: "{{ csrf_token() }}"

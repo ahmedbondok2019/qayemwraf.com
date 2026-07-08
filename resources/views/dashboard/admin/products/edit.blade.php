@@ -88,6 +88,15 @@
                                                             @enderror
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-group">
+                                                            <label for="meta_keywords_{{ $localeCode }}">{{ trans_db('dashboard.Meta Keywords') }} ({{ $properties['native'] }})</label>
+                                                            <textarea id="meta_keywords_{{ $localeCode }}" class="form-control" name="meta_keywords_{{ $localeCode }}">{{ old('meta_keywords_' . $localeCode, $translation->meta_keywords ?? '') }}</textarea>
+                                                            @error('meta_keywords_' . $localeCode)
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -330,6 +339,17 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="show_on_home">{{ trans_db('dashboard.Front-end') }}</label>
+                                        <div class="custom-control custom-switch custom-switch-info">
+                                            <input type="checkbox" class="custom-control-input" id="show_on_home" name="show_on_home" {{ $product->show_on_home ? 'checked' : '' }} />
+                                            <label class="custom-control-label" for="show_on_home">
+                                                <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                                <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="product_brand_id">{{ trans_db('dashboard.Brands') }}</label>
                                         <select class="form-control select2" name="product_brand_id" id="product_brand_id">
                                             <option value="">{{ trans_db('dashboard.Select') }}</option>
@@ -402,11 +422,12 @@
                                         @error('gallery')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
-                                        @if($product->images->count() > 0)
-                                            <div class="row mt-1">
-                                                @foreach($product->images as $img)
-                                                    <div class="col-4 mb-1 text-center position-relative">
-                                                        <img src="{{ asset($img->image) }}" class="img-fluid rounded">
+                                         @if($product->images->count() > 0)
+                                            <div class="row mt-1" id="sortable-gallery">
+                                                @foreach($product->images->sortBy('sort_order') as $img)
+                                                    <div class="col-4 mb-2 text-center position-relative gallery-item" data-id="{{ $img->id }}" style="cursor: move;">
+                                                        <input type="hidden" name="image_sort[{{ $img->id }}]" class="sort-input" value="{{ $img->sort_order }}">
+                                                        <img src="{{ asset($img->image) }}" class="img-fluid rounded border" style="height: 120px; width: 100%; object-fit: cover;">
                                                         <div class="custom-control custom-checkbox mt-1">
                                                             <input type="checkbox" class="custom-control-input" id="del_img_{{ $img->id }}" name="deleted_images[]" value="{{ $img->id }}">
                                                             <label class="custom-control-label text-danger" for="del_img_{{ $img->id }}">{{ trans_db('dashboard.Delete') }}</label>
@@ -414,6 +435,7 @@
                                                     </div>
                                                 @endforeach
                                             </div>
+                                            <p class="text-muted small mt-1"><i data-feather="info" class="mr-50"></i>{{ trans_db('dashboard.drag_to_sort') ?? 'اسحب الصور لترتيبها' }}</p>
                                         @endif
                                     </div>
 
@@ -429,9 +451,31 @@
 @endsection
 
 @section('script')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2();
+        
+        // --- Image Sortable Logic ---
+        const galleryContainer = document.getElementById('sortable-gallery');
+        if (galleryContainer) {
+             new Sortable(galleryContainer, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: function() {
+                    // Update hidden sort indices if needed (currently we rely on order of inputs)
+                    updateSortOrders();
+                },
+            });
+        }
+
+        function updateSortOrders() {
+            $('#sortable-gallery .gallery-item').each(function(index) {
+                $(this).find('.sort-input').val(index);
+            });
+        }
+        // ---------------------------
+
         let optionIndex = {{ $product->productOptions->count() }};
 
         // Restore old options if they exist
@@ -531,8 +575,8 @@
                         <h5 class="mb-0">${name}</h5>
                         <div>
                              <div class="custom-control custom-switch custom-control-inline">
-                                <input type="checkbox" class="custom-control-input" id="req_${id}" name="product_options[${optionIndex}][required]" checked>
-                                <label class="custom-control-label" for="req_${id}">{{ trans_db('dashboard.Required') }}</label>
+                                 <input type="checkbox" class="custom-control-input" id="req_${id}" name="product_options[${optionIndex}][required]" checked>
+                                 <label class="custom-control-label" for="req_${id}">{{ trans_db('dashboard.Required') }}</label>
                             </div>
                             <button type="button" class="btn btn-sm btn-danger remove-option-block" data-id="${id}"><i data-feather="trash"></i></button>
                         </div>
@@ -541,7 +585,7 @@
                         <input type="hidden" name="product_options[${optionIndex}][option_id]" value="${id}">
                         <table class="table table-bordered table-sm option-values-table" id="option-values-table-${id}">
                             <thead>
-                                <tr>
+                                <tr class="text-center bg-light">
                                     <th>{{ trans_db('dashboard.Value') }}</th>
                                     <th>{{ trans_db('dashboard.Quantity') }}</th>
                                     <th>{{ trans_db('dashboard.reduce quantity') }}</th>
@@ -553,20 +597,45 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <div class="mt-2">
-                            <select class="form-control d-inline-block w-auto" id="value-select-${id}">
+                        <div class="mt-2 d-flex align-items-center">
+                            <select class="form-control w-auto mr-1" id="value-select-${id}">
                                 ${valuesHtml}
                             </select>
-                            <button type="button" class="btn btn-sm btn-success add-value-row-btn" data-index="${optionIndex}" data-id="${id}"><i data-feather="plus"></i> {{ trans_db('dashboard.Add New Item') }}</button>
+                            <button type="button" class="btn btn-sm btn-success add-value-row-btn mr-1" data-index="${optionIndex}" data-id="${id}">
+                                <i data-feather="plus"></i> {{ trans_db('dashboard.Add New Item') }}
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-primary add-all-values-btn" data-index="${optionIndex}" data-id="${id}">
+                                {{ trans_db('dashboard.Add All Values') ?? 'إضافة كل القيم' }}
+                            </button>
                         </div>
                     </div>
                 </div>
             `;
             
             $('#product-options-container').append(block);
+            
+            // Automatically add all values on creation
+            values.forEach(val => {
+                addValueRow(optionIndex, id, val.id, val.name || val.translation?.name);
+            });
+
             if(feather) feather.replace();
             optionIndex++;
         }
+
+        $(document).on('click', '.add-all-values-btn', function() {
+            let id = $(this).data('id');
+            let idx = $(this).data('index');
+            let select = $(`#value-select-${id}`);
+            
+            select.find('option').each(function() {
+                let valId = $(this).val();
+                let valName = $(this).text();
+                if ($(`#val-row-${idx}-${valId}`).length === 0) {
+                    addValueRow(idx, id, valId, valName);
+                }
+            });
+        });
         
         function addValueRow(idx, id, valueId, valueName, data = null) {
              let qty = data ? data.quantity : 100;
@@ -656,5 +725,12 @@
 </script>
 <style>
     .d-flex { display: flex !important; }
+    .sortable-ghost {
+        opacity: 0.4;
+        background-color: #f0f0f0;
+    }
+    .gallery-item:hover {
+        border-color: #7367f0;
+    }
 </style>
 @endsection

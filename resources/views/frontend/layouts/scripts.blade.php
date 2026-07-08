@@ -1,8 +1,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" ></script>
-<script src="https://souqelmlabes.com/website/js/ar/swiper.js"></script>
-<script src="https://souqelmlabes.com/website/js/ar/main.js"></script>
+<script src="https://souqelmlabes.com/website/js/ar/swiper.js?v={{ $v ?? '1.0.3' }}"></script>
+<script src="https://souqelmlabes.com/website/js/ar/main.js?v={{ $v ?? '1.0.3' }}"></script>
 <script>
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.elegant-fixed-top');
@@ -123,35 +123,59 @@
             });
         }
 
-        // Drag to Scroll implementation for .subcat-grid
-        const slider = document.querySelector('.subcat-grid');
-        if(slider) {
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+        // Enhanced Drag to Scroll implementation for grids
+        const scrollSliders = document.querySelectorAll('.subcat-grid, .vibe-category-grid');
+        scrollSliders.forEach(slider => {
+            if(slider) {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+                let moved = false;
 
-            slider.addEventListener('mousedown', (e) => {
-                isDown = true;
-                slider.classList.add('active');
-                startX = e.pageX - slider.offsetLeft;
-                scrollLeft = slider.scrollLeft;
-            });
-            slider.addEventListener('mouseleave', () => {
-                isDown = false;
-                slider.classList.remove('active');
-            });
-            slider.addEventListener('mouseup', () => {
-                isDown = false;
-                slider.classList.remove('active');
-            });
-            slider.addEventListener('mousemove', (e) => {
-                if(!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 2; // scroll-fast
-                slider.scrollLeft = scrollLeft - walk;
-            });
-        }
+                slider.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    moved = false; // Reset movement flag
+                    slider.classList.add('active');
+                    startX = e.pageX - slider.offsetLeft;
+                    scrollLeft = slider.scrollLeft;
+                    slider.style.cursor = 'grabbing';
+                });
+
+                slider.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    slider.classList.remove('active');
+                    slider.style.cursor = 'grab';
+                });
+
+                slider.addEventListener('mouseup', (e) => {
+                    isDown = false;
+                    slider.classList.remove('active');
+                    slider.style.cursor = 'grab';
+                });
+
+                // Prevent click navigation if we actually moved the mouse during drag
+                slider.addEventListener('click', (e) => {
+                    if (moved) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }, true);
+
+                slider.addEventListener('mousemove', (e) => {
+                    if(!isDown) return;
+                    
+                    const x = e.pageX - slider.offsetLeft;
+                    const walk = (x - startX) * 2; // scroll-fast
+                    
+                    if (Math.abs(x - startX) > 5) {
+                        moved = true; // Flag that we are intentionally dragging
+                        e.preventDefault(); // Prevent default only when moving
+                    }
+                    
+                    slider.scrollLeft = scrollLeft - walk;
+                });
+            }
+        });
     });
 
 
@@ -233,6 +257,14 @@
                     }
                     if(response.cart_total !== undefined) {
                         $('.subtotal-display, .total-display').text(response.cart_total);
+                    }
+
+                    // Show confirmation modal
+                    if (typeof bootstrap !== 'undefined') {
+                        var myModal = new bootstrap.Modal(document.getElementById('addToCartModal'));
+                        myModal.show();
+                    } else {
+                        $('#addToCartModal').modal('show');
                     }
                 },
                 error: function(xhr) {
@@ -429,6 +461,46 @@
         if (mobileOverlay) {
             mobileOverlay.addEventListener('click', closeMobileMenu);
         }
+
+        // Mobile Submenu Toggle
+        const submenuToggles = document.querySelectorAll('.mobile-submenu-toggle');
+        submenuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parent = this.closest('.mobile-has-submenu');
+                const submenu = parent.querySelector('.mobile-submenu');
+                const arrow = this.querySelector('.arrow-icon');
+                
+                if (submenu.style.display === 'none') {
+                    submenu.style.display = 'block';
+                    arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    submenu.style.display = 'none';
+                    arrow.style.transform = 'rotate(0)';
+                }
+            });
+        });
+
+        // Mobile Inner Submenu Toggle
+        const innerSubmenuToggles = document.querySelectorAll('.mobile-inner-toggle');
+        innerSubmenuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                const submenu = this.nextElementSibling;
+                if (submenu && submenu.classList.contains('mobile-inner-submenu')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const arrow = this.querySelector('i.fa-chevron-down');
+                    
+                    if (submenu.style.display === 'none') {
+                        submenu.style.display = 'block';
+                        if (arrow) arrow.style.transform = 'rotate(180deg)';
+                    } else {
+                        submenu.style.display = 'none';
+                        if (arrow) arrow.style.transform = 'rotate(0)';
+                    }
+                }
+            });
+        });
     });
 </script>
 

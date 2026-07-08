@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 class Vendor extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use \App\Traits\HandleImageStorageTrait;
 
     /**
      * The attributes that are mass assignable.

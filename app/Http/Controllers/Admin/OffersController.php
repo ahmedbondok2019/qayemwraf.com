@@ -216,7 +216,23 @@ class OffersController extends BackendController
         if (! in_array('72', Session::get('permissionData'))) {
             return redirect()->back();
         }
-        Offer::where('id', $request->id)->delete();
+        $offer = Offer::where('id', $request->id)->first();
+        if ($offer) {
+            $translations = $offer->offer_translations;
+            foreach ($translations as $trans) {
+                if ($trans->image) {
+                    $oldPath = str_replace('storage/', '', $trans->image);
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path($trans->image))) {
+                        unlink(public_path($trans->image));
+                    } elseif (file_exists(public_path('website/images/offers/' . $trans->image))) {
+                        unlink(public_path('website/images/offers/' . $trans->image));
+                    }
+                }
+            }
+            $offer->delete();
+        }
 
         alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.congratulation'));
 
@@ -229,34 +245,35 @@ class OffersController extends BackendController
         $image_name = str_replace(' ', '', $image_nam).'.png';
         $scale = self::getImageScale($request->position);
         if ($request->cropped_image != null && file_exists(public_path($request->cropped_image))) {
-            // self::UploadImagesSlider(public_path($request->cropped_image) , $image_name , 'sliders' . DIRECTORY_SEPARATOR . 'small' , '1920 ','970');
-
-            self::UploadImagesOffer(public_path($request->cropped_image), $image_name, 'offers', $scale['width'], $scale['height']);
+            $relativePath = self::UploadImagesOffer(public_path($request->cropped_image), $image_name, 'offers', $scale['width'], $scale['height']);
             unlink(public_path($request->cropped_image));
 
-            return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+            return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
         }
 
         if (! empty($request->image) && empty($request->cropped_image)) {
             $ex = $request->image->getClientOriginalExtension();
             if (in_array($ex, ['png', 'jpeg', 'jpg', 'JPG', 'jfif', 'webp'])) {
-                self::UploadImagesOffer($request->image, $image_name, 'offers', $scale['width'] ?? '64', $scale['height'] ?? '64');
+                $relativePath = self::UploadImagesOffer($request->image, $image_name, 'offers', $scale['width'] ?? '64', $scale['height'] ?? '64');
 
-                return ['image' => $image_name, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
+                return ['image' => $relativePath, 'body' => trans_db('dashboard.saved'), 'title' => trans_db('dashboard.congratulation'), 'type' => 'success'];
             } else {
-                return ['image' => $image_name, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+                return ['image' => null, 'body' => trans_db('dashboard.notsaved'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
             }
         } else {
-            return ['image' => $image_name, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
+            return ['image' => null, 'body' => trans_db('dashboard.InValidImage'), 'title' => trans_db('dashboard.attention'), 'type' => 'error'];
         }
     }
 
     public static function UploadImagesOffer($image, $name, $folder, $width = null, $height = null)
     {
-        $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder);
-        $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name);
+        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
+        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
 
-        return HelperController::upload_images($path, $destination, $image, $width, $height);
+        HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
+        
+        return 'storage/website/images/offers/' . $name;
     }
 
     public function cropOffer(Request $request)

@@ -39,6 +39,7 @@ class SliderController extends Controller
     {
         $rules = [
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'category_id' => 'nullable|exists:categories,id',
             'link' => 'nullable|string',
             'sort_order' => 'nullable|integer',
@@ -58,10 +59,28 @@ class SliderController extends Controller
         $slider->sort_order = $request->sort_order ?? 0;
         $slider->is_active = $request->has('is_active') ? true : false; // Handle checkbox
 
-         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/sliders'), $imageName);
-            $slider->image = 'website/images/sliders/' . $imageName;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'sliders';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $slider->image = 'storage/website/images/sliders/' . $imageName;
+        }
+
+        if ($request->hasFile('mobile_image')) {
+            $file = $request->file('mobile_image');
+            $imageName = time() . '_mobile.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'sliders';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $slider->mobile_image = 'storage/website/images/sliders/' . $imageName;
         }
 
         $slider->save();
@@ -95,6 +114,7 @@ class SliderController extends Controller
     {
         $rules = [
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'category_id' => 'nullable|exists:categories,id',
             'link' => 'nullable|string',
             'sort_order' => 'nullable|integer',
@@ -114,13 +134,51 @@ class SliderController extends Controller
         $slider->is_active = $request->has('is_active') ? true : false;
         
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($slider->image && file_exists(public_path($slider->image))) {
-                @unlink(public_path($slider->image));
+            // Delete old image
+            if ($slider->image) {
+                $oldPath = str_replace('storage/', '', $slider->image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($slider->image))) {
+                    unlink(public_path($slider->image));
+                } elseif (file_exists(public_path('website/images/sliders/' . $slider->image))) {
+                    unlink(public_path('website/images/sliders/' . $slider->image));
+                }
             }
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('website/images/sliders'), $imageName);
-            $slider->image = 'website/images/sliders/' . $imageName;
+            
+            $file = $request->file('image');
+            $imageName = time() . '.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'sliders';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $slider->image = 'storage/website/images/sliders/' . $imageName;
+        }
+
+        if ($request->hasFile('mobile_image')) {
+            // Delete old mobile image
+            if ($slider->mobile_image) {
+                $oldPath = str_replace('storage/', '', $slider->mobile_image);
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($slider->mobile_image))) {
+                    unlink(public_path($slider->mobile_image));
+                } elseif (file_exists(public_path('website/images/sliders/' . $slider->mobile_image))) {
+                    unlink(public_path('website/images/sliders/' . $slider->mobile_image));
+                }
+            }
+            
+            $file = $request->file('mobile_image');
+            $imageName = time() . '_mobile.' . $file->extension();
+            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'sliders';
+            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
+            if (!file_exists($fullStoragePath)) {
+                mkdir($fullStoragePath, 0755, true);
+            }
+            $file->move($fullStoragePath, $imageName);
+            $slider->mobile_image = 'storage/website/images/sliders/' . $imageName;
         }
 
         $slider->save();
@@ -150,8 +208,25 @@ class SliderController extends Controller
      */
     public function destroy(Slider $slider)
     {
-        if ($slider->image && file_exists(public_path($slider->image))) {
-            @unlink(public_path($slider->image));
+        if ($slider->image) {
+            $oldPath = str_replace('storage/', '', $slider->image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($slider->image))) {
+                unlink(public_path($slider->image));
+            } elseif (file_exists(public_path('website/images/sliders/' . $slider->image))) {
+                unlink(public_path('website/images/sliders/' . $slider->image));
+            }
+        }
+        if ($slider->mobile_image) {
+            $oldPath = str_replace('storage/', '', $slider->mobile_image);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path($slider->mobile_image))) {
+                unlink(public_path($slider->mobile_image));
+            } elseif (file_exists(public_path('website/images/sliders/' . $slider->mobile_image))) {
+                unlink(public_path('website/images/sliders/' . $slider->mobile_image));
+            }
         }
         $slider->delete();
         return redirect()->route('admin.sliders.index')->with('success', trans_db('dashboard.deleted'));
