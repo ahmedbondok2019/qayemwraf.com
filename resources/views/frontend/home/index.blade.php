@@ -860,7 +860,7 @@
                         @if(isset($Setting) && $Setting->why_us_image)
                         <img src="{{ asset($Setting->why_us_image) }}" alt="Medical Center" />
                         @else
-                        <img src="{{ asset('website/images/medical_building.png') }}" alt="Medical Center" />
+                        <img src="{{ asset('website/medical_building.png') }}" alt="Medical Center" />
                         @endif
                     </div>
                 </div>
