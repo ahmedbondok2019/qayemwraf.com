@@ -3,10 +3,13 @@
 :root {
     --primary-color: var(--primary-color);
     --secondary-color: #e98939;
-    --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, #3066d1 100%); /* Blue Gradient */
-    --gold-gradient: linear-gradient(135deg, #e98939 0%, #f7a45e 100%); /* Orange Gradient */
+    --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, #3066d1 100%);
+    /* Blue Gradient */
+    --gold-gradient: linear-gradient(135deg, #e98939 0%, #f7a45e 100%);
+    /* Orange Gradient */
 }
-input:focus{
+
+input:focus {
     border: none !important;
     outline: 1px solid #eee !important;
     box-shadow: none !important;
@@ -32,7 +35,7 @@ input:focus{
 .vibe-main-slider .swiper-slide {
     position: relative;
     overflow: hidden;
-    border-radius: 15px;
+    /* border-radius: 15px; */
 }
 
 .vibe-slide-image-wrapper {
@@ -41,14 +44,16 @@ input:focus{
     height: 450px;
     overflow: hidden;
     border-radius: 15px;
-    transform: translateZ(0); /* Fix for Safari border-radius clipping */
+    transform: translateZ(0);
+    /* Fix for Safari border-radius clipping */
 }
 
 .vibe-slide-image-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 10s ease-out; /* Slow zoom effect */
+    transition: transform 10s ease-out;
+    /* Slow zoom effect */
 }
 
 .swiper-slide-active .vibe-slide-image-wrapper img {
@@ -95,8 +100,15 @@ input:focus{
 }
 
 @keyframes slideInContent {
-    from { opacity: 0; transform: translateY(-40%) translateX(60px); }
-    to { opacity: 1; transform: translateY(-50%) translateX(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-40%) translateX(60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
 }
 
 .vibe-slider-title {
@@ -107,7 +119,7 @@ input:focus{
     -webkit-background-clip: border-box;
     background-clip: border-box;
     -webkit-text-fill-color: initial;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
     line-height: 1.2;
     margin-bottom: 15px;
     opacity: 0;
@@ -117,7 +129,7 @@ input:focus{
 .vibe-slider-subtitle {
     font-size: 22px;
     color: #fff;
-    text-shadow: 0 1px 5px rgba(0,0,0,0.6);
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
     margin-bottom: 30px;
     font-weight: 500;
     line-height: 1.6;
@@ -126,8 +138,15 @@ input:focus{
 }
 
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .vibe-slider-btn {
@@ -137,20 +156,22 @@ input:focus{
     padding: 14px 35px;
     background: var(--primary-gradient);
     color: #fff;
-    border-radius: 12px; /* Slightly squircle */
+    border-radius: 12px;
+    /* Slightly squircle */
     font-weight: 700;
     font-size: 16px;
     transition: all 0.3s ease;
     box-shadow: 0 10px 25px rgba(28, 77, 173, 0.25);
     opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.7s; /* Staggered */
+    animation: fadeUp 0.8s ease forwards 0.7s;
+    /* Staggered */
     text-decoration: none;
 }
 
 .vibe-slider-btn:hover {
     background: #1a1a1a;
     transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .vibe-slider-btn i {
@@ -169,6 +190,7 @@ input:focus{
     height: 10px;
     transition: all 0.3s ease;
 }
+
 .swiper-pagination-bullet-active {
     background: var(--gold-gradient);
     opacity: 1;
@@ -176,20 +198,25 @@ input:focus{
     border-radius: 5px;
 }
 
-.swiper-button-next, .swiper-button-prev {
+.swiper-button-next,
+.swiper-button-prev {
     color: #fff;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     width: 45px;
     height: 45px;
     border-radius: 50%;
     backdrop-filter: blur(5px);
     transition: all 0.3s ease;
 }
-.swiper-button-next:after, .swiper-button-prev:after {
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
     font-size: 20px;
     font-weight: bold;
 }
-.swiper-button-next:hover, .swiper-button-prev:hover {
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
     background: var(--primary-gradient);
     color: #fff;
 }
@@ -227,12 +254,15 @@ input:focus{
     display: flex;
     gap: 20px;
     padding: 10px 15px;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
 }
 
 .vibe-offers-slider::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
 }
 
 /* Offers Strip: Premium Glowing Style */
@@ -255,7 +285,8 @@ input:focus{
     margin: 0 auto 15px;
     border-radius: 50%;
     position: relative;
-    padding: 5px; /* Increase padding slightly */
+    padding: 5px;
+    /* Increase padding slightly */
     background: var(--primary-gradient);
     transition: all 0.5s ease;
     box-shadow: 0 10px 25px rgba(28, 77, 173, 0.1);
@@ -280,7 +311,8 @@ input:focus{
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    border: 3px solid #fff; /* Inner white gap */
+    border: 3px solid #fff;
+    /* Inner white gap */
     transition: transform 0.5s ease;
 }
 
@@ -290,7 +322,8 @@ input:focus{
 
 .vibe-offer-item:hover .vibe-offer-image {
     box-shadow: 0 15px 35px rgba(28, 77, 173, 0.25);
-    background: var(--gold-gradient); /* Gold gradient on hover */
+    background: var(--gold-gradient);
+    /* Gold gradient on hover */
 }
 
 .vibe-offer-item:hover .vibe-offer-image::before {
@@ -366,7 +399,8 @@ input:focus{
     display: flex;
     overflow-x: auto;
     gap: 25px;
-    padding: 10px 10px 40px; /* Space for hover effects and shadow */
+    padding: 10px 10px 40px;
+    /* Space for hover effects and shadow */
     scrollbar-width: none;
     -ms-overflow-style: none;
     cursor: grab;
@@ -389,8 +423,8 @@ input:focus{
     background: var(--primary-gradient);
     padding: 15px;
     border-radius: 20px;
-    border: 1px solid rgba(0,0,0,0.03);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     text-decoration: none;
     position: relative;
@@ -411,7 +445,7 @@ input:focus{
 
 .vibe-cat-card:hover {
     transform: translateX(-10px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
 }
 
 .vibe-cat-card:hover::before {
@@ -482,7 +516,7 @@ input:focus{
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.8);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
 .vibe-subcat-card:hover {
@@ -493,7 +527,7 @@ input:focus{
 }
 
 .vibe-subcat-parent {
-     display: inline-block;
+    display: inline-block;
     padding: 3px 10px;
     background: rgb(255 255 255 / 5%);
     border-radius: 5px;
@@ -511,7 +545,7 @@ input:focus{
     padding: 8px;
     background: #fff;
     border-radius: 50%;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .vibe-subcat-img-wrapper img {
@@ -526,7 +560,7 @@ input:focus{
 }
 
 .vibe-subcat-title {
- font-size: 15px;
+    font-size: 15px;
     font-weight: 700;
     color: #fff !important;
     margin: 0 0 5px;
@@ -534,7 +568,7 @@ input:focus{
 }
 
 .vibe-subcat-count {
-     font-size: 12px;
+    font-size: 12px;
     color: #ff9800 !important;
     background: #fff5e6;
     padding: 2px 8px;
@@ -548,7 +582,7 @@ input:focus{
     height: 35px;
     background: #fff;
     border-radius: 50%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .vibe-subcat-section .swiper-button-next::after,
@@ -595,7 +629,8 @@ input:focus{
     align-items: center;
     height: 70px;
     background: #fff;
-    border-radius: 80px; /* Pill shape */
+    border-radius: 80px;
+    /* Pill shape */
     border: 1px solid #f0f0f0;
     padding: 0 25px;
     text-decoration: none;
@@ -621,7 +656,8 @@ input:focus{
 .vibe-brand-card:hover {
     transform: translateY(-3px);
     border-color: var(--primary-color, #1c4dac);
-    box-shadow: 0 5px 15px rgba(28, 77, 173, 0.08); /* Colored shadow */
+    box-shadow: 0 5px 15px rgba(28, 77, 173, 0.08);
+    /* Colored shadow */
 }
 
 .vibe-brand-card:hover::before {
@@ -630,7 +666,7 @@ input:focus{
 
 .vibe-brand-name {
     font-size: 15px;
-    font-weight: 800; 
+    font-weight: 800;
     color: #555;
     z-index: 2;
     transition: color 0.3s ease;
@@ -665,14 +701,14 @@ input:focus{
     background: #fff;
     padding: 25px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     transition: all 0.3s ease;
     border: 1px solid transparent;
 }
 
 .vibe-feature-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
     border-color: rgba(28, 77, 173, 0.1);
 }
 
@@ -723,7 +759,8 @@ input:focus{
     }
 
     .vibe-slide-image-wrapper img {
-        object-fit: fill; /* Keeps it filling the space */
+        object-fit: fill;
+        /* Keeps it filling the space */
     }
 
     .vibe-slider-content {
@@ -747,7 +784,8 @@ input:focus{
         font-size: 12px;
     }
 
-    .swiper-button-next, .swiper-button-prev {
+    .swiper-button-next,
+    .swiper-button-prev {
         display: none !important;
     }
 
@@ -755,13 +793,13 @@ input:focus{
     .vibe-offer-item {
         width: 110px;
     }
-    
+
     .vibe-offer-image {
         width: 90px;
         height: 90px;
         margin-bottom: 10px;
     }
-    
+
     .vibe-offer-name {
         font-size: 11px;
     }
@@ -771,17 +809,22 @@ input:focus{
         display: flex;
         overflow-x: auto;
         gap: 15px;
-        padding-bottom: 15px !important; /* Space for scrollbar if any */
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE/Edge */
+        padding-bottom: 15px !important;
+        /* Space for scrollbar if any */
+        scrollbar-width: none;
+        /* Firefox */
+        -ms-overflow-style: none;
+        /* IE/Edge */
     }
 
     .vibe-category-grid::-webkit-scrollbar {
-        display: none; /* Chrome/Safari */
+        display: none;
+        /* Chrome/Safari */
     }
 
     .vibe-cat-card {
-        min-width: 280px; /* Adjusted fixed width for slider items on mobile */
+        min-width: 280px;
+        /* Adjusted fixed width for slider items on mobile */
         flex: 0 0 auto;
     }
 
@@ -819,7 +862,7 @@ input:focus{
         text-align: center;
         color: #245b36;
         width: 100%;
-    
+
         border-radius: 10px;
     }
 
@@ -860,29 +903,40 @@ input:focus{
     /* Mobile Icon Boxes Swiper */
     .vibe-features-section.swiper {
         padding: 15px 0 !important;
-        background: var(--section-background); /* Optional: match background if needed */
+        background: var(--section-background);
+        /* Optional: match background if needed */
         width: 100%;
-        overflow: hidden; /* Hide overflow for swiper */
+        overflow: hidden;
+        /* Hide overflow for swiper */
     }
 
     .vibe-features-section.swiper .swiper-wrapper {
-        display: flex; /* Ensure wrapper flexes */
-        align-items: center; /* Vertically center items */
-        transition-timing-function: linear; /* Smooth linear movement for ticker */
+        display: flex;
+        /* Ensure wrapper flexes */
+        align-items: center;
+        /* Vertically center items */
+        transition-timing-function: linear;
+        /* Smooth linear movement for ticker */
     }
 
     .vibe-features-section.swiper .swiper-slide {
-        width: auto !important; /* Allow slides to size based on content */
-        margin-right: 15px; /* Spacing between items */
+        width: auto !important;
+        /* Allow slides to size based on content */
+        margin-right: 15px;
+        /* Spacing between items */
     }
 
     .vibe-feature-card {
-        min-width: unset !important; /* Let content dictate width or set specific if needed */
+        min-width: unset !important;
+        /* Let content dictate width or set specific if needed */
         width: auto !important;
         padding: 10px 15px !important;
-        background: #fff; /* Ensure contrast */
-        border-radius: 8px; /* Optional rounding */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Optional shadow */
+        background: #fff;
+        /* Ensure contrast */
+        border-radius: 8px;
+        /* Optional rounding */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        /* Optional shadow */
         display: flex;
         align-items: center;
         flex-direction: row !important;
@@ -896,11 +950,11 @@ input:focus{
         font-size: 18px !important;
         margin-left: 10px !important;
     }
-    
+
     .vibe-feature-title {
         font-size: 13px !important;
     }
-    
+
     .vibe-feature-desc {
         font-size: 11px !important;
     }
@@ -921,7 +975,8 @@ input:focus{
 
     .home-blogs-section .col-lg-4 {
         flex: 0 0 auto;
-        width: 280px; /* Fixed width for slider items */
+        width: 280px;
+        /* Fixed width for slider items */
         max-width: 280px;
         padding: 0;
     }
@@ -930,31 +985,33 @@ input:focus{
     .blog-card-modern .blog-img-wrapper {
         height: 140px !important;
     }
-    
+
     .blog-date-badge {
         font-size: 10px !important;
         padding: 3px 8px !important;
         top: 10px !important;
         right: 10px !important;
     }
-    
+
     .blog-content-wrapper {
         padding: 15px !important;
     }
-    
+
     .blog-title {
         font-size: 14px !important;
         margin-bottom: 5px !important;
-        white-space: normal; /* Allow title to wrap */
+        white-space: normal;
+        /* Allow title to wrap */
     }
-    
+
     .blog-excerpt {
         font-size: 11px !important;
         -webkit-line-clamp: 2;
         margin-bottom: 10px !important;
-        white-space: normal; /* Allow text to wrap */
+        white-space: normal;
+        /* Allow text to wrap */
     }
-    
+
     .read-more-btn {
         font-size: 11px !important;
     }
@@ -971,7 +1028,8 @@ input:focus{
 .view-toggles .btn-view-toggle {
     background: transparent;
     border: 1px solid #e0e0e0;
-    color: #95a5a6; /* Neutral color */
+    color: #95a5a6;
+    /* Neutral color */
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
@@ -994,10 +1052,14 @@ input:focus{
     overflow-x: auto;
     flex-wrap: nowrap;
     gap: 15px;
-    padding-bottom: 20px; /* Space for shadow/scroll */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE */
-    padding: 10px 5px 20px 5px; /* Adjust padding */
+    padding-bottom: 20px;
+    /* Space for shadow/scroll */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE */
+    padding: 10px 5px 20px 5px;
+    /* Adjust padding */
 }
 
 .products-grid.products-horizontal::-webkit-scrollbar {
@@ -1005,25 +1067,33 @@ input:focus{
 }
 
 .products-grid.products-horizontal .v-card {
-    flex: 0 0 280px; /* Fixed width */
+    flex: 0 0 280px;
+    /* Fixed width */
     min-width: 280px;
     margin-bottom: 0;
 }
 
 @media (max-width: 576px) {
     .products-grid.products-horizontal .v-card {
-        flex: 0 0 200px; /* Slightly narrower to show more items */
+        flex: 0 0 200px;
+        /* Slightly narrower to show more items */
         min-width: 200px;
-        flex-direction: column !important; /* Stack image and content vertically */
-        align-items: stretch !important; /* Stretch content to fill width */
-        padding: 10px !important; /* Reduce padding */
+        flex-direction: column !important;
+        /* Stack image and content vertically */
+        align-items: stretch !important;
+        /* Stretch content to fill width */
+        padding: 10px !important;
+        /* Reduce padding */
         gap: 10px !important;
-        text-align: center; /* Center align text */
+        text-align: center;
+        /* Center align text */
     }
 
     .products-grid.products-horizontal .v-card .v-card-img-link {
-        width: 100% !important; /* Full width image container */
-        height: 150px !important; /* Fixed height for consistency */
+        width: 100% !important;
+        /* Full width image container */
+        height: 150px !important;
+        /* Fixed height for consistency */
         background: transparent;
     }
 
@@ -1032,12 +1102,14 @@ input:focus{
     }
 
     .products-grid.products-horizontal .v-card .v-card-content {
-        align-items: center !important; /* Center content items */
+        align-items: center !important;
+        /* Center content items */
     }
 
     .products-grid.products-horizontal .v-card .v-card-title {
         font-size: 13px !important;
-        white-space: normal !important; /* Allow wrapping */
+        white-space: normal !important;
+        /* Allow wrapping */
         text-align: center;
         margin-bottom: 5px !important;
         -webkit-line-clamp: 2;
@@ -1050,9 +1122,10 @@ input:focus{
         justify-content: center !important;
         margin-bottom: 5px !important;
     }
-    
+
     .products-grid.products-horizontal .v-card .v-card-author {
-        display: none; /* Hide author to save space if needed, or keep it */
+        display: none;
+        /* Hide author to save space if needed, or keep it */
     }
 
     /* Adjust actions position for this view */
@@ -1063,5 +1136,644 @@ input:focus{
         flex-direction: column !important;
         margin: 0 !important;
         gap: 5px !important;
+    }
+}
+
+
+
+/* Medical Theme Design System */
+:root {
+    --medical-bg: #f8fbff;
+    --medical-card-shadow: 0 10px 30px rgba(138, 149, 158, 0.1);
+    --medical-border-radius: 20px;
+}
+
+.medical-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    direction: rtl;
+}
+
+.medical-section-header h2,
+.medical-section-header h3 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #2c3e50;
+    position: relative;
+    padding-right: 15px;
+}
+
+.medical-section-header h2::before,
+.medical-section-header h3::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 24px;
+    background: var(--primary-gradient);
+    border-radius: 10px;
+}
+
+.medical-section-header .view-all {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+.medical-section-header .view-all:hover {
+    padding-left: 10px;
+}
+
+/* Features Bar */
+.medical-features-bar {
+    background: #fff;
+    /* padding: 30px 0; */
+    border-radius: var(--medical-border-radius);
+    box-shadow: var(--medical-card-shadow);
+    margin: -10px auto 50px;
+    position: relative;
+    z-index: 10;
+    direction: rtl;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px;
+    border-left: 1px solid #eee;
+}
+
+.feature-item:last-child {
+    border-left: none;
+}
+
+.feature-icon-box {
+    width: 50px;
+    height: 50px;
+    background: #f0f7ff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    font-size: 24px;
+}
+
+.feature-text h4 {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.feature-text p {
+    font-size: 13px;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+/* Category Cards */
+.medical-cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+    direction: rtl;
+}
+
+.medical-cat-card {
+    background: #fff;
+    border-radius: var(--medical-border-radius);
+    padding: 25px 15px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.medical-cat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--medical-card-shadow);
+    border-color: var(--primary-color);
+}
+
+.medical-cat-icon-wrapper {
+    width: 100px;
+    height: 100px;
+    background: #f4f9ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.medical-cat-card:hover .medical-cat-icon-wrapper {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.medical-cat-icon-wrapper img {
+    max-width: 60%;
+    max-height: 60%;
+    object-fit: contain;
+}
+
+.medical-cat-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.medical-cat-count {
+    font-size: 12px;
+    color: #ff9800;
+    background: #fff5e6;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-weight: 700;
+}
+
+/* Product Cards */
+.medical-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+    direction: rtl;
+}
+
+.medical-product-card {
+    background: #fff;
+    border-radius: var(--medical-border-radius);
+    padding: 15px;
+    position: relative;
+    transition: all 0.4s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f1f1f1;
+}
+
+.medical-product-card:hover {
+    box-shadow: var(--medical-card-shadow);
+}
+
+.product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff7e5f;
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-weight: 700;
+    z-index: 2;
+}
+
+.product-image-box {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.product-image-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s;
+}
+
+.medical-product-card:hover .product-image-box img {
+    transform: scale(1.1);
+}
+
+.product-info-box {
+    text-align: center;
+}
+
+.product-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    display: block;
+    text-decoration: none;
+    height: 40px;
+    overflow: hidden;
+}
+
+.product-price-box {
+    margin-bottom: 15px;
+}
+
+.current-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.old-price {
+    font-size: 14px;
+    color: #bdc3c7;
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.product-rating {
+    color: #ff9800;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-view-details {
+    flex: 1;
+    background: #f4f9ff;
+    color: var(--primary-color);
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.btn-view-details:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.btn-add-cart {
+    width: 42px;
+    height: 42px;
+    background: var(--primary-gradient);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.btn-add-cart:hover {
+    transform: rotate(90deg);
+    box-shadow: 0 5px 15px rgba(28, 77, 173, 0.3);
+}
+
+/* Single card swiper - prevent stretching */
+.has-single-card .swiper-slide {
+    width: auto !important;
+    max-width: 320px;
+}
+
+.has-single-card {
+    justify-content: center;
+}
+
+/* Medical Slider Styles - Full Width Cover */
+.medical-hero {
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    min-height: var(--medical-hero-height);
+}
+
+.medical-slider .swiper-slide {
+    height: var(--medical-hero-height);
+    min-height: 420px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    padding-top: 0;
+}
+
+.medical-slide-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-position: center center;
+    opacity: 1;
+    z-index: 1;
+}
+
+.medical-slider .swiper-pagination {
+    bottom: 60px !important;
+}
+
+.medical-slide-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: #fff;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.slide-title {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+.slide-subtitle {
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.slide-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn-primary-medical {
+    background: var(--primary-gradient);
+    color: #fff !important;
+    padding: 15px 45px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(28, 77, 173, 0.4);
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-outline-medical {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff !important;
+    padding: 15px 45px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-medical:hover,
+.btn-outline-medical:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.custom-nav {
+    color: #fff !important;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.custom-nav:hover {
+    background: var(--primary-color);
+}
+
+/* Slider Navigation Custom Styles */
+.cat-nav,
+.prod-nav {
+    background: #fff !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    color: var(--primary-color) !important;
+    transition: all 0.3s !important;
+}
+
+.cat-nav::after,
+.prod-nav::after {
+    font-size: 18px !important;
+    font-weight: bold !important;
+}
+
+.cat-nav:hover,
+.prod-nav:hover {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+.medical-categories-swiper,
+.medical-products-swiper {
+    padding: 20px 5px !important;
+    margin: 0 -10px !important;
+}
+
+@media (max-width: 991px) {
+    .feature-item {
+        border-left: none;
+        border-bottom: 1px solid #eee;
+        padding: 15px 0;
+    }
+
+    .feature-item:last-child {
+        border-bottom: none;
+    }
+
+    .medical-features-bar {
+        margin-top: 20px;
+    }
+
+    .medical-hero {
+        min-height: 0;
+    }
+
+    .medical-slider .swiper-slide {
+        height: clamp(300px, 78vw, 420px) !important;
+        min-height: 300px;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-end;
+        background: #fff;
+    }
+
+    .medical-slide-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        display: block;
+    }
+
+    .medical-slide-content {
+        position: relative;
+        z-index: 10;
+        margin: 0 auto 14px;
+        padding: 0 16px;
+        width: 100%;
+        max-width: 260px;
+    }
+
+    .medical-slider .swiper-pagination {
+        bottom: 12px !important;
+    }
+
+    .slide-title {
+        font-size: 36px;
+    }
+
+    .slide-subtitle {
+        font-size: 18px;
+    }
+}
+
+/* Why Choose Us Section */
+.medical-why-us {
+    background: #fff;
+    border-radius: 30px;
+    padding: 60px 0;
+    margin: 50px 0;
+    box-shadow: var(--medical-card-shadow);
+    direction: rtl;
+    overflow: hidden;
+}
+
+.why-us-content {
+    padding: 20px 40px;
+}
+
+.why-us-tag {
+    color: var(--primary-color);
+    font-weight: 800;
+    font-size: 24px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.why-us-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.why-us-desc {
+    font-size: 16px;
+    color: #7f8c8d;
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+.why-us-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.stat-item {
+    padding: 20px 10px;
+    border-left: 1px solid #f1f1f1;
+}
+
+.stat-item:last-child {
+    border-left: none;
+}
+
+.stat-icon {
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 800;
+    color: #2c3e50;
+    display: block;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #95a5a6;
+}
+
+.why-us-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+/* Medical Brands Section */
+.medical-brands-section {
+    padding: 50px 0;
+    background: #f8fbff;
+    direction: rtl;
+}
+
+.brand-item {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    transition: all 0.3s;
+    border: 1px solid #f1f1f1;
+}
+
+.brand-item:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+}
+
+.brand-item img {
+    max-width: 100%;
+    max-height: 100%;
+    filter: grayscale(1);
+    opacity: 0.6;
+    transition: all 0.3s;
+}
+
+.brand-item:hover img {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+@media (max-width: 991px) {
+    .why-us-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-item:nth-child(2) {
+        border-left: none;
     }
 }
