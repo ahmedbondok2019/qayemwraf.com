@@ -1653,7 +1653,8 @@ INSERT INTO `static_translations` (`id`, `key`, `translations`, `created_at`, `u
 (1605, 'website.Choose', '{\"ar\":\"\\u0627\\u062e\\u062a\\u0631\",\"en\":\"Choose\"}', '2026-02-10 08:48:40', '2026-02-10 08:48:40'),
 (1606, 'website.Error', '{\"ar\":\"\\u062e\\u0637\\u0623\",\"en\":\"Error\"}', '2026-02-10 08:48:40', '2026-02-10 08:48:40'),
 (1607, 'website.Something went wrong', '{\"ar\":\"\\u062d\\u062f\\u062b \\u062e\\u0637\\u0623 \\u0645\\u0627\",\"en\":\"Something went wrong\"}', '2026-02-10 08:48:40', '2026-02-10 08:48:40'),
-(1608, 'website.Something went wrong, please try again', '{\"ar\":\"\\u062d\\u062f\\u062b \\u062e\\u0637\\u0623 \\u0645\\u0627\\u060c \\u064a\\u0631\\u062c\\u0649 \\u0627\\u0644\\u0645\\u062d\\u0627\\u0648\\u0644 \\u0645\\u0631\\u0629 \\u0623\\u062e\\u0631\\u0649\",\"en\":\"Something went wrong, please try again\"}', '2026-02-10 08:48:40', '2026-02-10 08:48:40');
+(1608, 'website.Something went wrong, please try again', '{\"ar\":\"\\u062d\\u062f\\u062b \\u062e\\u0637\\u0623 \\u0645\\u0627\\u060c \\u064a\\u0631\\u062c\\u0649 \\u0627\\u0644\\u0645\\u062d\\u0627\\u0648\\u0644 \\u0645\\u0631\\u0629 \\u0623\\u062e\\u0631\\u0649\",\"en\":\"Something went wrong, please try again\"}', '2026-02-10 08:48:40', '2026-02-10 08:48:40'),
+(1609, 'website.Author', '{\"ar\":\"\\u0627\\u0644\\u0645\\u0624\\u0644\\u0641\",\"en\":\"Author\"}', '2026-07-09 09:00:00', '2026-07-09 09:00:00');
 
 --
 -- Indexes for dumped tables
@@ -1674,7 +1675,7 @@ ALTER TABLE `static_translations`
 -- AUTO_INCREMENT for table `static_translations`
 --
 ALTER TABLE `static_translations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1609;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1610;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

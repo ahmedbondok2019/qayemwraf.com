@@ -293,4 +293,7 @@ return [
     'The product has been added to your shopping cart.' => 'The product has been added to your shopping cart.',
     'Complete Order' => 'Complete Order',
     'Go to Cart' => 'Go to Cart',
+    'Author' => 'Author',
+    'Unknown' => 'Unknown',
+    'Unknown author' => 'Unknown author',
 ];

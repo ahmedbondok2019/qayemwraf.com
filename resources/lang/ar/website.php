@@ -295,4 +295,7 @@ return [
     'The product has been added to your shopping cart.' => 'تم إضافة المنتج إلى عربة التسوق بنجاح.',
     'Complete Order' => 'إتمام الطلب',
     'Go to Cart' => 'الذهاب إلى السلة',
+    'Author' => 'المؤلف',
+    'Unknown' => 'غير معروف',
+    'Unknown author' => 'مؤلف غير معروف',
 ];

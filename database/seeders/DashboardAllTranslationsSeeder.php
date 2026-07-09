@@ -72,6 +72,7 @@ class DashboardAllTranslationsSeeder extends Seeder
             'website.In Cart' => ['ar' => 'في السلة', 'en' => 'In Cart'],
             'website.In Wishlist' => ['ar' => 'في المفضلة', 'en' => 'In Wishlist'],
             'website.Untitled book' => ['ar' => 'كتاب غير معنون', 'en' => 'Untitled book'],
+            'website.Author' => ['ar' => 'المؤلف', 'en' => 'Author'],
             'website.Unknown author' => ['ar' => 'مؤلف غير معروف', 'en' => 'Unknown author'],
             'website.Remove from Wishlist' => ['ar' => 'حذف من المفضلة', 'en' => 'Remove from Wishlist'],
             'website.Wishlist is empty' => ['ar' => 'قائمة المفضلة فارغة', 'en' => 'Wishlist is empty'],
