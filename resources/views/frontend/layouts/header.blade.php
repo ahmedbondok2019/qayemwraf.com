@@ -1,7 +1,7 @@
 @php
     $main_categories = \App\Models\Category::whereNull('parent_id')
         ->active()
-        ->with(['children' => function($q) {
+        ->with(['translation', 'children' => function($q) {
             $q->active()->with('translation');
         }])
         ->take(10)
@@ -68,7 +68,7 @@
                             </a>
                             <div class="elegant-dropdown-menu mega-menu">
                                 <div class="mega-menu-container">
-                                    @foreach($categories as $category)
+                                    @foreach($main_categories as $category)
                                     <div class="mega-column">
                                         <a href="{{ url(app()->getLocale() . '/products/' . ($category->translation->slug ?? '')) }}" class="mega-title">
                                             <i class="fa-solid fa-layer-group"></i>
