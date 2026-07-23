@@ -19,3 +19,10 @@ yarn-error.log
 /.vscode
 /public/website/images/*
 composer.lock
+
+# Scribe API Documentation
+/.scribe
+/public/docs
+/public/vendor/scribe
+/resources/views/scribe
+/storage/app/scribe
