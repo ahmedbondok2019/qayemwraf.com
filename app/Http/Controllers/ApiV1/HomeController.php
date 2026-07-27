@@ -58,13 +58,25 @@ class HomeController extends Controller
         $sliders = Slider::active()->orderBy('sort_order')->with(['translation', 'category'])->get();
         $data['sliders'] = SliderResource::collection($sliders);
 
-        // 2. الأقسام المتاحة للعرض في الصفحة الرئيسية (Home Categories) - تحتوي على Title, Image, Link
+        // 2. الأقسام المتاحة للعرض في الصفحة الرئيسية (Home Categories) - اختيار الأقسام التي تم تحديدها للعرض على الرئيسية
         $mainCategories = Category::active()
             ->whereNull('parent_id')
+            ->where('show_on_home', true)
             ->with(['translation', 'children.translation'])
             ->withCount('products')
             ->orderBy('sort_order')
             ->get();
+
+        // Fallback: إذا لم تتوفر أقسام مفعّلة بـ show_on_home، جلب الأقسام الرئيسية المتاحة
+        if ($mainCategories->isEmpty()) {
+            $mainCategories = Category::active()
+                ->whereNull('parent_id')
+                ->with(['translation', 'children.translation'])
+                ->withCount('products')
+                ->orderBy('sort_order')
+                ->get();
+        }
+
         $data['categories'] = CategoryResource::collection($mainCategories);
         $data['home_categories'] = CategoryResource::collection($mainCategories);
 
@@ -73,12 +85,19 @@ class HomeController extends Controller
             Category::active()->whereNotNull('parent_id')->with(['translation', 'parent'])->withCount('products')->orderBy('sort_order')->get()
         );
 
-        // 4. التخفيضات السريعة (Flash Sales) - منتجات الفلاش سيل النشطة
+        // 4. قسم التخفيضات السريعة (Flash Sale Module & Products)
+        $activeFlashSale = FlashSale::where('is_active', 1)
+            ->where('start_at', '<=', now())
+            ->where('end_at', '>=', now())
+            ->with(['translation', 'products.translation', 'products.brand.translation'])
+            ->orderBy('start_at', 'asc')
+            ->first();
+
         $flashSaleIds = FlashSale::where('is_active', 1)
             ->where('start_at', '<=', now())
             ->where('end_at', '>=', now())
             ->pluck('id');
-            
+
         $flashProducts = Product::active()
             ->whereHas('flashSales', function($q) use ($flashSaleIds) {
                 $q->whereIn('flash_sales.id', $flashSaleIds);
@@ -90,6 +109,7 @@ class HomeController extends Controller
             ->get();
             
         $data['flash_sales'] = ProductResource::collection($flashProducts);
+        $data['flash_sale_module'] = $activeFlashSale ? new FlashSaleResource($activeFlashSale) : null;
 
         // 5. العروض والبنرات (Offers) - تحتوي على Image, Title, Description, Link
         $offers = Offer::active()

@@ -15,7 +15,16 @@ class Category extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'show_on_home' => 'boolean',
     ];
+
+    /**
+     * Scope a query to only include categories displayed on home page.
+     */
+    public function scopeShowOnHome($query)
+    {
+        return $query->where('is_active', true)->where('show_on_home', true);
+    }
 
     /**
      * Get the translations for the category.

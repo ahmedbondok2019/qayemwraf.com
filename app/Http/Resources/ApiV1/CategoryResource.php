@@ -17,7 +17,10 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->translation->title ?? ($this->translations->first()->title ?? ''),
+            'name' => $this->translation->title ?? ($this->translations->first()->title ?? ''),
             'image' => $this->image ? asset($this->image) : null,
+            'link' => (string)$this->id,
+            'show_on_home' => (bool)($this->show_on_home ?? true),
             'products_count' => $this->whenCounted('products'),
             'parent_id' => $this->parent_id,
             'parent' => new CategoryResource($this->whenLoaded('parent')),
