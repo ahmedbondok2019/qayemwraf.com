@@ -14,19 +14,19 @@ use App\Http\Requests\ApiV1\Cart\CartStoreRequest;
 use App\Http\Requests\ApiV1\Cart\CartUpdateRequest;
 
 /**
- * @group Cart
+ *  سلة التسوق
  * 
- * APIs for managing the shopping cart
+ * يتولى العمليات المتعلقة باستعراض عناصر سلة التسوق، إضافة المنتجات للسلة، 
+ * تعديل كميات العناصر، وحذف العناصر من السلة للمستخدم المسجل أو الزائر.
  */
 class CartController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
+
     /**
-     * Get Cart Items
+     * جلب محتويات سلة التسوق
      * 
-     * Get all items in the cart for the authenticated user or guest.
-     * 
-     * @bodyParam temp_user_id string Optional. Required if user is not authenticated. Example: guest_123
+     * يعيد جميع المنتجات الموجودة بسلة التسوق الحالية مع المجموع الكلي وإجمالي السعر للمستخدم أو الزائر.
      */
     public function index(CartIndexRequest $request)
     {
@@ -65,17 +65,12 @@ class CartController extends Controller
     }
 
     /**
-     * Add to Cart
+     * إضافة منتج إلى سلة التسوق
      * 
-     * Add a product to the cart.
-     * 
-     * @bodyParam product_id int required The ID of the product. Example: 1
-     * @bodyParam quantity int Optional. Default 1. Example: 2
-     * @bodyParam temp_user_id string Optional. Required if user is not authenticated. Example: guest_123
+     * يضيف منتجاً جديداً أو يزيد كمية منتج موجود بالفعل داخل سلة التسوق.
      */
     public function store(CartStoreRequest $request)
     {
-
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
         $tempUserId = $request->temp_user_id;
 
@@ -99,16 +94,13 @@ class CartController extends Controller
             ]);
         }
 
-        return $this->successResponse($cartItem->load('options'), 'Product added to cart');
+        return $this->successResponse($cartItem->load('options'), 'تمت إضافة المنتج إلى السلة بنجاح');
     }
 
     /**
-     * Update Cart Item
+     * تحديث عنصر في سلة التسوق
      * 
-     * Update quantity of a cart item.
-     * 
-     * @urlParam id int required The ID of the cart item.
-     * @bodyParam quantity int required The new quantity. Example: 3
+     * يغيّر كمية عنصر محدد داخل سلة التسوق.
      */
     public function update(CartUpdateRequest $request, $id)
     {
@@ -116,21 +108,19 @@ class CartController extends Controller
 
         $cartItem->update(['quantity' => $request->quantity]);
 
-        return $this->successResponse($cartItem, 'Cart updated');
+        return $this->successResponse($cartItem, 'تم تحديث كمية السلة بنجاح');
     }
 
     /**
-     * Delete Cart Item
+     * حذف عنصر من سلة التسوق
      * 
-     * Remove an item from the cart.
-     * 
-     * @urlParam id int required The ID of the cart item.
+     * يزيل عنصراً معيناً من سلة التسوق نهائياً.
      */
     public function destroy(\Illuminate\Http\Request $request, $id)
     {
         $cartItem = Cart::findOrFail($id);
         $cartItem->delete();
 
-        return $this->successResponse(null, 'Item removed from cart');
+        return $this->successResponse(null, 'تم حذف المنتج من السلة بنجاح');
     }
 }

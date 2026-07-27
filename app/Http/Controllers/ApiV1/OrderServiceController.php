@@ -10,18 +10,18 @@ use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
 
 /**
- * @group Order Services
+ *  خدمات الطلبات الإضافية
  * 
- * APIs for retrieving available order services like gift wrapping.
+ * يتولى جلب قائمة الخدمات الإضافية المتاحة للطلبات (مثل التركيب والضمان الممتد أو الشحن الخاص).
  */
 class OrderServiceController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get All Order Services
+     * جلب جميع خدمات الطلبات الإضافية
      * 
-     * Returns a list of all active order services.
+     * يعيد قائمة بجميع خدمات الطلبات النشطة المتاحة.
      */
     public function index()
     {

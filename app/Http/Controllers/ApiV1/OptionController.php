@@ -12,18 +12,18 @@ use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
 
 /**
- * @group Options
+ *  خيارات ومواصفات المنتجات
  * 
- * APIs for fetching product options/attributes.
+ * يتولى جلب خيارات ومواصفات المنتجات (مثل الألوان والأنواع والمقاسات) وقيمها.
  */
 class OptionController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get All Options
+     * جلب جميع خيارات المنتجات العامة
      * 
-     * Returns a list of all available options and their values.
+     * يعيد قائمة بجميع المواصفات والخيارات العامة المتاحة للنظام وقيم كل منها.
      */
     public function index()
     {
@@ -32,17 +32,15 @@ class OptionController extends Controller
     }
 
     /**
-     * Get Product Options
+     * جلب خيارات ومواصفات منتج محدد
      * 
-     * Returns the specific options available for a product.
-     * 
-     * @urlParam product_id int required The ID of the product.
+     * يعيد الخيارات والمواصفات والقيم المتاحة لمنتج محدد برقم المنتج (product_id).
      */
     public function productOptions($product_id)
     {
         $product = Product::find($product_id);
         if (!$product) {
-            return $this->errorResponse('Product not found', 404);
+            return $this->errorResponse('المنتج غير موجود', 404);
         }
 
         $options = $product->productOptions()->with(['option.translation', 'values.optionValue.translation'])->get();

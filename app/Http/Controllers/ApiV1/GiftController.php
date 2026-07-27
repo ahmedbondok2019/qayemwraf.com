@@ -15,20 +15,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group Gifts
+ *  الهدايا والمكافآت
  * 
- * APIs for managing and claiming gifts.
+ * يتولى استعراض الهدايا المتاحة للمستخدمين المؤهلين والمطالبة بالهدايا المجانية.
  */
 class GiftController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Available Gifts
+     * جلب قائمة الهدايا المتاحة
      * 
-     * Returns a list of available gifts for the authenticated user if their gift page is enabled.
-     * 
-     * @authenticated
+     * يعيد قائمة بالمنتجات المحددة كـ هدايا للمستخدم في حال تفعيل الصفحة له بناءً على قيمة الطلبات.
      */
     public function index(Request $request)
     {
@@ -49,12 +47,9 @@ class GiftController extends Controller
     }
 
     /**
-     * Claim Gifts
+     * المطالبة بالهدايا المحددة
      * 
-     * Allows the user to select and claim gifts.
-     * 
-     * @authenticated
-     * @bodyParam gift_ids array required The IDs of the selected gift products. Example: [1, 2]
+     * ينشئ طلباً مجانياً بالهدايا التي اختارها المستخدم بعد استيفاء الشروط.
      */
     public function store(Request $request)
     {
@@ -112,14 +107,13 @@ class GiftController extends Controller
                 'notes' => 'Gift request placed via API',
             ]);
             
-            // Disable gift page after claiming
             $user->update(['gift_page_enabled' => 0]); 
 
             DB::commit();
 
             return $this->successResponse([
                 'order_id' => $order->id
-            ], 'Gifts claimed successfully');
+            ], 'تم اختيار الهدايا بنجاح');
 
         } catch (\Exception $e) {
             DB::rollBack();

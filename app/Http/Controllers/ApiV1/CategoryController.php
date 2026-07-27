@@ -10,18 +10,18 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group Categories
+ *  الأقسام والتصنيفات
  * 
- * APIs for managing product categories.
+ * يتولى جلب الأقسام الرئيسية والأقسام الفرعية المتاحة لعرض المنتجات في التطبيق.
  */
 class CategoryController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Main Categories
+     * جلب الأقسام الرئيسية
      * 
-     * Returns a list of main categories (parent_id is null).
+     * يعيد قائمة بجميع الأقسام الرئيسية المتاحة والنشطة في النظام.
      */
     public function index()
     {
@@ -35,9 +35,9 @@ class CategoryController extends Controller
     }
 
     /**
-     * Get Sub Categories
+     * جلب الأقسام الفرعية
      * 
-     * Returns a list of sub-categories (parent_id is NOT null/0).
+     * يعيد قائمة بالتصنيفات والأقسام الفرعية المرتبطة بالأقسام الرئيسية.
      */
     public function subCategories()
     {

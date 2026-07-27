@@ -12,18 +12,18 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group Blogs
+ *  المدونة والمقالات
  * 
- * APIs for managing blogs and blog categories.
+ * يتولى جلب أقسام المدونة، قائمة المقالات مع دعم الفلترة بحسب القسم، وتفاصيل المقال المكتوب.
  */
 class BlogController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Blog Categories
+     * جلب أقسام المدونة
      * 
-     * Returns a list of blog categories with their blogs count.
+     * يعيد قائمة بأقسام المدونة المتاحة مع عدد المقالات لكل قسم.
      */
     public function categories()
     {
@@ -33,11 +33,9 @@ class BlogController extends Controller
     }
 
     /**
-     * Get Blogs
+     * جلب المقالات والمدونة
      * 
-     * Returns a list of active blogs, can be filtered by category.
-     * 
-     * @queryParam category_id int Filter by blog category ID. Example: 1
+     * يعيد قائمة مقسمة صفحات من المقالات النشطة، مع إمكانية الفلترة حسب قسم المدونة.
      */
     public function index(Request $request)
     {
@@ -53,18 +51,16 @@ class BlogController extends Controller
     }
 
     /**
-     * Get Blog Details
+     * جلب تفاصيل مقال محدد
      * 
-     * Get a single blog details.
-     * 
-     * @urlParam id int required The ID of the blog.
+     * يعيد كامل بيانات ومحتوى ومحتويات مقال محدد برقم المقال (ID).
      */
     public function show($id)
     {
         $blog = Blog::active()->with(['BlogTranslation', 'category.translation'])->find($id);
 
         if (!$blog) {
-            return $this->errorResponse('Blog not found', 404);
+            return $this->errorResponse('المقال غير موجود', 404);
         }
 
         return $this->successResponse(new BlogResource($blog));

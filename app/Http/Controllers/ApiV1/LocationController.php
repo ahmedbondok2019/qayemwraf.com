@@ -12,18 +12,18 @@ use App\Traits\ApiPaginationTrait;
 use App\Http\Resources\ApiV1\CountryResource;
 
 /**
- * @group Locations
+ *  المواقع والمناطق الجغرافية
  * 
- * APIs for retrieving countries, governorates, and cities.
+ * يتولى جلب قائمة الدول المتاحة، المحافظات التابعة لدولة، والمدن التابعة لمحافظة.
  */
 class LocationController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get All Countries
+     * جلب قائمة جميع الدول المتاحة
      * 
-     * Returns a list of all active countries.
+     * يعيد قائمة بجميع الدول النشطة في النظام.
      */
     public function countries()
     {
@@ -33,11 +33,9 @@ class LocationController extends Controller
     }
 
     /**
-     * Get Governorates by Country
+     * جلب المحافظات التابعة لدولة محدودة
      * 
-     * Returns a list of governorates for a specific country.
-     * 
-     * @urlParam country_id int required The ID of the country. Example: 1
+     * يعيد قائمة المحافظات النشطة التابعة لدولة محددة برقم الدولة (country_id).
      */
     public function governorates($country_id)
     {
@@ -52,11 +50,9 @@ class LocationController extends Controller
     }
 
     /**
-     * Get Cities by Governorate
+     * جلب المدن التابعة لمحافظة محددة
      * 
-     * Returns a list of cities for a specific governorate.
-     * 
-     * @urlParam governorate_id int required The ID of the governorate. Example: 1
+     * يعيد قائمة المدن النشطة التابعة لمحافظة محددة برقم المحافظة (governorate_id).
      */
     public function cities($governorate_id)
     {

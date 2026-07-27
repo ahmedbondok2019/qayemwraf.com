@@ -10,20 +10,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @group User Profile
+ *  الملف الشخصي للمستخدم
  * 
- * APIs for managing the authenticated user's profile.
+ * يتولى جلب بيانات الملف الشخصي، تحديث المعلومات الشخصية وكلمة المرور، وتحديث رموز الإشعارات (FCM Token).
  */
 class ProfileController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Profile
+     * جلب الملف الشخصي
      * 
-     * Get the authenticated user's profile information.
-     * 
-     * @authenticated
+     * يعيد كافة البيانات والعلومات الشخصية الخاصة بالمستخدم الحالي المسجل.
      */
     public function show(Request $request)
     {
@@ -31,17 +29,9 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update Profile
+     * تحديث البيانات الشخصية
      * 
-     * Update the authenticated user's profile information.
-     * 
-     * @authenticated
-     * @bodyParam name string Optional new name.
-     * @bodyParam email string Optional new email.
-     * @bodyParam phone string Optional new phone number.
-     * @bodyParam country_id int Optional new country ID.
-     * @bodyParam password string Optional new password.
-     * @bodyParam password_confirmation string Required if password is provided.
+     * يحدّث الاسم، البريد، رقم الهاتف، الدولة، أو كلمة المرور الخاصة بالمستخدم.
      */
     public function update(ProfileUpdateRequest $request)
     {
@@ -56,16 +46,13 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        return $this->successResponse($user, 'Profile updated successfully');
+        return $this->successResponse($user, 'تم تحديث الملف الشخصي بنجاح');
     }
 
     /**
-     * Update FCM Token
+     * تحديث رمز الإشعارات (FCM Token)
      * 
-     * Update the authenticated user's FCM token.
-     * 
-     * @authenticated
-     * @bodyParam fcm_token string required New FCM token.
+     * يحدّث رمز الإشعارات التنبيهية الخاصة بجهاز المستخدم لارسال الإشعارات عبر Firebase.
      */
     public function updateFcmToken(Request $request)
     {
@@ -86,13 +73,11 @@ class ProfileController extends Controller
             ]
         );
 
-        // Also ensure they are subscribed to 'offers'
         try {
             app(\App\Services\FirebaseService::class)->subscribeToTopic($request->fcm_token, 'offers');
         } catch (\Exception $e) {
-            // Log or ignore
         }
 
-        return $this->successResponse(null, 'FCM Token updated successfully');
+        return $this->successResponse(null, 'تم تحديث رمز الإشعارات بنجاح');
     }
 }

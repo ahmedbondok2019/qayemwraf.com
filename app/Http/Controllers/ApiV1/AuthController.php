@@ -18,22 +18,20 @@ use App\Http\Requests\ApiV1\Auth\ForgetPasswordRequest;
 use App\Http\Requests\ApiV1\Auth\ResetPasswordRequest;
 use App\Http\Requests\ApiV1\Auth\SocialLoginRequest;
 
+/**
+ *  المصادقة وإدارة حسابات المستخدمين
+ * 
+ * يتولى العمليات الخاصة بتسجيل الحسابات الجديدة، تسجيل الدخول،
+ * تسجيل الدخول عبر شبكات التواصل، استعادة كلمة المرور، الاشتراك في الإشعارات، وإلغاء الحسابات.
+ */
 class AuthController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Register
+     * تسجيل حساب مستخدم جديد
      * 
-     * Register a new user and return a token.
-     * 
-     * @group Authentication
-     * @bodyParam name string required The name of the user. Example: John Doe
-     * @bodyParam email string required The email of the user. Example: john@example.com
-     * @bodyParam phone string required The phone number. Example: 01021456325
-     * @bodyParam country_id int required ID of the country. Example: 1
-     * @bodyParam password string required The password. Example: password123
-     * @header Content-Type multipart/form-data
+     * ينشئ حساباً جديداً للمستخدم ويعيد رمز المصادقة (Bearer Token).
      */
     public function register(RegisterRequest $request)
     {
@@ -56,18 +54,13 @@ class AuthController extends Controller
             'user' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
-        ], 'User registered successfully');
+        ], 'تم تسجيل الحساب بنجاح');
     }
 
     /**
-     * Login
+     * تسجيل الدخول
      * 
-     * Authenticate user and return a token.
-     * 
-     * @group Authentication
-     * @bodyParam login string required Email or Phone of the user. Example: john@example.com or 01021456325
-     * @bodyParam password string required The password. Example: password123
-     * @header Content-Type multipart/form-data
+     * يتحقق من بيانات الدخول (البريد أو الهاتف مع كلمة المرور) ويعيد رمز الوصول للمستخدم.
      */
     public function login(LoginRequest $request)
     {
@@ -76,7 +69,7 @@ class AuthController extends Controller
             ->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->errorResponse('Invalid login credentials', 401);
+            return $this->errorResponse('بيانات الدخول غير صحيحة', 401);
         }
 
         if ($request->temp_user_id) {
@@ -89,23 +82,23 @@ class AuthController extends Controller
             'user' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
-        ], 'Login successful');
+        ], 'تم تسجيل الدخول بنجاح');
     }
 
     /**
-     * Merge Guest Data
+     * دمج بيانات الزائر مؤقتاً
      * 
-     * Move cart and wishlist items from guest ID to user ID.
+     * ينقل عناصر السلة والمفضلة من المعرف المؤقت للزائر إلى معرف المستخدم المسجل.
      */
     private function mergeGuestData($userId, $tempUserId)
     {
-        // Merge Cart
+        // دمج عناصر السلة
         Cart::where('temp_user_id', $tempUserId)->update([
             'user_id' => $userId,
             'temp_user_id' => null
         ]);
 
-        // Merge Wishlist
+        // دمج عناصر المفضلة
         $guestWishlist = Wishlist::where('temp_user_id', $tempUserId)->get();
         foreach ($guestWishlist as $item) {
             $exists = Wishlist::where('user_id', $userId)
@@ -124,43 +117,32 @@ class AuthController extends Controller
     }
 
     /**
-     * Social Login
+     * تسجيل الدخول عبر شبكات التواصل الاجتماعي
      * 
-     * Login or Register via social media (Google, Facebook, Apple).
-     * 
-     * @group Authentication
-     * @bodyParam provider string required The provider name (google, facebook, apple). Example: google
-     * @bodyParam provider_id string required The unique ID from the provider.
-     * @bodyParam email string nullable The email of the user.
-     * @bodyParam name string nullable The name of the user.
-     * @bodyParam image string nullable The image URL of the user.
+     * تسجيل أو ربط حساب عبر شبكات التواصل (جوجل / فيسبوك / أبل).
      */
     public function socialLogin(SocialLoginRequest $request)
     {
         $providerField = $request->provider . '_id';
         
-        // Find user by social ID
         $user = User::where($providerField, $request->provider_id)->first();
 
         if (!$user && $request->email) {
-            // Find by email if social ID not found
             $user = User::where('email', $request->email)->first();
             
             if ($user) {
-                // Link social ID to existing account
                 $user->update([$providerField => $request->provider_id]);
             }
         }
 
         if (!$user) {
-            // Create new user
             $user = User::create([
                 'name' => $request->name ?? $request->provider . ' User',
                 'email' => $request->email,
                 'phone' => $request->phone ?? "0111111111",
                 'image' => $request->image,
                 $providerField => $request->provider_id,
-                'password' => Hash::make(rand(10000000, 99999999)), // Random password
+                'password' => Hash::make(rand(10000000, 99999999)),
                 'status' => 1,
                 'country_id' => $request->country_id ?? 1,
             ]);
@@ -176,60 +158,40 @@ class AuthController extends Controller
             'user' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
-        ], 'Social login successful');
+        ], 'تم تسجيل الدخول عبر شبكة التواصل بنجاح');
     }
 
     /**
-     * Logout
+     * تسجيل الخروج
      * 
-     * Log the user out (Invalidate the token).
-     * 
-     * @authenticated
-     * @group Authentication
-     * @response {
-     *  "success": true,
-     *  "message": "Successfully logged out"
-     * }
+     * يلغي رمز الوصول الحالي للمستخدم وينتهي الجلسة الحالية.
      */
     public function logout(\Illuminate\Http\Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
-        return $this->successResponse(null, 'Successfully logged out');
+        return $this->successResponse(null, 'تم تسجيل الخروج بنجاح');
     }
 
     /**
-     * Delete Account
+     * حذف حساب المستخدم
      * 
-     * Delete the authenticated user's account.
-     * 
-     * @authenticated
-     * @group Authentication
-     * @response {
-     *  "success": true,
-     *  "message": "Account deleted successfully"
-     * }
+     * يحذف حساب المستخدم الحالي نهائياً مع كافة الرموز والبيانات المرتبطة.
      */
     public function deleteAccount(\Illuminate\Http\Request $request)
     {
         $user = $request->user();
         
-        // Delete tokens first
         $user->tokens()->delete();
-        
-        // Delete user
         $user->delete();
 
-        return $this->successResponse(null, 'Account deleted successfully');
+        return $this->successResponse(null, 'تم حذف الحساب بنجاح');
     }
 
     /**
-     * Forget Password
+     * نسيت كلمة المرور
      * 
-     * Send an OTP to the user's email for password reset.
-     * 
-     * @group Authentication
-     * @bodyParam email string required The email of the user. Example: john@example.com
+     * يرسل كود التحقق (OTP) إلى البريد الإلكتروني للمستخدم لاستعادة كلمة المرور.
      */
     public function forgetPassword(ForgetPasswordRequest $request)
     {
@@ -245,18 +207,13 @@ class AuthController extends Controller
             Mail::to($user->email)->send(new OtpMail($otp));
         }
 
-        return $this->successResponse(null, 'تم ارسال كود التحقق الى بريدك الإلكتروني');
+        return $this->successResponse(null, 'تم إرسال كود التحقق إلى بريدك الإلكتروني');
     }
 
     /**
-     * Reset Password
+     * إعادة تعيين كلمة المرور
      * 
-     * Reset user password using OTP.
-     * 
-     * @group Authentication
-     * @bodyParam email string required The email address. Example: john@example.com
-     * @bodyParam otp string required The OTP received. Example: 1234
-     * @bodyParam password string required New password. Example: newpassword123
+     * يغيّر كلمة المرور للمستخدم بعد التأكد من صحة كود التحقق المدخل.
      */
     public function resetPassword(ResetPasswordRequest $request)
     {
@@ -275,20 +232,15 @@ class AuthController extends Controller
             ]);
         }
 
-        // Delete the OTP after successful reset
         $check->delete();
 
         return $this->successResponse(null, 'تم تغيير كلمة المرور بنجاح');
     }
 
     /**
-     * Subscribe to Topic
+     * الاشتراك في موضوع الإشعارات (FCM Topic)
      * 
-     * Subscribe a device to a specific Firebase topic (e.g., 'offers').
-     * 
-     * @group Authentication
-     * @bodyParam fcm_token string required The Firebase Cloud Messaging token.
-     * @bodyParam topic string required The topic to subscribe to. Default: offers
+     * يشترك جهاز المستخدم في استقبال الإشعارات عبر Firebase (مثل العروض والأخبار).
      */
     public function subscribeToTopic(\Illuminate\Http\Request $request)
     {
@@ -307,7 +259,6 @@ class AuthController extends Controller
             
             $userId = auth('sanctum')->id();
             
-            // Save token to database
             \App\Models\UserFcmToken::updateOrCreate(
                 ['fcm_token' => $request->fcm_token],
                 [
@@ -317,9 +268,9 @@ class AuthController extends Controller
                 ]
             );
             
-            return $this->successResponse(null, 'Subscribed to topic successfully');
+            return $this->successResponse(null, 'تم الاشتراك في الإشعارات بنجاح');
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to subscribe: ' . $e->getMessage(), 500);
+            return $this->errorResponse('فشل الاشتراك في الإشعارات: ' . $e->getMessage(), 500);
         }
     }
 }

@@ -10,18 +10,18 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group Home
+ *  شرائح العرض (السلايدرز)
  * 
- * APIs for home page components like sliders.
+ * يتولى جلب الشرائح والبنرات التفاعلية المتحركة في الصفحة الرئيسية.
  */
 class SliderController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Sliders
+     * جلب السلايدرز
      * 
-     * Returns a list of active sliders with their translations and associated categories.
+     * يعيد قائمة بجميع شرائح العرض النشطة المتاحة مع ترجماتها والأقسام المرتبطة بها.
      */
     public function index()
     {

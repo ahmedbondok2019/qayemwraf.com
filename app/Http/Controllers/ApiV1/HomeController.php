@@ -19,104 +19,61 @@ use App\Models\Product;
 use App\Models\ProductBrand;
 use App\Models\Slider;
 use App\Models\FlashSale;
+use App\Models\OrderDetail;
+use App\Models\Setting;
 use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ *  الصفحة الرئيسية لتطبيق الهاتف المحمول
+ * 
+ * يوفر الواجهات الخاصة بجلب كافة محتويات الصفحة الرئيسية مثل السلايدرز، الأقسام، العروض،
+ * الفلاش سيل، المنتجات المميزة، الأكثر مبيعاً، العلامات التجارية، قسم لماذا تختارنا، وتحميل الكتالوج.
+ */
 class HomeController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Integrated Home Data
+     * الصفحة الرئيسية
      * 
-     * Returns all data needed for the home page including sliders, offers, ads, categories, products, partners, and blogs.
+     * يجلب جميع البيانات المدمجة المطلوبة لعرض الصفحة الرئيسية في تطبيق الهاتف المحمول:
+     * - السلايدرز (sliders)
+     * - الأقسام المتاحة للعرض في الصفحة الرئيسية (categories / home_categories)
+     * - التخفيضات السريعة (flash_sales / flashdeals)
+     * - العروض الخاصة والبنرات (offers / top_offers)
+     * - المنتجات المميزة والخاصة (featured_products / features)
+     * - الأكثر مبيعاً المحسوبة بناءً على الطلبات الفعلية (top_sellers / topSeller)
+     * - العلامات التجارية والشركات المصنعة (brands / partners)
+     * - قسم لماذا تختار EG Medical (why_choose_us)
+     * - قسم تحميل الكتالوج الطبي بصيغة PDF (catalog_download)
      */
     public function index()
     {
         $data = [];
 
-        // 1. Sliders
-        $data['sliders'] = SliderResource::collection(Slider::active()->with(['translation', 'category'])->get());
+        // 1. شرائح العرض (Sliders) - تحتوي على Title, Description, Link, Image
+        $sliders = Slider::active()->orderBy('sort_order')->with(['translation', 'category'])->get();
+        $data['sliders'] = SliderResource::collection($sliders);
 
-        // 2. Strongest Offers
-        $data['top_offers'] = OfferResource::collection(
-            Offer::active()
-                ->where(function($query) {
-                    $query->where(function($q) {
-                        $q->whereNotNull('category_id')
-                          ->whereHas('category.products', function($pq) {
-                              $pq->where('status', 1)
-                                ->whereHas('flashSales', function($fq) {
-                                    $fq->where('is_active', 1)
-                                      ->where('start_at', '<=', now())
-                                      ->where('end_at', '>=', now());
-                                });
-                          });
-                    })->orWhere(function($q) {
-                        $q->whereNull('category_id')
-                          ->whereExists(function($eq) {
-                              $eq->select(DB::raw(1))
-                                 ->from('flash_sale_products')
-                                 ->join('flash_sales', 'flash_sales.id', '=', 'flash_sale_products.flash_sale_id')
-                                 ->join('products', 'products.id', '=', 'flash_sale_products.product_id')
-                                 ->where('flash_sales.is_active', 1)
-                                 ->where('flash_sales.start_at', '<=', now())
-                                 ->where('flash_sales.end_at', '>=', now())
-                                 ->where('products.status', 1);
-                          });
-                    });
-                })
-                ->orderBy('sort_order')
-                ->with(['translation', 'category.translation'])
-                ->get()
-        );
+        // 2. الأقسام المتاحة للعرض في الصفحة الرئيسية (Home Categories) - تحتوي على Title, Image, Link
+        $mainCategories = Category::active()
+            ->whereNull('parent_id')
+            ->with(['translation', 'children.translation'])
+            ->withCount('products')
+            ->orderBy('sort_order')
+            ->get();
+        $data['categories'] = CategoryResource::collection($mainCategories);
+        $data['home_categories'] = CategoryResource::collection($mainCategories);
 
-        // 3. Home Advertisements
-        $data['home_ads'] = AdvertisementResource::collection(Advertisement::where('location', 'home')->active()->with(['translation'])->get());
-
-        // 4. Main Categories (parent_id is null)
-        $data['main_categories'] = CategoryResource::collection(
-            Category::active()->whereNull('parent_id')->with(['translation', 'children.translation'])->withCount('products')->orderBy('sort_order')->get()
-        );
-
-        // 5. Sub Categories (parent_id is NOT null)
+        // 3. الأقسام الفرعية (Sub Categories)
         $data['sub_categories'] = CategoryResource::collection(
             Category::active()->whereNotNull('parent_id')->with(['translation', 'parent'])->withCount('products')->orderBy('sort_order')->get()
         );
 
-        // 6. Best Sellers
-        $bestSellers = Product::active()
-            ->where('is_best_seller', true)
-            ->where(function($q) {
-                $q->whereNull('best_seller_start')->orWhere('best_seller_start', '<=', now());
-            })
-            ->where(function($q) {
-                $q->whereNull('best_seller_end')->orWhere('best_seller_end', '>=', now());
-            })
-            ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
-                $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
-            }])
-            ->take(8)
-            ->get();
-        $data['best_sellers'] = ProductResource::collection($bestSellers);
-
-        // 7. Latest Products
-        $latestProducts = Product::active()
-            ->latest()
-            ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
-                $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
-            }])
-            ->take(8)
-            ->get();
-        $data['latest_products'] = ProductResource::collection($latestProducts);
-
-        // 8. Success Partners (Brands)
-        // Using ProductBrand as it's the more recent model used in products
-        $data['partners'] = BrandResource::collection(ProductBrand::active()->orderBy('sort_order')->withCount('products')->get());
-
-        // 9. Flash Sales (Products)
+        // 4. التخفيضات السريعة (Flash Sales) - منتجات الفلاش سيل النشطة
         $flashSaleIds = FlashSale::where('is_active', 1)
             ->where('start_at', '<=', now())
             ->where('end_at', '>=', now())
@@ -129,27 +86,153 @@ class HomeController extends Controller
             ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
                 $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
             }])
-            ->take(8)
+            ->take(10)
             ->get();
             
         $data['flash_sales'] = ProductResource::collection($flashProducts);
 
-        // 10. Blogs (Limited)
-        $data['blogs'] = BlogResource::collection(Blog::active()->with('BlogTranslation')->latest()->take(3)->get());
+        // 5. العروض والبنرات (Offers) - تحتوي على Image, Title, Description, Link
+        $offers = Offer::active()
+            ->orderBy('sort_order')
+            ->with(['translation', 'category.translation'])
+            ->get();
+        $data['offers'] = OfferResource::collection($offers);
 
-        // Map to legacy keys for Flutter app compatibility
+        // 6. المنتجات المميزة والعروض الخاصة (Featured Products / Special Offers)
+        // أي منتج مفعّل عليه خيار المعروضات الخاصة أو العرض على الرئيسية
+        $featuredProducts = Product::active()
+            ->where(function($q) {
+                $q->where('show_on_home', 1)
+                  ->orWhere(function($sq) {
+                      $sq->whereNotNull('special_price')
+                         ->where('special_price', '>', 0)
+                         ->where(function($dq) {
+                             $dq->whereNull('special_price_start')->orWhere('special_price_start', '<=', now());
+                         })
+                         ->where(function($dq) {
+                             $dq->whereNull('special_price_end')->orWhere('special_price_end', '>=', now());
+                         });
+                  });
+            })
+            ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+                $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
+            }])
+            ->take(10)
+            ->get();
+        $data['featured_products'] = ProductResource::collection($featuredProducts);
+
+        // 7. الأكثر مبيعاً (Top Sellers) - استخراج المنتجات الأكثر طلباً ديناميكياً من جدول تفاصيل الطلبات order_details
+        $topSoldProductIds = OrderDetail::select('product_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_quantity')
+            ->limit(10)
+            ->pluck('product_id')
+            ->toArray();
+
+        if (!empty($topSoldProductIds)) {
+            $topSellerProducts = Product::active()
+                ->whereIn('id', $topSoldProductIds)
+                ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+                    $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
+                }])
+                ->get()
+                ->sortBy(function($model) use ($topSoldProductIds) {
+                    return array_search($model->id, $topSoldProductIds);
+                })
+                ->values();
+        } else {
+            // في حال عدم وجود طلبات بعد، يتم جلب المنتجات المحددة كأكثر مبيعاً أو أحدث المنتجات
+            $topSellerProducts = Product::active()
+                ->where('is_best_seller', true)
+                ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+                    $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
+                }])
+                ->take(10)
+                ->get();
+        }
+        $data['top_sellers'] = ProductResource::collection($topSellerProducts);
+
+        // 8. أحدث المنتجات المضافة (Latest Products)
+        $latestProducts = Product::active()
+            ->latest()
+            ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+                $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
+            }])
+            ->take(10)
+            ->get();
+        $data['latest_products'] = ProductResource::collection($latestProducts);
+
+        // 9. العلامات التجارية شركاء النجاح (Brands) - تحتوي على Title و Image
+        $brands = ProductBrand::active()->orderBy('sort_order')->withCount('products')->get();
+        $data['brands'] = BrandResource::collection($brands);
+        $data['partners'] = $data['brands'];
+
+        // 10. قسم لماذا تختارنا (Why Choose Us) - مميزات الخدمة والشركة
+        $setting = Setting::first();
+        $data['why_choose_us'] = [
+            'title' => $setting ? ($setting->translate('why_choose_us_title') ?: 'لماذا تختار EG Medical؟') : 'لماذا تختار EG Medical؟',
+            'subtitle' => $setting ? ($setting->translate('why_choose_us_subtitle') ?: 'نحن نضع معايير جديدة للموثوقية والأمان في توفير المستلزمات والأجهزة الطبية') : 'نحن نضع معايير جديدة للموثوقية والأمان في توفير المستلزمات والأجهزة الطبية',
+            'items' => [
+                [
+                    'id' => 1,
+                    'icon' => 'shield_check',
+                    'title' => 'منتجات أصلية 100%',
+                    'description' => 'مستوردة مباشرة من المصنعين العالميين المعتمدين.',
+                ],
+                [
+                    'id' => 2,
+                    'icon' => 'award',
+                    'title' => 'موزع رسمي معتمد',
+                    'description' => 'الوكيل والموزع المعتمد لأكبر ماركات الأجهزة الطبية.',
+                ],
+                [
+                    'id' => 3,
+                    'icon' => 'stethoscope',
+                    'title' => 'استشارات طبية متخصصة',
+                    'description' => 'مهندسون متخصصون لمساعدتك في اختيار الجهاز المناسب.',
+                ],
+                [
+                    'id' => 4,
+                    'icon' => 'wrench',
+                    'title' => 'ضمان وصيانة معتمدة',
+                    'description' => 'ضمان الوكيل الشامل وتوافر قطع الغيار الأصلية والصيانة.',
+                ],
+            ]
+        ];
+
+        // 11. قسم تحميل الكتالوج الطبي بصيغة PDF (Catalog Download)
+        $data['catalog_download'] = [
+            'title' => $setting ? ($setting->translate('catalog_title') ?: 'حمّل كتالوج المنتجات الطبية الكامل') : 'حمّل كتالوج المنتجات الطبية الكامل',
+            'description' => $setting ? ($setting->translate('catalog_description') ?: 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.') : 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.',
+            'button_text' => 'تحميل الكتالوج بصيغة PDF',
+            'pdf_url' => ($setting && $setting->catalog_pdf) ? asset($setting->catalog_pdf) : asset('storage/medical_catalog.pdf'),
+        ];
+
+        // 12. الإعلانات البنريّة في الصفحة الرئيسية
+        $data['home_ads'] = AdvertisementResource::collection(
+            Advertisement::where('location', 'home')->active()->with(['translation'])->get()
+        );
+
+        // 13. المقالات الأخيرة في المدونة
+        $data['blogs'] = BlogResource::collection(
+            Blog::active()->with('BlogTranslation')->latest()->take(3)->get()
+        );
+
+        // التوافق المباشر مع الإصدارات السابقة للتطبيق (Legacy Keys mapping)
         $legacyData = [
             'slider' => $data['sliders'],
-            'offers' => $data['top_offers'],
-            'categories' => $data['main_categories'],
-            'brands' => $data['partners'],
+            'offers' => $data['offers'],
+            'top_offers' => $data['offers'],
+            'categories' => $data['categories'],
+            'brands' => $data['brands'],
             'latestProducts' => $data['latest_products'],
-            'topSeller' => $data['best_sellers'],
+            'topSeller' => $data['top_sellers'],
+            'best_sellers' => $data['top_sellers'],
             'flashdeals' => $data['flash_sales'],
-            'mostviewedProducts' => $data['best_sellers'], // Fallback
+            'mostviewedProducts' => $data['top_sellers'],
+            'features' => $data['featured_products'],
         ];
-        
-        // Merge so both new and old keys coexist
+
         $responseData = array_merge($data, $legacyData);
 
         return response()->json([
@@ -161,9 +244,9 @@ class HomeController extends Controller
     }
 
     /**
-     * Get Flash Sales
+     * جلب قائمة عروض التخفيضات السريعة (فلاش سيل)
      * 
-     * Returns a list of current and upcoming flash sales.
+     * يعيد قائمة بجميع حملات الفلاش سيل المتاحة والقادمة مع المنتجات المدرجة بها.
      */
     public function flashSales()
     {

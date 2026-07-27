@@ -10,18 +10,18 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group General
+ *  العروض الترويجية والبنرات
  * 
- * APIs for offers.
+ * يتولى جلب قائمة العروض الخاصة والبنرات الترويجية النشطة في النظام.
  */
 class OfferController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Offers
+     * جلب العروض الخاصة
      * 
-     * Returns a list of active offers.
+     * يعيد قائمة بجميع العروض الترويجية النشطة المتاحة.
      */
     public function index()
     {

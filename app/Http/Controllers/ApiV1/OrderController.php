@@ -10,34 +10,28 @@ use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
 
 /**
- * @group User Orders
+ *  طلبيات المستخدم
  * 
- * APIs for managing and viewing user orders.
+ * يتولى جلب قائمة طلبات المستخدم، استعراض تفاصيل طلب محدد، وإلغاء الطلبات القابلة للإلغاء.
  */
 class OrderController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get User Orders
+     * جلب قائمة الطلبات للمستخدم
      * 
-     * Returns a paginated list of orders for the authenticated user.
-     * 
-     * @authenticated
-     * @queryParam status string Filter by status (e.g., pending, processing, completed, all). Example: pending
-     * @queryParam type string Filter by type (regular or gift). Example: regular
+     * يعيد قائمة مفلترة ومقسمة صفحات لطلبات المستخدم الحالي.
      */
     public function index(Request $request)
     {
         $user = $request->user();
         $query = Order::where('user_id', $user->id);
 
-        // Filter by Status
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
-        // Filter by Type (Gift vs Regular)
         if ($request->filled('type') && $request->type !== 'all') {
             if ($request->type === 'gift') {
                 $query->where('payment_method', 'gift');
@@ -55,12 +49,9 @@ class OrderController extends Controller
     }
 
     /**
-     * Get Order Details
+     * جلب تفاصيل طلب محدد
      * 
-     * Returns detailed information about a specific order.
-     * 
-     * @authenticated
-     * @urlParam id int required The ID of the order.
+     * يعيد كامل بيانات وتفاصيل المنتج وعنوان الشحن وحالة الطلب لرقم طلب محدد.
      */
     public function show($id, Request $request)
     {
@@ -70,17 +61,16 @@ class OrderController extends Controller
             ->find($id);
 
         if (!$order) {
-            return $this->errorResponse('Order not found', 404);
+            return $this->errorResponse('الطلب غير موجود', 404);
         }
 
         return $this->successResponse(new OrderResource($order));
     }
 
     /**
-     * Cancel Order
+     * إلغاء طلب مسبق
      * 
-     * @authenticated
-     * @urlParam id int required The ID of the order.
+     * يلغي الطلب المكتوب إذا كان لا يزال في حالة قيد الانتظار ولم يتم تجهيزه أو شحنه بعد.
      */
     public function cancel(Request $request)
     {
@@ -91,15 +81,12 @@ class OrderController extends Controller
             return $this->errorResponse(__('website.Order Not Found'), 404);
         }
 
-        if ($order->status != 0) { // Only pending orders can be cancelled
+        if ($order->status != 0) {
             return $this->errorResponse(__('website.Order cannot be cancelled'), 400);
         }
 
-        $order->status = 4; // Cancelled
+        $order->status = 4;
         $order->save();
-
-        // Log status change if needed, usually via observer or direct create
-        // $order->order_statuses()->create(['status' => 4]);
 
         return $this->successResponse(new OrderResource($order), __('website.Order Cancelled Successfully'));
     }

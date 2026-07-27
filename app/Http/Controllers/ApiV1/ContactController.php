@@ -9,28 +9,21 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group General
+ *  تواصل معنا
  * 
- * APIs for contact us and general support.
+ * يتولى استقبال وتخزين رسائل واستفسارات المستخدمين والزوار من نموذج اتصل بنا.
  */
 class ContactController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Contact Us
+     * إرسال رسالة تواصل معنا
      * 
-     * Store a new contact message.
-     * 
-     * @bodyParam name string required The name of the person. Example: John Doe
-     * @bodyParam email string required The email address. Example: john@example.com
-     * @bodyParam phone string ID of the person. Example: 01021456325
-     * @bodyParam subject string The subject of the message. Example: Inquiry about products
-     * @bodyParam message string required The message content. Example: I would like to know more about your services.
+     * ينشئ ويحفظ رسالة جديدة من المستخدم المشتملة على الاسم، البريد، رقم التواصل، والموضوع.
      */
     public function store(ContactStoreRequest $request)
     {
-
         $contact = Contact::create([
             'name' => $request->name,
             'email' => $request->email,

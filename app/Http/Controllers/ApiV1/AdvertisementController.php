@@ -10,20 +10,18 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group General
+ *  الإعلانات والبنرات
  * 
- * APIs for advertisements.
+ * يتولى جلب الإعلانات البنريّة النشطة والمتاحة للعرض في أماكن مختلفة داخل التطبيق.
  */
 class AdvertisementController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Advertisements
+     * جلب قائمة الإعلانات البنريّة
      * 
-     * Returns a list of active advertisements.
-     * 
-     * @queryParam position string Filter by position. Example: popup, sidebar, top_banner
+     * يعيد قائمة بالإعلانات النشطة مع دعم الفلترة حسب الموضع (popup, home, sidebar, etc).
      */
     public function index(Request $request)
     {

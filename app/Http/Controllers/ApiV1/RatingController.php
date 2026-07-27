@@ -9,10 +9,20 @@ use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ *  تقييم ومراجعة المنتجات
+ * 
+ * يتولى استقبال وتخزين تقييمات وتعليقات المستخدمين المسجلين على المنتجات بعد الشراء.
+ */
 class RatingController extends Controller
 {
     use ApiResponseTrait;
 
+    /**
+     * إضافة تقييم ومراجعة لمنتج
+     * 
+     * يحفظ التقييم الرقمي والتعليق الخاص بالمستخدم على منتج تم شراؤه واستلامه مسبقاً.
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -27,9 +37,8 @@ class RatingController extends Controller
 
         $user = $request->user();
 
-        // Check if user purchased AND received the product
         $hasPurchased = $user->orders()
-            ->where('status', 3) // 3 = Received/Delivered
+            ->where('status', 3)
             ->whereHas('order_details', function($q) use ($request) {
                 $q->where('product_id', $request->product_id);
             })->exists();
@@ -38,7 +47,6 @@ class RatingController extends Controller
              return $this->NewApiResponse(null, __('website.You must purchase and receive this product to rate it'), 'false', 403);
         }
 
-        // Create or update rating
         $rating = Rating::updateOrCreate(
             [
                 'user_id' => $user->id,
@@ -47,7 +55,7 @@ class RatingController extends Controller
             [
                 'rating' => $request->rating,
                 'comment' => $request->comment,
-                'status' => true, // Auto-approve for now
+                'status' => true,
             ]
         );
 

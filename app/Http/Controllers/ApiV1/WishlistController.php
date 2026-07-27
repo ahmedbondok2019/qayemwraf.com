@@ -10,19 +10,18 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group Wishlist
+ *  قائمة الرغبات (المفضلة)
  * 
- * APIs for managing the user wishlist
+ * يتولى جلب قائمة المنتجات المفضلة وإضافة/إزالة المنتجات من مفضلة المستخدم أو الزائر.
  */
 class WishlistController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
+
     /**
-     * Get Wishlist Items
+     * جلب عناصر قائمة الرغبات
      * 
-     * Get all products in the wishlist for the authenticated user or guest.
-     * 
-     * @bodyParam temp_user_id string Optional. Required if user is not authenticated. Example: guest_123
+     * يعيد جميع المنتجات المضافة إلى قائمة المفضلة للمستخدم الحالي أو الزائر.
      */
     public function index(WishlistIndexRequest $request)
     {
@@ -40,16 +39,12 @@ class WishlistController extends Controller
     }
 
     /**
-     * Toggle Wishlist
+     * إضافة أو إزالة منتج من المفضلة
      * 
-     * Add or remove a product from the wishlist.
-     * 
-     * @bodyParam product_id int required The ID of the product. Example: 1
-     * @bodyParam temp_user_id string Optional. Required if user is not authenticated. Example: guest_123
+     * يضيف المنتج إلى المفضلة إذا لم يكن موجوداً، أو يزيله من المفضلة إذا كان موجوداً مسبقاً.
      */
     public function toggle(WishlistToggleRequest $request)
     {
-
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
         $tempUserId = $request->temp_user_id;
 
@@ -64,14 +59,14 @@ class WishlistController extends Controller
 
         if ($wishlistItem) {
             $wishlistItem->delete();
-            return $this->successResponse(['status' => 'removed'], 'Product removed from wishlist');
+            return $this->successResponse(['status' => 'removed'], 'تم حذف المنتج من قائمة المفضلة');
         } else {
             Wishlist::create([
                 'user_id' => $userId,
                 'temp_user_id' => $tempUserId,
                 'product_id' => $request->product_id,
             ]);
-            return $this->successResponse(['status' => 'added'], 'Product added to wishlist');
+            return $this->successResponse(['status' => 'added'], 'تمت إضافة المنتج إلى قائمة المفضلة');
         }
     }
 }

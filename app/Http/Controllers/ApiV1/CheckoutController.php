@@ -32,18 +32,20 @@ use App\Notifications\OrderNotification;
 use App\Http\Controllers\helper\HelperController;
 
 /**
- * @group Checkout
+ *  إنهاء الشراء وإنشاء الطلبات
  * 
- * APIs for handling order checkout, summary calculation, and order placement.
+ * يتولى حساب إجمالي ملخص الطلب وشامل مصاريف الشحن والخصومات والخدمات الإضافية،
+ * والتحقق من صحة وتطبيق كوبونات الخصم، وتأكيد وإنشاء الطلبات الجديدة للمستخدم.
  */
 class CheckoutController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get Checkout Summary
+     * حساب ملخص إنهاء الشراء
      * 
-     * Calculates the order breakdowns including subtotal, shipping, discounts, and total.
+     * يحسب إجمالي المبلغ المطلوب للطلب شاملاً السعر الفرعي للمنتجات، مصاريف الشحن، 
+     * خصومات طرق الدفع، خصم الكوبون، وإجمالي الخدمات الإضافية.
      */
     public function summary(CheckoutSummaryRequest $request)
     {
@@ -65,16 +67,16 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Place Order
+     * تأكيد وإنشاء الطلب
      * 
-     * Creates a new order and clears the cart.
+     * ينشئ طلباً جديداً في النظام بناءً على عناصر سلة التسوق والعنوان وطريقة الدفع المحددة، 
+     * ويفرّغ سلة التسوق الحالية للمستخدم.
      */
     public function store(CheckoutStoreRequest $request)
     {
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
         $tempUserId = $request->temp_user_id;
 
-        // Force auth for final order placement if that's the system rule
         if (!$userId) {
              return $this->errorResponse(__('frontend.please_login_first'), 401);
         }
@@ -100,7 +102,6 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
-            // Split name
             $parts = explode(' ', $address->name ?? $request->user()->name, 2);
             $firstName = $parts[0] ?? '';
             $lastName = $parts[1] ?? '';
@@ -157,7 +158,7 @@ class CheckoutController extends Controller
                 'order_id' => $order->id,
                 'user_id' => $userId,
                 'status' => 'pending',
-                'notes' => 'Order placed via API checkout',
+                'notes' => 'تم إنشاء الطلب عبر تطبيق الجوال',
             ]);
 
             Cart::where('user_id', $userId)->delete();
@@ -166,7 +167,6 @@ class CheckoutController extends Controller
                 Coupon::where('code', $breakdown['coupon_code'])->increment('usage_count');
             }
 
-            // Gift Page Eligibility
             $setting = Setting::first();
             $giftPageUnlocked = false;
             if ($setting && $setting->min_order_for_gift && $breakdown['total'] >= $setting->min_order_for_gift) {
@@ -177,13 +177,11 @@ class CheckoutController extends Controller
             DB::commit();
 
             try {
-                // Notify Admins
                 $admins = HelperController::getAllowedAdmins(null, ['57', '58', '59', '60']);
                 if (count($admins) > 0) {
                     Notification::send($admins, new OrderNotification($order));
                 }
 
-                // Notify Vendors
                 $vendors = Vendor::whereHas('products', function ($query) use ($order) {
                     $query->whereHas('orderDetails', function ($q) use ($order) {
                         $q->where('order_id', $order->id);
@@ -194,14 +192,13 @@ class CheckoutController extends Controller
                     Notification::send($vendors, new OrderNotification($order));
                 }
             } catch (\Exception $e) {
-                // Silently fail notification to not break the response
                 Log::error('Order notification failed: ' . $e->getMessage());
             }
 
             return $this->successResponse([
                 'order_id' => $order->id,
                 'gift_unlocked' => $giftPageUnlocked
-            ], 'Order placed successfully');
+            ], 'تم إنشاء الطلب بنجاح');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -210,7 +207,9 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Apply Coupon (Validation only)
+     * تطبيق وفحص كود كوبون الخصم
+     * 
+     * يفحص مدى صلاحية وتأثير كود الكوبون المدخل ويعيد تفاصيل قيمة الخصومات.
      */
     public function applyCoupon(Request $request)
     {
@@ -226,7 +225,6 @@ class CheckoutController extends Controller
             return $this->errorResponse(__('frontend.invalid_coupon'), 400);
         }
 
-        // Re-use logic from calculateOrderBreakdown for consistency
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
         $tempUserId = $request->temp_user_id;
         $cartItems = Cart::where(function($q) use ($userId, $tempUserId) {
@@ -234,7 +232,6 @@ class CheckoutController extends Controller
                 else $q->where('temp_user_id', $tempUserId);
             })->pluck('product_id')->toArray();
 
-        // 1. Payment Method Restriction
         if (!empty($coupon->payment_method_id) && is_array($coupon->payment_method_id)) {
             if (!$request->payment_method_id) {
                 return $this->errorResponse(__('frontend.please_select_payment_first'), 400);
@@ -244,8 +241,6 @@ class CheckoutController extends Controller
             }
         }
 
-        // 1.5 Max Discount vs Subtotal validation (As requested in Web Controller)
-        // In this project, if subtotal > max_discount, the coupon is considered invalid for this order
         $subtotal = 0;
         $cartItems = Cart::where(function($q) use ($userId, $tempUserId) {
                 if ($userId) $q->where('user_id', $userId);
@@ -262,7 +257,6 @@ class CheckoutController extends Controller
             return $this->errorResponse(__('frontend.coupon_not_valid_for_total', ['amount' => $coupon->max_discount]), 400);
         }
 
-        // 2. Product Restriction
         if (!empty($coupon->product_id) && is_array($coupon->product_id)) {
             $hasValidProduct = false;
             foreach ($cartItems as $pid) {
@@ -276,7 +270,6 @@ class CheckoutController extends Controller
             }
         }
 
-        // 3. Usage Limit
         if ($coupon->usage_limit && $coupon->usage_count >= $coupon->usage_limit) {
             return $this->errorResponse(__('frontend.coupon_limit_reached'), 400);
         }

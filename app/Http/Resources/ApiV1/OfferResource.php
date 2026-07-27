@@ -16,18 +16,20 @@ class OfferResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'title' => $this->translation->name ?? ($this->translations->first()->name ?? $this->name),
+            'name' => $this->translation->name ?? ($this->translations->first()->name ?? $this->name),
+            'description' => $this->translation->description ?? ($this->translations->first()->description ?? ''),
             'image' => $this->image ? asset($this->image) : null,
-            'link_type' => $this->link_type,
+            'link' => $this->link_id ? (string)$this->link_id : '',
+            'link_type' => $this->link_type ?? 'category',
             'link_id' => $this->link_id,
+            'category_id' => $this->category_id,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'filters' => [
                 'flash_sale' => 1
             ],
-            'is_active' => $this->is_active,
-            // Legacy fields for Flutter
-            'title' => $this->name,
-            'slug' => (string)$this->id, // fallback to ID if slug is missing
+            'is_active' => (bool)$this->is_active,
+            'slug' => (string)$this->id,
         ];
     }
 }

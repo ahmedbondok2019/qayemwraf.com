@@ -9,18 +9,18 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 /**
- * @group Payment Methods
+ *  طرق ووسائل الدفع
  * 
- * APIs for retrieving available payment methods.
+ * يتولى جلب وسائل وطرق الدفع النشطة المتاحة في النظام (الدفع عند الاستلام، بطاقات، تحويل).
  */
 class PaymentMethodController extends Controller
 {
     use ApiResponseTrait;
 
     /**
-     * Get All Payment Methods
+     * جلب طرق الدفع المتاحة
      * 
-     * Returns a list of all active payment methods.
+     * يعيد جميع طرق ووسائل الدفع المتاحة والنشطة في النظام مع تفاصيل الخصومات المتاحة لكل طريقة.
      */
     public function index()
     {

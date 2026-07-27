@@ -11,22 +11,22 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- * @group Brands / Partners
+ *  العلامات التجارية (البراندات وشركاء النجاح)
  * 
- * APIs for managing brands (partners).
+ * يتولى جلب العلامات التجارية والشركات المصنعة المتاحة للمنتجات.
  */
 class BrandController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
 
     /**
-     * Get All Brands
+     * جلب العلامات التجارية
      * 
-     * Returns a list of brands (partners) with the count of products for each.
+     * يعيد قائمة بجميع العلامات التجارية والشركات المصنعة مع عدد المنتجات لكل علامة تجارية.
      */
     public function index()
     {
-        $brands = ProductBrand::withCount('products')->get();
+        $brands = ProductBrand::active()->withCount('products')->get();
 
         return $this->successResponse(BrandResource::collection($brands));
     }

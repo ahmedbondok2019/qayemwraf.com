@@ -11,19 +11,18 @@ use App\Traits\ApiPaginationTrait;
 use App\Http\Resources\ApiV1\AddressResource;
 
 /**
- * @group User Addresses
+ *  عناوين شحن المستخدم
  * 
- * APIs for managing user addresses
+ * يتولى جلب قائمة العناوين، إضافة عنوان جديد، تعديل عنوان، حذف عنوان، وتحديد العنوان الرئيسي للشحن.
  */
 class UserAddressController extends Controller
 {
     use ApiResponseTrait, ApiPaginationTrait;
+
     /**
-     * Get Addresses
+     * جلب قائمة عناوين المستخدم
      * 
-     * Get all addresses for the authenticated user.
-     * 
-     * @authenticated
+     * يعيد قائمة بجميع عناوين الشحن المسجلة للمستخدم الحالي مع أسماء الدولة والمحافظة والمدينة.
      */
     public function index(\Illuminate\Http\Request $request)
     {
@@ -35,48 +34,32 @@ class UserAddressController extends Controller
     }
 
     /**
-     * Add Address
+     * إضافة عنوان شحن جديد
      * 
-     * Add a new address for the authenticated user.
-     * 
-     * @authenticated
-     * @bodyParam name string required The name for the address (e.g., Home, Work). Example: Home
-     * @bodyParam country_id int required The country ID. Example: 1
-     * @bodyParam governorate_id int required The governorate ID. Example: 1
-     * @bodyParam city_id int required The city ID. Example: 1
-     * @bodyParam address string required The full address details. Example: 123 Street Name
-     * @bodyParam phone string required Phone number for this address. Example: 01021456325
-     * @bodyParam lat string Optional latitude. Example: 30.0444
-     * @bodyParam lng string Optional longitude. Example: 31.2357
-     * @bodyParam is_main boolean Set as main address. Example: 1
+     * ينشئ عنوان شحن جديد للمستخدم ويحفظ البيانات الجغرافية ورقم التواصل.
      */
     public function store(AddressStoreRequest $request)
     {
-
-        // If this is set as main, unset others
         if ($request->is_main) {
             UserAddress::where('user_id', $request->user()->id)->update(['is_main' => 0]);
         }
 
         $address = $request->user()->address()->create($request->all());
 
-        return $this->successResponse(new AddressResource($address->load(['country_rel.translation', 'governorate_rel.translation', 'city_rel.translation'])), 'Address added successfully');
+        return $this->successResponse(new AddressResource($address->load(['country_rel.translation', 'governorate_rel.translation', 'city_rel.translation'])), 'تمت إضافة العنوان بنجاح');
     }
 
     /**
-     * Update Address
+     * تعديل بيانات عنوان شحن
      * 
-     * Update an existing address.
-     * 
-     * @authenticated
-     * @urlParam id int required The ID of the address. Example: 1
+     * يحدّث تفاصيل عنوان شحن محدد للمستخدم.
      */
     public function update(AddressUpdateRequest $request, $id)
     {
         $address = $request->user()->address()->find($id);
 
         if (!$address) {
-            return $this->errorResponse('Address not found', 404);
+            return $this->errorResponse('العنوان غير موجود', 404);
         }
 
         if ($request->is_main) {
@@ -85,52 +68,43 @@ class UserAddressController extends Controller
 
         $address->update($request->all());
 
-        return $this->successResponse(new AddressResource($address->load(['country_rel.translation', 'governorate_rel.translation', 'city_rel.translation'])), 'Address updated successfully');
+        return $this->successResponse(new AddressResource($address->load(['country_rel.translation', 'governorate_rel.translation', 'city_rel.translation'])), 'تم تحديث العنوان بنجاح');
     }
 
     /**
-     * Delete Address
+     * حذف عنوان شحن
      * 
-     * Delete an address.
-     * 
-     * @authenticated
-     * @urlParam id int required The ID of the address. Example: 1
+     * يزيل عنوان شحن محدد للمستخدم من النظام.
      */
     public function destroy(\Illuminate\Http\Request $request, $id)
     {
         $address = $request->user()->address()->find($id);
 
         if (!$address) {
-            return $this->errorResponse('Address not found', 404);
+            return $this->errorResponse('العنوان غير موجود', 404);
         }
 
         $address->delete();
 
-        return $this->successResponse(null, 'Address deleted successfully');
+        return $this->successResponse(null, 'تم حذف العنوان بنجاح');
     }
 
     /**
-     * Set Main Address
+     * تعيين عنوان كعنوان رئيسي
      * 
-     * Set a specific address as the main address for the user.
-     * 
-     * @authenticated
-     * @urlParam id int required The ID of the address. Example: 1
+     * يحدد عنواناً معيناً ليكون عنوان الشحن الرئيسي الافتراضي للمستخدم.
      */
     public function setMain(\Illuminate\Http\Request $request, $id)
     {
         $address = $request->user()->address()->find($id);
 
         if (!$address) {
-            return $this->errorResponse('Address not found', 404);
+            return $this->errorResponse('العنوان غير موجود', 404);
         }
 
-        // Unset all other addresses as main
         UserAddress::where('user_id', $request->user()->id)->update(['is_main' => 0]);
-
-        // Set this address as main
         $address->update(['is_main' => 1]);
 
-        return $this->successResponse(new AddressResource($address->load(['country_rel.translation', 'governorate_rel.translation', 'city_rel.translation'])), 'Address set as main successfully');
+        return $this->successResponse(new AddressResource($address->load(['country_rel.translation', 'governorate_rel.translation', 'city_rel.translation'])), 'تم تعيين العنوان كعنوان رئيسي بنجاح');
     }
 }
