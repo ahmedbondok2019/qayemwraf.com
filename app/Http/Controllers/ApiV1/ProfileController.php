@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 /**
- *  الملف الشخصي للمستخدم
+ * @group 12. الملف الشخصي (Profile)
  * 
  * يتولى جلب بيانات الملف الشخصي، تحديث المعلومات الشخصية وكلمة المرور، وتحديث رموز الإشعارات (FCM Token).
  */

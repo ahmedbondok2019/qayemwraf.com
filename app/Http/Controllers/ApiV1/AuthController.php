@@ -19,7 +19,7 @@ use App\Http\Requests\ApiV1\Auth\ResetPasswordRequest;
 use App\Http\Requests\ApiV1\Auth\SocialLoginRequest;
 
 /**
- *  المصادقة وإدارة حسابات المستخدمين
+ * @group 01. المصادقة والحسابات (Auth)
  * 
  * يتولى العمليات الخاصة بتسجيل الحسابات الجديدة، تسجيل الدخول،
  * تسجيل الدخول عبر شبكات التواصل، استعادة كلمة المرور، الاشتراك في الإشعارات، وإلغاء الحسابات.

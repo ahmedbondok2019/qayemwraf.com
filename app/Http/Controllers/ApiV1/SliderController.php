@@ -10,7 +10,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  شرائح العرض (السلايدرز)
+ * @group 18. شرائح العرض (Sliders)
  * 
  * يتولى جلب الشرائح والبنرات التفاعلية المتحركة في الصفحة الرئيسية.
  */

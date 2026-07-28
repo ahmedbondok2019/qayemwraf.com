@@ -12,7 +12,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  المدونة والمقالات
+ * @group 15. المدونة والمقالات (Blog & Articles)
  * 
  * يتولى جلب أقسام المدونة، قائمة المقالات مع دعم الفلترة بحسب القسم، وتفاصيل المقال المكتوب.
  */

@@ -12,7 +12,7 @@ use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
 
 /**
- *  خيارات ومواصفات المنتجات
+ * @group 06. خيارات المنتجات (Product Options)
  * 
  * يتولى جلب خيارات ومواصفات المنتجات (مثل الألوان والأنواع والمقاسات) وقيمها.
  */

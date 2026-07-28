@@ -10,7 +10,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  العروض الترويجية والبنرات
+ * @group 20. العروض والتخفيضات (Offers)
  * 
  * يتولى جلب قائمة العروض الخاصة والبنرات الترويجية النشطة في النظام.
  */

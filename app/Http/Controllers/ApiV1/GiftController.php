@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
- *  الهدايا والمكافآت
+ * @group 14. الهدايا والمكافآت (Gifts)
  * 
  * يتولى استعراض الهدايا المتاحة للمستخدمين المؤهلين والمطالبة بالهدايا المجانية.
  */

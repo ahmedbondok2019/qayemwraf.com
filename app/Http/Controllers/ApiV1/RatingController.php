@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /**
- *  تقييم ومراجعة المنتجات
+ * @group 07. تقييمات المنتجات (Product Ratings)
  * 
  * يتولى استقبال وتخزين تقييمات وتعليقات المستخدمين المسجلين على المنتجات بعد الشراء.
  */

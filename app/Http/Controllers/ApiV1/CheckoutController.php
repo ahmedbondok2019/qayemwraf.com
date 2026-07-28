@@ -32,7 +32,7 @@ use App\Notifications\OrderNotification;
 use App\Http\Controllers\helper\HelperController;
 
 /**
- *  إنهاء الشراء وإنشاء الطلبات
+ * @group 10. ملخص الشراء والخصومات (Checkout & Coupons)
  * 
  * يتولى حساب إجمالي ملخص الطلب وشامل مصاريف الشحن والخصومات والخدمات الإضافية،
  * والتحقق من صحة وتطبيق كوبونات الخصم، وتأكيد وإنشاء الطلبات الجديدة للمستخدم.

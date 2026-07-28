@@ -11,7 +11,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  العلامات التجارية (البراندات وشركاء النجاح)
+ * @group 05. العلامات التجارية (Brands)
  * 
  * يتولى جلب العلامات التجارية والشركات المصنعة المتاحة للمنتجات.
  */

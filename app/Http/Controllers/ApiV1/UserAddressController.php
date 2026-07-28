@@ -11,7 +11,7 @@ use App\Traits\ApiPaginationTrait;
 use App\Http\Resources\ApiV1\AddressResource;
 
 /**
- *  عناوين شحن المستخدم
+ * @group 13. عناوين المستخدم (User Addresses)
  * 
  * يتولى جلب قائمة العناوين، إضافة عنوان جديد، تعديل عنوان، حذف عنوان، وتحديد العنوان الرئيسي للشحن.
  */

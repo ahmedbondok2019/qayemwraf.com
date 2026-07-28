@@ -10,7 +10,7 @@ use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
 
 /**
- *  خدمات الطلبات الإضافية
+ * @group 23. خدمات الطلبات (Order Services)
  * 
  * يتولى جلب قائمة الخدمات الإضافية المتاحة للطلبات (مثل التركيب والضمان الممتد أو الشحن الخاص).
  */

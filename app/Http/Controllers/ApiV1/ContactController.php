@@ -9,7 +9,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  تواصل معنا
+ * @group 22. تواصل معنا (Contact Us)
  * 
  * يتولى استقبال وتخزين رسائل واستفسارات المستخدمين والزوار من نموذج اتصل بنا.
  */

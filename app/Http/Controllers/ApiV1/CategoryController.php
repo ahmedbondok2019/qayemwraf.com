@@ -10,7 +10,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  الأقسام والتصنيفات
+ * @group 04. الأقسام (Categories)
  * 
  * يتولى جلب الأقسام الرئيسية والأقسام الفرعية المتاحة لعرض المنتجات في التطبيق.
  */

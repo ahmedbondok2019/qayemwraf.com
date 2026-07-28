@@ -14,7 +14,7 @@ use App\Http\Requests\ApiV1\Cart\CartStoreRequest;
 use App\Http\Requests\ApiV1\Cart\CartUpdateRequest;
 
 /**
- *  سلة التسوق
+ * @group 08. سلة التسوق (Cart)
  * 
  * يتولى العمليات المتعلقة باستعراض عناصر سلة التسوق، إضافة المنتجات للسلة، 
  * تعديل كميات العناصر، وحذف العناصر من السلة للمستخدم المسجل أو الزائر.

@@ -10,7 +10,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  قائمة الرغبات (المفضلة)
+ * @group 09. قائمة الرغبات (Wishlist)
  * 
  * يتولى جلب قائمة المنتجات المفضلة وإضافة/إزالة المنتجات من مفضلة المستخدم أو الزائر.
  */

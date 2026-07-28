@@ -10,7 +10,7 @@ use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
 
 /**
- *  طلبيات المستخدم
+ * @group 11. الطلبات (Orders)
  * 
  * يتولى جلب قائمة طلبات المستخدم، استعراض تفاصيل طلب محدد، وإلغاء الطلبات القابلة للإلغاء.
  */

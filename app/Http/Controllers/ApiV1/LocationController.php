@@ -12,7 +12,7 @@ use App\Traits\ApiPaginationTrait;
 use App\Http\Resources\ApiV1\CountryResource;
 
 /**
- *  المواقع والمناطق الجغرافية
+ * @group 21. المناطق والدول (Locations)
  * 
  * يتولى جلب قائمة الدول المتاحة، المحافظات التابعة لدولة، والمدن التابعة لمحافظة.
  */

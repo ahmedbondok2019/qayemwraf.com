@@ -9,7 +9,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 /**
- *  طرق ووسائل الدفع
+ * @group 24. طرق الدفع (Payment Methods)
  * 
  * يتولى جلب وسائل وطرق الدفع النشطة المتاحة في النظام (الدفع عند الاستلام، بطاقات، تحويل).
  */

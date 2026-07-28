@@ -10,7 +10,7 @@ use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 
 /**
- *  الإعلانات والبنرات
+ * @group 19. الإعلانات (Advertisements)
  * 
  * يتولى جلب الإعلانات البنريّة النشطة والمتاحة للعرض في أماكن مختلفة داخل التطبيق.
  */
