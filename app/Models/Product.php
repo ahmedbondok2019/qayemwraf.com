@@ -131,4 +131,76 @@ class Product extends Model
     {
         return $this->has_special_price ? $this->special_price : $this->price;
     }
+
+    public function getSlugArAttribute()
+    {
+        $trans = $this->translations->firstWhere('locale', 'ar');
+        if ($trans && !empty($trans->slug)) {
+            return $trans->slug;
+        }
+
+        $name = $trans->name ?? ($this->translation->name ?? ($this->translations->first()->name ?? ''));
+        if (empty($name)) {
+            $name = 'product-' . $this->id;
+        }
+
+        $slug = \App\Http\Controllers\helper\HelperController::make_slug($name);
+        if (empty($slug)) {
+            $slug = 'product-' . $this->id;
+        }
+
+        if ($trans) {
+            $trans->update(['slug' => $slug]);
+        } else {
+            $this->translations()->create([
+                'locale' => 'ar',
+                'name' => $name,
+                'slug' => $slug,
+            ]);
+        }
+
+        return $slug;
+    }
+
+    public function getSlugEnAttribute()
+    {
+        $trans = $this->translations->firstWhere('locale', 'en');
+        if ($trans && !empty($trans->slug)) {
+            return $trans->slug;
+        }
+
+        $name = $trans->name ?? '';
+        if (empty($name)) {
+            $name = $this->translation->name ?? ($this->translations->first()->name ?? ('product-' . $this->id));
+        }
+
+        $slug = \Illuminate\Support\Str::slug($name);
+        if (empty($slug)) {
+            $slug = \App\Http\Controllers\helper\HelperController::make_slug($name);
+        }
+        if (empty($slug)) {
+            $slug = 'product-' . $this->id;
+        }
+
+        if ($trans) {
+            $trans->update(['slug' => $slug]);
+        } else {
+            $this->translations()->create([
+                'locale' => 'en',
+                'name' => $name,
+                'slug' => $slug,
+            ]);
+        }
+
+        return $slug;
+    }
+
+    public function getSlugAttribute()
+    {
+        $currentLocale = app()->getLocale();
+        if ($currentLocale === 'en') {
+            return $this->slug_en;
+        }
+        return $this->slug_ar;
+    }
 }

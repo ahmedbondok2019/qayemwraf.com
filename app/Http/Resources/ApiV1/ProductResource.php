@@ -21,7 +21,13 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->translation->name ?? ($this->translations->first()->name ?? ''),
             'description' => $this->translation->description ?? ($this->translations->first()->description ?? ''),
-            'slug' => $this->translation->slug ?? ($this->translations->first()->slug ?? ''),
+            'slug' => $this->slug,
+            'slug_ar' => $this->slug_ar,
+            'slug_en' => $this->slug_en,
+            'slugs' => [
+                'ar' => $this->slug_ar,
+                'en' => $this->slug_en,
+            ],
             'meta_title' => $this->translation->meta_title ?? ($this->translations->first()->meta_title ?? ''),
             'meta_description' => $this->translation->meta_description ?? ($this->translations->first()->meta_description ?? ''),
             'sku' => $this->sku,
@@ -93,6 +99,7 @@ class ProductResource extends JsonResource
                 ];
             }),
             'deal_of_day_end' => null,
+            'related_products' => ProductResource::collection($this->whenLoaded('relatedProducts')),
         ];
     }
 }

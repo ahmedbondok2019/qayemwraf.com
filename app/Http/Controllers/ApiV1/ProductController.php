@@ -203,6 +203,7 @@ class ProductController extends Controller
                 'productOptions.option.translation',
                 'productOptions.values.optionValue.translation',
                 'relatedProducts.translation',
+                'relatedProducts.translations',
                 'relatedProducts.images',
                 'flashSales' => function($q) {
                     $q->where('start_at', '<=', now())
