@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if ($request->wantsJson()) {
+        if ($request->is('api/*') || $request->wantsJson()) {
             return $this->handleApiException($request, $e);
         }
         
@@ -48,6 +48,10 @@ class Handler extends ExceptionHandler
 
     private function handleApiException($request, Throwable $e)
     {
+        if ($e instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
+            return $e->getResponse();
+        }
+
         $exception = $this->prepareException($e);
 
         if ($exception instanceof \Illuminate\Validation\ValidationException) {

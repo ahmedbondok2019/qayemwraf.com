@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\ApiV1\Checkout;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\ApiV1\BaseApiV1Request;
 
-class CheckoutStoreRequest extends FormRequest
+class CheckoutStoreRequest extends BaseApiV1Request
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }

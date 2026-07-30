@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\ApiV1\User;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\ApiV1\BaseApiV1Request;
 use Illuminate\Validation\Rule;
 
-class ProfileUpdateRequest extends FormRequest
+class ProfileUpdateRequest extends BaseApiV1Request
 {
     /**
      * Determine if the user is authorized to make this request.

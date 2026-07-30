@@ -13,20 +13,20 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        if (! $request->expectsJson()) {
-            if ($request->routeIs(\LaravelLocalization::transRoute('admin.*'))) {
-                return route('admin.login');
-            }
-            if ($request->routeIs(\LaravelLocalization::transRoute('vendor.*'))) {
-                return route('vendor.login');
-            }
-            if ($request->routeIs(\LaravelLocalization::transRoute('user.*'))) {
-                return route('login');
-            }
-            
+        if ($request->is('api/*') || $request->expectsJson()) {
+            return null;
+        }
+
+        if ($request->routeIs(LaravelLocalization::transRoute('admin.*'))) {
+            return route('admin.login');
+        }
+        if ($request->routeIs(LaravelLocalization::transRoute('vendor.*'))) {
+            return route('vendor.login');
+        }
+        if ($request->routeIs(LaravelLocalization::transRoute('user.*'))) {
             return route('login');
         }
         
-        return null;
+        return route('login');
     }
 }
