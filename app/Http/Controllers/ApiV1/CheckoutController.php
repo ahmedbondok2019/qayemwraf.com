@@ -67,10 +67,23 @@ class CheckoutController extends Controller
     }
 
     /**
-     * تأكيد وإنشاء الطلب
+     * تأكيد وإنشاء الطلب (Checkout Store)
      * 
-     * ينشئ طلباً جديداً في النظام بناءً على عناصر سلة التسوق والعنوان وطريقة الدفع المحددة، 
-     * ويفرّغ سلة التسوق الحالية للمستخدم.
+     * ينشئ طلباً جديداً في النظام بناءً على عناصر سلة التسوق للمستخدم والعنوان وطريقة الدفع المحددة.
+     * 
+     * Endpoint: POST /api/v1/checkout/store
+     * Headers:
+     *   - Authorization: Bearer {token} (مطلوب)
+     *   - Accept: application/json (مطلوب)
+     *   - Content-Type: application/json (مطلوب)
+     * 
+     * Body Parameters:
+     *   - payment_method_id (integer, required): ID طريقة الدفع (مثال: 1).
+     *   - address_id (integer, optional): ID عنوان الشحن. إذا لم يُرسل، يتم اختيار العنوان الرئيسي تلقائياً.
+     *   - coupon_code (string, optional): كود كوبون الخصم إن وجد (مثال: "SAVE20").
+     *   - services (array, optional): مصفوفة تحتوي على IDs الخدمات الإضافية المختارة (مثال: [1, 2]).
+     *   - note (string, optional): ملاحظات العميل على الطلب بحد أقصى 500 حرف.
+     *   - temp_user_id (string, optional): معرف الزائر المؤقت.
      */
     public function store(CheckoutStoreRequest $request)
     {
