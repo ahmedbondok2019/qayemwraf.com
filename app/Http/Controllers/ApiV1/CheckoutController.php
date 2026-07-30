@@ -69,7 +69,8 @@ class CheckoutController extends Controller
     /**
      * تأكيد وإنشاء الطلب (Checkout Store)
      * 
-     * ينشئ طلباً جديداً في النظام بناءً على عناصر سلة التسوق للمستخدم والعنوان وطريقة الدفع المحددة.
+     * ينشئ طلباً جديداً في النظام بناءً على عناصر سلة التسوق للمستخدم والعنوان وطريقة الدفع المحددة،
+     * ويعيد تفاصيل الطلب بالإضافة إلى رابط التوجيه للبوابة الإلكترونية (redirect_url) إن وجدت.
      * 
      * Endpoint: POST /api/v1/checkout/store
      * Headers:
@@ -77,13 +78,17 @@ class CheckoutController extends Controller
      *   - Accept: application/json (مطلوب)
      *   - Content-Type: application/json (مطلوب)
      * 
-     * Body Parameters:
-     *   - payment_method_id (integer, required): ID طريقة الدفع (مثال: 1).
-     *   - address_id (integer, optional): ID عنوان الشحن. إذا لم يُرسل، يتم اختيار العنوان الرئيسي تلقائياً.
-     *   - coupon_code (string, optional): كود كوبون الخصم إن وجد (مثال: "SAVE20").
-     *   - services (array, optional): مصفوفة تحتوي على IDs الخدمات الإضافية المختارة (مثال: [1, 2]).
-     *   - note (string, optional): ملاحظات العميل على الطلب بحد أقصى 500 حرف.
-     *   - temp_user_id (string, optional): معرف الزائر المؤقت.
+     * Response Format (نجاح العملية):
+     * {
+     *   "status": "success",
+     *   "data": {
+     *     "order_id": 123,
+     *     "is_online_payment": true,
+     *     "redirect_url": "https://accept.paymob.com/...", // رابط بوابة الدفع الأونلاين للتحويل أو null في حالة COD
+     *     "gift_unlocked": false
+     *   },
+     *   "message": "تم إنشاء الطلب بنجاح"
+     * }
      */
     public function store(CheckoutStoreRequest $request)
     {
@@ -208,9 +213,27 @@ class CheckoutController extends Controller
                 Log::error('Order notification failed: ' . $e->getMessage());
             }
 
+            // فحص هل طريقة الدفع إلكترونية (أونلاين)
+            $isOnlinePayment = false;
+            $redirectUrl = null;
+
+            if ($paymentMethod) {
+                $methodCode = strtolower($paymentMethod->code ?? '');
+                $methodType = strtolower($paymentMethod->type ?? '');
+                if (in_array($methodCode, ['paymob', 'online', 'card', 'kashier', 'fawry', 'credit_card', 'visa']) || 
+                    in_array($methodType, ['online', 'gateway', 'electronic']) || 
+                    !empty($paymentMethod->is_online)) {
+                    $isOnlinePayment = true;
+                    // رابط التوجيه لبوابة الدفع (مثل Paymob iframe / redirect link)
+                    $redirectUrl = config('app.url') . "/payment/paymob/initiate/{$order->id}";
+                }
+            }
+
             return $this->successResponse([
-                'order_id' => $order->id,
-                'gift_unlocked' => $giftPageUnlocked
+                'order_id'          => $order->id,
+                'is_online_payment' => $isOnlinePayment,
+                'redirect_url'      => $redirectUrl,
+                'gift_unlocked'     => $giftPageUnlocked
             ], 'تم إنشاء الطلب بنجاح');
 
         } catch (\Exception $e) {
