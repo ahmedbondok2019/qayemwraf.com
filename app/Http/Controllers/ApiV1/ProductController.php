@@ -212,7 +212,19 @@ class ProductController extends Controller
                       ->with('translation');
                 }
             ])
-            ->findOrFail($id);
+            ->where(function ($q) use ($id) {
+                if (is_numeric($id)) {
+                    $q->where('id', $id)
+                      ->orWhereHas('translations', function ($qt) use ($id) {
+                          $qt->where('slug', $id);
+                      });
+                } else {
+                    $q->whereHas('translations', function ($qt) use ($id) {
+                        $qt->where('slug', $id);
+                    });
+                }
+            })
+            ->firstOrFail();
 
         return $this->successResponse(new ProductResource($product));
     }

@@ -66,7 +66,30 @@ class ProductController extends Controller
         if ($category_slug) {
             $category = \App\Models\Category::whereHas('translations', function ($q) use ($category_slug) {
                 $q->where('slug', $category_slug);
-            })->with('translation', 'children')->firstOrFail();
+            })->with('translation', 'children')->first();
+
+            if (!$category) {
+                // If it's not a category slug, check if it's a product slug or product ID
+                $product = Product::active()
+                    ->where(function ($q) use ($category_slug) {
+                        if (is_numeric($category_slug)) {
+                            $q->where('id', $category_slug)
+                              ->orWhereHas('translations', function ($qt) use ($category_slug) {
+                                  $qt->where('slug', $category_slug);
+                              });
+                        } else {
+                            $q->whereHas('translations', function ($qt) use ($category_slug) {
+                                $qt->where('slug', $category_slug);
+                            });
+                        }
+                    })->first();
+
+                if ($product) {
+                    return $this->show($product->id, $product->slug);
+                }
+
+                abort(404);
+            }
 
             $categoryIds = $category->children->pluck('id')->push($category->id)->toArray();
 
@@ -239,7 +262,24 @@ class ProductController extends Controller
                 'relatedProducts.translation',
                 'relatedProducts.images' // To show related product images
             ])
-            ->findOrFail($id);
+            ->where(function ($q) use ($id, $slug) {
+                if (is_numeric($id)) {
+                    $q->where('id', $id)
+                      ->orWhereHas('translations', function ($qt) use ($id) {
+                          $qt->where('slug', $id);
+                      });
+                } else {
+                    $q->whereHas('translations', function ($qt) use ($id) {
+                        $qt->where('slug', $id);
+                    });
+                }
+                if ($slug) {
+                    $q->orWhereHas('translations', function ($qt) use ($slug) {
+                        $qt->where('slug', $slug);
+                    });
+                }
+            })
+            ->firstOrFail();
 
         // Redirect if slug is mismatch (optional SEO improvement, skipping for now to keep it simple or implement if strict)
         // if ($slug && $product->translation->slug !== $slug) { ... }
