@@ -26,7 +26,8 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $query = Order::where('user_id', $user->id);
+        $query = Order::where('user_id', $user->id)
+            ->with(['order_details.product.translation', 'order_details.product.brand.translation', 'city.translation', 'governorate.translation', 'order_statuses']);
 
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
