@@ -22,7 +22,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "Starting Deployment..."
-            cd ~/domains/egimedical.com/public_html/ || exit 1
+            mkdir -p ~/domains/egimedical.com/public_html/admin
+            cd ~/domains/egimedical.com/public_html/admin/ || exit 1
 
             # 1. هوية السحب من جيت هب
             export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
