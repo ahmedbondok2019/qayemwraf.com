@@ -48,7 +48,7 @@ class CategoryController extends Controller
             $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
             $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
             
-            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
+            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null, 'category/' . $fileName);
             $imagePath = 'storage/website/images/category/' . $fileName;
         }
 
@@ -115,7 +115,7 @@ class CategoryController extends Controller
             $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
             $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
             
-            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
+            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null, 'category/' . $fileName);
             $category->image = 'storage/website/images/category/' . $fileName;
         }
 

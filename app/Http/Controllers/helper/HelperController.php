@@ -25,7 +25,50 @@ class HelperController extends Controller
         return str_replace('resources', '', resource_path());
     }
 
-    public static function upload_images($path, $destination, $image, $width = null, $height = null, $format = null)
+    public static function syncToRootImages($sourceFilePath, $relativePath = '')
+    {
+        try {
+            if (! File::exists($sourceFilePath)) {
+                return false;
+            }
+
+            // Determine root public_html images path for main domain (egimedical.com/images)
+            $possiblePaths = [
+                base_path('../images'),                                               // if nested under admin/
+                base_path('../../egimedical.com/public_html/images'),                // if sibling subdomain folder
+                '/home/u373210132/domains/egimedical.com/public_html/images',          // absolute server path
+                public_path('images')                                                 // fallback to public/images
+            ];
+
+            $rootImagesDir = base_path('../images');
+            foreach ($possiblePaths as $p) {
+                if (File::isDirectory(dirname($p))) {
+                    $rootImagesDir = $p;
+                    break;
+                }
+            }
+
+            if ($relativePath) {
+                $targetFile = $rootImagesDir . DIRECTORY_SEPARATOR . ltrim($relativePath, '/\\');
+            } else {
+                $filename = basename($sourceFilePath);
+                $targetFile = $rootImagesDir . DIRECTORY_SEPARATOR . $filename;
+            }
+
+            $targetDir = dirname($targetFile);
+            if (! File::isDirectory($targetDir)) {
+                File::makeDirectory($targetDir, 0777, true, true);
+            }
+
+            File::copy($sourceFilePath, $targetFile);
+            return true;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Root image sync failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public static function upload_images($path, $destination, $image, $width = null, $height = null, $format = null, $relativePath = '')
     {
         if (! File::isDirectory($path)) {
             File::makeDirectory($path, 0777, true, true);
@@ -42,10 +85,19 @@ class HelperController extends Controller
                 }
                 // save file as jpg with medium quality
                 $img->save($destination, 100, $format);
+                
+                // Automatically copy uploaded image to root /images directory outside admin
+                if ($relativePath) {
+                    self::syncToRootImages($destination, $relativePath);
+                } else {
+                    $filename = basename($destination);
+                    self::syncToRootImages($destination, $filename);
+                }
+
                 $flag = false;
             } catch (\Exception $e) {
                 return $e;
-                // not throwing  error when exception occurs
+                // not throwing error when exception occurs
             }
             $try++;
         }

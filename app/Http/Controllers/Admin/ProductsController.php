@@ -118,6 +118,7 @@ class ProductsController extends BackendController
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $finalName);
+            \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $finalName, 'products/' . $finalName);
             $primaryImage = 'storage/website/images/products/' . $finalName;
         }
 
@@ -132,6 +133,7 @@ class ProductsController extends BackendController
                     mkdir($fullStoragePath, 0755, true);
                 }
                 $img->move($fullStoragePath, $name);
+                \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $name, 'products/' . $name);
                 $galleryImages[] = 'storage/website/images/products/' . $name;
             }
         }
@@ -358,6 +360,7 @@ class ProductsController extends BackendController
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $finalName);
+            \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $finalName, 'products/' . $finalName);
             $primaryImage = 'storage/website/images/products/' . $finalName;
         }
 
@@ -493,6 +496,7 @@ class ProductsController extends BackendController
                     mkdir($fullStoragePath, 0755, true);
                 }
                 $img->move($fullStoragePath, $name);
+                \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $name, 'products/' . $name);
                 ProductImage::create(['product_id' => $product->id, 'image' => 'storage/website/images/products/' . $name]);
             }
         }
