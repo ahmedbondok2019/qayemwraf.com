@@ -38,6 +38,7 @@ class OfferController extends Controller
     {
         $rules = [
             'category_id' => 'nullable|exists:categories,id',
+            'link' => 'nullable|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'sort_order' => 'integer',
         ];
@@ -51,6 +52,7 @@ class OfferController extends Controller
 
         $data = [
             'category_id' => $request->category_id,
+            'link' => $request->link,
             'is_active' => $request->has('is_active'),
             'sort_order' => $request->sort_order ?? 0,
         ];
@@ -116,6 +118,7 @@ class OfferController extends Controller
     {
         $rules = [
             'category_id' => 'nullable|exists:categories,id',
+            'link' => 'nullable|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'sort_order' => 'integer',
         ];
@@ -128,6 +131,7 @@ class OfferController extends Controller
 
         $data = [
             'category_id' => $request->category_id,
+            'link' => $request->link,
             'is_active' => $request->has('is_active'),
             'sort_order' => $request->sort_order ?? 0,
         ];

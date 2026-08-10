@@ -132,19 +132,48 @@
     }
 
     /* Custom Switch */
-    .custom-switch .custom-control-label:before {
+    .custom-switch .custom-control-label::before {
         height: 1.8rem;
         width: 3.5rem;
         border-radius: 20px;
     }
-    .custom-switch .custom-control-label:after {
+    .custom-switch .custom-control-label::after {
         height: 1.4rem;
         width: 1.4rem;
         border-radius: 50%;
         top: 0.2rem;
-        left: 0.2rem;
+        transition: transform 0.2s ease-in-out, background-color 0.15s ease-in-out;
     }
-    .custom-switch-success .custom-control-input:checked ~ .custom-control-label::after {
-        transform: translateX(1.7rem);
-    }
+
+    @if (app()->getLocale() == 'ar')
+        .custom-switch {
+            padding-right: 3.5rem;
+            padding-left: 0;
+        }
+        .custom-switch .custom-control-label {
+            padding-right: 0;
+            padding-left: 0;
+        }
+        .custom-switch .custom-control-label::before {
+            right: -3.5rem;
+            left: auto;
+        }
+        .custom-switch .custom-control-label::after {
+            right: calc(-3.5rem + 0.2rem);
+            left: auto;
+        }
+        .custom-switch .custom-control-input:checked ~ .custom-control-label::after,
+        .custom-switch-success .custom-control-input:checked ~ .custom-control-label::after {
+            transform: translateX(-1.7rem) !important;
+        }
+    @else
+        .custom-switch .custom-control-label::after {
+            left: 0.2rem;
+            right: auto;
+        }
+        .custom-switch .custom-control-input:checked ~ .custom-control-label::after,
+        .custom-switch-success .custom-control-input:checked ~ .custom-control-label::after {
+            transform: translateX(1.7rem) !important;
+        }
+    @endif
 </style>

@@ -44,6 +44,7 @@
                                                 <th>#</th>
                                                 <th>{{ trans_db('dashboard.Name') }} ({{ app()->getLocale() }})</th>
                                                 <th>{{ trans_db('dashboard.Category') }}</th>
+                                                <th>{{ trans_db('dashboard.Link', 'الرابط') }}</th>
                                                 <th>{{ trans_db('dashboard.Status') }}</th>
                                                 <th>{{ trans_db('dashboard.Image') }}</th>
                                                 <th>{{ trans_db('dashboard.Actions') }}</th>
@@ -55,6 +56,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $offer->name }}</td>
                                                     <td>{{ $offer->category->name ?? 'N/A' }}</td>
+                                                    <td>{{ $offer->link ?? '-' }}</td>
                                                     <td>
                                                         @if($offer->is_active)
                                                             <span class="badge badge-light-success">{{ trans_db('dashboard.Active') }}</span>

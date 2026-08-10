@@ -103,6 +103,13 @@
 
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
+                                                    <label for="link">{{ trans_db('dashboard.Link', 'الرابط') }}</label>
+                                                    <input type="text" id="link" class="form-control" name="link" value="{{ old('link', $offer->link) }}" placeholder="https://... {{ trans_db('dashboard.Or product/category link', 'أو رابط القسم/المنتج') }}" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
                                                     <label for="sort_order">{{ trans_db('dashboard.Sort Order') }}</label>
                                                     <input type="number" id="sort_order" class="form-control" name="sort_order" value="{{ old('sort_order', $offer->sort_order) }}" />
                                                 </div>
