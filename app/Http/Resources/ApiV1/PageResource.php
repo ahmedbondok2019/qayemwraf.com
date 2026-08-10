@@ -18,6 +18,8 @@ class PageResource extends JsonResource
             'id' => $this->id,
             'slug' => $this->slug,
             'title' => $this->title, // Current locale title
+            'image' => $this->image ? asset($this->image) : null,
+            'images' => $this->image ? [asset($this->image)] : [],
             'content' => $this->content, // Current locale content
             'translations' => $this->translations->map(function ($translation) {
                 return [

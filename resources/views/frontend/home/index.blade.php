@@ -851,6 +851,45 @@
     </section>
     @endif
 
+    {{-- ===================== Why Choose Us Cards ===================== --}}
+    @php
+        $whyChooseData = isset($Setting) && $Setting ? $Setting->getWhyChooseUsFormatted() : (new \App\Models\Setting())->getWhyChooseUsFormatted();
+        $iconMap = [
+            'shield_check' => 'fa-shield-halved',
+            'award' => 'fa-award',
+            'stethoscope' => 'fa-user-doctor',
+            'wrench' => 'fa-wrench',
+        ];
+    @endphp
+    @if(isset($whyChooseData['items']) && count($whyChooseData['items']))
+    <section class="container py-4">
+        <div class="why-choose-cards-section text-center p-4 rounded-4" style="background: linear-gradient(135deg, #0b1a30 0%, #152c4e 100%); color: #fff;">
+            <h2 class="fw-bold mb-2 text-white">{{ $whyChooseData['title'] }}</h2>
+            <p class="text-white-50 mb-4 mx-auto" style="max-width: 650px;">{{ $whyChooseData['subtitle'] }}</p>
+            
+            <div class="row g-3">
+                @foreach($whyChooseData['items'] as $card)
+                @php
+                    $faIcon = $iconMap[$card['icon']] ?? $card['icon'];
+                    if (!str_contains($faIcon, 'fa-')) {
+                        $faIcon = 'fa-circle-check';
+                    }
+                @endphp
+                <div class="col-lg-3 col-md-6">
+                    <div class="p-3 rounded-3 h-100 d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <div class="mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 50px; height: 50px; background: rgba(230, 81, 0, 0.2); color: #ff8a65; font-size: 22px;">
+                            <i class="fa-solid {{ $faIcon }}"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-white mb-2">{{ $card['title'] }}</h4>
+                        <p class="small text-white-50 m-0">{{ $card['description'] }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     {{-- ===================== Why Choose Us ===================== --}}
     <section class="container">
         <div class="medical-why-us">

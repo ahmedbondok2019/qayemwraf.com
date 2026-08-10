@@ -82,6 +82,11 @@
                                                             <i data-feather="star"></i> {{ trans_db('dashboard.Ratings Settings') ?: 'إعدادات التقييمات' }}
                                                         </a>
                                                     </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="why-choose-us-tab" data-toggle="tab" href="#why-choose-us" aria-controls="why-choose-us" role="tab" aria-selected="false">
+                                                            <i data-feather="help-circle"></i> {{ trans_db('dashboard.Why Choose Us') ?: 'لماذا تختارنا' }}
+                                                        </a>
+                                                    </li>
                                                 </ul>
 
                                                 <div class="tab-content">

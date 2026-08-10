@@ -21,6 +21,7 @@ class SettingResource extends JsonResource
             'logo' => $this->logo ? asset($this->logo) : null,
             'logo_dark' => $this->logo_dark ? asset($this->logo_dark) : null,
             'fav_icon' => $this->fav_icon ? asset($this->fav_icon) : null,
+            'about_image' => asset(\App\Models\Page::active()->whereHas('translations', function($q) { $q->where('slug', 'like', 'about%'); })->value('image') ?? ($this->logo ?? '')),
             'address' => $this->translate('address'),
             'phone' => $this->phone,
             'contact_email' => $this->contact_email,
@@ -43,36 +44,7 @@ class SettingResource extends JsonResource
                 'max_gift_items' => (int)($this->max_gift_items ?? 1),
                 'min_order_for_gift' => (float)($this->min_order_for_gift ?? 0),
             ],
-            'why_choose_us' => [
-                'title' => $this->translate('why_choose_us_title') ?: 'لماذا تختار EG Medical؟',
-                'subtitle' => $this->translate('why_choose_us_subtitle') ?: 'نحن نضع معايير جديدة للموثوقية والأمان في توفير المستلزمات والأجهزة الطبية',
-                'items' => [
-                    [
-                        'id' => 1,
-                        'icon' => 'shield_check',
-                        'title' => 'منتجات أصلية 100%',
-                        'description' => 'مستوردة مباشرة من المصنعين العالميين المعتمدين.',
-                    ],
-                    [
-                        'id' => 2,
-                        'icon' => 'award',
-                        'title' => 'موزع رسمي معتمد',
-                        'description' => 'الوكيل والموزع المعتمد لأكبر ماركات الأجهزة الطبية.',
-                    ],
-                    [
-                        'id' => 3,
-                        'icon' => 'stethoscope',
-                        'title' => 'استشارات طبية متخصصة',
-                        'description' => 'مهندسون متخصصون لمساعدتك في اختيار الجهاز المناسب.',
-                    ],
-                    [
-                        'id' => 4,
-                        'icon' => 'wrench',
-                        'title' => 'ضمان وصيانة معتمدة',
-                        'description' => 'ضمان الوكيل الشامل وتوافر قطع الغيار الأصلية والصيانة.',
-                    ],
-                ]
-            ],
+            'why_choose_us' => $this->getWhyChooseUsFormatted(),
             'catalog_download' => [
                 'title' => $this->translate('catalog_title') ?: 'حمّل كتالوج المنتجات الطبية الكامل',
                 'description' => $this->translate('catalog_description') ?: 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.',

@@ -61,6 +61,9 @@ class SettingController extends BackendController
             'enable_reviews' => 'nullable',
             'primary_color' => 'nullable|string',
             'primary_color_to' => 'nullable|string',
+            'why_choose_us_title' => 'nullable|array',
+            'why_choose_us_subtitle' => 'nullable|array',
+            'why_choose_us_items' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {
@@ -98,6 +101,9 @@ class SettingController extends BackendController
             'enable_reviews' => $request->has('enable_reviews'),
             'primary_color' => $request->primary_color,
             'primary_color_to' => $request->primary_color_to,
+            'why_choose_us_title' => $request->why_choose_us_title,
+            'why_choose_us_subtitle' => $request->why_choose_us_subtitle,
+            'why_choose_us_items' => $request->why_choose_us_items,
         ];
 
         // Handle Images

@@ -188,37 +188,8 @@ class HomeController extends Controller
         $data['partners'] = $data['brands'];
 
         // 10. قسم لماذا تختارنا (Why Choose Us) - مميزات الخدمة والشركة
-        $setting = Setting::first();
-        $data['why_choose_us'] = [
-            'title' => $setting ? ($setting->translate('why_choose_us_title') ?: 'لماذا تختار EG Medical؟') : 'لماذا تختار EG Medical؟',
-            'subtitle' => $setting ? ($setting->translate('why_choose_us_subtitle') ?: 'نحن نضع معايير جديدة للموثوقية والأمان في توفير المستلزمات والأجهزة الطبية') : 'نحن نضع معايير جديدة للموثوقية والأمان في توفير المستلزمات والأجهزة الطبية',
-            'items' => [
-                [
-                    'id' => 1,
-                    'icon' => 'shield_check',
-                    'title' => 'منتجات أصلية 100%',
-                    'description' => 'مستوردة مباشرة من المصنعين العالميين المعتمدين.',
-                ],
-                [
-                    'id' => 2,
-                    'icon' => 'award',
-                    'title' => 'موزع رسمي معتمد',
-                    'description' => 'الوكيل والموزع المعتمد لأكبر ماركات الأجهزة الطبية.',
-                ],
-                [
-                    'id' => 3,
-                    'icon' => 'stethoscope',
-                    'title' => 'استشارات طبية متخصصة',
-                    'description' => 'مهندسون متخصصون لمساعدتك في اختيار الجهاز المناسب.',
-                ],
-                [
-                    'id' => 4,
-                    'icon' => 'wrench',
-                    'title' => 'ضمان وصيانة معتمدة',
-                    'description' => 'ضمان الوكيل الشامل وتوافر قطع الغيار الأصلية والصيانة.',
-                ],
-            ]
-        ];
+        $setting = Setting::first() ?: new Setting();
+        $data['why_choose_us'] = $setting->getWhyChooseUsFormatted();
 
         // 11. قسم تحميل الكتالوج الطبي بصيغة PDF (Catalog Download)
         $data['catalog_download'] = [
