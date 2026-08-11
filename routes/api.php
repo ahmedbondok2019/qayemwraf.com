@@ -26,10 +26,27 @@ use App\Http\Controllers\ApiV1\OrderServiceController;
 use App\Http\Controllers\ApiV1\PaymentMethodController;
 use App\Http\Controllers\ApiV1\PageController;
 use App\Http\Controllers\ApiV1\RatingController;
-// 
+use App\Http\Controllers\ApiV1\FeedExportController;
+
 Route::group(['middleware' => ['Language']], function () {
     Route::prefix('v1')->group(function () {
+        // === خريطة الموقع والتغذية والإعلانات (Sitemap & Product Feeds) ===
+        // رابط خريطة الموقع sitemap (XML / JSON)
+        Route::get('/sitemap.xml', [FeedExportController::class, 'sitemap']);
+        Route::get('/sitemap', [FeedExportController::class, 'sitemap']);
+
+        // رابط تصدير منتجات Google Merchant Center (CSV)
+        Route::get('/export/google-merchant.csv', [FeedExportController::class, 'googleMerchant']);
+        Route::get('/google-merchant.csv', [FeedExportController::class, 'googleMerchant']);
+        Route::get('/export/google-merchant', [FeedExportController::class, 'googleMerchant']);
+
+        // رابط تصدير كتالوج منتجات Facebook / Meta Catalog (CSV)
+        Route::get('/export/facebook-catalog.csv', [FeedExportController::class, 'facebookCatalog']);
+        Route::get('/facebook-catalog.csv', [FeedExportController::class, 'facebookCatalog']);
+        Route::get('/export/facebook-catalog', [FeedExportController::class, 'facebookCatalog']);
+
         // === المصادقة والحسابات ===
+        // تسجيل حساب جديد للمستخدم
         // تسجيل حساب جديد للمستخدم
         Route::post('/registerUser', [AuthController::class, 'register']);
         // تسجيل الدخول بواسطة البريد الإلكتروني أو الهاتف وكلمة المرور
