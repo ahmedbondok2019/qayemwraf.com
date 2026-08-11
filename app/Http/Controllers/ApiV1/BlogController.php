@@ -53,11 +53,23 @@ class BlogController extends Controller
     /**
      * جلب تفاصيل مقال محدد
      * 
-     * يعيد كامل بيانات ومحتوى ومحتويات مقال محدد برقم المقال (ID).
+     * يعيد كامل بيانات ومحتوى مقال محدد برقم المقال (ID) أو بالرابط الصديق (Slug).
      */
-    public function show($id)
+    public function show($idOrSlug)
     {
-        $blog = Blog::active()->with(['BlogTranslation', 'category.translation'])->find($id);
+        $decodedSlug = urldecode($idOrSlug);
+
+        $blog = Blog::active()
+            ->with(['BlogTranslation', 'category.translation'])
+            ->where(function ($query) use ($idOrSlug, $decodedSlug) {
+                if (is_numeric($idOrSlug)) {
+                    $query->where('id', $idOrSlug);
+                }
+                $query->orWhereHas('BlogTranslation', function ($q) use ($idOrSlug, $decodedSlug) {
+                    $q->where('slug', $idOrSlug)->orWhere('slug', $decodedSlug);
+                });
+            })
+            ->first();
 
         if (!$blog) {
             return $this->errorResponse('المقال غير موجود', 404);
