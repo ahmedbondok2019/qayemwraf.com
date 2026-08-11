@@ -64,6 +64,9 @@ class SettingController extends BackendController
             'why_choose_us_title' => 'nullable|array',
             'why_choose_us_subtitle' => 'nullable|array',
             'why_choose_us_items' => 'nullable|array',
+            'catalog_title' => 'nullable|array',
+            'catalog_description' => 'nullable|array',
+            'catalog_pdf' => 'nullable|file|mimes:pdf|max:51200',
         ]);
 
         if ($validator->fails()) {
@@ -104,6 +107,8 @@ class SettingController extends BackendController
             'why_choose_us_title' => $request->why_choose_us_title,
             'why_choose_us_subtitle' => $request->why_choose_us_subtitle,
             'why_choose_us_items' => $request->why_choose_us_items,
+            'catalog_title' => $request->catalog_title,
+            'catalog_description' => $request->catalog_description,
         ];
 
         // Handle Images
@@ -139,6 +144,13 @@ class SettingController extends BackendController
 
             HelperController::upload_images($fullStoragePath, $destination, $file, '100', '100', 'png');
             $data['fav_icon'] = 'storage/website/images/logo/' . $fileName;
+        }
+
+        if ($request->hasFile('catalog_pdf')) {
+            $file = $request->file('catalog_pdf');
+            $fileName = 'catalog_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('catalogs', $fileName, 'public');
+            $data['catalog_pdf'] = 'storage/' . $path;
         }
 
         Setting::updateOrCreate(['id' => 1], $data);

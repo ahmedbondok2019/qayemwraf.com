@@ -25,6 +25,8 @@ class Setting extends Model
         'why_choose_us_title' => 'array',
         'why_choose_us_subtitle' => 'array',
         'why_choose_us_items' => 'array',
+        'catalog_title' => 'array',
+        'catalog_description' => 'array',
         'facebook_client_id' => 'string',
         'facebook_client_secret' => 'string',
         'facebook_redirect' => 'string',

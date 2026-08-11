@@ -166,7 +166,7 @@ Route::group(['middleware' => ['Language']], function () {
             // إضافة عنوان شحن جديد
             Route::post('/addresses', [UserAddressController::class, 'store']);
             // تحديث بيانات عنوان شحن محدد
-            Route::post('/addresses/{id}', [UserAddressController::class, 'update']);
+            Route::match(['put', 'patch', 'post'], '/addresses/{id}', [UserAddressController::class, 'update']);
             // حذف عنوان شحن محدد
             Route::delete('/addresses/{id}', [UserAddressController::class, 'destroy']);
             // تعيين عنوان كعنوان شحن رئيسي

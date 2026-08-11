@@ -79,12 +79,17 @@
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" id="ratings-tab" data-toggle="tab" href="#ratings" aria-controls="ratings" role="tab" aria-selected="false">
-                                                            <i data-feather="star"></i> {{ trans_db('dashboard.Ratings Settings') ?: 'إعدادات التقييمات' }}
+                                                            <i data-feather="star"></i> {{ trans_db('dashboard.Ratings Settings') }}
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" id="why-choose-us-tab" data-toggle="tab" href="#why-choose-us" aria-controls="why-choose-us" role="tab" aria-selected="false">
-                                                            <i data-feather="help-circle"></i> {{ trans_db('dashboard.Why Choose Us') ?: 'لماذا تختارنا' }}
+                                                            <i data-feather="help-circle"></i> {{ trans_db('dashboard.Why Choose Us') }}
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="catalog-tab" data-toggle="tab" href="#catalog" aria-controls="catalog" role="tab" aria-selected="false">
+                                                            <i data-feather="file-text"></i> {{ trans_db('dashboard.Catalog Download Settings') }}
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -393,24 +398,148 @@
                                                     <div class="tab-pane" id="ratings" aria-labelledby="ratings-tab" role="tabpanel">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <h5 class="mb-1 mt-2 theme-text-primary"><i data-feather="star"></i> {{ trans_db('dashboard.Ratings & Reviews Control') ?: 'التحكم في التقييمات والمراجعات' }}</h5>
+                                                                <h5 class="mb-1 mt-2 theme-text-primary"><i data-feather="star"></i> {{ trans_db('dashboard.Ratings & Reviews Control') }}</h5>
                                                             </div>
                                                             <div class="col-md-6 col-12">
                                                                 <div class="form-group">
                                                                     <div class="custom-control custom-switch custom-control-inline">
                                                                         <input type="checkbox" class="custom-control-input" id="show_ratings" name="show_ratings" {{ $Setting->show_ratings ? 'checked' : '' }}>
-                                                                        <label class="custom-control-label" for="show_ratings">{{ trans_db('dashboard.Show Ratings in Frontend') ?: 'إظهار التقييمات في الموقع' }}</label>
+                                                                        <label class="custom-control-label" for="show_ratings">{{ trans_db('dashboard.Show Ratings in Frontend') }}</label>
                                                                     </div>
-                                                                    <p><small class="text-muted">{{ trans_db('dashboard.show_ratings_desc') ?: 'عند تفعيل هذا الخيار، سيتم عرض النجوم ومتوسط التقييم في صفحات المنتجات.' }}</small></p>
+                                                                    <p><small class="text-muted">{{ trans_db('dashboard.show_ratings_desc') }}</small></p>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6 col-12">
                                                                 <div class="form-group">
                                                                     <div class="custom-control custom-switch custom-control-inline">
                                                                         <input type="checkbox" class="custom-control-input" id="enable_reviews" name="enable_reviews" {{ $Setting->enable_reviews ? 'checked' : '' }}>
-                                                                        <label class="custom-control-label" for="enable_reviews">{{ trans_db('dashboard.Enable Adding Reviews') ?: 'السماح بإضافة تقييمات وتعليقات' }}</label>
+                                                                        <label class="custom-control-label" for="enable_reviews">{{ trans_db('dashboard.Enable Adding Reviews') }}</label>
                                                                     </div>
-                                                                    <p><small class="text-muted">{{ trans_db('dashboard.enable_reviews_desc') ?: 'عند تفعيل هذا الخيار، سيتمكن العملاء من إضافة تقييمات وتعليقات على المنتجات التي اشتروها.' }}</small></p>
+                                                                    <p><small class="text-muted">{{ trans_db('dashboard.enable_reviews_desc') }}</small></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Why Choose Us Tab -->
+                                                    <div class="tab-pane" id="why-choose-us" aria-labelledby="why-choose-us-tab" role="tabpanel">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h5 class="mb-1 mt-2 theme-text-primary"><i data-feather="help-circle"></i> {{ trans_db('dashboard.Why Choose Us') }}</h5>
+                                                            </div>
+                                                            
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.why_choose_us_title') }} ({{ $properties['native'] }})</label>
+                                                                    <input type="text" class="form-control" name="why_choose_us_title[{{ $localeCode }}]"
+                                                                        value="{{ old("why_choose_us_title.$localeCode", $Setting->translate('why_choose_us_title', $localeCode)) }}" />
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.why_choose_us_subtitle') }} ({{ $properties['native'] }})</label>
+                                                                    <input type="text" class="form-control" name="why_choose_us_subtitle[{{ $localeCode }}]"
+                                                                        value="{{ old("why_choose_us_subtitle.$localeCode", $Setting->translate('why_choose_us_subtitle', $localeCode)) }}" />
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <div class="col-12"><hr><h6 class="mb-2"><i data-feather="grid"></i> {{ trans_db('dashboard.why_choose_us_items') }}</h6></div>
+
+                                                            @php
+                                                                $rawItems = $Setting->why_choose_us_items ?? \App\Models\Setting::defaultWhyChooseUsItems();
+                                                            @endphp
+
+                                                            @foreach($rawItems as $index => $item)
+                                                            <div class="col-12 mb-2 p-2 border rounded" style="background: #f8f9fa;">
+                                                                <h6 class="text-primary font-weight-bold">العنصر {{ $index + 1 }}</h6>
+                                                                <input type="hidden" name="why_choose_us_items[{{ $index }}][id]" value="{{ $item['id'] ?? ($index + 1) }}">
+                                                                <div class="row">
+                                                                    <div class="col-md-4 col-12">
+                                                                        <div class="form-group mb-1">
+                                                                            <label>الأيقونة (Icon Key)</label>
+                                                                            <select class="form-control" name="why_choose_us_items[{{ $index }}][icon]">
+                                                                                <option value="shield_check" {{ ($item['icon'] ?? '') == 'shield_check' ? 'selected' : '' }}>shield_check (أمان)</option>
+                                                                                <option value="award" {{ ($item['icon'] ?? '') == 'award' ? 'selected' : '' }}>award (جودة)</option>
+                                                                                <option value="stethoscope" {{ ($item['icon'] ?? '') == 'stethoscope' ? 'selected' : '' }}>stethoscope (استشارات)</option>
+                                                                                <option value="wrench" {{ ($item['icon'] ?? '') == 'wrench' ? 'selected' : '' }}>wrench (صيانة)</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 col-12">
+                                                                        <div class="form-group mb-1">
+                                                                            <label>العنوان (عربي)</label>
+                                                                            <input type="text" class="form-control" name="why_choose_us_items[{{ $index }}][title][ar]" value="{{ is_array($item['title'] ?? null) ? ($item['title']['ar'] ?? '') : ($item['title'] ?? '') }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 col-12">
+                                                                        <div class="form-group mb-1">
+                                                                            <label>العنوان (English)</label>
+                                                                            <input type="text" class="form-control" name="why_choose_us_items[{{ $index }}][title][en]" value="{{ is_array($item['title'] ?? null) ? ($item['title']['en'] ?? '') : ($item['title'] ?? '') }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group mb-0">
+                                                                            <label>الوصف (عربي)</label>
+                                                                            <textarea class="form-control" rows="2" name="why_choose_us_items[{{ $index }}][description][ar]">{{ is_array($item['description'] ?? null) ? ($item['description']['ar'] ?? '') : ($item['description'] ?? '') }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group mb-0">
+                                                                            <label>الوصف (English)</label>
+                                                                            <textarea class="form-control" rows="2" name="why_choose_us_items[{{ $index }}][description][en]">{{ is_array($item['description'] ?? null) ? ($item['description']['en'] ?? '') : ($item['description'] ?? '') }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Catalog Download Tab -->
+                                                    <div class="tab-pane" id="catalog" aria-labelledby="catalog-tab" role="tabpanel">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h5 class="mb-1 mt-2 theme-text-primary"><i data-feather="file-text"></i> {{ trans_db('dashboard.Catalog Download Settings') }}</h5>
+                                                            </div>
+
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.Catalog Title') }} ({{ $properties['native'] }})</label>
+                                                                    <input type="text" class="form-control" name="catalog_title[{{ $localeCode }}]"
+                                                                        value="{{ old("catalog_title.$localeCode", $Setting->translate('catalog_title', $localeCode) ?: ($localeCode == 'ar' ? 'حمّل كتالوج المنتجات الطبية الكامل' : 'Download Full Medical Products Catalog')) }}" />
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.Catalog Description') }} ({{ $properties['native'] }})</label>
+                                                                    <textarea class="form-control" rows="2" name="catalog_description[{{ $localeCode }}]">{{ old("catalog_description.$localeCode", $Setting->translate('catalog_description', $localeCode) ?: ($localeCode == 'ar' ? 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.' : 'Browse over 10,000 medical products. Ideal for hospitals, clinics, and wholesale orders.')) }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="catalog_pdf">{{ trans_db('dashboard.Upload Catalog PDF') }}</label>
+                                                                    <div class="custom-file">
+                                                                        <input type="file" class="custom-file-input" id="catalog_pdf" name="catalog_pdf" accept="application/pdf">
+                                                                        <label class="custom-file-label" for="catalog_pdf">{{ trans_db('dashboard.Choose file') }}</label>
+                                                                    </div>
+                                                                    @if($Setting->catalog_pdf)
+                                                                        <div class="mt-1">
+                                                                            <a href="{{ asset($Setting->catalog_pdf) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                                                <i data-feather="download"></i> {{ trans_db('dashboard.Current PDF File') }}
+                                                                            </a>
+                                                                        </div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>
