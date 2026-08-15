@@ -203,4 +203,10 @@ class Product extends Model
         }
         return $this->slug_ar;
     }
+
+    public function getFrontendUrlAttribute()
+    {
+        $slug = $this->translation->slug ?? 'product';
+        return frontend_site_url(route('frontend.products.show', ['id' => $this->id, 'slug' => $slug]));
+    }
 }

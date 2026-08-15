@@ -59,6 +59,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'frontend_url' => env('FRONTEND_URL', str_replace(['://admin.', '://www.admin.'], '://', env('APP_URL', 'https://egimedical.com'))),
+
     'asset_url' => env('ASSET_URL'),
 
     /*

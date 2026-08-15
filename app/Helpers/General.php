@@ -32,3 +32,17 @@ if (!function_exists('trans_db')) {
         return trans($key, $replace, $locale);
     }
 }
+
+if (!function_exists('frontend_site_url')) {
+    function frontend_site_url($url)
+    {
+        $frontendUrl = config('app.frontend_url');
+        if (!$frontendUrl) {
+            $appUrl = config('app.url');
+            $frontendUrl = preg_replace('/:\/\/(www\.)?admin\./i', '://', $appUrl);
+        }
+        $appUrl = config('app.url');
+        return str_replace($appUrl, $frontendUrl, $url);
+    }
+}
+
