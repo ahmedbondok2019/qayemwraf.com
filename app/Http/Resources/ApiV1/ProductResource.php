@@ -82,7 +82,7 @@ class ProductResource extends JsonResource
             'isFavorite' => false,
             'countFavorite' => 0,
             'countOrder' => (int)($this->orders_count ?? 0),
-            'product_link' => frontend_site_url(url('/products/' . $this->id)),
+            'product_link' => frontend_site_url(url(app()->getLocale() . '/products/' . ($this->translation->slug ?? $this->slug ?? $this->id))),
             'product_rates' => $this->ratings()->with('user')->get()->map(function($rate) {
                 return [
                     'id' => $rate->id,

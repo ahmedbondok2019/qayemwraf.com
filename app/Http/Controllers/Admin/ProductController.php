@@ -126,7 +126,11 @@ class ProductController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="btn-group">';
-                    $btn .= '<a href="' . frontend_site_url(url('/products/' . $row->id)) . '" target="_blank" class="btn btn-sm btn-success"><i data-feather="external-link"></i></a>';
+                    $locale = app()->getLocale();
+                    $trans = $row->translation ?? $row->translations->firstWhere('locale', $locale) ?? $row->translations->first();
+                    $slug = $trans->slug ?? $row->slug ?? $row->id;
+                    $url = frontend_site_url(url($locale . '/products/' . $slug));
+                    $btn .= '<a href="' . $url . '" target="_blank" class="btn btn-sm btn-success"><i data-feather="external-link"></i></a>';
                     $btn .= '<a href="' . route('admin.products.edit', $row->id) . '" class="btn btn-sm btn-primary"><i data-feather="edit"></i></a>';
                     $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-danger"><i data-feather="trash"></i></a>';
                     $btn .= '</div>';

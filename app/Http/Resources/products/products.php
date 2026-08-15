@@ -100,7 +100,7 @@ class products extends JsonResource
                 'isFavorite' => $isFavorite,
                 'countFavorite' => $countFavorite,
                 'countOrder' => $countOrder,
-                'product_link' => frontend_site_url(url('/products/' . $this->id)),
+                'product_link' => frontend_site_url(url(app()->getLocale() . '/products/' . (helperController::make_slug($this->translations['title'] ?? '') ?: ($this->slug ?? $this->id)))),
                 'product_rates' => productRates::collection($this->rates),
                 'deal_of_day_end' => $this->deal_of_day_end,
             ];

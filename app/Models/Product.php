@@ -206,6 +206,9 @@ class Product extends Model
 
     public function getFrontendUrlAttribute()
     {
-        return frontend_site_url(url('/products/' . $this->id));
+        $locale = app()->getLocale();
+        $trans = $this->translation ?? $this->translations->firstWhere('locale', $locale) ?? $this->translations->first();
+        $slug = $trans->slug ?? $this->slug ?? $this->id;
+        return frontend_site_url(url($locale . '/products/' . $slug));
     }
 }

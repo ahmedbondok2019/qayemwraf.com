@@ -22,7 +22,12 @@
                 </div>
                 <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
                     <div class="form-group breadcrumb-right">
-                        <a href="{{ frontend_site_url(url('/products/' . $product->id)) }}" target="_blank" class="btn btn-success">
+                        @php
+                            $locale = app()->getLocale();
+                            $trans = $product->translation ?? $product->translations->firstWhere('locale', $locale) ?? $product->translations->first();
+                            $slug = $trans->slug ?? $product->slug ?? $product->id;
+                        @endphp
+                        <a href="{{ frontend_site_url(url($locale . '/products/' . $slug)) }}" target="_blank" class="btn btn-success">
                             <i data-feather="external-link"></i> {{ trans_db('dashboard.View on Site') }}
                         </a>
                         <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-primary">
