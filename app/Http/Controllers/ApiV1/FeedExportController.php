@@ -48,7 +48,7 @@ class FeedExportController extends Controller
             foreach ($products as $product) {
                 $slug = $product->translation->slug ?? $product->slug ?? $product->id;
                 $urls[] = [
-                    'loc' => url($locale . '/product/' . $product->id . '/' . $slug),
+                    'loc' => frontend_site_url(url($locale . '/product/' . $product->id . '/' . $slug)),
                     'lastmod' => ($product->updated_at ?? now())->toIso8601String(),
                     'changefreq' => 'weekly',
                     'priority' => '0.8',
@@ -59,7 +59,7 @@ class FeedExportController extends Controller
             foreach ($categories as $category) {
                 $slug = $category->translation->slug ?? $category->slug ?? $category->id;
                 $urls[] = [
-                    'loc' => url($locale . '/products/' . $slug),
+                    'loc' => frontend_site_url(url($locale . '/products/' . $slug)),
                     'lastmod' => ($category->updated_at ?? now())->toIso8601String(),
                     'changefreq' => 'weekly',
                     'priority' => '0.7',
@@ -144,7 +144,7 @@ class FeedExportController extends Controller
             $description = strip_tags($trans->description ?? $trans->name ?? '');
 
             $slug = $trans->slug ?? $product->slug ?? $product->id;
-            $link = url($locale . '/product/' . $product->id . '/' . $slug);
+            $link = frontend_site_url(url($locale . '/product/' . $product->id . '/' . $slug));
 
             $imageLink = $product->image ? asset($product->image) : '';
 
@@ -223,7 +223,7 @@ class FeedExportController extends Controller
             $description = strip_tags($trans->description ?? $trans->name ?? '');
 
             $slug = $trans->slug ?? $product->slug ?? $product->id;
-            $link = url($locale . '/product/' . $product->id . '/' . $slug);
+            $link = frontend_site_url(url($locale . '/product/' . $product->id . '/' . $slug));
 
             $imageLink = $product->image ? asset($product->image) : '';
 

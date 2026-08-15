@@ -95,7 +95,7 @@ class flashdeals extends JsonResource
                 'isFavorite' => $isFavorite,
                 'countFavorite' => $countFavorite,
                 'countOrder' => $countOrder,
-                'product_link' => LaravelLocalization::localizeUrl('/product/'.$this->id.'/'.helperController::make_slug($this->translations['title'])),
+                'product_link' => frontend_site_url(LaravelLocalization::localizeUrl('/product/'.$this->id.'/'.helperController::make_slug($this->translations['title']))),
                 'product_rates' => productRates::collection($this->rates),
                 'deal_of_day_end' => $this->deal_of_day_end,
             ];
