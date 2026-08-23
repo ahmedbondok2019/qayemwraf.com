@@ -39,16 +39,20 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         JsonResource::withoutWrapping();
 
-        if(Schema::hasTable('settings')){
-            $setting = Setting::first() ?? new Setting();
-            $popupAds = Schema::hasTable('advertisements') 
-                ? Advertisement::where('location', 'popup')->active()->get() 
-                : collect();
-            View::share([
-                'Setting' => $setting,
-                'popupAds' => $popupAds,
-                'Pages' => Schema::hasTable('pages') ? Page::active()->with('translation')->get() : collect(),
-            ]);
+        try {
+            if (Schema::hasTable('settings')) {
+                $setting = Setting::first() ?? new Setting();
+                $popupAds = Schema::hasTable('advertisements') 
+                    ? Advertisement::where('location', 'popup')->active()->get() 
+                    : collect();
+                View::share([
+                    'Setting' => $setting,
+                    'popupAds' => $popupAds,
+                    'Pages' => Schema::hasTable('pages') ? Page::active()->with('translation')->get() : collect(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            // Ignore DB connection errors during console/composer commands
         }
         // $parents = Category::whereNotNull('show_category')->pluck('parent_id')->whereNotNull('show_category');
         // $currency = Currency::where('status', 1)->first();

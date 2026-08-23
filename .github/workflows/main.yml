@@ -42,9 +42,9 @@ jobs:
             export APP_ENV=production
             export APP_DEBUG=false
 
-            composer install --no-dev --optimize-autoloader --ignore-platform-reqs || {
+            composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts || {
               echo "Composer failed, trying with update as fallback..."
-              composer update --no-dev --optimize-autoloader --ignore-platform-reqs
+              composer update --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts
             }
 
             # 4. ملف الـ Admin (قبل الـ Optimize)
