@@ -70,18 +70,93 @@
         src: url('website/Tajwal/Tajawal-Medium') format('ttf');
     }
 
+    :root {
+        --brand-yellow-primary: #ffde59;
+        --brand-yellow-secondary: #fce150;
+        --brand-gold-accent: #f8de69;
+        --brand-gold-soft: #f1dd7f;
+        --brand-light-bg: #fefdf0;
+        --brand-muted-gold: #eddd99;
+        --brand-dark-bronze: #8d7b40;
+        --brand-dark-brown: #190f08;
+    }
+
+    /* Core Admin Theme Overrides */
+    body {
+        background-color: #fcfbfa !important;
+        color: var(--brand-dark-brown) !important;
+        font-family: 'Tajawal', 'Cairo', sans-serif;
+    }
+
+    /* Navbar & Header */
+    .header-navbar {
+        background-color: #ffffff !important;
+        border-bottom: 2px solid var(--brand-muted-gold) !important;
+        box-shadow: 0 4px 15px rgba(25, 15, 8, 0.04) !important;
+    }
+
+    .header-navbar .nav-link {
+        color: var(--brand-dark-brown) !important;
+    }
+
+    .header-navbar .nav-link:hover {
+        color: var(--brand-dark-bronze) !important;
+    }
+
+    /* Sidebar Navigation */
+    .main-menu {
+        background-color: var(--brand-dark-brown) !important;
+        border-left: 1px solid rgba(141, 123, 64, 0.2);
+    }
+
+    .main-menu .navigation {
+        background-color: var(--brand-dark-brown) !important;
+    }
+
+    .main-menu .navigation li a {
+        color: #e2d9cc !important;
+        border-radius: 10px !important;
+        margin: 4px 12px !important;
+        transition: all 0.25s ease-in-out !important;
+    }
+
+    .main-menu .navigation li a:hover {
+        color: var(--brand-yellow-primary) !important;
+        background-color: rgba(255, 222, 89, 0.1) !important;
+    }
+
+    .main-menu .navigation > li.active > a,
+    .main-menu .navigation > li.sidebar-group-active > a {
+        background: linear-gradient(135deg, var(--brand-yellow-primary), var(--brand-yellow-secondary)) !important;
+        color: var(--brand-dark-brown) !important;
+        font-weight: 700 !important;
+        box-shadow: 0 6px 18px rgba(255, 222, 89, 0.4) !important;
+    }
+
+    .main-menu .navigation > li.active > a i,
+    .main-menu .navigation > li.active > a svg,
+    .main-menu .navigation > li.sidebar-group-active > a i,
+    .main-menu .navigation > li.sidebar-group-active > a svg {
+        color: var(--brand-dark-brown) !important;
+    }
+
+    .main-menu .navigation li.has-sub .menu-content li.active a {
+        background: rgba(255, 222, 89, 0.15) !important;
+        color: var(--brand-yellow-primary) !important;
+        font-weight: 700 !important;
+    }
+
     /* General Form Styling */
     .form-control {
         border-radius: 12px;
-        border: 1px solid #e0e0e0;
-        /* padding: 25px 15px; */
+        border: 1px solid var(--brand-muted-gold);
         transition: all 0.3s ease-in-out;
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
 
     .form-control:focus {
-        border-color: #67f072;
-        box-shadow: 0 4px 10px rgba(115, 103, 240, 0.15);
+        border-color: var(--brand-dark-bronze) !important;
+        box-shadow: 0 0 0 0.25rem rgba(255, 222, 89, 0.3) !important;
     }
 
     /* Buttons Styling */
@@ -99,23 +174,82 @@
         box-shadow: 0 6px 12px rgba(0,0,0,0.12);
     }
 
+    .btn-primary {
+        background: linear-gradient(135deg, var(--brand-yellow-primary), var(--brand-yellow-secondary)) !important;
+        border-color: var(--brand-dark-bronze) !important;
+        color: var(--brand-dark-brown) !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 12px rgba(255, 222, 89, 0.35) !important;
+    }
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+        background: linear-gradient(135deg, var(--brand-yellow-secondary), var(--brand-gold-accent)) !important;
+        border-color: var(--brand-dark-brown) !important;
+        color: var(--brand-dark-brown) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 222, 89, 0.5) !important;
+    }
+
+    .btn-outline-primary {
+        border-color: var(--brand-dark-bronze) !important;
+        color: var(--brand-dark-brown) !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--brand-yellow-primary) !important;
+        color: var(--brand-dark-brown) !important;
+    }
+
+    /* Badges & Text */
+    .badge-primary, .bg-primary {
+        background-color: var(--brand-yellow-primary) !important;
+        color: var(--brand-dark-brown) !important;
+        font-weight: 700 !important;
+    }
+
+    .badge-light-primary {
+        background-color: var(--brand-light-bg) !important;
+        color: var(--brand-dark-bronze) !important;
+        border: 1px solid var(--brand-muted-gold) !important;
+    }
+
+    .text-primary {
+        color: var(--brand-dark-bronze) !important;
+    }
+
     /* Card Styling */
     .card {
-        border-radius: 16px;
-        border: none;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-        background: #fff;
+        border-radius: 16px !important;
+        border: 1px solid var(--brand-muted-gold) !important;
+        box-shadow: 0 6px 20px rgba(25, 15, 8, 0.04) !important;
+        background: #ffffff !important;
     }
 
     .card-header {
-        border-bottom: 1px solid #f2f2f2;
+        border-bottom: 1px solid var(--brand-gold-soft) !important;
         padding: 1.5rem;
-        background-color: transparent;
+        background-color: var(--brand-light-bg) !important;
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
     }
 
     .card-title {
-        font-weight: 700;
-        color: #333;
+        font-weight: 700 !important;
+        color: var(--brand-dark-brown) !important;
+    }
+
+    .table thead th {
+        background-color: var(--brand-light-bg) !important;
+        color: var(--brand-dark-brown) !important;
+        border-bottom: 2px solid var(--brand-muted-gold) !important;
+        font-weight: 700 !important;
+    }
+
+    .page-item.active .page-link {
+        background-color: var(--brand-yellow-primary) !important;
+        border-color: var(--brand-dark-bronze) !important;
+        color: var(--brand-dark-brown) !important;
+        font-weight: 700 !important;
     }
 
     /* Tab Styling */
@@ -126,9 +260,10 @@
     }
 
     .nav-tabs .nav-link.active {
-        background-color: #fff;
-        border-color: #dee2e6 #dee2e6 #fff;
-        color: #000000;
+        background-color: var(--brand-yellow-primary);
+        border-color: var(--brand-dark-bronze) var(--brand-dark-bronze) #fff;
+        color: var(--brand-dark-brown);
+        font-weight: 700;
     }
 
     /* Custom Switch */

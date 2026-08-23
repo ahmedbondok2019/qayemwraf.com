@@ -12,15 +12,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #0ea5e9;
-            --primary-dark: #0284c7;
-            --secondary-color: #0f172a;
-            --accent-color: #0d9488;
-            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            --primary-color: #ffde59;
+            --primary-dark: #8d7b40;
+            --secondary-color: #190f08;
+            --accent-color: #fce150;
+            --bg-gradient: linear-gradient(135deg, #190f08 0%, #2e1d12 50%, #190f08 100%);
+            --glass-bg: rgba(254, 253, 240, 0.96);
+            --text-main: #190f08;
+            --text-muted: #8d7b40;
+            --shadow-premium: 0 25px 50px -12px rgba(25, 15, 8, 0.4);
         }
 
         * {
