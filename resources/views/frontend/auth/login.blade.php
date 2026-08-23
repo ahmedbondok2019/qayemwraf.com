@@ -6,7 +6,7 @@
         <!-- Visual Column -->
         <div class="auth-visual">
             <div class="visual-content">
-                <div class="brand-badge">{{ $Setting->translate('app_name') ?? 'إيجي ميديكال' }}</div>
+                <div class="brand-badge">{{ $Setting->translate('app_name') ?? 'قايم ورف' }}</div>
                 <h1>{{ trans_db('frontend.Welcome Back') }}</h1>
                 <p>سعدنا بعودتك! قم بتسجيل الدخول لمتابعة مشترياتك وخدماتك الطبية.</p>
                 <div class="visual-features">

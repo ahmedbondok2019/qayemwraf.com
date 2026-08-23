@@ -230,7 +230,7 @@ return [
     'View Details' => 'عرض التفاصيل',
     'New Arrival' => 'وصل حديثاً',
     'Why Us?' => 'لماذا نحن؟',
-    'Egi Medical is a leading enterprise in medical equipment and supplies' => 'إيجي ميديكال مؤسسة رائدة في مجال الأجهزة والمستلزمات الطبية',
+    'Egi Medical is a leading enterprise in medical equipment and supplies' => 'قايم ورف مؤسسة رائدة في مجال الأجهزة والمستلزمات الطبية',
     'We offer high-quality products and integrated solutions that meet the needs of hospitals and clinics across Egypt, with a commitment to the highest global standards in service and warranty.' => 'نقدم منتجات عالية الجودة وحلول متكاملة تلبي احتياجات المستشفيات والعيادات في جميع أنحاء مصر، مع الالتزام بأعلى المعايير العالمية في الخدمة والضمان.',
     'Diverse products' => 'منتج متنوع',
     'Years of experience' => 'سنين خبرة',
