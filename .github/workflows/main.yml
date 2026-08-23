@@ -22,8 +22,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "Starting Deployment..."
-            mkdir -p ~/domains/egimedical.com/public_html/admin
-            cd ~/domains/egimedical.com/public_html/admin/ || exit 1
+            mkdir -p ~/domains/qayemwraf.com/public_html/admin
+            cd ~/domains/qayemwraf.com/public_html/admin/ || exit 1
 
             # 1. هوية السحب من جيت هب
             export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
@@ -31,18 +31,17 @@ jobs:
             # 2. تحديث الكود
             if [ ! -d ".git" ]; then
               git init
-              git remote add origin git@github.com:egypt-vision/egimedical.com.git
+              git remote add origin git@github.com:ahmedbondok2019/qayemwraf.com.git
             fi
             echo "Fetching latest changes..."
             git fetch origin main
             git reset --hard origin/main
 
-            # 3. تثبيت المكتبات (تعديل جوهري هنا)
+            # 3. تثبيت المكتبات
             echo "Installing dependencies..."
             export APP_ENV=production
             export APP_DEBUG=false
 
-            # استخدام install مع تجاهل المتطلبات التقنية للسيرفر لضمان النجاح
             composer install --no-dev --optimize-autoloader --ignore-platform-reqs || {
               echo "Composer failed, trying with update as fallback..."
               composer update --no-dev --optimize-autoloader --ignore-platform-reqs
@@ -55,6 +54,7 @@ jobs:
               mkdir -p "$(dirname "$ADMIN_FILE")"
               echo "" > "$ADMIN_FILE"
             fi
+
             # 5. تهيئة Laravel (أضفنا فحص للملف .env)
             echo "Optimizing Laravel..."
             if [ -f ".env" ]; then
