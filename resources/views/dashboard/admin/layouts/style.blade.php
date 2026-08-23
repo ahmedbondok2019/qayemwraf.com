@@ -81,85 +81,246 @@
         --brand-dark-brown: #190f08;
     }
 
-    /* Core Admin Theme Overrides */
-    body {
-        background-color: #fcfbfa !important;
-        color: var(--brand-dark-brown) !important;
-        font-family: 'Tajawal', 'Cairo', sans-serif;
-    }
-
-    /* Navbar & Header */
-    .header-navbar {
-        background-color: #ffffff !important;
-        border-bottom: 2px solid var(--brand-muted-gold) !important;
-        box-shadow: 0 4px 15px rgba(25, 15, 8, 0.04) !important;
-    }
-
-    .header-navbar .nav-link {
-        color: var(--brand-dark-brown) !important;
-    }
-
-    .header-navbar .nav-link:hover {
-        color: var(--brand-dark-bronze) !important;
-    }
-
-    /* Sidebar Navigation */
-    .main-menu {
+    /* ========================================================
+       1. GLOBAL SIDEBAR STYLES (Always Dark & Crisp)
+       ======================================================== */
+    .main-menu,
+    .main-menu.menu-dark,
+    .main-menu.menu-light {
         background-color: var(--brand-dark-brown) !important;
-        border-left: 1px solid rgba(141, 123, 64, 0.2);
+        border-left: 1px solid rgba(141, 123, 64, 0.25) !important;
     }
 
     .main-menu .navigation {
         background-color: var(--brand-dark-brown) !important;
     }
 
-    .main-menu .navigation li a {
-        color: #e2d9cc !important;
+    /* Non-active menu items: Bright cream/white text for high contrast */
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a,
+    .main-menu.menu-light .navigation li:not(.active):not(.sidebar-group-active) > a,
+    .main-menu.menu-dark .navigation li:not(.active):not(.sidebar-group-active) > a {
+        color: #f5eedc !important;
         border-radius: 10px !important;
         margin: 4px 12px !important;
         transition: all 0.25s ease-in-out !important;
     }
 
-    .main-menu .navigation li a:hover {
-        color: var(--brand-yellow-primary) !important;
-        background-color: rgba(255, 222, 89, 0.1) !important;
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a i,
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a svg,
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a span {
+        color: #f5eedc !important;
     }
 
+    /* Hover State */
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover {
+        color: var(--brand-yellow-primary) !important;
+        background-color: rgba(255, 222, 89, 0.12) !important;
+    }
+
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover i,
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover svg,
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover span {
+        color: var(--brand-yellow-primary) !important;
+    }
+
+    /* Active Sidebar Item */
     .main-menu .navigation > li.active > a,
     .main-menu .navigation > li.sidebar-group-active > a {
         background: linear-gradient(135deg, var(--brand-yellow-primary), var(--brand-yellow-secondary)) !important;
         color: var(--brand-dark-brown) !important;
         font-weight: 700 !important;
         box-shadow: 0 6px 18px rgba(255, 222, 89, 0.4) !important;
+        border-radius: 10px !important;
+        margin: 4px 12px !important;
     }
 
     .main-menu .navigation > li.active > a i,
     .main-menu .navigation > li.active > a svg,
+    .main-menu .navigation > li.active > a span,
     .main-menu .navigation > li.sidebar-group-active > a i,
-    .main-menu .navigation > li.sidebar-group-active > a svg {
+    .main-menu .navigation > li.sidebar-group-active > a svg,
+    .main-menu .navigation > li.sidebar-group-active > a span {
         color: var(--brand-dark-brown) !important;
     }
 
+    /* Submenu active item */
     .main-menu .navigation li.has-sub .menu-content li.active a {
-        background: rgba(255, 222, 89, 0.15) !important;
+        background: rgba(255, 222, 89, 0.2) !important;
         color: var(--brand-yellow-primary) !important;
         font-weight: 700 !important;
     }
 
-    /* General Form Styling */
-    .form-control {
-        border-radius: 12px;
-        border: 1px solid var(--brand-muted-gold);
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    }
-
-    .form-control:focus {
+    /* ========================================================
+       2. NAVIGATION TABS & PILLS (Header & Page Tabs)
+       ======================================================== */
+    .nav-pills .nav-link.active,
+    .nav-tabs .nav-link.active,
+    .nav .nav-link.active,
+    .nav-item .nav-link.active {
+        background-color: var(--brand-yellow-primary) !important;
+        color: var(--brand-dark-brown) !important;
+        font-weight: 700 !important;
         border-color: var(--brand-dark-bronze) !important;
-        box-shadow: 0 0 0 0.25rem rgba(255, 222, 89, 0.3) !important;
+        box-shadow: 0 4px 12px rgba(255, 222, 89, 0.3) !important;
     }
 
-    /* Buttons Styling */
+    /* ========================================================
+       3. LIGHT MODE SPECIFIC STYLES (html:not(.dark-layout))
+       ======================================================== */
+    html:not(.dark-layout) body {
+        background-color: #fcfbfa !important;
+        color: var(--brand-dark-brown) !important;
+        font-family: 'Tajawal', 'Cairo', sans-serif;
+    }
+
+    html:not(.dark-layout) .header-navbar {
+        background-color: #ffffff !important;
+        border-bottom: 2px solid var(--brand-muted-gold) !important;
+        box-shadow: 0 4px 15px rgba(25, 15, 8, 0.04) !important;
+    }
+
+    html:not(.dark-layout) .header-navbar .nav-link {
+        color: var(--brand-dark-brown) !important;
+    }
+
+    html:not(.dark-layout) .card {
+        border-radius: 16px !important;
+        border: 1px solid var(--brand-muted-gold) !important;
+        box-shadow: 0 6px 20px rgba(25, 15, 8, 0.04) !important;
+        background: #ffffff !important;
+        color: var(--brand-dark-brown) !important;
+    }
+
+    html:not(.dark-layout) .card-header {
+        border-bottom: 1px solid var(--brand-gold-soft) !important;
+        padding: 1.25rem 1.5rem;
+        background-color: var(--brand-light-bg) !important;
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+    }
+
+    html:not(.dark-layout) .card-title,
+    html:not(.dark-layout) .card h1,
+    html:not(.dark-layout) .card h2,
+    html:not(.dark-layout) .card h3,
+    html:not(.dark-layout) .card h4,
+    html:not(.dark-layout) .card h5,
+    html:not(.dark-layout) .card h6 {
+        font-weight: 700 !important;
+        color: var(--brand-dark-brown) !important;
+    }
+
+    html:not(.dark-layout) .card p,
+    html:not(.dark-layout) .card span,
+    html:not(.dark-layout) .card div,
+    html:not(.dark-layout) .card label,
+    html:not(.dark-layout) .card td,
+    html:not(.dark-layout) .card th {
+        color: #2b231d !important;
+    }
+
+    html:not(.dark-layout) .text-muted,
+    html:not(.dark-layout) small,
+    html:not(.dark-layout) .card small {
+        color: #706253 !important;
+    }
+
+    html:not(.dark-layout) .nav-pills .nav-link:not(.active),
+    html:not(.dark-layout) .nav-tabs .nav-link:not(.active) {
+        color: #55493d !important;
+        font-weight: 600;
+    }
+
+    html:not(.dark-layout) .table thead th {
+        background-color: var(--brand-light-bg) !important;
+        color: var(--brand-dark-brown) !important;
+        border-bottom: 2px solid var(--brand-muted-gold) !important;
+        font-weight: 700 !important;
+    }
+
+    /* ========================================================
+       4. DARK MODE SPECIFIC STYLES (html.dark-layout)
+       ======================================================== */
+    html.dark-layout body {
+        background-color: #16100c !important;
+        color: #fefdf0 !important;
+        font-family: 'Tajawal', 'Cairo', sans-serif;
+    }
+
+    html.dark-layout .header-navbar {
+        background-color: #241a13 !important;
+        border-bottom: 1px solid #3e3023 !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    html.dark-layout .header-navbar .nav-link {
+        color: #fefdf0 !important;
+    }
+
+    html.dark-layout .card {
+        border-radius: 16px !important;
+        border: 1px solid #3e3023 !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+        background-color: #241a13 !important;
+        color: #fefdf0 !important;
+    }
+
+    html.dark-layout .card-header {
+        border-bottom: 1px solid #3e3023 !important;
+        padding: 1.25rem 1.5rem;
+        background-color: #1f1610 !important;
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+    }
+
+    html.dark-layout .card-title,
+    html.dark-layout .card h1,
+    html.dark-layout .card h2,
+    html.dark-layout .card h3,
+    html.dark-layout .card h4,
+    html.dark-layout .card h5,
+    html.dark-layout .card h6 {
+        font-weight: 700 !important;
+        color: var(--brand-yellow-primary) !important;
+    }
+
+    html.dark-layout .card p,
+    html.dark-layout .card span,
+    html.dark-layout .card div,
+    html.dark-layout .card label,
+    html.dark-layout .card td,
+    html.dark-layout .card th {
+        color: #f5eedc !important;
+    }
+
+    html.dark-layout .text-muted,
+    html.dark-layout small,
+    html.dark-layout .card small {
+        color: #d6c6b4 !important;
+    }
+
+    html.dark-layout .nav-pills .nav-link:not(.active),
+    html.dark-layout .nav-tabs .nav-link:not(.active) {
+        color: #d6c6b4 !important;
+        font-weight: 600;
+    }
+
+    html.dark-layout .table thead th {
+        background-color: #1f1610 !important;
+        color: var(--brand-yellow-primary) !important;
+        border-bottom: 2px solid #3e3023 !important;
+        font-weight: 700 !important;
+    }
+
+    html.dark-layout .apexcharts-text tspan,
+    html.dark-layout .apexcharts-legend-text {
+        fill: #f5eedc !important;
+        color: #f5eedc !important;
+    }
+
+    /* ========================================================
+       5. GENERAL BUTTONS, FORMS & BADGES
+       ======================================================== */
     .btn {
         border-radius: 10px !important;
         padding: 10px 24px;
@@ -200,7 +361,6 @@
         color: var(--brand-dark-brown) !important;
     }
 
-    /* Badges & Text */
     .badge-primary, .bg-primary {
         background-color: var(--brand-yellow-primary) !important;
         color: var(--brand-dark-brown) !important;
@@ -217,32 +377,16 @@
         color: var(--brand-dark-bronze) !important;
     }
 
-    /* Card Styling */
-    .card {
-        border-radius: 16px !important;
-        border: 1px solid var(--brand-muted-gold) !important;
-        box-shadow: 0 6px 20px rgba(25, 15, 8, 0.04) !important;
-        background: #ffffff !important;
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid var(--brand-muted-gold);
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
 
-    .card-header {
-        border-bottom: 1px solid var(--brand-gold-soft) !important;
-        padding: 1.5rem;
-        background-color: var(--brand-light-bg) !important;
-        border-top-left-radius: 16px !important;
-        border-top-right-radius: 16px !important;
-    }
-
-    .card-title {
-        font-weight: 700 !important;
-        color: var(--brand-dark-brown) !important;
-    }
-
-    .table thead th {
-        background-color: var(--brand-light-bg) !important;
-        color: var(--brand-dark-brown) !important;
-        border-bottom: 2px solid var(--brand-muted-gold) !important;
-        font-weight: 700 !important;
+    .form-control:focus {
+        border-color: var(--brand-dark-bronze) !important;
+        box-shadow: 0 0 0 0.25rem rgba(255, 222, 89, 0.3) !important;
     }
 
     .page-item.active .page-link {
@@ -250,20 +394,6 @@
         border-color: var(--brand-dark-bronze) !important;
         color: var(--brand-dark-brown) !important;
         font-weight: 700 !important;
-    }
-
-    /* Tab Styling */
-    .nav-tabs .nav-link {
-        border-radius: 8px 8px 0 0;
-        padding: 12px 20px;
-        font-weight: 600;
-    }
-
-    .nav-tabs .nav-link.active {
-        background-color: var(--brand-yellow-primary);
-        border-color: var(--brand-dark-bronze) var(--brand-dark-bronze) #fff;
-        color: var(--brand-dark-brown);
-        font-weight: 700;
     }
 
     /* Custom Switch */
