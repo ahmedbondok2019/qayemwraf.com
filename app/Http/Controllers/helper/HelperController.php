@@ -32,11 +32,11 @@ class HelperController extends Controller
                 return false;
             }
 
-            // Determine root public_html images path for main domain (egimedical.com/images)
+            // Determine root public_html images path for main domain (qayemwraf.com/images)
             $possiblePaths = [
                 base_path('../images'),                                               // if nested under admin/
-                base_path('../../egimedical.com/public_html/images'),                // if sibling subdomain folder
-                '/home/u373210132/domains/egimedical.com/public_html/images',          // absolute server path
+                base_path('../../qayemwraf.com/public_html/images'),                // if sibling subdomain folder
+                '/home/u373210132/domains/qayemwraf.com/public_html/images',          // absolute server path
                 public_path('images')                                                 // fallback to public/images
             ];
 

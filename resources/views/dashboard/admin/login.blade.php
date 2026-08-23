@@ -418,7 +418,7 @@
                     <div class="input-group">
                         <input type="email" name="email" id="email" 
                                class="form-control @error('email') is-invalid @enderror" 
-                               placeholder="example@egimedical.com" 
+                               placeholder="example@qayemwraf.com"
                                value="{{ old('email') }}" required autofocus>
                         <i class="fas fa-envelope"></i>
                     </div>

@@ -8,7 +8,7 @@
                 @if(isset($Setting) && $Setting->logo)
                     <img src="{{ asset($Setting->logo) }}" class="img-fluid" style="height: 100px" alt="{{ $Setting->translate('app_name') }}" />
                 @else
-                    <img src="{{ asset('_fixed/logo.png') }}" class="img-fluid" style="height: 100px" alt="Egypt Vision" />
+                    <img src="{{ asset('_fixed/logo.png') }}" class="img-fluid" style="height: 100px" alt="QayemWraf" />
                 @endif
             </a>
         </li>

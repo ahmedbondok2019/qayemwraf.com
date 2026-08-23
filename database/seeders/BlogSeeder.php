@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class BlogSeeder extends Seeder
 {
     /**
-     * Run the database seeds for EgiMedical blog articles.
+     * Run the database seeds for QayemWraf blog articles.
      *
      * @return void
      */
@@ -34,17 +34,17 @@ class BlogSeeder extends Seeder
                     'title' => 'الأجهزة الطبية المنزلية',
                     'slug' => 'home-medical-equipment',
                     'description' => 'دليلك الشامل لاختيار واستخدام الأجهزة الطبية في المنزل كأجهزة قياس الضغط والسكر وأجهزة التنفس.',
-                    'meta_title' => 'الأجهزة الطبية المنزلية | EgiMedical',
+                    'meta_title' => 'الأجهزة الطبية المنزلية | QayemWraf',
                     'meta_description' => 'استكشف أحدث الأجهزة الطبية المنزلية وطرق اختيار جهاز قياس الضغط ومولدات الأكسجين المناسبة لك.',
-                    'meta_keywords' => 'أجهزة طبية, جهاز قياس الضغط, مولد أكسجين, قياس السكر, EgiMedical',
+                    'meta_keywords' => 'أجهزة طبية, جهاز قياس الضغط, مولد أكسجين, قياس السكر, QayemWraf',
                 ],
                 'en' => [
                     'title' => 'Home Medical Devices',
                     'slug' => 'home-medical-devices',
                     'description' => 'Your comprehensive guide to selecting and using home healthcare devices like BP monitors, glucometers, and concentrators.',
-                    'meta_title' => 'Home Medical Devices | EgiMedical',
+                    'meta_title' => 'Home Medical Devices | QayemWraf',
                     'meta_description' => 'Explore the latest home healthcare monitors, blood pressure cuffs, and oxygen concentrators.',
-                    'meta_keywords' => 'medical devices, blood pressure monitor, oxygen concentrator, glucometer, EgiMedical',
+                    'meta_keywords' => 'medical devices, blood pressure monitor, oxygen concentrator, glucometer, QayemWraf',
                 ],
                 'blogs' => [
                     [
@@ -56,7 +56,7 @@ class BlogSeeder extends Seeder
                             'Author' => 'د. أحمد محمود - استشاري الأجهزة الطبية',
                             'meta_title' => 'كيف تختار أفضل جهاز قياس ضغط الدم المنزلي 2026',
                             'meta_description' => 'نصائح هامة ودليل متكامل لاختيار جهاز قياس ضغط الدم الدقيق والمناسب للاستخدام المنزلي.',
-                            'meta_keywords' => 'جهاز ضغط الدم, قياس الضغط بالمنزل, أجهزة ديجيتال, EgiMedical',
+                            'meta_keywords' => 'جهاز ضغط الدم, قياس الضغط بالمنزل, أجهزة ديجيتال, QayemWraf',
                             'description' => '
                                 <h2>مقدمة عن أهمية المتابعة المنزلية لضغط الدم</h2>
                                 <p>تعتبر المتابعة المنتظمة لضغط الدم في المنزل خطوة أساسية للوقاية من أمراض القلب والسكتات الدماغية. يساعدك اختيار الجهاز المناسب في الحصول على قراءات دقيقة يمكنك الاعتماد عليها وإرسالها لطبيبك المعالج.</p>
@@ -82,7 +82,7 @@ class BlogSeeder extends Seeder
                             'Author' => 'Dr. Ahmed Mahmoud - Medical Devices Specialist',
                             'meta_title' => 'How to Choose the Best Home Blood Pressure Monitor 2026',
                             'meta_description' => 'Expert tips and complete guide to selecting an accurate home blood pressure monitor for your family.',
-                            'meta_keywords' => 'blood pressure monitor, home BP test, digital BP machine, EgiMedical',
+                            'meta_keywords' => 'blood pressure monitor, home BP test, digital BP machine, QayemWraf',
                             'description' => '
                                 <h2>Introduction to Home Blood Pressure Monitoring</h2>
                                 <p>Regular home blood pressure monitoring is essential for preventing cardiovascular complications. Choosing the right device ensures accurate readings that your physician can rely on.</p>
@@ -110,7 +110,7 @@ class BlogSeeder extends Seeder
                             'Author' => 'م. سارة علي - مهندسة معدات طبية',
                             'meta_title' => 'دليل مولدات الأكسجين المنزلية وصيانتها الدوريّة',
                             'meta_description' => 'تعرف على كيفية اختيار مولد الأكسجين المنزلي المناسب وطرق الصيانة للحفاظ على كفاءته.',
-                            'meta_keywords' => 'مولد أكسجين 10 لتر, أكسجين منزلي, صيانة فلاتر الأكسجين, EgiMedical',
+                            'meta_keywords' => 'مولد أكسجين 10 لتر, أكسجين منزلي, صيانة فلاتر الأكسجين, QayemWraf',
                             'description' => '
                                 <h2>ما هو مولد الأكسجين المنزلي وكيف يعمل؟</h2>
                                 <p>يقوم مولد الأكسجين بسحب الهواء الجوي وتنقيته من النيتروجين لتزويد المريض بأكسجين عالي النقاوة بنسبة تصل إلى 95%. يعتبر حل اقتصادياً وآمناً مقارنة بأسطوانات الأكسجين التقليدية.</p>
@@ -131,7 +131,7 @@ class BlogSeeder extends Seeder
                             'Author' => 'Eng. Sarah Ali - Biomedical Engineer',
                             'meta_title' => 'Home Oxygen Concentrators Guide and Maintenance Tips',
                             'meta_description' => 'Learn how home oxygen concentrators work and essential maintenance steps to preserve purity and safety.',
-                            'meta_keywords' => 'oxygen concentrator 10L, home oxygen therapy, oxygen filter cleaning, EgiMedical',
+                            'meta_keywords' => 'oxygen concentrator 10L, home oxygen therapy, oxygen filter cleaning, QayemWraf',
                             'description' => '
                                 <h2>What is a Home Oxygen Concentrator?</h2>
                                 <p>Oxygen concentrators pull ambient air, extract nitrogen, and deliver medical-grade oxygen at up to 95% purity. They provide a continuous, cost-effective alternative to heavy oxygen cylinders.</p>
@@ -152,17 +152,17 @@ class BlogSeeder extends Seeder
                     'title' => 'مستلزمات العناية والوقاية',
                     'slug' => 'care-and-protection-supplies',
                     'description' => 'كل ما تود معرفته عن مستلزمات التعقيم، الكمامات الطبية، القفازات، وأدوات الوقاية الفردية.',
-                    'meta_title' => 'مستلزمات العناية والوقاية الطبية | EgiMedical',
+                    'meta_title' => 'مستلزمات العناية والوقاية الطبية | QayemWraf',
                     'meta_description' => 'تسوق واقرأ عن أجود أدوات التعقيم والقفازات الطبية ومستلزمات العناية الشخصية.',
-                    'meta_keywords' => 'قفازات طبية, كمامات, مطهرات, تعقيم طبي, EgiMedical',
+                    'meta_keywords' => 'قفازات طبية, كمامات, مطهرات, تعقيم طبي, QayemWraf',
                 ],
                 'en' => [
                     'title' => 'Care & Protection Supplies',
                     'slug' => 'care-and-protection-supplies',
                     'description' => 'All you need to know about medical disposables, sterilization, masks, gloves, and PPE gear.',
-                    'meta_title' => 'Care & Protection Supplies | EgiMedical',
+                    'meta_title' => 'Care & Protection Supplies | QayemWraf',
                     'meta_description' => 'Discover high-grade medical disposables, surgical gloves, disinfectants, and personal protection.',
-                    'meta_keywords' => 'surgical masks, medical gloves, disinfectants, PPE supplies, EgiMedical',
+                    'meta_keywords' => 'surgical masks, medical gloves, disinfectants, PPE supplies, QayemWraf',
                 ],
                 'blogs' => [
                     [
@@ -174,7 +174,7 @@ class BlogSeeder extends Seeder
                             'Author' => 'د. خالد توفيق - أخصائي مكافحة العدوى',
                             'meta_title' => 'مقارنة بين القفازات الطبية اللاتكس والنيتريل والفينيل',
                             'meta_description' => 'دليل شامل يوضح الفروق بين أنواع القفازات الطبية المختلفة والاستخدام الأمثل لكل نوع.',
-                            'meta_keywords' => 'قفازات نيتريل, قفازات لاتكس, قفازات بدون بودرة, EgiMedical',
+                            'meta_keywords' => 'قفازات نيتريل, قفازات لاتكس, قفازات بدون بودرة, QayemWraf',
                             'description' => '
                                 <h2>اختيار القفاز الطبي المناسب لاحتياجاتك</h2>
                                 <p>تتعدد أنواع القفازات الطبية ويختلف كل نوع بحسب الخامة ومستوى الحماية ومقاومة الثقوب والحساسية الجلدية.</p>
@@ -197,7 +197,7 @@ class BlogSeeder extends Seeder
                             'Author' => 'Dr. Khaled Tawfik - Infection Control Specialist',
                             'meta_title' => 'Latex vs Nitrile vs Vinyl Medical Gloves Comparison',
                             'meta_description' => 'Comprehensive breakdown comparing medical glove materials, allergy risks, puncture resistance, and ideal uses.',
-                            'meta_keywords' => 'nitrile gloves, powder-free gloves, latex allergy, vinyl disposable gloves, EgiMedical',
+                            'meta_keywords' => 'nitrile gloves, powder-free gloves, latex allergy, vinyl disposable gloves, QayemWraf',
                             'description' => '
                                 <h2>Choosing the Right Medical Gloves</h2>
                                 <p>Medical gloves vary greatly in composition, puncture resistance, barrier protection, and allergen potential.</p>
@@ -220,17 +220,17 @@ class BlogSeeder extends Seeder
                     'title' => 'نصائح وإرشادات صحية',
                     'slug' => 'health-and-medical-tips',
                     'description' => 'إرشادات طبية موثوقة من خبراء الرعاية الصحية للحفاظ على صحتك وصحة عائلتك.',
-                    'meta_title' => 'نصائح وإرشادات صحية موثوقة | EgiMedical',
+                    'meta_title' => 'نصائح وإرشادات صحية موثوقة | QayemWraf',
                     'meta_description' => 'مقالات صحية وإرشادات يومية للعناية بمرضى السكري والضغط وكبار السن.',
-                    'meta_keywords' => 'نصائح صحية, السكري, كبار السن, العناية المنزلية, EgiMedical',
+                    'meta_keywords' => 'نصائح صحية, السكري, كبار السن, العناية المنزلية, QayemWraf',
                 ],
                 'en' => [
                     'title' => 'Health & Medical Tips',
                     'slug' => 'health-and-medical-tips',
                     'description' => 'Trusted medical insights and wellness guides from healthcare experts to safeguard your family.',
-                    'meta_title' => 'Trusted Health & Wellness Tips | EgiMedical',
+                    'meta_title' => 'Trusted Health & Wellness Tips | QayemWraf',
                     'meta_description' => 'Read health advice and daily tips for managing diabetes, hypertension, and elder care.',
-                    'meta_keywords' => 'health tips, diabetes care, elder care, home health, EgiMedical',
+                    'meta_keywords' => 'health tips, diabetes care, elder care, home health, QayemWraf',
                 ],
                 'blogs' => [
                     [
@@ -242,7 +242,7 @@ class BlogSeeder extends Seeder
                             'Author' => 'د. نادية حسن - أخصائية غدد صماء وسكري',
                             'meta_title' => 'دليل العناية بالقدم السكرية والوقاية من القروح',
                             'meta_description' => 'خطوات عملية يومية لمرضى السكري لحماية القدمين والوقاية من القروح والمضاعفات.',
-                            'meta_keywords' => 'القدم السكرية, فحص السكر, جوارب سكرية, EgiMedical',
+                            'meta_keywords' => 'القدم السكرية, فحص السكر, جوارب سكرية, QayemWraf',
                             'description' => '
                                 <h2>أهمية العناية اليومية بالقدم لمرضى السكري</h2>
                                 <p>يؤدي ارتفاع السكر الفترات طويلة إلى ضعف الدورة الدموية وتأثر الأعصاب الطرفية. لذا فإن الفحص اليومي للقدم يمنع حدوث الجروح والقروح الخطيرة.</p>
@@ -262,9 +262,9 @@ class BlogSeeder extends Seeder
                             'image' => 'blogs/diabetic_care.jpg',
                             'tags' => 'diabetes care,foot health,diabetic supplies,wellness',
                             'Author' => 'Dr. Nadia Hassan - Endocrinologist',
-                            'meta_title' => 'Diabetic Foot Care and Prevention Guide | EgiMedical',
+                            'meta_title' => 'Diabetic Foot Care and Prevention Guide | QayemWraf',
                             'meta_description' => 'Practical daily steps for diabetic patients to protect their feet and prevent ulcers and nerve complications.',
-                            'meta_keywords' => 'diabetic foot, blood glucose check, diabetic socks, EgiMedical',
+                            'meta_keywords' => 'diabetic foot, blood glucose check, diabetic socks, QayemWraf',
                             'description' => '
                                 <h2>Why Daily Foot Inspection Matters for Diabetics</h2>
                                 <p>Prolonged high blood glucose can impair circulation and nerve sensitivity. Daily foot care is the single most effective way to prevent ulcers and severe complications.</p>
