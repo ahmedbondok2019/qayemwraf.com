@@ -16,7 +16,7 @@
   "sku": "{{ $product->sku ?? $product->id }}",
   "brand": {
     "@type": "Brand",
-    "name": "{{ $product->brand->translation->title ?? 'Mushaf Home' }}"
+    "name": "{{ $product->brand->translation->title ?? 'qayemwraf' }}"
   },
   "offers": {
     "@type": "Offer",

@@ -34,13 +34,13 @@ return [
     'facebook' => [
         'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect' => 'https://mushafhome.com/'.app()->getLocale().'/user/login/facebook/callback',
+        'redirect' => env('FRONTEND_URL', 'https://qayemwraf.com').'/'.app()->getLocale().'/user/login/facebook/callback',
     ],
 
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => 'https://mushafhome.com/'.app()->getLocale().'/user/login/google/callback',
+        'redirect' => env('FRONTEND_URL', 'https://qayemwraf.com').'/'.app()->getLocale().'/user/login/google/callback',
     ],
 
  'jnt' => [

@@ -60,6 +60,7 @@ return [
     'Enter your email address' => 'أدخل بريدك الإلكتروني',
     'Subscribe' => 'اشتراك',
     'We strive to provide the best Islamic books and Mushafs with high quality service.' => 'نسعى جاهدين لتقديم أفضل المنتجات بخدمة عالية الجودة.',
+    'We strive to provide the best products with high quality service.' => 'نسعى جاهدين لتقديم أفضل المنتجات بخدمة عالية الجودة.',
     'Quick Links' => 'روابط سريعة',
     'Customer Care' => 'خدمة العملاء',
     'Shop' => 'المتجر',

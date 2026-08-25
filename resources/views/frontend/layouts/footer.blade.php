@@ -38,11 +38,11 @@
                 <div class="col-lg-4 col-md-6 mb-5">
                     <div class="footer-widget brand-widget">
                         <a href="{{ route('frontend.index') }}" class="footer-logo">
-                            <img src="{{ isset($Setting) && $Setting?->logo ? asset($Setting->logo) : '/website/images/logo/logo.png' }}" alt="{{ $Setting?->translate('app_name') ?? 'Mushaf Home' }}">
+                            <img src="{{ isset($Setting) && $Setting?->logo ? asset($Setting->logo) : '/website/images/logo/logo.png' }}" alt="{{ $Setting?->translate('app_name') ?? 'qayemwraf' }}">
                         </a>
                         <p class="mt-4 mb-4 text-white-muted">
                             {{ trans_db('frontend.Explore our trusted partners and publishers') }}. 
-                            {{ trans_db('frontend.We strive to provide the best Islamic books and Mushafs with high quality service.') }}
+                            {{ trans_db('frontend.We strive to provide the best products with high quality service.') }}
                         </p>
                         <div class="social-links-modern">
                             @if(isset($Setting->facebook)) <a href="{{ $Setting->facebook }}" class="social-link"><i class="fa-brands fa-facebook-f"></i></a> @endif
@@ -99,7 +99,7 @@
                             </li>
                             <li>
                                 <div class="icon"><i class="fa-regular fa-envelope"></i></div>
-                                <div class="text">{{ $Setting?->contact_email ?? 'info@mushafhome.com' }}</div>
+                                <div class="text">{{ $Setting?->contact_email ?? 'info@qayemwraf.com' }}</div>
                             </li>
                         </ul>
                     </div>
@@ -114,7 +114,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-start">
                     <p class="copyright-text">
-                        &copy; {{ date('Y') }} <strong>{{ $Setting?->translate('app_name') ?? 'Mushaf Home' }}</strong>. {{ trans_db('frontend.All Rights Reserved') }}
+                        &copy; {{ date('Y') }} <strong>{{ $Setting?->translate('app_name') ?? 'qayemwraf' }}</strong>. {{ trans_db('frontend.All Rights Reserved') }}
                     </p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">

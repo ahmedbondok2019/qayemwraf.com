@@ -36,7 +36,7 @@
                                         <td style="width:60%">
                                             <div>
                                                 <div class="logo-wrapper" style="margin-bottom:0 !important">
-                                                    <img src="{{ asset('website/images/logo/souqelmlabes.png') }}" class="invoice_logo" style="width:160px;height:93px;" alt="souqelmlabes Logo">
+                                                     <img src="{{ isset($Setting) && $Setting->logo ? asset($Setting->logo) : asset('website/images/logo/logo.png') }}" class="invoice_logo" style="width:160px;height:93px;" alt="Logo">
                                                 </div>
                                             </div>
                                         </td>

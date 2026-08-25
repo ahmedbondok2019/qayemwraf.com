@@ -18,12 +18,12 @@ class SettingSeeder extends Seeder
 
         if (!$setting) {
             Setting::create([
-                'app_name' => 'Mushaf Home',
-                'app_meta_title' => 'Mushaf Home - Default Title',
-                'app_meta_desc' => 'Default Meta Description for Mushaf Home application.',
+                'app_name' => 'qayemwraf',
+                'app_meta_title' => 'qayemwraf',
+                'app_meta_desc' => 'qayemwraf application.',
                 'address' => 'Cairo, Egypt',
                 'phone' => '01000000000',
-                'contact_email' => 'info@mushafhome.com',
+                'contact_email' => 'info@qayemwraf.com',
                 'facebook' => 'https://facebook.com',
                 'instagram' => 'https://instagram.com',
                 'twitter' => 'https://twitter.com',

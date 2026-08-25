@@ -153,7 +153,7 @@
                                         <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0 align-items-xl-center" style="margin-bottom: 0 !important;">
                                             <div>
                                                 <div class="logo-wrapper" style="margin-bottom: 0 !important;">
-                                                    <img src="{{ asset('website/images/logo/souqelmlabes.png') }}" class="invoice_logo" style="width:160px;" alt="Store Logo">
+                                                     <img src="{{ isset($Setting) && $Setting->logo ? asset($Setting->logo) : asset('website/images/logo/logo.png') }}" class="invoice_logo" style="width:160px;" alt="Store Logo">
                                                 </div>
                                             </div>
                                             <div class="invoice-number-date mt-md-0 mt-2">
@@ -265,7 +265,7 @@
                                         {{-- <hr class="invoice-spacing mt-0" /> --}}
                                         {{-- <h2 style="margin: 0 40px;align-self: center;">User By : {{ \Illuminate\Support\Facades\Auth::user()->name }}</h2> --}}
                                         <hr class="invoice-spacing mt-0" />
-                                        <p style="text-align:center;font-weight:700 !important">Powered by: souqelmlabes
+                                        <p style="text-align:center;font-weight:700 !important">Powered by: qayemwraf
                                         <p style="text-align:center;font-weight:700 !important">
                                             <img src="{{ env('APP_URL') }} . "website/images/BarCode/Oct-2023/img-1696374724.png" alt="">
                                         </p>

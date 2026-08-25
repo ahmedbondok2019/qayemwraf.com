@@ -5,4 +5,4 @@ Disallow: /register
 Disallow: /checkout
 Disallow: /cart
 
-Sitemap: https://mushafhome.com/sitemap.xml
+Sitemap: https://qayemwraf.com/sitemap.xml

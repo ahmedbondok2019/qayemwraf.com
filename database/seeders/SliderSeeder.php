@@ -16,13 +16,13 @@ class SliderSeeder extends Seeder
         $sliders = [
             [
                 'ar' => [
-                    'title' => 'مرحباً بكم في مصحف هوم',
-                    'subtitle' => 'أكبر مكتبة إسلامية شاملة',
+                    'title' => 'Welcome to qayemwraf',
+                    'subtitle' => 'Your Favorite Store',
                     'button_text' => 'تسوق الآن',
                 ],
                 'en' => [
-                    'title' => 'Welcome to Mushaf Home',
-                    'subtitle' => 'The Largest Comprehensive Islamic Library',
+                    'title' => 'Welcome to qayemwraf',
+                    'subtitle' => 'Your Favorite Store',
                     'button_text' => 'Shop Now',
                 ],
                 'image' => '/_fixed/sliders.jpg',

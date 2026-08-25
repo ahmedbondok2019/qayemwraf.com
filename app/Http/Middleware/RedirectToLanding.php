@@ -9,41 +9,44 @@ class RedirectToLanding
 {
     public function handle(Request $request, Closure $next)
     {
-        // // قائمة بالمسارات المسموح بها (يمكن توسيعها)
-        // $allowedPaths = [
-        //     'landing',
-        //     'cache-clear',
-        //     'convert',
-        //     'TextToSpeech',
-        //     'service-account-file.json',
-        //     'sitemap.xml',
-        //     'sitemap/*',
-        //     'create_sitemap',
-        //     'api/*',
-        //     'admin-2023*', // هذا يشمل admin-2023/login
-        //     'admin-2023/*',
-        //     'ar/admin-2023*',
-        //     'en/admin-2023*',
-        //     '_ignition/*',
-        //     'telescope/*',
-        //     'ar/getAllArea',
-        //     'ar/getAllCity',
-        //     'ar/getAllZones',
-        //     'guest-order-direct',
-        //     'get-shipping-cost',
-        //     'health',
-        // ];
+        $host = $request->getHost();
 
-        // foreach ($allowedPaths as $path) {
-        //     if ($request->is($path)) {
-        //         return $next($request);
-        //     }
-        // }
+        // If request is on the admin subdomain (e.g. admin.qayemwraf.com)
+        if (str_contains($host, 'admin.')) {
+            $allowedPatterns = [
+                'admin-2026*',
+                '*/admin-2026*',
+                'admin*',
+                '*/admin*',
+                'api*',
+                '*/api*',
+                'docs*',
+                '*/docs*',
+                'scribe*',
+                '*/scribe*',
+                '_ignition*',
+                'telescope*',
+                'sanctum/*',
+            ];
 
-        // if ($request->is('livewire/*') || $request->is('*/livewire/*')) {
-        //     return $next($request);
-        // }
-        // return redirect()->route('landing');
+            foreach ($allowedPatterns as $pattern) {
+                if ($request->is($pattern)) {
+                    return $next($request);
+                }
+            }
+
+            // For any non-admin/api/docs request on admin subdomain, redirect to frontend (qayemwraf.com)
+            $frontendUrl = config('app.frontend_url', 'https://qayemwraf.com');
+            $requestUri = $request->getRequestUri();
+
+            // Clean up /public from request URI if present
+            $requestUri = preg_replace('/^\/public(\/|$)/', '/', $requestUri);
+
+            $targetUrl = rtrim($frontendUrl, '/') . $requestUri;
+
+            return redirect()->away($targetUrl);
+        }
+
         return $next($request);
     }
 }

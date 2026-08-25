@@ -69,7 +69,7 @@ class ProductResource extends JsonResource
             'title' => $this->translation->name ?? ($this->translations->first()->name ?? ''),
             'category_id' => $this->product_category_id ?? ($this->categories->first()->id ?? null),
             'category' => $this->categories->first()->translation->title ?? ($this->categories->first()->translations->first()->title ?? ''),
-            'store_name' => 'Mushaf Home',
+            'store_name' => 'qayemwraf',
             'rating' => (float)($this->ratings()->avg('rating') ?? 0),
             'rate_count' => (int)$this->ratings()->count(),
             'sale_price' => (float)($flashPrice > 0 ? $flashPrice : ($this->special_price ?: $this->price)),

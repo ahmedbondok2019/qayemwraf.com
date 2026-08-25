@@ -38,7 +38,7 @@
                                     <i class="fa-regular fa-envelope"></i>
                                     <div>
                                         <h5>{{ trans_db('frontend.Email') }}</h5>
-                                        <p>{{ $Setting->contact_email ?? 'info@mushafhome.com' }}</p>
+                                        <p>{{ $Setting->contact_email ?? 'info@qayemwraf.com' }}</p>
                                     </div>
                                 </div>
 

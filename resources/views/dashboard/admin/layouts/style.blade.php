@@ -441,4 +441,39 @@
             transform: translateX(1.7rem) !important;
         }
     @endif
+
+    /* Fix Sidebar Logo & Remove Dark Shadow Halo */
+    .shadow-bottom,
+    .main-menu .shadow-bottom {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    .main-menu .navbar-header {
+        height: 85px !important;
+        padding: 0.5rem 1rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    .main-menu .navbar-header .navbar-brand {
+        margin-right: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .main-menu .navbar-header .navbar-brand img,
+    .admin-logo-img {
+        max-height: 65px !important;
+        width: auto !important;
+        max-width: 175px !important;
+        object-fit: contain !important;
+    }
 </style>

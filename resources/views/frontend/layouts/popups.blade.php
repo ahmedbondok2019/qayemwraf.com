@@ -4,7 +4,7 @@
 
     <div class="content">
         <h3>{{ __('website.Choose Country') }}</h3>
-        <form action="https://souqelmlabes.com/ar/change_lang" method="POST">
+        <form action="{{ url('ar/change_lang') }}" method="POST">
             <input type="hidden" name="_token" value="Y6NhYvsaGxYq3ZedNV4u5V98pRx04B4gWVAlHW0B" autocomplete="off">
                                                 <div class="box">
                         <div class="lang">
@@ -12,7 +12,7 @@
                                 id="1msr" />
                             <label
                                 for="1msr">
-                                <img src="https://souqelmlabes.com/website/images/flags/j72xcfco-2024-08-1100-00-00.png" alt=""
+                                <img src="{{ asset('website/images/flags/j72xcfco-2024-08-1100-00-00.png') }}" alt=""
                                     srcset="" />
                                 <span>{{ __('website.Egypt') }}</span>
                             </label>
@@ -23,13 +23,13 @@
                                                                     
                                     
                                     <a rel="alternate" hreflang="ar"
-                                        href="https://souqelmlabes.com/ar">
+                                        href="{{ url('ar') }}">
                                         العربية
                                     </a>
                                                                     
                                     
                                     <a rel="alternate" hreflang="en"
-                                        href="https://souqelmlabes.com/en">
+                                        href="{{ url('en') }}">
                                         English
                                     </a>
                                                             </div>
@@ -41,7 +41,7 @@
                                 id="2alkoyt" />
                             <label
                                 for="2alkoyt">
-                                <img src="https://souqelmlabes.com/website/images/flags/qqahnzkp-2024-08-1100-00-00.png" alt=""
+                                <img src="{{ asset('website/images/flags/qqahnzkp-2024-08-1100-00-00.png') }}" alt=""
                                     srcset="" />
                                 <span>{{ __('website.Kuwait') }}</span>
                             </label>
@@ -52,13 +52,13 @@
                                                                     
                                     
                                     <a rel="alternate" hreflang="ar"
-                                        href="https://souqelmlabes.com/ar">
+                                        href="{{ url('ar') }}">
                                         العربية
                                     </a>
                                                                     
                                     
                                     <a rel="alternate" hreflang="en"
-                                        href="https://souqelmlabes.com/en">
+                                        href="{{ url('en') }}">
                                         English
                                     </a>
                                                             </div>
@@ -70,7 +70,7 @@
                                 id="3morytanya" />
                             <label
                                 for="3morytanya">
-                                <img src="https://souqelmlabes.com/website/images/flags/dlniwrjg-2024-08-1100-00-00.png" alt=""
+                                <img src="{{ asset('website/images/flags/dlniwrjg-2024-08-1100-00-00.png') }}" alt=""
                                     srcset="" />
                                 <span>{{ __('website.Mauritania') }}</span>
                             </label>
@@ -81,13 +81,13 @@
                                                                     
                                     
                                     <a rel="alternate" hreflang="ar"
-                                        href="https://souqelmlabes.com/ar">
+                                        href="{{ url('ar') }}">
                                         العربية
                                     </a>
                                                                     
                                     
                                     <a rel="alternate" hreflang="en"
-                                        href="https://souqelmlabes.com/en">
+                                        href="{{ url('en') }}">
                                         English
                                     </a>
                                                             </div>
@@ -99,7 +99,7 @@
                                 id="4alsaaody" />
                             <label
                                 for="4alsaaody">
-                                <img src="https://souqelmlabes.com/website/images/flags/9suzwsq4-2024-08-1100-00-00.png" alt=""
+                                <img src="{{ asset('website/images/flags/9suzwsq4-2024-08-1100-00-00.png') }}" alt=""
                                     srcset="" />
                                 <span>{{ __('website.Saudi Arabia') }}</span>
                             </label>
@@ -110,13 +110,13 @@
                                                                     
                                     
                                     <a rel="alternate" hreflang="ar"
-                                        href="https://souqelmlabes.com/ar">
+                                        href="{{ url('ar') }}">
                                         العربية
                                     </a>
                                                                     
                                     
                                     <a rel="alternate" hreflang="en"
-                                        href="https://souqelmlabes.com/en">
+                                        href="{{ url('en') }}">
                                         English
                                     </a>
                                                             </div>
@@ -128,7 +128,7 @@
                                 id="5ktr" />
                             <label
                                 for="5ktr">
-                                <img src="https://souqelmlabes.com/website/images/flags/djalctdh-2024-08-1100-00-00.png" alt=""
+                                <img src="{{ asset('website/images/flags/djalctdh-2024-08-1100-00-00.png') }}" alt=""
                                     srcset="" />
                                 <span>{{ __('website.Qatar') }}</span>
                             </label>
@@ -139,13 +139,13 @@
                                                                     
                                     
                                     <a rel="alternate" hreflang="ar"
-                                        href="https://souqelmlabes.com/ar">
+                                        href="{{ url('ar') }}">
                                         العربية
                                     </a>
                                                                     
                                     
                                     <a rel="alternate" hreflang="en"
-                                        href="https://souqelmlabes.com/en">
+                                        href="{{ url('en') }}">
                                         English
                                     </a>
                                                             </div>
@@ -165,7 +165,7 @@
     <i class="close fa-solid fa-xmark"></i>
     <div class="form">
         <input type="hidden" name="url" id="url"
-            value="https://souqelmlabes.com/ar/user/addAddress">
+            value="{{ url('ar/user/addAddress') }}">
         <div>
             <input type="text" class="input" name="address_title" required id="address_title2" />
             <label for="address_title">{{ __('website.Address *') }}</label>

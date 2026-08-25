@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
-        <title>Mushaf Home Updates</title>
+        <title>Qayem Wraf Updates</title>
         <item>
             <title>Version 1.0.1</title>
             <description>إضافة تحسينات في واجهة المستخدم وإصلاح أخطاء تسجيل الدخول.</description>
             <pubDate>Sun, 08 Feb 2026 12:00:00 +0000</pubDate>
             <enclosure 
-                url="https://mushafhome.com/app-release.apk" 
+                url="https://qayemwraf.com/app-release.apk" 
                 sparkle:version="1.0.1" 
                 sparkle:os="android" />
         </item>

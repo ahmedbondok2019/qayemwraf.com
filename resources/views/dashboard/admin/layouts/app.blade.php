@@ -75,8 +75,6 @@
 
             @include('dashboard.admin.layouts.header')
 
-            <div class="shadow-bottom"></div>
-
             @include('dashboard.admin.layouts.sidebar')
         </div>
         <!-- END: Main Menu-->
