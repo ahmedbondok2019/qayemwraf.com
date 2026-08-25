@@ -90,7 +90,7 @@ class ProductController extends Controller
                 })
                 ->addColumn('image', function ($row) {
                     if ($row->image) {
-                        return '<img src="' . asset($row->image) . '" class="rounded border" style="width: 44px; height: 44px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">';
+                        return '<img src="' . asset($row->image) . '" class="rounded border" style="width: 44px; height: 44px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" onerror="this.onerror=null; this.parentNode.innerHTML=\'<div class=\\&quot;rounded border d-flex align-items-center justify-content-center bg-light text-muted\\&quot; style=\\&quot;width: 44px; height: 44px;\\&quot;><i data-feather=\\&quot;image\\&quot; style=\\&quot;width: 18px; height: 18px;\\&quot;></i></div>\';">';
                     }
                     return '<div class="rounded border d-flex align-items-center justify-content-center bg-light text-muted" style="width: 44px; height: 44px;"><i data-feather="image" style="width: 18px; height: 18px;"></i></div>';
                 })
@@ -130,10 +130,10 @@ class ProductController extends Controller
                     $slug = $trans->slug ?? $row->slug ?? $row->id;
                     $url = frontend_site_url(url($locale . '/products/' . $slug));
 
-                    $btn = '<div class="d-flex align-items-center justify-content-center" style="gap: 6px; white-space: nowrap;">';
-                    $btn .= '<a href="' . $url . '" target="_blank" class="btn btn-sm btn-icon btn-outline-success" title="معاينة" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;"><i data-feather="external-link" style="width: 14px; height: 14px;"></i></a>';
-                    $btn .= '<a href="' . route('admin.products.edit', $row->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="تعديل" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;"><i data-feather="edit" style="width: 14px; height: 14px;"></i></a>';
-                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-icon btn-outline-danger" title="حذف" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;"><i data-feather="trash-2" style="width: 14px; height: 14px;"></i></a>';
+                    $btn = '<div class="d-flex align-items-center justify-content-center" style="gap: 8px; white-space: nowrap; min-width: 130px;">';
+                    $btn .= '<a href="' . $url . '" target="_blank" class="btn btn-sm btn-light-success text-success p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="معاينة" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(40,199,111,0.25); background-color: #e8fadf;"><i data-feather="external-link" style="width: 18px; height: 18px;"></i></a>';
+                    $btn .= '<a href="' . route('admin.products.edit', $row->id) . '" class="btn btn-sm btn-light-primary text-primary p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="تعديل" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(115,103,240,0.25); background-color: #f0f0ff;"><i data-feather="edit" style="width: 18px; height: 18px;"></i></a>';
+                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-light-danger text-danger p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="حذف" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(234,84,85,0.25); background-color: #fceaea;"><i data-feather="trash-2" style="width: 18px; height: 18px;"></i></a>';
                     $btn .= '</div>';
                     return $btn;
                 })

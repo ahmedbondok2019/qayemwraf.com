@@ -46,16 +46,16 @@
                                     <table class="table table-hover align-middle mb-0" id="products-table" style="width: 100%;">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th style="width: 4%;">#</th>
-                                                <th style="width: 6%;">{{ trans_db('dashboard.Image') }}</th>
-                                                <th style="width: 25%;">{{ trans_db('dashboard.Name') }}</th>
-                                                <th style="width: 12%;">{{ trans_db('dashboard.SKU') }}</th>
-                                                <th style="width: 18%;">{{ trans_db('dashboard.Categories') }}</th>
-                                                <th style="width: 10%;">{{ trans_db('dashboard.Price') }}</th>
-                                                <th style="width: 7%;">{{ trans_db('dashboard.Quantity') }}</th>
-                                                <th style="width: 6%;">{{ trans_db('dashboard.Front-end') }}</th>
+                                                <th style="width: 3%;">#</th>
+                                                <th style="width: 5%;">{{ trans_db('dashboard.Image') }}</th>
+                                                <th style="width: 23%;">{{ trans_db('dashboard.Name') }}</th>
+                                                <th style="width: 10%;">{{ trans_db('dashboard.SKU') }}</th>
+                                                <th style="width: 15%;">{{ trans_db('dashboard.Categories') }}</th>
+                                                <th style="width: 8%;">{{ trans_db('dashboard.Price') }}</th>
+                                                <th style="width: 5%;">{{ trans_db('dashboard.Quantity') }}</th>
+                                                <th style="width: 8%;"><span style="font-size: 11px; white-space: nowrap;">عرض بالرئيسية</span></th>
                                                 <th style="width: 6%;">{{ trans_db('dashboard.Status') }}</th>
-                                                <th style="width: 6%;">{{ trans_db('dashboard.Actions') }}</th>
+                                                <th style="width: 17%; text-align: center;">{{ trans_db('dashboard.Actions') }}</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -99,16 +99,16 @@
                 },
                 ajax: "{{ route('admin.products.index') }}",
                 columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '4%', className: 'text-center align-middle' },
-                    { data: 'image', name: 'image', orderable: false, searchable: false, width: '6%', className: 'text-center align-middle' },
-                    { data: 'name', name: 'name', width: '25%', className: 'align-middle' },
-                    { data: 'sku', name: 'sku', width: '12%', className: 'text-center align-middle' },
-                    { data: 'categories', name: 'categories', orderable: false, searchable: true, width: '18%', className: 'align-middle' },
-                    { data: 'price', name: 'price', width: '10%', className: 'text-center align-middle' },
-                    { data: 'quantity', name: 'quantity', width: '7%', className: 'text-center align-middle font-weight-bold' },
-                    { data: 'show_on_home', name: 'show_on_home', width: '6%', className: 'text-center align-middle' },
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '3%', className: 'text-center align-middle' },
+                    { data: 'image', name: 'image', orderable: false, searchable: false, width: '5%', className: 'text-center align-middle' },
+                    { data: 'name', name: 'name', width: '23%', className: 'align-middle' },
+                    { data: 'sku', name: 'sku', width: '10%', className: 'text-center align-middle' },
+                    { data: 'categories', name: 'categories', orderable: false, searchable: true, width: '15%', className: 'align-middle' },
+                    { data: 'price', name: 'price', width: '8%', className: 'text-center align-middle' },
+                    { data: 'quantity', name: 'quantity', width: '5%', className: 'text-center align-middle font-weight-bold' },
+                    { data: 'show_on_home', name: 'show_on_home', width: '8%', className: 'text-center align-middle' },
                     { data: 'status', name: 'status', width: '6%', className: 'text-center align-middle' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false, width: '6%', className: 'text-center align-middle' }
+                    { data: 'action', name: 'action', orderable: false, searchable: false, width: '17%', className: 'text-center align-middle' }
                 ],
                 drawCallback: function() {
                     if (feather) {
