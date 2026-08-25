@@ -84,6 +84,7 @@ class ProductController extends Controller
                         $q->where('category_translations.title', 'like', "%{$keyword}%");
                     });
                 })
+                ->addIndexColumn()
                 ->addColumn('name', function ($row) {
                     return '<span style="font-weight: 600; color: #1e293b; line-height: 1.4; display: block;">' . e($row->name) . '</span>';
                 })
