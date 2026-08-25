@@ -84,19 +84,18 @@ class ProductController extends Controller
                         $q->where('category_translations.title', 'like', "%{$keyword}%");
                     });
                 })
-                ->addIndexColumn()
                 ->addColumn('name', function ($row) {
-                    return $row->name;
+                    return '<span style="font-weight: 600; color: #1e293b; line-height: 1.4; display: block;">' . e($row->name) . '</span>';
                 })
                 ->addColumn('image', function ($row) {
                     if ($row->image) {
-                        return '<img src="' . asset($row->image) . '" width="50px">';
+                        return '<img src="' . asset($row->image) . '" class="rounded border" style="width: 44px; height: 44px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">';
                     }
-                    return '';
+                    return '<div class="rounded border d-flex align-items-center justify-content-center bg-light text-muted" style="width: 44px; height: 44px;"><i data-feather="image" style="width: 18px; height: 18px;"></i></div>';
                 })
                 ->addColumn('categories', function ($row) {
                     return $row->categories->map(function($cat) {
-                        return '<span class="badge badge-info">' . $cat->name . '</span>';
+                        return '<span class="badge" style="background-color: #e0f2fe; color: #0369a1; font-weight: 600; font-size: 11px; margin: 2px 1px; border: 1px solid #bae6fd; padding: 4px 8px; border-radius: 6px;">' . e($cat->name) . '</span>';
                     })->implode(' ');
                 })
 
@@ -112,31 +111,32 @@ class ProductController extends Controller
                 })
                 ->editColumn('price', function ($row) {
                     if ($row->has_special_price) {
-                        return '<div class="d-flex flex-column">' .
-                               '<span class="text-muted" style="text-decoration: line-through; font-size: 0.85rem;">' . number_format($row->price, 2) . '</span>' .
-                               '<span class="text-success font-weight-bold">' . number_format($row->special_price, 2) . '</span>' .
+                        return '<div class="d-flex flex-column text-center">' .
+                               '<span class="text-muted" style="text-decoration: line-through; font-size: 0.8rem;">' . number_format($row->price, 2) . '</span>' .
+                               '<span class="text-success font-weight-bold" style="font-size: 0.9rem;">' . number_format($row->special_price, 2) . '</span>' .
                                '</div>';
                     }
-                    return number_format($row->price, 2);
+                    return '<div class="text-center font-weight-bold" style="font-size: 0.9rem; color: #334155;">' . number_format($row->price, 2) . '</div>';
                 })
                 ->addColumn('status', function ($row) {
                      return $row->status 
-                        ? '<span class="badge badge-success">' . trans_db('dashboard.active') . '</span>' 
-                        : '<span class="badge badge-danger">' . trans_db('dashboard.inactive') . '</span>';
+                        ? '<span class="badge" style="background-color: #dcfce7; color: #15803d; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">' . trans_db('dashboard.active') . '</span>' 
+                        : '<span class="badge" style="background-color: #fee2e2; color: #b91c1c; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">' . trans_db('dashboard.inactive') . '</span>';
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<div class="btn-group">';
                     $locale = app()->getLocale();
                     $trans = $row->translation ?? $row->translations->firstWhere('locale', $locale) ?? $row->translations->first();
                     $slug = $trans->slug ?? $row->slug ?? $row->id;
                     $url = frontend_site_url(url($locale . '/products/' . $slug));
-                    $btn .= '<a href="' . $url . '" target="_blank" class="btn btn-sm btn-success"><i data-feather="external-link"></i></a>';
-                    $btn .= '<a href="' . route('admin.products.edit', $row->id) . '" class="btn btn-sm btn-primary"><i data-feather="edit"></i></a>';
-                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-danger"><i data-feather="trash"></i></a>';
+
+                    $btn = '<div class="d-flex align-items-center justify-content-center" style="gap: 6px; white-space: nowrap;">';
+                    $btn .= '<a href="' . $url . '" target="_blank" class="btn btn-sm btn-icon btn-outline-success" title="معاينة" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;"><i data-feather="external-link" style="width: 14px; height: 14px;"></i></a>';
+                    $btn .= '<a href="' . route('admin.products.edit', $row->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="تعديل" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;"><i data-feather="edit" style="width: 14px; height: 14px;"></i></a>';
+                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-icon btn-outline-danger" title="حذف" style="width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;"><i data-feather="trash-2" style="width: 14px; height: 14px;"></i></a>';
                     $btn .= '</div>';
                     return $btn;
                 })
-                ->rawColumns(['image', 'categories', 'show_on_home', 'status', 'action', 'price'])
+                ->rawColumns(['name', 'image', 'categories', 'show_on_home', 'status', 'action', 'price'])
                 ->make(true);
         }
         return view('dashboard.admin.products.index');

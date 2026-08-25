@@ -41,23 +41,25 @@
                 <section id="basic-datatable">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card">
-                                <table class="datatables-basic table" id="products-table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>{{ trans_db('dashboard.Image') }}</th>
-                                            <th>{{ trans_db('dashboard.Name') }}</th>
-                                            <th>{{ trans_db('dashboard.SKU') }}</th>
-                                            <th>{{ trans_db('dashboard.Categories') }}</th>
-                                            <th>{{ trans_db('dashboard.Price') }}</th>
-                                            <th>{{ trans_db('dashboard.Quantity') }}</th>
-                                            <th>{{ trans_db('dashboard.Front-end') }}</th>
-                                            <th>{{ trans_db('dashboard.Status') }}</th>
-                                            <th>{{ trans_db('dashboard.Actions') }}</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                            <div class="card p-3 shadow-sm border-0" style="border-radius: 12px;">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0" id="products-table" style="width: 100%;">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th style="width: 4%;">#</th>
+                                                <th style="width: 6%;">{{ trans_db('dashboard.Image') }}</th>
+                                                <th style="width: 25%;">{{ trans_db('dashboard.Name') }}</th>
+                                                <th style="width: 12%;">{{ trans_db('dashboard.SKU') }}</th>
+                                                <th style="width: 18%;">{{ trans_db('dashboard.Categories') }}</th>
+                                                <th style="width: 10%;">{{ trans_db('dashboard.Price') }}</th>
+                                                <th style="width: 7%;">{{ trans_db('dashboard.Quantity') }}</th>
+                                                <th style="width: 6%;">{{ trans_db('dashboard.Front-end') }}</th>
+                                                <th style="width: 6%;">{{ trans_db('dashboard.Status') }}</th>
+                                                <th style="width: 6%;">{{ trans_db('dashboard.Actions') }}</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,55 +80,35 @@
             var table = $('#products-table').DataTable({
                 processing: true,
                 serverSide: true,
+                autoWidth: false,
+                language: {
+                    processing: '<div class="d-flex justify-content-center align-items-center p-2"><div class="spinner-border text-primary" role="status"><span class="sr-only">جاري التحميل...</span></div></div>',
+                    search: "بحث:",
+                    searchPlaceholder: "اسم، رمز، أو قسم...",
+                    lengthMenu: "عرض _MENU_ عنصر",
+                    info: "عرض _START_ إلى _END_ من _TOTAL_ منتج",
+                    infoEmpty: "لا توجد نتائج",
+                    infoFiltered: "(من إجمالي _MAX_ منتج)",
+                    zeroRecords: "لم يتم العثور على منتجات مطابقة",
+                    paginate: {
+                        first: "الأول",
+                        last: "الأخير",
+                        next: "التالي",
+                        previous: "السابق"
+                    }
+                },
                 ajax: "{{ route('admin.products.index') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'image',
-                        name: 'image',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'sku',
-                        name: 'sku'
-                    },
-                    {
-                        data: 'categories',
-                        name: 'categories',
-                        orderable: false,
-                        searchable: true
-                    },
-                    {
-                        data: 'price',
-                        name: 'price'
-                    },
-                    {
-                        data: 'quantity',
-                        name: 'quantity'
-                    },
-                    {
-                        data: 'show_on_home',
-                        name: 'show_on_home'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '4%', className: 'text-center align-middle' },
+                    { data: 'image', name: 'image', orderable: false, searchable: false, width: '6%', className: 'text-center align-middle' },
+                    { data: 'name', name: 'name', width: '25%', className: 'align-middle' },
+                    { data: 'sku', name: 'sku', width: '12%', className: 'text-center align-middle' },
+                    { data: 'categories', name: 'categories', orderable: false, searchable: true, width: '18%', className: 'align-middle' },
+                    { data: 'price', name: 'price', width: '10%', className: 'text-center align-middle' },
+                    { data: 'quantity', name: 'quantity', width: '7%', className: 'text-center align-middle font-weight-bold' },
+                    { data: 'show_on_home', name: 'show_on_home', width: '6%', className: 'text-center align-middle' },
+                    { data: 'status', name: 'status', width: '6%', className: 'text-center align-middle' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false, width: '6%', className: 'text-center align-middle' }
                 ],
                 drawCallback: function() {
                     if (feather) {
