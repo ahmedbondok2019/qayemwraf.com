@@ -15,33 +15,13 @@ class ProductBrandSeeder extends Seeder
     {
         $brands = [
             [
-                'ar' => 'دار السلام',
-                'en' => 'Dar Al-Salam',
+                'ar' => 'تصنيع محلي',
+                'en' => 'Local Made',
                 'image' => '/_fixed/brands.png',
             ],
             [
-                'ar' => 'دار ابن حزم',
-                'en' => 'Dar Ibn Hazm',
-                'image' => '/_fixed/brands.png',
-            ],
-            [
-                'ar' => 'مكتبة جرير',
-                'en' => 'Jarir Bookstore',
-                'image' => '/_fixed/brands.png',
-            ],
-            [
-                'ar' => 'دار المعرفة',
-                'en' => 'Dar Al-Maarefa',
-                'image' => '/_fixed/brands.png',
-            ],
-            [
-                'ar' => 'دار الشروق',
-                'en' => 'Dar Al-Shorouk',
-                'image' => '/_fixed/brands.png',
-            ],
-            [
-                'ar' => 'عصير الكتب',
-                'en' => 'Aseer Al-Kotob',
+                'ar' => 'قايم ورف',
+                'en' => 'Qayem W Raf',
                 'image' => '/_fixed/brands.png',
             ],
         ];

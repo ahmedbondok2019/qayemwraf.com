@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
-use Faker\Factory as Faker;
 
 class OrderSeeder extends Seeder
 {
@@ -17,54 +16,50 @@ class OrderSeeder extends Seeder
      */
     public function run()
     {
-        // Check if Faker exists (it's a dev dependency)
-        if (!class_exists(\Faker\Factory::class)) {
-            $this->command->warn('Faker library not found. Skipping OrderSeeder.');
-            return;
-        }
-
-        $faker = \Faker\Factory::create();
         $products = Product::all();
 
         if ($products->isEmpty()) {
             return;
         }
-// 
-        for ($i = 0; $i < 50; $i++) {
-            $total = 0;
-            
-            // Create Order
+
+        $sampleCustomers = [
+            ['name' => 'أحمد محمود', 'email' => 'ahmed.m@example.com', 'phone' => '01012345678', 'city' => 'القاهرة', 'address' => 'مدينة نصر - المنطقة الصناعية'],
+            ['name' => 'محمد إبراهيم', 'email' => 'mohamed.i@example.com', 'phone' => '01123456789', 'city' => 'الجيزة', 'address' => 'منطقة 6 أكتوبر الصناعية - مخزن رقم 12'],
+            ['name' => 'خالد عبد الله', 'email' => 'khaled.a@example.com', 'phone' => '01234567890', 'city' => 'العاشر من رمضان', 'address' => 'العاشر من رمضان - المنطقة B4'],
+            ['name' => 'سامح توفيق', 'email' => 'sameh.t@example.com', 'phone' => '01545678901', 'city' => 'الإسكندرية', 'address' => 'برج العرب الجديدة - مجمع المخازن'],
+        ];
+
+        foreach ($sampleCustomers as $cust) {
             $order = Order::create([
-                'user_id' => null, // Guest or random user if User model exists
-                'total' => 0, // Will update later
+                'user_id' => null,
+                'total' => 0,
                 'subtotal' => 0,
                 'discount' => 0,
                 'tax' => 0,
-                'status' => $faker->randomElement(['pending', 'processing', 'completed', 'cancelled']),
-                'payment_method' => $faker->randomElement(['cod', 'credit_card', 'paypal']),
-                'payment_status' => $faker->randomElement(['pending', 'paid']),
+                'status' => 'completed',
+                'payment_method' => 'cod',
+                'payment_status' => 'paid',
                 'currency' => 'EGP',
                 'exchange_rate' => 1,
-                'first_name' => $faker->firstName,
-                'last_name' => $faker->lastName,
-                'email' => $faker->email,
-                'phone' => $faker->phoneNumber,
-                'address' => $faker->address,
-                'note' => $faker->sentence,
+                'first_name' => $cust['name'],
+                'last_name' => '',
+                'email' => $cust['email'],
+                'phone' => $cust['phone'],
+                'address' => $cust['address'],
+                'note' => 'طلب تجهيز مخزن شامل الرفوف والقوائم',
             ]);
 
-            // Add Order Details
-            $randomProducts = $products->random(rand(1, 5));
+            $randomProducts = $products->random(rand(1, 3));
             $subtotal = 0;
 
-            foreach ($randomProducts as $product) {
-                $qty = rand(1, 3);
-                $price = $product->price;
+            foreach ($randomProducts as $prod) {
+                $qty = rand(2, 5);
+                $price = $prod->price;
                 $lineSubtotal = $qty * $price;
 
                 OrderDetail::create([
                     'order_id' => $order->id,
-                    'product_id' => $product->id,
+                    'product_id' => $prod->id,
                     'quantity' => $qty,
                     'price' => $price,
                     'subtotal' => $lineSubtotal,
@@ -74,10 +69,9 @@ class OrderSeeder extends Seeder
                 $subtotal += $lineSubtotal;
             }
 
-            // Update Order Totals
             $order->update([
                 'subtotal' => $subtotal,
-                'total' => $subtotal, // Simple logic, ignoring tax/discount for now
+                'total' => $subtotal,
             ]);
         }
     }

@@ -16,82 +16,92 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        // Clear existing categories to avoid duplicates if run multiple times (optional, but good for testing)
-        // Category::truncate(); // Be careful with truncate if you have foreign key constraints, maybe just leave it adding new ones.
-
         $categories = [
             [
-                'en' => ['title' => 'Islamic Books', 'description' => 'All kinds of Islamic books including Quran, Hadith, and Fiqh.'],
-                'ar' => ['title' => 'كتب إسلامية', 'description' => 'جميع أنواع الكتب الإسلامية بما في ذلك القرآن والحديث والفقه.'],
+                'en' => [
+                    'title' => 'Standard & Light Storage Shelving',
+                    'description' => 'Standard metal shelving units with 5 shelves, 92x42 cm, height 2m, including bolts, nuts, and 8 corner gusset plates. Various weight capacities from 30kg to 200kg per shelf.',
+                ],
+                'ar' => [
+                    'title' => 'وحدات أرفف تخزين خفيفة ومتوسطة',
+                    'description' => 'وحدات أرفف معدنية قياسية 5 أرفف مقاس 92×42 سم وارتفاع 2 متر، شاملة المسامير والصواميل وعدد 8 مثلثات تثبيت. بحمولات متعددة تبدأ من 30 كجم وحتى 200 كجم للرف الواحد.',
+                ],
                 'children' => [
                     [
-                        'en' => ['title' => 'The Holy Quran', 'description' => 'Different prints and translations of the Holy Quran.'],
-                        'ar' => ['title' => 'القرآن الكريم', 'description' => 'طبعات وترجمات مختلفة للقرآن الكريم.'],
+                        'en' => ['title' => 'Standard Shelving Units (5 Shelves)', 'description' => 'Ready stock 5-shelf metal units in various capacities and colors.'],
+                        'ar' => ['title' => 'وحدات أرفف قياسية (5 أرفف)', 'description' => 'وحدات أرفف بضاعة حاضرة 5 أرفف بحمولات وألوان متعددة.'],
                     ],
                     [
-                        'en' => ['title' => 'Hadith', 'description' => 'Collections of Prophetic Traditions.'],
-                        'ar' => ['title' => 'الحديث الشريف', 'description' => 'مجموعات الأحاديث النبوية الشريفة.'],
-                    ],
-                    [
-                        'en' => ['title' => 'Fiqh & Sharia', 'description' => 'Islamic Jurisprudence and Law books.'],
-                        'ar' => ['title' => 'الفقه والشريعة', 'description' => 'كتب الفقه الإسلامي والشريعة.'],
-                    ],
-                    [
-                        'en' => ['title' => 'Islamic History', 'description' => 'Books covering the history of Islam.'],
-                        'ar' => ['title' => 'التاريخ الإسلامي', 'description' => 'كتب تغطي تاريخ الإسلام.'],
+                        'en' => ['title' => 'Custom & Individual Shelves', 'description' => 'Individual shelf panels in various depths (30cm, 60cm) and heavy duty specs.'],
+                        'ar' => ['title' => 'أرفف ومقاسات خاصة', 'description' => 'بلاطات أرفف مفردة بأعماق مختلفة (30 سم، 60 سم) ومقاسات محملة.'],
                     ],
                 ]
             ],
             [
-                'en' => ['title' => 'Literature & Fiction', 'description' => 'Novels, stories, and literary works.'],
-                'ar' => ['title' => 'الأدب والروايات', 'description' => 'روايات، قصص، وأعمال أدبية.'],
-                'children' => [
-                    [
-                        'en' => ['title' => 'Arabic Novels', 'description' => 'Contemporary and classic Arabic novels.'],
-                        'ar' => ['title' => 'روايات عربية', 'description' => 'روايات عربية معاصرة وكلاسيكية.'],
-                    ],
-                    [
-                        'en' => ['title' => 'International Literature', 'description' => 'Translated international literary works.'],
-                        'ar' => ['title' => 'أدب عالمي', 'description' => 'أعمال أدبية عالمية مترجمة.'],
-                    ],
-                    [
-                        'en' => ['title' => 'Poetry', 'description' => 'Collections of poems from various eras.'],
-                        'ar' => ['title' => 'الشعر', 'description' => 'دواوين شعرية من عصور مختلفة.'],
-                    ],
-                ]
-            ],
-            [
-                'en' => ['title' => 'Children\'s Books', 'description' => 'Books suitable for children of all ages.'],
-                'ar' => ['title' => 'كتب الأطفال', 'description' => 'كتب مناسبة للأطفال من جميع الأعمار.'],
-                'children' => [
-                    [
-                        'en' => ['title' => 'Educational Stories', 'description' => 'Stories that teach moral values.'],
-                        'ar' => ['title' => 'قصص تعليمية', 'description' => 'قصص تعلم القيم الأخلاقية.'],
-                    ],
-                    [
-                        'en' => ['title' => 'Activity Books', 'description' => 'Coloring and puzzle books.'],
-                        'ar' => ['title' => 'كتب أنشطة', 'description' => 'كتب تلوين وألغاز.'],
-                    ],
-                ]
-            ],
-            [
-                'en' => ['title' => 'Self Development', 'description' => 'Books for personal growth and productivity.'],
-                'ar' => ['title' => 'تطوير الذات', 'description' => 'كتب للنمو الشخصي والإنتاجية.'],
+                'en' => [
+                    'title' => 'Medium Duty Racking Units',
+                    'description' => 'Medium duty shelving and storage racking units (Light Medium) - 250kg capacity per level. Available in 3 and 4 levels with heights up to 2.5m.',
+                ],
+                'ar' => [
+                    'title' => 'وحدات تخزين ميدي ديوتي (لايت ميدي)',
+                    'description' => 'وحدات تخزين ورفوف ميدي ديوتي حمولة 250 كجم للمستوى الواحد. متوفرة بـ 3 و 4 مستويات وبارتفاعات حتى 2.5 متر، متصلة أو منفصلة وبضاعة حاضرة.',
+                ],
                 'children' => []
             ],
             [
-                'en' => ['title' => 'Science & Technology', 'description' => 'Books regarding modern science and tech.'],
-                'ar' => ['title' => 'العلوم والتكنولوجيا', 'description' => 'كتب تتعلق بالعلوم الحديثة والتكنولوجيا.'],
+                'en' => [
+                    'title' => 'Heavy Duty Racking Units',
+                    'description' => 'Heavy duty warehouse storage racking units - 500kg load capacity per level. Heavy 1.5mm uprights, 8-fold reinforced beams, and 1mm / 0.8mm decking.',
+                ],
+                'ar' => [
+                    'title' => 'وحدات تخزين هيفي ديوتي (مخازن ثقيلة)',
+                    'description' => 'وحدات أرفف ومخازن هيفي ديوتي حمولة 500 كجم للمستوى. قوايم 1.5 مم وعوارض 1.25 مم معصبة بـ 8 تنايات وبلاطات محملة بدعامات، وحدات متصلة أو منفصلة.',
+                ],
+                'children' => []
+            ],
+            [
+                'en' => [
+                    'title' => 'Metal Cabinets, Lockers & Filing Units',
+                    'description' => 'Heavy-duty electrostatic powder coated metal document cabinets, multi-door employee lockers, and wooden/metal filing drawer cabinets.',
+                ],
+                'ar' => [
+                    'title' => 'دواليب ولوكرات معدنية وشانونات',
+                    'description' => 'دواليب مستندات معدنية مدهونة إلكتروستاتيك، ولوكرات عمال وموظفين متعددة الضلف بكوالين، وشانونات حفظ ملفات خشب ومعدن.',
+                ],
+                'children' => [
+                    [
+                        'en' => ['title' => 'Document Cabinets', 'description' => '2-door metal document cabinets with adjustable shelves.'],
+                        'ar' => ['title' => 'دواليب مستندات', 'description' => 'دواليب حفظ مستندات وأرشيف 2 ضلفة بأرفف متحركة.'],
+                    ],
+                    [
+                        'en' => ['title' => 'Metal Lockers', 'description' => 'Heavy duty and commercial multi-door lockers with keys and accessories.'],
+                        'ar' => ['title' => 'لوكرات معدنية', 'description' => 'لوكرات حفظ أمانات وملابس 2 و 4 و 6 ضلفة بكوالين وإكسسوارات.'],
+                    ],
+                    [
+                        'en' => ['title' => 'Filing Cabinets (Shanons)', 'description' => '4-drawer metal and wood filing cabinets.'],
+                        'ar' => ['title' => 'شانونات حفظ ملفات', 'description' => 'شانونات معدنية وخشبية 4 أدراج للأرشيف والملفات.'],
+                    ],
+                ]
+            ],
+            [
+                'en' => [
+                    'title' => 'Shelving Components & Accessories',
+                    'description' => 'Individual slotted angle upright posts, metal shelves with brackets, wire mesh shelves, and mounting hardware.',
+                ],
+                'ar' => [
+                    'title' => 'أرفف وقوائم واكسسوارات منفصلة',
+                    'description' => 'قوائم حديد مثقبة مفردة، أرفف بالكوابيل، أرفف شبك سلك، ودعامات ومسامير تثبيت للأرفف.',
+                ],
                 'children' => []
             ],
         ];
 
-        foreach ($categories as $catData) {
+        foreach ($categories as $catIndex => $catData) {
             $parent = Category::create([
-                'parent_id' => null, // Root category
-                'image' => '/_fixed/categories.jpg',     // You can add dummy image paths if you have them
+                'parent_id' => null,
+                'image' => '/_fixed/categories.jpg',
                 'is_active' => true,
-                'sort_order' => 0,
+                'sort_order' => $catIndex,
             ]);
 
             foreach (['en', 'ar'] as $locale) {
@@ -100,7 +110,7 @@ class CategorySeeder extends Seeder
                     'locale' => $locale,
                     'title' => $catData[$locale]['title'],
                     'description' => $catData[$locale]['description'],
-                    'slug' => Str::slug($catData['en']['title'] . '-' . $locale), // Unique slug
+                    'slug' => Str::slug($catData['en']['title'] . '-' . $locale . '-' . $parent->id),
                     'meta_title' => $catData[$locale]['title'],
                     'meta_description' => $catData[$locale]['description'],
                     'meta_keywords' => str_replace(' ', ',', $catData[$locale]['title']),
@@ -108,12 +118,12 @@ class CategorySeeder extends Seeder
             }
 
             if (!empty($catData['children'])) {
-                foreach ($catData['children'] as $childData) {
+                foreach ($catData['children'] as $childIndex => $childData) {
                     $child = Category::create([
                         'parent_id' => $parent->id,
                         'image' => '/_fixed/subcategories.jpg',
                         'is_active' => true,
-                        'sort_order' => 0,
+                        'sort_order' => $childIndex,
                     ]);
 
                     foreach (['en', 'ar'] as $locale) {
@@ -122,7 +132,7 @@ class CategorySeeder extends Seeder
                             'locale' => $locale,
                             'title' => $childData[$locale]['title'],
                             'description' => $childData[$locale]['description'],
-                            'slug' => Str::slug($childData['en']['title'] . '-' . $locale),
+                            'slug' => Str::slug($childData['en']['title'] . '-' . $locale . '-' . $child->id),
                             'meta_title' => $childData[$locale]['title'],
                             'meta_description' => $childData[$locale]['description'],
                             'meta_keywords' => str_replace(' ', ',', $childData[$locale]['title']),

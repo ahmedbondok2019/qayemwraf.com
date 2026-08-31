@@ -16,58 +16,40 @@ class OfferSeeder extends Seeder
     {
         $offers = [
             [
-                'ar' => ['name' => 'القرآن الكريم'],
-                'en' => ['name' => 'The Holy Quran'],
+                'ar' => ['name' => 'وحدات أرفف تخزين خفيفة ومتوسطة'],
+                'en' => ['name' => 'Standard & Light Shelving Units'],
                 'image' => '/_fixed/offers.jpg',
             ],
             [
-                'ar' => ['name' => 'كتب إسلامية'],
-                'en' => ['name' => 'Islamic Books'],
+                'ar' => ['name' => 'وحدات تخزين ميدي ديوتي (لايت ميدي)'],
+                'en' => ['name' => 'Medium Duty Racking Units'],
                 'image' => '/_fixed/offers.jpg',
             ],
             [
-                'ar' => ['name' => 'الأدب والروايات'],
-                'en' => ['name' => 'Literature & Novels'],
+                'ar' => ['name' => 'وحدات تخزين هيفي ديوتي للمخازن'],
+                'en' => ['name' => 'Heavy Duty Warehouse Racking'],
                 'image' => '/_fixed/offers.jpg',
             ],
             [
-                'ar' => ['name' => 'تطوير الذات'],
-                'en' => ['name' => 'Self Development'],
-                'image' => '/_fixed/offers.jpg',
-            ],
-            [
-                'ar' => ['name' => 'التاريخ الإسلامي'],
-                'en' => ['name' => 'Islamic History'],
+                'ar' => ['name' => 'دواليب ولوكرات معدنية وشانونات'],
+                'en' => ['name' => 'Metal Lockers & Cabinets'],
                 'image' => '/_fixed/offers.jpg',
             ],
         ];
 
         foreach ($offers as $index => $data) {
-            $enSlug = Str::slug($data['en']['name'] . '-en');
-            $existingTranslation = OfferTranslation::where('slug', $enSlug)->first();
-            $offer = $existingTranslation ? Offer::find($existingTranslation->offer_id) : null;
-
-            if (!$offer) {
-                $offer = Offer::create([
-                    'image' => $data['image'],
-                    'is_active' => true,
-                    'sort_order' => $index,
-                ]);
-            } else {
-                $offer->update([
-                    'image' => $data['image'],
-                    'is_active' => true,
-                    'sort_order' => $index,
-                ]);
-            }
+            $offer = Offer::create([
+                'image' => $data['image'],
+                'is_active' => true,
+                'sort_order' => $index,
+            ]);
 
             foreach (['ar', 'en'] as $locale) {
-                OfferTranslation::updateOrCreate([
+                OfferTranslation::create([
                     'offer_id' => $offer->id,
                     'locale' => $locale,
-                ], [
                     'name' => $data[$locale]['name'],
-                    'slug' => Str::slug($data['en']['name'] . '-' . $locale),
+                    'slug' => Str::slug($data['en']['name'] . '-' . $locale . '-' . $offer->id),
                 ]);
             }
         }
