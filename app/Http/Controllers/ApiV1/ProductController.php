@@ -41,11 +41,52 @@ class ProductController extends Controller
             }
         ]);
 
-        // الفلترة حسب القسم
-        if ($request->filled('category_id')) {
-            $query->whereHas('categories', function ($q) use ($request) {
-                $q->where('categories.id', $request->category_id);
-            });
+        // الفلترة حسب القسم (يدعم المعرف الرقمي، الرابط Slug، الأقسام الفرعية، والقوائم المتعددة)
+        $categoryInput = $request->get('category_id') 
+            ?? $request->get('category_slug') 
+            ?? $request->get('category') 
+            ?? $request->get('categories') 
+            ?? $request->get('sub_category_id') 
+            ?? $request->get('subcategory_id') 
+            ?? $request->get('parent');
+
+        if (!empty($categoryInput)) {
+            $catIdentifiers = is_array($categoryInput) ? $categoryInput : explode(',', (string)$categoryInput);
+            
+            $targetCategoryIds = [];
+            foreach ($catIdentifiers as $ident) {
+                $ident = trim((string)$ident);
+                if ($ident === '') continue;
+                
+                $decoded = urldecode($ident);
+                $foundCategories = Category::where(function($q) use ($ident, $decoded) {
+                    if (is_numeric($ident)) {
+                        $q->where('id', $ident);
+                    }
+                    $q->orWhereHas('translations', function($qt) use ($ident, $decoded) {
+                        $qt->where('slug', $ident)->orWhere('slug', $decoded);
+                    });
+                })->with('children')->get();
+
+                foreach ($foundCategories as $foundCat) {
+                    $targetCategoryIds[] = $foundCat->id;
+                    foreach ($foundCat->children as $child) {
+                        $targetCategoryIds[] = $child->id;
+                    }
+                }
+
+                if (is_numeric($ident)) {
+                    $targetCategoryIds[] = (int)$ident;
+                }
+            }
+
+            $targetCategoryIds = array_unique($targetCategoryIds);
+
+            if (!empty($targetCategoryIds)) {
+                $query->whereHas('categories', function ($q) use ($targetCategoryIds) {
+                    $q->whereIn('categories.id', $targetCategoryIds);
+                });
+            }
         }
 
         // البحث باسم المنتج أو العلامة التجارية

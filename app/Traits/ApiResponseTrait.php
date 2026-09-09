@@ -16,25 +16,15 @@ trait ApiResponseTrait
      */
     public function successResponse($data = null, string $message = null, int $code = 200): JsonResponse
     {
-        $response = [
+        return response()->json([
             'status'  => true,
             'success' => true,
             'code'    => (string)$code,
             'message' => $message ? __($message) : __('Operation successful'),
             'error'   => null,
             'errors'  => null,
-        ];
-
-        if (is_array($data) && isset($data['items']) && (isset($data['current_page']) || isset($data['meta']))) {
-            $items = $data['items'];
-            unset($data['items'], $data['data'], $data['products']);
-            $response['data'] = $items;
-            $response = array_merge($response, $data);
-        } else {
-            $response['data'] = $data;
-        }
-
-        return response()->json($response, $code);
+            'data'    => $data,
+        ], $code);
     }
 
     /**
