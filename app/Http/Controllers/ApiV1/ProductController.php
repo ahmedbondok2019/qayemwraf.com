@@ -193,6 +193,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
+        $rawId = $id;
+        $decodedId = urldecode($id);
+
         $product = Product::active()
             ->with([
                 'translation',
@@ -212,19 +215,23 @@ class ProductController extends Controller
                       ->with('translation');
                 }
             ])
-            ->where(function ($q) use ($id) {
-                if (is_numeric($id)) {
-                    $q->where('id', $id)
-                      ->orWhereHas('translations', function ($qt) use ($id) {
-                          $qt->where('slug', $id);
+            ->where(function ($q) use ($rawId, $decodedId) {
+                if (is_numeric($rawId)) {
+                    $q->where('id', $rawId)
+                      ->orWhereHas('translations', function ($qt) use ($rawId, $decodedId) {
+                          $qt->where('slug', $rawId)->orWhere('slug', $decodedId);
                       });
                 } else {
-                    $q->whereHas('translations', function ($qt) use ($id) {
-                        $qt->where('slug', $id);
+                    $q->whereHas('translations', function ($qt) use ($rawId, $decodedId) {
+                        $qt->where('slug', $rawId)->orWhere('slug', $decodedId);
                     });
                 }
             })
-            ->firstOrFail();
+            ->first();
+
+        if (!$product) {
+            return $this->errorResponse('المنتج غير موجود', 404);
+        }
 
         return $this->successResponse(new ProductResource($product));
     }

@@ -17,8 +17,12 @@ trait ApiResponseTrait
     public function successResponse($data = null, string $message = null, int $code = 200): JsonResponse
     {
         return response()->json([
+            'status'  => true,
             'success' => true,
+            'code'    => (string)$code,
             'message' => $message ? __($message) : __('Operation successful'),
+            'error'   => null,
+            'errors'  => null,
             'data'    => $data,
         ], $code);
     }
@@ -34,9 +38,13 @@ trait ApiResponseTrait
     public function errorResponse(string $message = null, int $code = 422, $errors = null): JsonResponse
     {
         return response()->json([
+            'status'  => false,
             'success' => false,
+            'code'    => (string)$code,
             'message' => $message ? __($message) : __('An error occurred'),
+            'error'   => $message ? __($message) : __('An error occurred'),
             'errors'  => $errors,
+            'data'    => null,
         ], $code);
     }
 }
