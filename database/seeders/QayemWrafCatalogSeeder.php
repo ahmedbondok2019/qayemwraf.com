@@ -10,16 +10,15 @@ use App\Models\Product;
 class QayemWrafCatalogSeeder extends Seeder
 {
     /**
-     * Clear all existing dummy data and seed the Qayem W Raf catalog safely.
-     * Guards against resetting if the catalog already exists in production.
+     * Clear all existing dummy data and seed the Qayem W Raf catalog.
      *
      * @return void
      */
     public function run()
     {
-        // Safety guard: If the Qayem W Raf catalog is already present, do not wipe production data or admin edits.
-        if (Product::where('sku', 'SH-STD-30K')->exists()) {
-            $this->command->info('✅ تم العثور على كتالوج (قايم ورف) مسبقاً. تم تخطي السيدر تلقائياً للحفاظ على تعديلات الأسعار والصور والطلبات الحية في البرودكشن.');
+        // Safety guard: If the new catalog is already seeded, skip to avoid repeating on every deployment
+        if (Product::where('sku', 'HD-PALLET-1TON')->exists()) {
+            $this->command->info('✅ تم العثور على كتالوج المنتجات مسبقاً. تم تخطي السيدر تلقائياً لمنع التكرار والحفاظ على التعديلات.');
             return;
         }
 

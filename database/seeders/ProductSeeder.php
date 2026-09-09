@@ -325,6 +325,57 @@ class ProductSeeder extends Seeder
                     'description' => 'Extra-deep heavy duty warehouse racking unit: 2.5m height, 80cm depth, 2.0mm thick steel uprights, 500kg per level capacity.',
                 ],
             ],
+            [
+                'sku' => 'HD-PALLET-1TON',
+                'price' => 12500,
+                'category' => $catHeavy,
+                'weight' => 140.0,
+                'image' => '/_fixed/book1.png',
+                'is_best_seller' => true,
+                'show_on_home' => true,
+                'ar' => [
+                    'name' => 'وحدة تخزين هيفي ديوتي حمولة 1 طن للمستوى (قوايم 10سم سمك 2مم)',
+                    'description' => "وحدات تخزين هيفي ديوتي للأحمال الثقيلة والمستودعات والبالتات بحمولة 1 طن (1000 كجم) للمستوى الواحد.\nالمواصفات الفنية والتصنيعية:\n- الارتفاعات المتاحة: من 3 متر إلى 6 متر حسب رغبة العميل.\n- الأعماق المتاحة: 1 متر و 1.2 متر.\n- العرض (طول الكمر): 2.2 متر و 2.5 متر و 2.8 متر.\n- القايم: سمك 2 مم وعرض 10 سم قطاع صلب فائق المتانة.\n- الكمر: قطاع وسمك الكمر مصمم خصيصاً ليتحمل حمولة 1 طن بكل أمان وبدون أي تقوس.\n- البلاطات: تضاف حسب الطلب والسمك حسب نوع وطبيعة التخزين.\n- التسعير: يتم التسعير حسب الحمولات وعرض الكمر وعدد المستويات المطلوبة.\n* محلي الصنع بأعلى مواصفات الجودة والصلابة.",
+                ],
+                'en' => [
+                    'name' => 'Heavy Duty Pallet Racking Unit - 1 Ton/Level (10cm Upright 2mm)',
+                    'description' => "Heavy duty warehouse storage racking unit engineered for 1 Ton (1000 kg) load capacity per level.\nTechnical Specifications:\n- Heights Available: From 3m up to 6m.\n- Depths Available: 1.0m and 1.2m.\n- Widths / Beam Length: 2.2m, 2.5m, and 2.8m.\n- Upright Profile: 2.0mm steel thickness, 10cm profile width.\n- Beams: Heavy engineered profile for 1 Ton loads.\n- Decking: Steel panels added upon customer request.\n- Custom Pricing: Scaled according to beam span, heights, and levels.\n* Locally made with industrial standards.",
+                ],
+            ],
+            [
+                'sku' => 'HD-PALLET-2TON',
+                'price' => 15800,
+                'category' => $catHeavy,
+                'weight' => 180.0,
+                'image' => '/_fixed/book2.png',
+                'is_best_seller' => true,
+                'show_on_home' => true,
+                'ar' => [
+                    'name' => 'وحدة تخزين هيفي ديوتي حمولة 2 طن للمستوى (قوايم 10سم سمك 2مم)',
+                    'description' => "وحدات تخزين هيفي ديوتي للمستودعات الكبرى والمصانع بحمولة 2 طن (2000 كجم) للمستوى الواحد.\nالمواصفات الفنية والتصنيعية:\n- الارتفاعات المتاحة: من 3 متر إلى 6 متر.\n- الأعماق المتاحة: 1 متر و 1.2 متر.\n- العرض (طول الكمر): 2.2 متر و 2.5 متر و 2.8 متر.\n- القايم: سمك 2 مم وعرض 10 سم صلب صناعي مصفح.\n- الكمر: قطاع معصب ومقوى خصيصاً ليتحمل حمولة 2 طن بأعلى درجات الأمان والسلامة.\n- البلاطات: تضاف حسب الطلب بالسمك المناسب لطبيعة التخزين.\n- التسعير: حسب الارتفاع، طول الكمر، وعدد مستويات التخزين.\n* محلي الصنع.",
+                ],
+                'en' => [
+                    'name' => 'Heavy Duty Pallet Racking Unit - 2 Tons/Level (10cm Upright 2mm)',
+                    'description' => "Heavy duty industrial pallet racking unit with 2 Tons (2000 kg) load capacity per level.\nTechnical Specifications:\n- Heights: 3m to 6m.\n- Depths: 1m and 1.2m.\n- Widths (Beam Spans): 2.2m, 2.5m, and 2.8m.\n- Upright Post: 2.0mm thickness, 10cm profile width.\n- Beams: Heavy boxed profile engineered for 2 Tons load rating.\n- Decking: Steel shelving panels optional on demand.\n* Locally made.",
+                ],
+            ],
+            [
+                'sku' => 'HD-PALLET-3TON',
+                'price' => 18900,
+                'category' => $catHeavy,
+                'weight' => 220.0,
+                'image' => '/_fixed/book3.png',
+                'is_best_seller' => false,
+                'show_on_home' => true,
+                'ar' => [
+                    'name' => 'وحدة تخزين هيفي ديوتي حمولة 3 طن للمستوى (قوايم 10سم سمك 2مم)',
+                    'description' => "أقصى درجات التحمل في وحدات الهيفي ديوتي للأحمال الشاقة جداً والتخزين اللوجستي بحمولة 3 طن (3000 كجم) للمستوى الواحد.\nالمواصفات الفنية والتصنيعية:\n- الارتفاعات المتاحة: من 3 متر إلى 6 متر.\n- الأعماق المتاحة: 1 متر و 1.2 متر.\n- العرض (طول الكمر): 2.2 متر و 2.5 متر و 2.8 متر.\n- القايم: سمك 2 مم وعرض 10 سم صلب صناعي فائق القوة.\n- قطاع الكمر: كمر ثقيل مصمم لأقصى درجات التحمل والعزم لمقاومة أحمال 3 طن لكل مستوى.\n- البلاطات والفرش: تضاف حسب الطلب بالسمك المطلوب.\n- التسعير: يتم التفصيل والتسعير حسب الارتفاع والأبعاد وأوزان البالتات.\n* محلي الصنع.",
+                ],
+                'en' => [
+                    'name' => 'Heavy Duty Pallet Racking Unit - 3 Tons/Level (10cm Upright 2mm)',
+                    'description' => "Maximum capacity 3 Tons (3000 kg) per level heavy duty warehouse racking system.\nTechnical Specifications:\n- Heights: 3m up to 6m.\n- Depths: 1m and 1.2m.\n- Width / Span: 2.2m, 2.5m, and 2.8m.\n- Upright: 2.0mm thickness, 10cm wide industrial grade steel.\n- Beams: Ultra-duty engineered section for 3 Tons per level.\n- Decking: Optional steel panels customized per application.\n* Locally made.",
+                ],
+            ],
 
             // ==========================================
             // 4. دواليب ولوكرات معدنية وشانونات

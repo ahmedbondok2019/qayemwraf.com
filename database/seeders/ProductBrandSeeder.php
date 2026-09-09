@@ -15,13 +15,8 @@ class ProductBrandSeeder extends Seeder
     {
         $brands = [
             [
-                'ar' => 'تصنيع محلي',
-                'en' => 'Local Made',
-                'image' => '/_fixed/brands.png',
-            ],
-            [
-                'ar' => 'قايم ورف',
-                'en' => 'Qayem W Raf',
+                'ar' => 'محلي الصنع',
+                'en' => 'Locally Made',
                 'image' => '/_fixed/brands.png',
             ],
         ];
