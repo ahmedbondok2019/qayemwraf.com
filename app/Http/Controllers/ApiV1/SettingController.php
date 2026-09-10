@@ -53,6 +53,12 @@ class SettingController extends Controller
             ], 404);
         }
 
+        $aboutPage = \App\Models\Page::active()->whereHas('translations', function($q) {
+            $q->where('slug', 'like', 'about%');
+        })->with(['translations', 'translation'])->first();
+
+        $aboutImageUrl = ($aboutPage && $aboutPage->image) ? asset($aboutPage->image) : ($setting->logo ? asset($setting->logo) : null);
+
         return response()->json([
             'status' => true,
             'data' => [
@@ -64,8 +70,11 @@ class SettingController extends Controller
                 'accept_email' => true,
                 'maintenance' => false,
                 'default_lang' => 'ar',
-                'about' => $setting->translate('about') ?: 'عن EG Medical',
-                'about_image' => asset(\App\Models\Page::active()->whereHas('translations', function($q) { $q->where('slug', 'like', 'about%'); })->value('image') ?? ($setting->logo ?? '')),
+                'about' => $aboutPage ? $aboutPage->content : ($setting->translate('about') ?: 'عن EG Medical'),
+                'about_title' => $aboutPage ? $aboutPage->title : 'من نحن',
+                'about_image' => $aboutImageUrl,
+                'about_images' => $aboutImageUrl ? [$aboutImageUrl] : [],
+                'about_details' => $aboutPage ? new \App\Http\Resources\ApiV1\PageResource($aboutPage) : null,
                 'privacy' => $setting->translate('privacy') ?: 'سياسة الخصوصية',
                 'terms' => $setting->translate('terms') ?: 'الشروط والأحكام',
                 'contact' => $setting->phone,

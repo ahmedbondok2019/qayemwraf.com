@@ -11,6 +11,7 @@ use App\Http\Resources\ApiV1\OfferResource;
 use App\Http\Resources\ApiV1\SliderResource;
 use App\Http\Resources\ApiV1\ProductResource;
 use App\Http\Resources\ApiV1\FlashSaleResource;
+use App\Http\Resources\ApiV1\PageResource;
 use App\Models\Advertisement;
 use App\Models\Blog;
 use App\Models\Category;
@@ -21,6 +22,7 @@ use App\Models\Slider;
 use App\Models\FlashSale;
 use App\Models\OrderDetail;
 use App\Models\Setting;
+use App\Models\Page;
 use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
@@ -209,6 +211,14 @@ class HomeController extends Controller
             Blog::active()->with('BlogTranslation')->latest()->take(3)->get()
         );
 
+        // 14. معلومات عن الشركة (About Us)
+        $aboutPage = Page::active()->whereHas('translations', function($q) {
+            $q->where('slug', 'like', 'about%');
+        })->with(['translations', 'translation'])->first();
+
+        $data['about'] = $aboutPage ? new PageResource($aboutPage) : null;
+        $data['about_us'] = $data['about'];
+
         // التوافق المباشر مع الإصدارات السابقة للتطبيق (Legacy Keys mapping)
         $legacyData = [
             'slider' => $data['sliders'],
@@ -222,6 +232,8 @@ class HomeController extends Controller
             'flashdeals' => $data['flash_sales'],
             'mostviewedProducts' => $data['top_sellers'],
             'features' => $data['featured_products'],
+            'about' => $data['about'],
+            'about_us' => $data['about'],
         ];
 
         $responseData = array_merge($data, $legacyData);

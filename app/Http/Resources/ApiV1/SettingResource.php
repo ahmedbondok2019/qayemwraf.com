@@ -14,6 +14,12 @@ class SettingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $aboutPage = \App\Models\Page::active()->whereHas('translations', function($q) {
+            $q->where('slug', 'like', 'about%');
+        })->with(['translations', 'translation'])->first();
+
+        $aboutImageUrl = ($aboutPage && $aboutPage->image) ? asset($aboutPage->image) : ($this->logo ? asset($this->logo) : null);
+
         return [
             'app_name' => $this->translate('app_name'),
             'app_meta_title' => $this->translate('app_meta_title'),
@@ -21,7 +27,11 @@ class SettingResource extends JsonResource
             'logo' => $this->logo ? asset($this->logo) : null,
             'logo_dark' => $this->logo_dark ? asset($this->logo_dark) : null,
             'fav_icon' => $this->fav_icon ? asset($this->fav_icon) : null,
-            'about_image' => asset(\App\Models\Page::active()->whereHas('translations', function($q) { $q->where('slug', 'like', 'about%'); })->value('image') ?? ($this->logo ?? '')),
+            'about' => $aboutPage ? $aboutPage->content : ($this->translate('about') ?: 'عن EG Medical'),
+            'about_title' => $aboutPage ? $aboutPage->title : 'من نحن',
+            'about_image' => $aboutImageUrl,
+            'about_images' => $aboutImageUrl ? [$aboutImageUrl] : [],
+            'about_details' => $aboutPage ? new PageResource($aboutPage) : null,
             'address' => $this->translate('address'),
             'phone' => $this->phone,
             'contact_email' => $this->contact_email,

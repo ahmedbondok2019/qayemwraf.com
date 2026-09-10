@@ -54,4 +54,12 @@ class Page extends Model
     {
         return $this->translation->content ?? $this->translations->first()->content ?? '';
     }
+
+    /**
+     * Helper to get slug in current locale
+     */
+    public function getSlugAttribute()
+    {
+        return $this->translation->slug ?? $this->translations->first()->slug ?? '';
+    }
 }

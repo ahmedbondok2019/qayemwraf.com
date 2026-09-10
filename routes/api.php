@@ -91,6 +91,9 @@ Route::group(['middleware' => ['Language']], function () {
         Route::get('/blogs/{id}', [BlogController::class, 'show']);
         
         // === الصفحات التعريفية والتنظيمية ===
+        // جلب صفحة من نحن ومعلومات الشركة والصور
+        Route::get('/about', [PageController::class, 'about']);
+        Route::get('/about-us', [PageController::class, 'about']);
         // جلب قائمة الصفحات التعريفية (من نحن، الشروط، السياسات)
         Route::get('/pages', [PageController::class, 'index']);
         // جلب تفاصيل صفحة تعريفية بواسطة الرابط الصديق (Slug)

@@ -36,16 +36,28 @@ class PageController extends Controller
     public function show($slug)
     {
         if (is_numeric($slug)) {
-            $page = Page::active()->find($slug);
+            $page = Page::active()->with(['translations', 'translation'])->find($slug);
         } else {
-            $page = Page::active()->where('slug', $slug)->first();
-            
-            if (!$page) {
-                $page = Page::active()->whereHas('translations', function($q) use ($slug) {
-                    $q->where('slug', $slug);
-                })->first();
-            }
+            $page = Page::active()->whereHas('translations', function($q) use ($slug) {
+                $q->where('slug', $slug);
+            })->with(['translations', 'translation'])->first();
         }
+
+        if (!$page) {
+            return $this->NewApiResponse(null, __('website.Page Not Found'), 'false', 404);
+        }
+
+        return $this->NewApiResponse(new PageResource($page), '', 'true', 200);
+    }
+
+    /**
+     * جلب صفحة من نحن (About Us) مباشرة مع كافة الصور والبيانات
+     */
+    public function about()
+    {
+        $page = Page::active()->whereHas('translations', function($q) {
+            $q->where('slug', 'like', 'about%');
+        })->with(['translations', 'translation'])->first();
 
         if (!$page) {
             return $this->NewApiResponse(null, __('website.Page Not Found'), 'false', 404);
