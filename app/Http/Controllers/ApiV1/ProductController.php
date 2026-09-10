@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiV1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiV1\ProductResource;
 use App\Models\Product;
+use App\Models\Category;
 use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
 use Illuminate\Http\Request;
