@@ -18,7 +18,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'title' => $this->translation->title ?? ($this->translations->first()->title ?? ''),
             'name' => $this->translation->title ?? ($this->translations->first()->title ?? ''),
-            'image' => $this->image ? asset($this->image) : null,
+            'image' => $this->image ? asset(ltrim(preg_replace('#/+#', '/', $this->image), '/')) : null,
             'link' => (string)$this->id,
             'show_on_home' => (bool)($this->show_on_home ?? true),
             'products_count' => $this->whenCounted('products'),

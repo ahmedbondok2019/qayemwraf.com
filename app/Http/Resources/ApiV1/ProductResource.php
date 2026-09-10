@@ -38,11 +38,11 @@ class ProductResource extends JsonResource
                 'symbol' => config('app.currency_symbol'),
                 'exchange_rate' => config('app.exchange_rate'),
             ],
-            'image' => $this->image ? asset($this->image) : null,
+            'image' => $this->image ? $this->formatImageUrl($this->image) : null,
             'gallery' => $this->images->map(function($img) {
                 return [
                     'id' => $img->id,
-                    'image' => asset($img->image),
+                    'image' => $this->formatImageUrl($img->image),
                     'sort_order' => (int)$img->sort_order,
                 ];
             }),
@@ -65,7 +65,7 @@ class ProductResource extends JsonResource
             'has_flash_sale' => $flashPrice > 0,
             'flash_sale_price' => $flashPrice > 0 ? (float)$flashPrice : null,
             // Legacy fields for Flutter
-            'primary_image' => $this->image ? asset($this->image) : null,
+            'primary_image' => $this->image ? $this->formatImageUrl($this->image) : null,
             'title' => $this->translation->name ?? ($this->translations->first()->name ?? ''),
             'category_id' => $this->product_category_id ?? ($this->categories->first()->id ?? null),
             'category' => $this->categories->first()->translation->title ?? ($this->categories->first()->translations->first()->title ?? ''),
@@ -77,7 +77,7 @@ class ProductResource extends JsonResource
             'item_code' => $this->sku,
             // 'brand' => $this->brand ? ($this->brand->translation->title ?? ($this->brand->translations->first()->title ?? '')) : '',
             'images' => $this->relationLoaded('images') ? $this->images->map(function($img) {
-                return ['image' => asset($img->image)];
+                return ['image' => $this->formatImageUrl($img->image)];
             }) : [],
             'isFavorite' => false,
             'countFavorite' => 0,
@@ -95,5 +95,19 @@ class ProductResource extends JsonResource
             'deal_of_day_end' => null,
             'related_products' => ProductResource::collection($this->whenLoaded('relatedProducts')),
         ];
+    }
+
+    protected function formatImageUrl($imagePath): ?string
+    {
+        if (empty($imagePath)) {
+            return null;
+        }
+
+        if (str_starts_with($imagePath, 'http://') || str_starts_with($imagePath, 'https://')) {
+            return $imagePath;
+        }
+
+        $cleanPath = ltrim(preg_replace('#/+#', '/', $imagePath), '/');
+        return asset($cleanPath);
     }
 }
