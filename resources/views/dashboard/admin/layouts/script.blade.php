@@ -64,8 +64,8 @@
     $(window).on('load', function() {
         if (feather) {
             feather.replace({
-                width: 32,
-                height: 32
+                width: 14,
+                height: 14
             });
         }
     })

@@ -286,7 +286,7 @@
                                         </select>
                                         @error('product_brand_id')
                                             <span class="text-danger">{{ $message }}</span>
-                                        @enderror>
+                                        @enderror
                                     </div>
                                     
                                     <div class="form-group">
@@ -299,7 +299,7 @@
                                         </select>
                                         @error('shipping_rule_id')
                                             <span class="text-danger">{{ $message }}</span>
-                                        @enderror>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group">
