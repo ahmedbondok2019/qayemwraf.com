@@ -1021,4 +1021,5 @@ return [
     'Catalog PDF File' => 'ملف الكتالوج (PDF)',
     'Upload Catalog PDF' => 'رفع الكتالوج (PDF)',
     'Current PDF File' => 'الملف الحالي',
+    'drag_to_sort' => 'اسحب الصور لترتيبها',
 ];

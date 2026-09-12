@@ -1006,4 +1006,5 @@ return [
     'Catalog PDF File' => 'Catalog PDF File',
     'Upload Catalog PDF' => 'Upload Catalog PDF',
     'Current PDF File' => 'Current PDF File',
+    'drag_to_sort' => 'Drag images to reorder',
 ];
