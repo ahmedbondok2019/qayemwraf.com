@@ -195,20 +195,24 @@
         
         .input-group {
             position: relative;
+            display: flex;
+            align-items: center;
         }
         
-        .input-group i {
+        .input-group .input-icon {
             position: absolute;
             right: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             transition: color 0.3s;
+            pointer-events: none;
+            z-index: 2;
         }
         
         .form-control {
             width: 100%;
-            padding: 16px 50px 16px 20px;
+            padding: 16px 50px 16px 50px;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 16px;
@@ -224,8 +228,31 @@
             box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
         }
 
-        .form-control:focus + i {
+        .form-control:focus ~ .input-icon {
             color: var(--primary-color);
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s, transform 0.2s;
+            z-index: 2;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
         }
         
         .remember-wrap {
@@ -420,7 +447,7 @@
                                class="form-control @error('email') is-invalid @enderror" 
                                placeholder="example@qayemwraf.com"
                                value="{{ old('email') }}" required autofocus>
-                        <i class="fas fa-envelope"></i>
+                        <i class="fas fa-envelope input-icon"></i>
                     </div>
                     @error('email')
                         <span class="error-msg">{{ $message }}</span>
@@ -433,7 +460,10 @@
                         <input type="password" name="password" id="password" 
                                class="form-control @error('password') is-invalid @enderror" 
                                placeholder="••••••••" required>
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-lock input-icon"></i>
+                        <button type="button" class="toggle-password" id="togglePassword" title="إظهار / إخفاء كلمة المرور" tabindex="-1">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
                     </div>
                     @error('password')
                         <span class="error-msg">{{ $message }}</span>
@@ -460,6 +490,21 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
 
+            if (togglePassword && passwordInput && eyeIcon) {
+                togglePassword.addEventListener('click', function() {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                    eyeIcon.classList.toggle('fa-eye', !isPassword);
+                    eyeIcon.classList.toggle('fa-eye-slash', isPassword);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
