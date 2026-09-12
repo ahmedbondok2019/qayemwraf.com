@@ -475,28 +475,22 @@
         box-shadow: 0 0 0 0.2rem rgba(255, 222, 89, 0.25) !important;
     }
 
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        display: none !important;
+    }
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 100% !important;
         top: 0 !important;
-        width: 28px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__arrow b {
-        border: none !important;
-        width: 7px !important;
-        height: 7px !important;
-        border-right: 2px solid var(--brand-dark-bronze) !important;
-        border-bottom: 2px solid var(--brand-dark-bronze) !important;
-        transform: rotate(45deg) !important;
-        margin: 0 !important;
-        position: static !important;
-        display: inline-block !important;
+        width: 24px !important;
+        display: block !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238d7b40' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: center center !important;
+        background-size: 13px 13px !important;
         transition: transform 0.2s ease !important;
     }
-    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-        transform: rotate(-135deg) !important;
+    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow {
+        transform: rotate(180deg) !important;
     }
 
     .select2-container--default .select2-selection--multiple {
@@ -624,6 +618,9 @@
     html.dark-layout .select2-container--default .select2-search--dropdown .select2-search__field {
         background-color: #1f1610 !important;
         border-color: #3e3023 !important;
+    }
+    html.dark-layout .select2-container--default .select2-selection--single .select2-selection__arrow {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffde59' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
     }
 
     /* Fix Sidebar Logo & Remove Dark Shadow Halo */
