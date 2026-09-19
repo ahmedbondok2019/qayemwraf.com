@@ -59,14 +59,14 @@ class OrderService
         $flash_sales = FlashSale::where('start_at', '<=', Carbon::now())
             ->where('end_at', '>=', Carbon::now())
             ->where('is_active', 1)
-            ->with(['translation', 'products' => function($q) use ($active) {
+            ->with(['translation', 'products' => function ($q) {
                 // We could filter pivot here but simpler to load and check in loop given structure
             }])
             ->get();
 
         foreach ($flash_sales as $sale) {
-             // Access products via relation, not sale_products property which might be old
-            $sale_products = $sale->products; 
+            // Access products via relation, not sale_products property which might be old
+            $sale_products = $sale->products;
             if ($sale_products->count() > 0) {
                 foreach ($sale_products as $pro) {
                     if (is_array($active)) {
@@ -77,8 +77,8 @@ class OrderService
                                 $valid_from = $sale->start_at;
                                 $valid_to = $sale->end_at;
                                 $flash_name = $sale->translation->name ?? $sale->name; // Get name
-                                
-                                // Return immediately on first valid match? 
+
+                                // Return immediately on first valid match?
                                 // Usually yes, or find best price. For now return first active.
                                 return [$value, $flash_id, $valid_from, $valid_to, $flash_name];
                             }

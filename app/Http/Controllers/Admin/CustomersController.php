@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\helper\HelperController;
 use App\Models\Cart;
+use App\Models\CartOption;
 use App\Models\Currency;
 use App\Models\Order;
 use App\Models\User;
@@ -61,9 +63,9 @@ class CustomersController extends BackendController
         $data['cart'] = Cart::where('user_id', $request->id)->with('options')->get();
         $data['sum'] = collect($data['cart'])
             ->reduce(function ($carry, $item) use ($rate) {
-                $optionId = \App\Models\CartOption::where('cart_id', $item['id'])->where('product_id', $item['product_id'])->first();
+                $optionId = CartOption::where('cart_id', $item['id'])->where('product_id', $item['product_id'])->first();
                 $cartOption = $optionId == null ? null : $optionId->option_item_id;
-                $ProQty = \App\Http\Controllers\helper\HelperController::getProductQuantiy($item['product_id'], $cartOption);
+                $ProQty = HelperController::getProductQuantiy($item['product_id'], $cartOption);
                 if ($ProQty != null) {
                     // return $carry + ($item["price"] + $item["tax"]) * $item["quantity"] * $rate;
                     return $carry + $item['price'] * $item['quantity'] * $rate;
@@ -71,9 +73,9 @@ class CustomersController extends BackendController
             }, 0);
         $data['prices'] = collect($data['cart'])
             ->reduce(function ($carry, $item) use ($rate) {
-                $optionId = \App\Models\CartOption::where('cart_id', $item['id'])->where('product_id', $item['product_id'])->first();
+                $optionId = CartOption::where('cart_id', $item['id'])->where('product_id', $item['product_id'])->first();
                 $cartOption = $optionId == null ? null : $optionId->option_item_id;
-                $ProQty = \App\Http\Controllers\helper\HelperController::getProductQuantiy($item['product_id'], $cartOption);
+                $ProQty = HelperController::getProductQuantiy($item['product_id'], $cartOption);
                 if ($ProQty != null) {
                     return $carry + ($item['price'] * $item['quantity'] * $rate);
                 }
@@ -116,11 +118,11 @@ class CustomersController extends BackendController
                 } else {
                     $data->status = 1;
                 }
-                
+
                 if (isset($request->gift_page_enabled)) {
-                     $data->gift_page_enabled = 1;
+                    $data->gift_page_enabled = 1;
                 } else {
-                     $data->gift_page_enabled = 0;
+                    $data->gift_page_enabled = 0;
                 }
 
                 //      if (isset($request->branch_id) && $request->branch_id != ''){ $data->branch_id = $request->branch_id; }

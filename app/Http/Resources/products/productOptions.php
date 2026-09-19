@@ -4,6 +4,7 @@ namespace App\Http\Resources\products;
 
 use App\Models\Option;
 use App\Models\OptionTranslation;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class productOptions extends JsonResource
@@ -11,7 +12,7 @@ class productOptions extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

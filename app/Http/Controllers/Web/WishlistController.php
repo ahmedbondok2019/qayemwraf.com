@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class WishlistController extends Controller
 {
@@ -15,28 +17,28 @@ class WishlistController extends Controller
         $userId = $user ? $user->id : null;
         $tempUserId = $request->cookie('temp_user_id');
 
-        $wishlistItems = Wishlist::where(function($q) use ($userId, $tempUserId) {
-                if ($userId) {
-                    $q->where('user_id', $userId);
-                } elseif ($tempUserId) {
-                    $q->where('temp_user_id', $tempUserId);
-                } else {
-                    $q->whereRaw('1 = 0');
-                }
-            })
+        $wishlistItems = Wishlist::where(function ($q) use ($userId, $tempUserId) {
+            if ($userId) {
+                $q->where('user_id', $userId);
+            } elseif ($tempUserId) {
+                $q->where('temp_user_id', $tempUserId);
+            } else {
+                $q->whereRaw('1 = 0');
+            }
+        })
             ->with(['product.translation', 'product.brand.translation'])
             ->get();
 
         // Cart for Guest/Auth to check status
-        $cartProducts = \App\Models\Cart::where(function($q) use ($userId, $tempUserId) {
-                if ($userId) {
-                    $q->where('user_id', $userId);
-                } elseif ($tempUserId) {
-                    $q->where('temp_user_id', $tempUserId);
-                } else {
-                    $q->whereRaw('1 = 0');
-                }
-            })
+        $cartProducts = Cart::where(function ($q) use ($userId, $tempUserId) {
+            if ($userId) {
+                $q->where('user_id', $userId);
+            } elseif ($tempUserId) {
+                $q->where('temp_user_id', $tempUserId);
+            } else {
+                $q->whereRaw('1 = 0');
+            }
+        })
             ->pluck('quantity', 'product_id')
             ->toArray();
 
@@ -49,19 +51,19 @@ class WishlistController extends Controller
             'product_id' => 'required|exists:products,id',
         ]);
 
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
         $userId = $user ? $user->id : null;
         $tempUserId = null;
 
-        if (!$userId) {
+        if (! $userId) {
             $tempUserId = $request->cookie('temp_user_id');
-            if (!$tempUserId) {
-                $tempUserId = (string) \Illuminate\Support\Str::uuid();
+            if (! $tempUserId) {
+                $tempUserId = (string) Str::uuid();
             }
         }
 
         $wishlist = Wishlist::where('product_id', $request->product_id)
-            ->where(function($q) use ($userId, $tempUserId) {
+            ->where(function ($q) use ($userId, $tempUserId) {
                 if ($userId) {
                     $q->where('user_id', $userId);
                 } else {
@@ -78,14 +80,14 @@ class WishlistController extends Controller
             Wishlist::create([
                 'user_id' => $userId,
                 'temp_user_id' => $userId ? null : $tempUserId,
-                'product_id' => $request->product_id
+                'product_id' => $request->product_id,
             ]);
             $action = 'added';
             $message = __('Item added to wishlist');
         }
 
-        $count = Wishlist::where(function($q) use ($userId, $tempUserId) {
-             if ($userId) {
+        $count = Wishlist::where(function ($q) use ($userId, $tempUserId) {
+            if ($userId) {
                 $q->where('user_id', $userId);
             } else {
                 $q->where('temp_user_id', $tempUserId);
@@ -96,11 +98,11 @@ class WishlistController extends Controller
             'status' => true,
             'action' => $action,
             'message' => $message,
-            'wishlist_count' => $count
+            'wishlist_count' => $count,
         ]);
 
-        if (!$userId && !$request->cookie('temp_user_id')) {
-             $response->withCookie(cookie('temp_user_id', $tempUserId, 60 * 24 * 30));
+        if (! $userId && ! $request->cookie('temp_user_id')) {
+            $response->withCookie(cookie('temp_user_id', $tempUserId, 60 * 24 * 30));
         }
 
         return $response;

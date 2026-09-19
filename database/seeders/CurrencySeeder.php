@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Currency;
+use App\Models\CurrencyTranslation;
 use Illuminate\Database\Seeder;
 
 class CurrencySeeder extends Seeder
@@ -21,7 +22,7 @@ class CurrencySeeder extends Seeder
                 'translations' => [
                     'ar' => ['name' => 'جنيه مصري', 'symbol' => 'ج.م'],
                     'en' => ['name' => 'Egyptian Pound', 'symbol' => 'EGP'],
-                ]
+                ],
             ],
             [
                 'code' => 'USD',
@@ -31,7 +32,7 @@ class CurrencySeeder extends Seeder
                 'translations' => [
                     'ar' => ['name' => 'دولار أمريكي', 'symbol' => '$'],
                     'en' => ['name' => 'US Dollar', 'symbol' => '$'],
-                ]
+                ],
             ],
             [
                 'code' => 'SAR',
@@ -41,7 +42,7 @@ class CurrencySeeder extends Seeder
                 'translations' => [
                     'ar' => ['name' => 'ريال سعودي', 'symbol' => 'ر.س'],
                     'en' => ['name' => 'Saudi Riyal', 'symbol' => 'SAR'],
-                ]
+                ],
             ],
         ];
 
@@ -49,13 +50,13 @@ class CurrencySeeder extends Seeder
             $translations = $data['translations'];
             unset($data['translations']);
 
-            $currency = \App\Models\Currency::updateOrCreate(
+            $currency = Currency::updateOrCreate(
                 ['code' => $data['code']],
                 $data
             );
 
             foreach ($translations as $locale => $transData) {
-                \App\Models\CurrencyTranslation::updateOrCreate(
+                CurrencyTranslation::updateOrCreate(
                     [
                         'currency_id' => $currency->id,
                         'locale' => $locale,

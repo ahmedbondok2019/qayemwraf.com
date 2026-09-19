@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\City;
+use App\Models\CityTranslation;
 use App\Models\Country;
 use App\Models\Governorate;
 use App\Models\GovernorateTranslation;
-use App\Models\City;
-use App\Models\CityTranslation;
+use Illuminate\Database\Seeder;
 
 class GovernorateCitySeeder extends Seeder
 {
@@ -21,8 +21,9 @@ class GovernorateCitySeeder extends Seeder
         // Get Egypt
         $egypt = Country::where('code', 'EG')->first();
 
-        if (!$egypt) {
+        if (! $egypt) {
             $this->command->info('Egypt country not found. Please run CountrySeeder first.');
+
             return;
         }
 
@@ -35,7 +36,7 @@ class GovernorateCitySeeder extends Seeder
                     ['en' => 'Maadi', 'ar' => 'المعادي'],
                     ['en' => 'New Cairo', 'ar' => 'القاهرة الجديدة'],
                     ['en' => 'Heliopolis', 'ar' => 'مصر الجديدة'],
-                ]
+                ],
             ],
             [
                 'en' => 'Giza',
@@ -45,7 +46,7 @@ class GovernorateCitySeeder extends Seeder
                     ['en' => 'Dokki', 'ar' => 'الدقي'],
                     ['en' => 'Mohandessin', 'ar' => 'المهندسين'],
                     ['en' => 'Haram', 'ar' => 'الهرم'],
-                ]
+                ],
             ],
             [
                 'en' => 'Alexandria',
@@ -54,7 +55,7 @@ class GovernorateCitySeeder extends Seeder
                     ['en' => 'Smouha', 'ar' => 'سموحة'],
                     ['en' => 'Sidi Gaber', 'ar' => 'سيدي جابر'],
                     ['en' => 'Montaza', 'ar' => 'المنتزه'],
-                ]
+                ],
             ],
             [
                 'en' => 'Dakahlia',
@@ -62,15 +63,15 @@ class GovernorateCitySeeder extends Seeder
                 'cities' => [
                     ['en' => 'Mansoura', 'ar' => 'المنصورة'],
                     ['en' => 'Talkha', 'ar' => 'طلخا'],
-                ]
+                ],
             ],
-             [
+            [
                 'en' => 'Red Sea',
                 'ar' => 'البحر الأحمر',
                 'cities' => [
                     ['en' => 'Hurghada', 'ar' => 'الغردقة'],
                     ['en' => 'El Gouna', 'ar' => 'الجونة'],
-                ]
+                ],
             ],
         ];
 

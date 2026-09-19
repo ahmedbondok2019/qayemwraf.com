@@ -16,19 +16,19 @@ class StaticTranslationSqlSeeder extends Seeder
     public function run()
     {
         $path = public_path('static_translations.sql');
-        
+
         if (File::exists($path)) {
             $sql = File::get($path);
-            
+
             // Disable foreign key checks and drop table to allow the SQL script to re-create it
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             DB::statement('DROP TABLE IF EXISTS static_translations;');
-            
+
             // Execute the raw SQL
             DB::unprepared($sql);
-            
+
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-            
+
             $this->command->info('Static translations SQL seeded successfully!');
         } else {
             $this->command->error('File static_translations.sql not found in public directory.');

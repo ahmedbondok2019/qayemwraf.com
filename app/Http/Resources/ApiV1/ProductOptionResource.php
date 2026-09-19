@@ -19,11 +19,11 @@ class ProductOptionResource extends JsonResource
             'option_id' => $this->option_id,
             'name' => $this->option ? $this->option->name : null,
             'type' => $this->option ? $this->option->type : null,
-            'required' => (bool)$this->required,
+            'required' => (bool) $this->required,
             'values' => ProductOptionValueResource::collection($this->relationLoaded('values') ? $this->values : collect([])),
             // Legacy fields for Flutter
             'title' => $this->option ? $this->option->name : null,
-            'isRequired' => (bool)$this->required,
+            'isRequired' => (bool) $this->required,
             'items' => ProductOptionValueResource::collection($this->relationLoaded('values') ? $this->values : collect([])),
         ];
     }

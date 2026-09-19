@@ -11,6 +11,7 @@ class OrderServiceController extends Controller
     public function index()
     {
         $services = OrderService::latest()->get();
+
         return view('dashboard.admin.order_services.index', compact('services'));
     }
 
@@ -63,6 +64,7 @@ class OrderServiceController extends Controller
     public function destroy(OrderService $orderService)
     {
         $orderService->delete();
+
         return redirect()->route('admin.order_services.index')->with('success', trans_db('dashboard.deleted'));
     }
 }

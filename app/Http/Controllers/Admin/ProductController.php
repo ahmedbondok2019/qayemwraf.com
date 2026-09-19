@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\BrandsListExport;
+use App\Exports\CategoriesListExport;
+use App\Exports\ProductsTemplateExport;
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
+use App\Imports\ProductsImport;
 use App\Models\Category;
 use App\Models\Option;
 use App\Models\Product;
@@ -13,20 +16,18 @@ use App\Models\ProductOption;
 use App\Models\ProductOptionValue;
 use App\Models\ProductTranslation;
 use App\Models\ShippingRule;
+use App\Traits\UploadImageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\ProductsImport;
-use App\Exports\ProductsTemplateExport;
-use App\Exports\CategoriesListExport;
-use App\Exports\BrandsListExport;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
 {
-    use \App\Traits\UploadImageTrait;
+    use UploadImageTrait;
 
     public function import()
     {
@@ -36,7 +37,7 @@ class ProductController extends Controller
     public function importProcess(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:csv,txt'
+            'file' => 'required|mimes:csv,txt',
         ]);
         try {
             Excel::import(new ProductsImport, $request->file('file'));
@@ -50,12 +51,12 @@ class ProductController extends Controller
     public function downloadTemplate(Request $request)
     {
         $format = $request->get('format', 'csv');
-        $filename = 'products_import_template.' . $format;
-        
+        $filename = 'products_import_template.'.$format;
+
         if ($format === 'xlsx') {
             return Excel::download(new ProductsTemplateExport, $filename);
         }
-        
+
         return Excel::download(new ProductsTemplateExport, $filename, \Maatwebsite\Excel\Excel::CSV);
     }
 
@@ -73,38 +74,41 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $data = Product::with(['translation', 'categories'])->select('products.*');
+
             return DataTables::of($data)
-                ->filterColumn('name', function($query, $keyword) {
-                    $query->whereHas('translations', function($q) use ($keyword) {
+                ->filterColumn('name', function ($query, $keyword) {
+                    $query->whereHas('translations', function ($q) use ($keyword) {
                         $q->where('product_translations.name', 'like', "%{$keyword}%");
                     });
                 })
-                ->filterColumn('categories', function($query, $keyword) {
-                    $query->whereHas('categories.translations', function($q) use ($keyword) {
+                ->filterColumn('categories', function ($query, $keyword) {
+                    $query->whereHas('categories.translations', function ($q) use ($keyword) {
                         $q->where('category_translations.title', 'like', "%{$keyword}%");
                     });
                 })
                 ->addIndexColumn()
                 ->addColumn('name', function ($row) {
-                    return '<span style="font-weight: 600; color: #1e293b; line-height: 1.4; display: block;">' . e($row->name) . '</span>';
+                    return '<span style="font-weight: 600; color: #1e293b; line-height: 1.4; display: block;">'.e($row->name).'</span>';
                 })
                 ->addColumn('image', function ($row) {
                     if ($row->image) {
-                        return '<img src="' . asset($row->image) . '" class="rounded border" style="width: 44px; height: 44px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" onerror="this.onerror=null; this.parentNode.innerHTML=\'<div class=\\&quot;rounded border d-flex align-items-center justify-content-center bg-light text-muted\\&quot; style=\\&quot;width: 44px; height: 44px;\\&quot;><i data-feather=\\&quot;image\\&quot; style=\\&quot;width: 18px; height: 18px;\\&quot;></i></div>\';">';
+                        return '<img src="'.asset($row->image).'" class="rounded border" style="width: 44px; height: 44px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" onerror="this.onerror=null; this.parentNode.innerHTML=\'<div class=\\&quot;rounded border d-flex align-items-center justify-content-center bg-light text-muted\\&quot; style=\\&quot;width: 44px; height: 44px;\\&quot;><i data-feather=\\&quot;image\\&quot; style=\\&quot;width: 18px; height: 18px;\\&quot;></i></div>\';">';
                     }
+
                     return '<div class="rounded border d-flex align-items-center justify-content-center bg-light text-muted" style="width: 44px; height: 44px;"><i data-feather="image" style="width: 18px; height: 18px;"></i></div>';
                 })
                 ->addColumn('categories', function ($row) {
-                    return $row->categories->map(function($cat) {
-                        return '<span class="badge" style="background-color: #e0f2fe; color: #0369a1; font-weight: 600; font-size: 11px; margin: 2px 1px; border: 1px solid #bae6fd; padding: 4px 8px; border-radius: 6px;">' . e($cat->name) . '</span>';
+                    return $row->categories->map(function ($cat) {
+                        return '<span class="badge" style="background-color: #e0f2fe; color: #0369a1; font-weight: 600; font-size: 11px; margin: 2px 1px; border: 1px solid #bae6fd; padding: 4px 8px; border-radius: 6px;">'.e($cat->name).'</span>';
                     })->implode(' ');
                 })
 
                 ->addColumn('show_on_home', function ($row) {
                     $checked = $row->show_on_home ? 'checked' : '';
+
                     return '<div class="custom-control custom-switch custom-switch-success text-center">
-                                <input type="checkbox" class="custom-control-input toggle-show-on-home" id="home_' . $row->id . '" data-id="' . $row->id . '" ' . $checked . '>
-                                <label class="custom-control-label" for="home_' . $row->id . '">
+                                <input type="checkbox" class="custom-control-input toggle-show-on-home" id="home_'.$row->id.'" data-id="'.$row->id.'" '.$checked.'>
+                                <label class="custom-control-label" for="home_'.$row->id.'">
                                     <span class="switch-icon-left"><i data-feather="check"></i></span>
                                     <span class="switch-icon-right"><i data-feather="x"></i></span>
                                 </label>
@@ -112,34 +116,37 @@ class ProductController extends Controller
                 })
                 ->editColumn('price', function ($row) {
                     if ($row->has_special_price) {
-                        return '<div class="d-flex flex-column text-center">' .
-                               '<span class="text-muted" style="text-decoration: line-through; font-size: 0.8rem;">' . number_format($row->price, 2) . '</span>' .
-                               '<span class="text-success font-weight-bold" style="font-size: 0.9rem;">' . number_format($row->special_price, 2) . '</span>' .
+                        return '<div class="d-flex flex-column text-center">'.
+                               '<span class="text-muted" style="text-decoration: line-through; font-size: 0.8rem;">'.number_format($row->price, 2).'</span>'.
+                               '<span class="text-success font-weight-bold" style="font-size: 0.9rem;">'.number_format($row->special_price, 2).'</span>'.
                                '</div>';
                     }
-                    return '<div class="text-center font-weight-bold" style="font-size: 0.9rem; color: #334155;">' . number_format($row->price, 2) . '</div>';
+
+                    return '<div class="text-center font-weight-bold" style="font-size: 0.9rem; color: #334155;">'.number_format($row->price, 2).'</div>';
                 })
                 ->addColumn('status', function ($row) {
-                     return $row->status 
-                        ? '<span class="badge" style="background-color: #dcfce7; color: #15803d; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">' . trans_db('dashboard.active') . '</span>' 
-                        : '<span class="badge" style="background-color: #fee2e2; color: #b91c1c; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">' . trans_db('dashboard.inactive') . '</span>';
+                    return $row->status
+                       ? '<span class="badge" style="background-color: #dcfce7; color: #15803d; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">'.trans_db('dashboard.active').'</span>'
+                       : '<span class="badge" style="background-color: #fee2e2; color: #b91c1c; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">'.trans_db('dashboard.inactive').'</span>';
                 })
                 ->addColumn('action', function ($row) {
                     $locale = app()->getLocale();
                     $trans = $row->translation ?? $row->translations->firstWhere('locale', $locale) ?? $row->translations->first();
                     $slug = $trans->slug ?? $row->slug ?? $row->id;
-                    $url = frontend_site_url(url($locale . '/products/' . $slug));
+                    $url = frontend_site_url(url($locale.'/products/'.$slug));
 
                     $btn = '<div class="d-flex align-items-center justify-content-center" style="gap: 8px; white-space: nowrap; min-width: 130px;">';
-                    $btn .= '<a href="' . $url . '" target="_blank" class="btn btn-sm btn-light-success text-success p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="معاينة" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(40,199,111,0.25); background-color: #e8fadf;"><i data-feather="external-link" style="width: 18px; height: 18px;"></i></a>';
-                    $btn .= '<a href="' . route('admin.products.edit', $row->id) . '" class="btn btn-sm btn-light-primary text-primary p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="تعديل" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(115,103,240,0.25); background-color: #f0f0ff;"><i data-feather="edit" style="width: 18px; height: 18px;"></i></a>';
-                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-light-danger text-danger p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="حذف" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(234,84,85,0.25); background-color: #fceaea;"><i data-feather="trash-2" style="width: 18px; height: 18px;"></i></a>';
+                    $btn .= '<a href="'.$url.'" target="_blank" class="btn btn-sm btn-light-success text-success p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="معاينة" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(40,199,111,0.25); background-color: #e8fadf;"><i data-feather="external-link" style="width: 18px; height: 18px;"></i></a>';
+                    $btn .= '<a href="'.route('admin.products.edit', $row->id).'" class="btn btn-sm btn-light-primary text-primary p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="تعديل" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(115,103,240,0.25); background-color: #f0f0ff;"><i data-feather="edit" style="width: 18px; height: 18px;"></i></a>';
+                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem('.$row->id.')" class="btn btn-sm btn-light-danger text-danger p-0 d-inline-flex align-items-center justify-content-center shadow-sm" title="حذف" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(234,84,85,0.25); background-color: #fceaea;"><i data-feather="trash-2" style="width: 18px; height: 18px;"></i></a>';
                     $btn .= '</div>';
+
                     return $btn;
                 })
                 ->rawColumns(['name', 'image', 'categories', 'show_on_home', 'status', 'action', 'price'])
                 ->make(true);
         }
+
         return view('dashboard.admin.products.index');
     }
 
@@ -149,21 +156,22 @@ class ProductController extends Controller
         $categories = Category::whereNull('parent_id')->orWhere('parent_id', 0)->with('children')->get(); // Hierarchical categories
         // Let's assume flat or simplified category selection for now or load all active
         $shippingRules = ShippingRule::active()->get();
-        $options = Option::with('translation')->get(); 
-        
+        $options = Option::with('translation')->get();
+
         return view('dashboard.admin.products.create', compact('brands', 'categories', 'shippingRules', 'options'));
     }
-    
+
     // AJAX to get option values
     public function getOptionValues($id)
     {
         $option = Option::findOrFail($id);
-        $values = $option->values()->with('translation')->get()->map(function($val) {
+        $values = $option->values()->with('translation')->get()->map(function ($val) {
             return [
                 'id' => $val->id,
-                'name' => $val->translation->value ?? $val->translations->first()->value ?? ''
+                'name' => $val->translation->value ?? $val->translations->first()->value ?? '',
             ];
         });
+
         return response()->json($values);
     }
 
@@ -186,7 +194,7 @@ class ProductController extends Controller
             // Main Image
             $imagePath = null;
             if ($request->hasFile('image')) {
-                 $imagePath = $this->uploadImage($request->file('image'), 'products');
+                $imagePath = $this->uploadImage($request->file('image'), 'products');
             }
 
             $product = Product::create([
@@ -202,7 +210,7 @@ class ProductController extends Controller
                 'ignore_quantity' => $request->has('ignore_quantity'),
                 'is_best_seller' => $request->has('is_best_seller'),
                 'is_gift' => $request->has('is_gift'),
-                'show_on_home' => $request->has('show_on_home') || !$request->has('_token') ? 1 : 0, // Default to true if not specified during import/etc
+                'show_on_home' => $request->has('show_on_home') || ! $request->has('_token') ? 1 : 0, // Default to true if not specified during import/etc
                 'best_seller_start' => $request->best_seller_start,
                 'best_seller_end' => $request->best_seller_end,
                 'weight' => $request->weight,
@@ -228,7 +236,7 @@ class ProductController extends Controller
             if ($request->has('categories')) {
                 $product->categories()->sync($request->categories);
             }
-            
+
             // Related Products
             if ($request->has('related_products')) {
                 $product->relatedProducts()->sync($request->related_products);
@@ -241,7 +249,7 @@ class ProductController extends Controller
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $imagePath,
-                        'sort_order' => $key
+                        'sort_order' => $key,
                     ]);
                 }
             }
@@ -249,8 +257,10 @@ class ProductController extends Controller
             // Product Options
             if ($request->has('product_options')) {
                 foreach ($request->product_options as $optionData) {
-                    if (empty($optionData['option_id'])) continue;
-                    
+                    if (empty($optionData['option_id'])) {
+                        continue;
+                    }
+
                     $productOption = ProductOption::create([
                         'product_id' => $product->id,
                         'option_id' => $optionData['option_id'],
@@ -275,12 +285,14 @@ class ProductController extends Controller
             }
 
             DB::commit();
+
             return redirect()->route('admin.products.index')->with('success', trans_db('dashboard.created_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
-             // For debugging
-             dd($e);
+            // For debugging
+            dd($e);
+
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
@@ -290,10 +302,10 @@ class ProductController extends Controller
         $product = Product::with(['translations', 'categories', 'images', 'productOptions.values', 'productOptions.option', 'brand', 'shippingRule'])->findOrFail($id);
         $brands = ProductBrand::active()->get();
         // Assuming categories are fetched similarly
-        $categories = Category::whereNull('parent_id')->orWhere('parent_id', 0)->with('children')->get(); 
+        $categories = Category::whereNull('parent_id')->orWhere('parent_id', 0)->with('children')->get();
         $shippingRules = ShippingRule::active()->get();
         $options = Option::with('translation')->get();
-        
+
         return view('dashboard.admin.products.edit', compact('product', 'brands', 'categories', 'shippingRules', 'options'));
     }
 
@@ -308,17 +320,17 @@ class ProductController extends Controller
 
         DB::beginTransaction();
         try {
-             if ($request->hasFile('image')) {
-                  // Delete old image
-                  if ($product->image) {
-                      $oldPath = str_replace('storage/', '', $product->image);
-                      if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                          \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-                      } elseif (file_exists(public_path($product->image))) {
-                          unlink(public_path($product->image));
-                      }
-                  }
-                  $product->image = $this->uploadImage($request->file('image'), 'products');
+            if ($request->hasFile('image')) {
+                // Delete old image
+                if ($product->image) {
+                    $oldPath = str_replace('storage/', '', $product->image);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path($product->image))) {
+                        unlink(public_path($product->image));
+                    }
+                }
+                $product->image = $this->uploadImage($request->file('image'), 'products');
             }
 
             $product->update([
@@ -357,14 +369,14 @@ class ProductController extends Controller
             }
 
             // Sync Categories
-             if ($request->has('categories')) {
+            if ($request->has('categories')) {
                 $product->categories()->sync($request->categories);
             }
-            
-             if ($request->has('related_products')) {
+
+            if ($request->has('related_products')) {
                 $product->relatedProducts()->sync($request->related_products);
             }
-            
+
             // Gallery Images (Update sort order for existing)
             if ($request->has('image_sort')) {
                 foreach ($request->image_sort as $imgId => $sortOrder) {
@@ -380,19 +392,19 @@ class ProductController extends Controller
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $imagePath,
-                        'sort_order' => $maxSort + $key + 1
+                        'sort_order' => $maxSort + $key + 1,
                     ]);
                 }
             }
-            
+
             // Delete deleted images
             if ($request->has('deleted_images')) {
                 $imagesToDelete = ProductImage::whereIn('id', $request->deleted_images)->get();
                 foreach ($imagesToDelete as $img) {
                     if ($img->image) {
                         $oldPath = str_replace('storage/', '', $img->image);
-                        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                            \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                        if (Storage::disk('public')->exists($oldPath)) {
+                            Storage::disk('public')->delete($oldPath);
                         } elseif (file_exists(public_path($img->image))) {
                             unlink(public_path($img->image));
                         }
@@ -406,14 +418,16 @@ class ProductController extends Controller
             // WARNING: This breaks integrity if order items reference product_option_values by ID!
             // But usually order items snapshot data. If we have strict FKs, this fails.
             // Let's assume we can sync.
-            
+
             $product->productOptions()->delete(); // Cascades values if configured, else manually delete values first
             // Note: Schema has onDelete cascade, so this should be fine.
-            
+
             if ($request->has('product_options')) {
                 foreach ($request->product_options as $optionData) {
-                    if (empty($optionData['option_id'])) continue;
-                    
+                    if (empty($optionData['option_id'])) {
+                        continue;
+                    }
+
                     $productOption = ProductOption::create([
                         'product_id' => $product->id,
                         'option_id' => $optionData['option_id'],
@@ -438,10 +452,12 @@ class ProductController extends Controller
             }
 
             DB::commit();
+
             return redirect()->route('admin.products.index')->with('success', trans_db('dashboard.updated_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
@@ -449,12 +465,12 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        
+
         // Delete main image
         if ($product->image) {
             $oldPath = str_replace('storage/', '', $product->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             } elseif (file_exists(public_path($product->image))) {
                 unlink(public_path($product->image));
             }
@@ -464,8 +480,8 @@ class ProductController extends Controller
         foreach ($product->images as $img) {
             if ($img->image) {
                 $oldPath = str_replace('storage/', '', $img->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path($img->image))) {
                     unlink(public_path($img->image));
                 }
@@ -473,13 +489,14 @@ class ProductController extends Controller
         }
 
         $product->delete();
+
         return response()->json(['success' => trans_db('dashboard.deleted_successfully')]);
     }
 
     public function toggleGift($id)
     {
         $product = Product::findOrFail($id);
-        $product->is_gift = !$product->is_gift;
+        $product->is_gift = ! $product->is_gift;
         $product->save();
 
         return response()->json(['success' => true]);
@@ -488,7 +505,7 @@ class ProductController extends Controller
     public function toggleShowOnHome($id)
     {
         $product = Product::findOrFail($id);
-        $product->show_on_home = !$product->show_on_home;
+        $product->show_on_home = ! $product->show_on_home;
         $product->save();
 
         return response()->json(['success' => true]);
@@ -497,6 +514,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::with(['translations', 'categories', 'images', 'productOptions.values.translation', 'productOptions.option.translation', 'brand.translation', 'shippingRule.translation', 'relatedProducts.translation'])->findOrFail($id);
+
         return view('dashboard.admin.products.show', compact('product'));
     }
 }

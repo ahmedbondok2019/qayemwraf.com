@@ -4,6 +4,7 @@ namespace App\Http\Resources\orders;
 
 use App\Http\Controllers\helper\HelperController;
 use App\Models\Vendor;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 
@@ -12,7 +13,7 @@ class orders extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

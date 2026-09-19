@@ -3,34 +3,37 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\PhoneCheck;
-use App\Models\Cart;
-use App\Models\Wishlist;
-use App\Mail\OtpMail;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use App\Traits\ApiResponseTrait;
-use App\Traits\ApiPaginationTrait;
-use App\Http\Requests\ApiV1\Auth\RegisterRequest;
-use App\Http\Requests\ApiV1\Auth\LoginRequest;
 use App\Http\Requests\ApiV1\Auth\ForgetPasswordRequest;
+use App\Http\Requests\ApiV1\Auth\LoginRequest;
+use App\Http\Requests\ApiV1\Auth\RegisterRequest;
 use App\Http\Requests\ApiV1\Auth\ResetPasswordRequest;
 use App\Http\Requests\ApiV1\Auth\SocialLoginRequest;
+use App\Mail\OtpMail;
+use App\Models\Cart;
+use App\Models\PhoneCheck;
+use App\Models\User;
+use App\Models\UserFcmToken;
+use App\Models\Wishlist;
+use App\Services\FirebaseService;
+use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * @group 01. المصادقة والحسابات (Auth)
- * 
+ *
  * يتولى العمليات الخاصة بتسجيل الحسابات الجديدة، تسجيل الدخول،
  * تسجيل الدخول عبر شبكات التواصل، استعادة كلمة المرور، الاشتراك في الإشعارات، وإلغاء الحسابات.
  */
 class AuthController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * تسجيل حساب مستخدم جديد
-     * 
+     *
      * ينشئ حساباً جديداً للمستخدم ويعيد رمز المصادقة (Bearer Token).
      */
     public function register(RegisterRequest $request)
@@ -59,7 +62,7 @@ class AuthController extends Controller
 
     /**
      * تسجيل الدخول
-     * 
+     *
      * يتحقق من بيانات الدخول (البريد أو الهاتف مع كلمة المرور) ويعيد رمز الوصول للمستخدم.
      */
     public function login(LoginRequest $request)
@@ -68,7 +71,7 @@ class AuthController extends Controller
             ->orWhere('phone', $request->login)
             ->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return $this->errorResponse('بيانات الدخول غير صحيحة', 401);
         }
 
@@ -87,7 +90,7 @@ class AuthController extends Controller
 
     /**
      * دمج بيانات الزائر مؤقتاً
-     * 
+     *
      * ينقل عناصر السلة والمفضلة من المعرف المؤقت للزائر إلى معرف المستخدم المسجل.
      */
     private function mergeGuestData($userId, $tempUserId)
@@ -95,7 +98,7 @@ class AuthController extends Controller
         // دمج عناصر السلة
         Cart::where('temp_user_id', $tempUserId)->update([
             'user_id' => $userId,
-            'temp_user_id' => null
+            'temp_user_id' => null,
         ]);
 
         // دمج عناصر المفضلة
@@ -104,13 +107,13 @@ class AuthController extends Controller
             $exists = Wishlist::where('user_id', $userId)
                 ->where('product_id', $item->product_id)
                 ->first();
-            
+
             if ($exists) {
                 $item->delete();
             } else {
                 $item->update([
                     'user_id' => $userId,
-                    'temp_user_id' => null
+                    'temp_user_id' => null,
                 ]);
             }
         }
@@ -118,28 +121,28 @@ class AuthController extends Controller
 
     /**
      * تسجيل الدخول عبر شبكات التواصل الاجتماعي
-     * 
+     *
      * تسجيل أو ربط حساب عبر شبكات التواصل (جوجل / فيسبوك / أبل).
      */
     public function socialLogin(SocialLoginRequest $request)
     {
-        $providerField = $request->provider . '_id';
-        
+        $providerField = $request->provider.'_id';
+
         $user = User::where($providerField, $request->provider_id)->first();
 
-        if (!$user && $request->email) {
+        if (! $user && $request->email) {
             $user = User::where('email', $request->email)->first();
-            
+
             if ($user) {
                 $user->update([$providerField => $request->provider_id]);
             }
         }
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
-                'name' => $request->name ?? $request->provider . ' User',
+                'name' => $request->name ?? $request->provider.' User',
                 'email' => $request->email,
-                'phone' => $request->phone ?? "0111111111",
+                'phone' => $request->phone ?? '0111111111',
                 'image' => $request->image,
                 $providerField => $request->provider_id,
                 'password' => Hash::make(rand(10000000, 99999999)),
@@ -163,10 +166,10 @@ class AuthController extends Controller
 
     /**
      * تسجيل الخروج
-     * 
+     *
      * يلغي رمز الوصول الحالي للمستخدم وينتهي الجلسة الحالية.
      */
-    public function logout(\Illuminate\Http\Request $request)
+    public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
@@ -175,13 +178,13 @@ class AuthController extends Controller
 
     /**
      * حذف حساب المستخدم
-     * 
+     *
      * يحذف حساب المستخدم الحالي نهائياً مع كافة الرموز والبيانات المرتبطة.
      */
-    public function deleteAccount(\Illuminate\Http\Request $request)
+    public function deleteAccount(Request $request)
     {
         $user = $request->user();
-        
+
         $user->tokens()->delete();
         $user->delete();
 
@@ -190,13 +193,13 @@ class AuthController extends Controller
 
     /**
      * نسيت كلمة المرور
-     * 
+     *
      * يرسل كود التحقق (OTP) إلى البريد الإلكتروني للمستخدم لاستعادة كلمة المرور.
      */
     public function forgetPassword(ForgetPasswordRequest $request)
     {
         $otp = rand(1000, 9999);
-        
+
         PhoneCheck::updateOrCreate(
             ['phone' => $request->email],
             ['check_code' => $otp, 'status' => 0]
@@ -212,7 +215,7 @@ class AuthController extends Controller
 
     /**
      * إعادة تعيين كلمة المرور
-     * 
+     *
      * يغيّر كلمة المرور للمستخدم بعد التأكد من صحة كود التحقق المدخل.
      */
     public function resetPassword(ResetPasswordRequest $request)
@@ -221,14 +224,14 @@ class AuthController extends Controller
             ->where('check_code', $request->otp)
             ->first();
 
-        if (!$check) {
+        if (! $check) {
             return $this->errorResponse('كود التحقق غير صحيح', 422);
         }
 
         $user = User::where('email', $request->email)->first();
         if ($user) {
             $user->update([
-                'password' => Hash::make($request->password)
+                'password' => Hash::make($request->password),
             ]);
         }
 
@@ -239,10 +242,10 @@ class AuthController extends Controller
 
     /**
      * الاشتراك في موضوع الإشعارات (FCM Topic)
-     * 
+     *
      * يشترك جهاز المستخدم في استقبال الإشعارات عبر Firebase (مثل العروض والأخبار).
      */
-    public function subscribeToTopic(\Illuminate\Http\Request $request)
+    public function subscribeToTopic(Request $request)
     {
         $request->validate([
             'fcm_token' => 'required|string',
@@ -252,14 +255,14 @@ class AuthController extends Controller
         ]);
 
         $topic = $request->topic ?: 'offers';
-        
+
         try {
-            $firebaseService = app(\App\Services\FirebaseService::class);
+            $firebaseService = app(FirebaseService::class);
             $firebaseService->subscribeToTopic($request->fcm_token, $topic);
-            
+
             $userId = auth('sanctum')->id();
-            
-            \App\Models\UserFcmToken::updateOrCreate(
+
+            UserFcmToken::updateOrCreate(
                 ['fcm_token' => $request->fcm_token],
                 [
                     'user_id' => $userId,
@@ -267,10 +270,10 @@ class AuthController extends Controller
                     'device_type' => $request->device_type,
                 ]
             );
-            
+
             return $this->successResponse(null, 'تم الاشتراك في الإشعارات بنجاح');
         } catch (\Exception $e) {
-            return $this->errorResponse('فشل الاشتراك في الإشعارات: ' . $e->getMessage(), 500);
+            return $this->errorResponse('فشل الاشتراك في الإشعارات: '.$e->getMessage(), 500);
         }
     }
 }

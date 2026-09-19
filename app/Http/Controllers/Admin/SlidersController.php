@@ -11,6 +11,7 @@ use App\Models\SliderTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class SlidersController extends BackendController
@@ -189,7 +190,7 @@ class SlidersController extends BackendController
         $position = array_unique($pos);
 
         $sliderupdate = SliderTranslation::where('slider_id', $slider->id);
-        
+
         $oldTrans = $sliderupdate->first();
         $oldImage = $oldTrans ? $oldTrans->image : null;
 
@@ -275,8 +276,8 @@ class SlidersController extends BackendController
             $trans = SliderTranslation::where('slider_id', $request->id)->first();
             if ($trans && $trans->image != null) {
                 $oldPath = str_replace('storage/', '', $trans->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path('website/images/sliders/'.$trans->image))) {
                     unlink(public_path('website/images/sliders/'.$trans->image));
                 }
@@ -297,8 +298,8 @@ class SlidersController extends BackendController
         $data = Slider::find($request->id);
         if ($data && $data->image != null) {
             $oldPath = str_replace('storage/', '', $data->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             } elseif (file_exists(public_path('website/images/sliders/'.$data->image))) {
                 unlink(public_path('website/images/sliders/'.$data->image));
             }
@@ -365,8 +366,8 @@ class SlidersController extends BackendController
 
                 if (isset($oldImage) && $oldImage != null) {
                     $oldPath = str_replace('storage/', '', $oldImage);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path('website/images/sliders/'.$oldImage))) {
                         unlink(public_path('website/images/sliders/'.$oldImage));
                     }
@@ -385,13 +386,13 @@ class SlidersController extends BackendController
 
     public static function UploadImagesSlider($image, $name, $folder, $width = null, $height = null)
     {
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$name;
 
         HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
-        
-        return 'storage/website/images/' . $folder . '/' . $name;
+
+        return 'storage/website/images/'.$folder.'/'.$name;
     }
 
     public function cropSlider(Request $request)

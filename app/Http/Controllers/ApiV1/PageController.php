@@ -6,11 +6,10 @@ use App\Http\Controllers\Api\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiV1\PageResource;
 use App\Models\Page;
-use Illuminate\Http\Request;
 
 /**
  * @group 16. الصفحات التعريفية (Pages)
- * 
+ *
  * يتولى جلب قائمة الصفحات العامة في النظام (مثل من نحن، الشروط، سياسة الخصوصية) وتفاصيل صفحة معينة.
  */
 class PageController extends Controller
@@ -19,18 +18,19 @@ class PageController extends Controller
 
     /**
      * جلب قائمة الصفحات التعريفية
-     * 
+     *
      * يعيد جميع الصفحات التعريفية النشطة المتاحة في النظام.
      */
     public function index()
     {
         $pages = Page::active()->get();
+
         return $this->NewApiResponse(PageResource::collection($pages), '', 'true', 200);
     }
 
     /**
      * جلب تفاصيل صفحة تعريفية بواسطة المعرف أو الرابط الصديق (Slug)
-     * 
+     *
      * يعيد كامل بيانات ومحتوى صفحة معينة (مثل من نحن أو الشروط والأحكام).
      */
     public function show($slug)
@@ -38,12 +38,12 @@ class PageController extends Controller
         if (is_numeric($slug)) {
             $page = Page::active()->with(['translations', 'translation'])->find($slug);
         } else {
-            $page = Page::active()->whereHas('translations', function($q) use ($slug) {
+            $page = Page::active()->whereHas('translations', function ($q) use ($slug) {
                 $q->where('slug', $slug);
             })->with(['translations', 'translation'])->first();
         }
 
-        if (!$page) {
+        if (! $page) {
             return $this->NewApiResponse(null, __('website.Page Not Found'), 'false', 404);
         }
 
@@ -55,11 +55,11 @@ class PageController extends Controller
      */
     public function about()
     {
-        $page = Page::active()->whereHas('translations', function($q) {
+        $page = Page::active()->whereHas('translations', function ($q) {
             $q->where('slug', 'like', 'about%');
         })->with(['translations', 'translation'])->first();
 
-        if (!$page) {
+        if (! $page) {
             return $this->NewApiResponse(null, __('website.Page Not Found'), 'false', 404);
         }
 

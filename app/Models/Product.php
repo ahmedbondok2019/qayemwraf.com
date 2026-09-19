@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\helper\HelperController;
+use App\Traits\HandleImageStorageTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    use HandleImageStorageTrait;
     use HasFactory;
     use SoftDeletes;
-    use \App\Traits\HandleImageStorageTrait;
 
     protected $guarded = [];
 
@@ -35,7 +38,7 @@ class Product extends Model
     {
         return $this->belongsTo(ProductBrand::class, 'product_brand_id');
     }
-    
+
     public function shippingRule()
     {
         return $this->belongsTo(ShippingRule::class);
@@ -66,12 +69,12 @@ class Product extends Model
     {
         return $this->hasMany(ProductOption::class);
     }
-    
+
     public function ratings()
     {
         return $this->hasMany(Rating::class);
     }
-    
+
     public function relatedProducts()
     {
         return $this->belongsToMany(Product::class, 'product_related', 'product_id', 'related_product_id');
@@ -80,15 +83,15 @@ class Product extends Model
     public function flashSales()
     {
         return $this->belongsToMany(FlashSale::class, 'flash_sale_products')
-                    ->withPivot('price')
-                    ->withTimestamps();
+            ->withPivot('price')
+            ->withTimestamps();
     }
 
     public function scopeActive($query)
     {
         return $query->where('status', 1);
     }
-    
+
     public function getNameAttribute()
     {
         return $this->translation->name ?? $this->translations->first()->name ?? '';
@@ -97,7 +100,10 @@ class Product extends Model
     public function getConvertedPriceAttribute()
     {
         $rate = session('exchange_rate', 1);
-        if ($rate == 0) $rate = 1; // Avoid division by zero
+        if ($rate == 0) {
+            $rate = 1;
+        } // Avoid division by zero
+
         return $this->price / $rate;
     }
 
@@ -118,13 +124,15 @@ class Product extends Model
 
     public function getHasSpecialPriceAttribute()
     {
-        if (!$this->special_price || $this->special_price <= 0) return false;
-        
+        if (! $this->special_price || $this->special_price <= 0) {
+            return false;
+        }
+
         $now = now();
         $start = $this->special_price_start;
         $end = $this->special_price_end;
-        
-        return (!$start || $start <= $now) && (!$end || $end >= $now);
+
+        return (! $start || $start <= $now) && (! $end || $end >= $now);
     }
 
     public function getCurrentPriceAttribute()
@@ -135,18 +143,18 @@ class Product extends Model
     public function getSlugArAttribute()
     {
         $trans = $this->translations->firstWhere('locale', 'ar');
-        if ($trans && !empty($trans->slug)) {
+        if ($trans && ! empty($trans->slug)) {
             return $trans->slug;
         }
 
         $name = $trans->name ?? ($this->translation->name ?? ($this->translations->first()->name ?? ''));
         if (empty($name)) {
-            $name = 'product-' . $this->id;
+            $name = 'product-'.$this->id;
         }
 
-        $slug = \App\Http\Controllers\helper\HelperController::make_slug($name);
+        $slug = HelperController::make_slug($name);
         if (empty($slug)) {
-            $slug = 'product-' . $this->id;
+            $slug = 'product-'.$this->id;
         }
 
         if ($trans) {
@@ -165,21 +173,21 @@ class Product extends Model
     public function getSlugEnAttribute()
     {
         $trans = $this->translations->firstWhere('locale', 'en');
-        if ($trans && !empty($trans->slug)) {
+        if ($trans && ! empty($trans->slug)) {
             return $trans->slug;
         }
 
         $name = $trans->name ?? '';
         if (empty($name)) {
-            $name = $this->translation->name ?? ($this->translations->first()->name ?? ('product-' . $this->id));
+            $name = $this->translation->name ?? ($this->translations->first()->name ?? ('product-'.$this->id));
         }
 
-        $slug = \Illuminate\Support\Str::slug($name);
+        $slug = Str::slug($name);
         if (empty($slug)) {
-            $slug = \App\Http\Controllers\helper\HelperController::make_slug($name);
+            $slug = HelperController::make_slug($name);
         }
         if (empty($slug)) {
-            $slug = 'product-' . $this->id;
+            $slug = 'product-'.$this->id;
         }
 
         if ($trans) {
@@ -201,6 +209,7 @@ class Product extends Model
         if ($currentLocale === 'en') {
             return $this->slug_en;
         }
+
         return $this->slug_ar;
     }
 
@@ -209,6 +218,7 @@ class Product extends Model
         $locale = app()->getLocale();
         $trans = $this->translation ?? $this->translations->firstWhere('locale', $locale) ?? $this->translations->first();
         $slug = $trans->slug ?? $this->slug ?? $this->id;
-        return frontend_site_url(url($locale . '/products/' . $slug));
+
+        return frontend_site_url(url($locale.'/products/'.$slug));
     }
 }

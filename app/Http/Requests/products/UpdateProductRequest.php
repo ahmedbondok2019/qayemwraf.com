@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\products;
 
+use App\Models\ProductTranslation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -45,7 +46,7 @@ class UpdateProductRequest extends FormRequest
      */
     private function getTranslationId($langCode, $productId)
     {
-        $trans = \App\Models\ProductTranslation::where('product_id', $productId)
+        $trans = ProductTranslation::where('product_id', $productId)
             ->where('lang_id', $langCode)
             ->first();
 

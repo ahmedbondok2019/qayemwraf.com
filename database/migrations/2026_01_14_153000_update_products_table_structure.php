@@ -15,26 +15,26 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->foreignId('shipping_rule_id')->nullable()->constrained('shipping_rules')->nullOnDelete();
-            $table->unsignedBigInteger('product_brand_id')->nullable(); 
-            
+            $table->unsignedBigInteger('product_brand_id')->nullable();
+
             $table->string('sku')->nullable();
             $table->string('image')->nullable();
-            
+
             // Pricing & Promo
             $table->decimal('special_price', 10, 2)->nullable();
             $table->date('special_price_start')->nullable();
             $table->date('special_price_end')->nullable();
-            
+
             // Stock
             $table->integer('quantity')->default(0);
             $table->integer('max_order_qty')->nullable();
             $table->boolean('ignore_quantity')->default(false);
-            
+
             // Best Seller
             $table->boolean('is_best_seller')->default(false);
             $table->date('best_seller_start')->nullable();
             $table->date('best_seller_end')->nullable();
-            
+
             // Other
             $table->decimal('weight', 10, 2)->nullable();
             $table->bigInteger('viewed')->default(0);
@@ -101,19 +101,19 @@ return new class extends Migration
         Schema::dropIfExists('product_related');
         Schema::dropIfExists('product_categories');
         Schema::dropIfExists('product_images');
-        
+
         Schema::table('product_translations', function (Blueprint $table) {
             $table->dropColumn(['slug', 'meta_title', 'meta_description']);
         });
 
         Schema::table('products', function (Blueprint $table) {
-             $table->dropColumn([
+            $table->dropColumn([
                 'shipping_rule_id', 'product_brand_id', 'sku', 'image',
                 'special_price', 'special_price_start', 'special_price_end',
                 'quantity', 'max_order_qty', 'ignore_quantity',
                 'is_best_seller', 'best_seller_start', 'best_seller_end',
-                'weight', 'viewed'
-             ]);
+                'weight', 'viewed',
+            ]);
         });
     }
 };

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\StaticTranslation;
+use Illuminate\Database\Seeder;
 
 class DashboardAllTranslationsSeeder extends Seeder
 {
@@ -27,7 +27,7 @@ class DashboardAllTranslationsSeeder extends Seeder
                     if (is_array($translations)) {
                         foreach ($translations as $key => $value) {
                             $fullKey = "{$ns}.{$key}";
-                            if (!isset($allKeys[$fullKey])) {
+                            if (! isset($allKeys[$fullKey])) {
                                 $allKeys[$fullKey] = [];
                             }
                             $allKeys[$fullKey][$locale] = $value;
@@ -112,7 +112,7 @@ class DashboardAllTranslationsSeeder extends Seeder
 
         foreach ($allKeys as $key => $translations) {
             foreach ($locales as $locale) {
-                if (!isset($translations[$locale])) {
+                if (! isset($translations[$locale])) {
                     $translations[$locale] = '';
                 }
             }

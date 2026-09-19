@@ -9,8 +9,8 @@ use App\Models\CategoryTranslation;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\CurrencyTranslation;
-use App\Models\Setting;
 use App\Models\Page;
+use App\Models\Setting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    // 
+    //
     public function boot(): void
     {
         Schema::defaultStringLength(191);
@@ -41,9 +41,9 @@ class AppServiceProvider extends ServiceProvider
 
         try {
             if (Schema::hasTable('settings')) {
-                $setting = Setting::first() ?? new Setting();
-                $popupAds = Schema::hasTable('advertisements') 
-                    ? Advertisement::where('location', 'popup')->active()->get() 
+                $setting = Setting::first() ?? new Setting;
+                $popupAds = Schema::hasTable('advertisements')
+                    ? Advertisement::where('location', 'popup')->active()->get()
                     : collect();
                 View::share([
                     'Setting' => $setting,

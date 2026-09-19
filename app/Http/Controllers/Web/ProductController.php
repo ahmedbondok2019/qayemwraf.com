@@ -3,17 +3,22 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
+use App\Models\Advertisement;
 use App\Models\Cart;
+use App\Models\Category;
+use App\Models\FlashSale;
 use App\Models\Option;
 use App\Models\Product;
 use App\Models\ProductBrand;
+use App\Models\Rating;
+use App\Models\User;
 use App\Models\Wishlist;
+use App\Notifications\NewRatingNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Route;
-use App\Models\FlashSale;
-use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -26,7 +31,7 @@ class ProductController extends Controller
 
         $products = Product::active()
             ->whereHas('translations', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%');
             })
             ->with(['translation'])
             ->limit(10)
@@ -38,8 +43,8 @@ class ProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->translation->name ?? '',
                 'image' => asset($product->image),
-                'price' => number_format($product->current_price, 2) . ' ج.م',
-                'url' => url('ar/product/' . $product->id . '/' . ($product->translation->slug ?? ''))
+                'price' => number_format($product->current_price, 2).' ج.م',
+                'url' => url('ar/product/'.$product->id.'/'.($product->translation->slug ?? '')),
             ];
         }
 
@@ -59,24 +64,24 @@ class ProductController extends Controller
 
         // Filter by Category Slug
         $category = null;
-        if (!$category_slug && $request->filled('category')) {
+        if (! $category_slug && $request->filled('category')) {
             $category_slug = $request->category;
         }
 
         if ($category_slug) {
-            $category = \App\Models\Category::whereHas('translations', function ($q) use ($category_slug) {
+            $category = Category::whereHas('translations', function ($q) use ($category_slug) {
                 $q->where('slug', $category_slug);
             })->with('translation', 'children')->first();
 
-            if (!$category) {
+            if (! $category) {
                 // If it's not a category slug, check if it's a product slug or product ID
                 $product = Product::active()
                     ->where(function ($q) use ($category_slug) {
                         if (is_numeric($category_slug)) {
                             $q->where('id', $category_slug)
-                              ->orWhereHas('translations', function ($qt) use ($category_slug) {
-                                  $qt->where('slug', $category_slug);
-                              });
+                                ->orWhereHas('translations', function ($qt) use ($category_slug) {
+                                    $qt->where('slug', $category_slug);
+                                });
                         } else {
                             $q->whereHas('translations', function ($qt) use ($category_slug) {
                                 $qt->where('slug', $category_slug);
@@ -103,11 +108,11 @@ class ProductController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->whereHas('translations', function ($qt) use ($search) {
-                    $qt->where('name', 'like', '%' . $search . '%');
+                    $qt->where('name', 'like', '%'.$search.'%');
                 })
-                ->orWhereHas('brand.translations', function ($qb) use ($search) {
-                    $qb->where('title', 'like', '%' . $search . '%');
-                });
+                    ->orWhereHas('brand.translations', function ($qb) use ($search) {
+                        $qb->where('title', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -142,15 +147,15 @@ class ProductController extends Controller
         if ($request->filled('flash_sale_id')) {
             $query->whereHas('flashSales', function ($q) use ($request) {
                 $q->where('flash_sales.id', $request->flash_sale_id)
-                  ->where('start_at', '<=', Carbon::now())
-                  ->where('end_at', '>=', Carbon::now())
-                  ->where('is_active', 1);
+                    ->where('start_at', '<=', Carbon::now())
+                    ->where('end_at', '>=', Carbon::now())
+                    ->where('is_active', 1);
             });
         } elseif ($request->has('flash_sale')) {
             $query->whereHas('flashSales', function ($q) {
                 $q->where('start_at', '<=', Carbon::now())
-                  ->where('end_at', '>=', Carbon::now())
-                  ->where('is_active', 1);
+                    ->where('end_at', '>=', Carbon::now())
+                    ->where('is_active', 1);
             });
         }
 
@@ -181,11 +186,11 @@ class ProductController extends Controller
         $options = Option::whereHas('values', function ($q) {
             $q->whereHas('productOptionValues');
         })->with([
-                    'translation',
-                    'values' => function ($q) {
-                        $q->whereHas('productOptionValues')->with('translation');
-                    }
-                ])->get();
+            'translation',
+            'values' => function ($q) {
+                $q->whereHas('productOptionValues')->with('translation');
+            },
+        ])->get();
 
         $minPrice = Product::min('price') ?? 0;
         $maxPrice = Product::max('price') ?? 10000;
@@ -226,15 +231,15 @@ class ProductController extends Controller
             // If we want "category ads matching current category", we might need to rely on 'location' = 'category' and maybe some other way?
             // Or maybe the user meant "remove the foreign key constraint" but keep the column?
             // Re-reading: "modified... removing category_id from advertisements".
-            // So we can only filter by location = 'category'. 
+            // So we can only filter by location = 'category'.
             // If the user wants SPECIFIC category ads, they can't do it with the current schema.
             // I will return ALL 'category' ads for now as "Category Page Ads".
             // Wait, the seeder created 'category' location ads.
-            $categoryAds = \App\Models\Advertisement::where('location', 'category')->active()->get();
+            $categoryAds = Advertisement::where('location', 'category')->active()->get();
         } else {
-             // Maybe show them on the main shop page too if desired? Defaulting to empty or generic 'category' ads?
-             // Let's show them on main shop page too as "General Shop Ads" if location is 'category'.
-             $categoryAds = \App\Models\Advertisement::where('location', 'category')->active()->get();
+            // Maybe show them on the main shop page too if desired? Defaulting to empty or generic 'category' ads?
+            // Let's show them on main shop page too as "General Shop Ads" if location is 'category'.
+            $categoryAds = Advertisement::where('location', 'category')->active()->get();
         }
 
         // Fetch active Flash Sales for Sidebar Filter
@@ -246,6 +251,7 @@ class ProductController extends Controller
 
         return view('frontend.products.index', compact('products', 'brands', 'options', 'minPrice', 'maxPrice', 'cartProducts', 'wishlistIds', 'category', 'categoryAds', 'activeFlashSales'));
     }
+
     public function show($id, $slug = null)
     {
         $product = Product::active()
@@ -260,14 +266,14 @@ class ProductController extends Controller
                 'productOptions.values.optionValue.translation',
                 // 'reviews.user', // If reviews exist
                 'relatedProducts.translation',
-                'relatedProducts.images' // To show related product images
+                'relatedProducts.images', // To show related product images
             ])
             ->where(function ($q) use ($id, $slug) {
                 if (is_numeric($id)) {
                     $q->where('id', $id)
-                      ->orWhereHas('translations', function ($qt) use ($id) {
-                          $qt->where('slug', $id);
-                      });
+                        ->orWhereHas('translations', function ($qt) use ($id) {
+                            $qt->where('slug', $id);
+                        });
                 } else {
                     $q->whereHas('translations', function ($qt) use ($id) {
                         $qt->where('slug', $id);
@@ -317,6 +323,7 @@ class ProductController extends Controller
 
         return view('frontend.products.show', compact('product', 'relatedProducts', 'cartProducts', 'wishlistIds'));
     }
+
     public function rate(Request $request)
     {
         $request->validate([
@@ -325,30 +332,30 @@ class ProductController extends Controller
             'comment' => 'nullable|string|max:1000',
         ]);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         // Check if user purchased AND received the product
         $hasPurchased = $user->orders()
             ->where('status', 3) // 3 = Received/Delivered
-            ->whereHas('order_details', function($q) use ($request) {
+            ->whereHas('order_details', function ($q) use ($request) {
                 $q->where('product_id', $request->product_id);
             })->exists();
 
-        if (!$hasPurchased) {
-             return redirect()->back()->with('error', __('website.You must purchase and receive this product to rate it'));
+        if (! $hasPurchased) {
+            return redirect()->back()->with('error', __('website.You must purchase and receive this product to rate it'));
         }
 
         // Check if user already rated this product
-        $existingRating = \App\Models\Rating::where('user_id', $user->id)
+        $existingRating = Rating::where('user_id', $user->id)
             ->where('product_id', $request->product_id)
             ->exists();
 
         if ($existingRating) {
-             return redirect()->back()->with('error', __('website.You have already rated this product'));
+            return redirect()->back()->with('error', __('website.You have already rated this product'));
         }
 
-        $rating = \App\Models\Rating::create(
+        $rating = Rating::create(
             [
                 'user_id' => $user->id,
                 'product_id' => $request->product_id,
@@ -359,21 +366,22 @@ class ProductController extends Controller
         );
 
         // Notify admins if it's a new rating or updated
-        $admins = \App\Models\Admin::where('status', 1)->get();
-        foreach($admins as $admin) {
-            $admin->notify(new \App\Notifications\NewRatingNotification($rating));
+        $admins = Admin::where('status', 1)->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewRatingNotification($rating));
         }
 
         return redirect()->back()->with('success', __('website.Rating submitted successfully'));
     }
+
     public function getMoreReviews(Request $request)
     {
         $input = $request->all();
         $skip = $input['skip'] ?? 0;
         $take = 5;
-        
+
         $product = Product::findOrFail($input['product_id']);
-        
+
         $ratings = $product->ratings()
             ->where('status', 1)
             ->with('user')
@@ -381,9 +389,9 @@ class ProductController extends Controller
             ->skip($skip)
             ->take($take)
             ->get();
-            
+
         $view = view('frontend.products.partials.reviews_list', compact('ratings'))->render();
-        
+
         return response()->json(['html' => $view, 'count' => $ratings->count()]);
     }
 }

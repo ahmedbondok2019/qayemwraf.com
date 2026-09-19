@@ -2,16 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Product;
-use App\Models\ProductTranslation;
 use App\Models\Category;
-use App\Models\ProductBrand;
-use App\Models\ShippingRule;
-use App\Models\ProductOption;
-use App\Models\ProductOptionValue;
 use App\Models\Option;
+use App\Models\Product;
+use App\Models\ProductBrand;
 use App\Models\ProductImage;
+use App\Models\ProductTranslation;
+use App\Models\ShippingRule;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
@@ -37,6 +35,7 @@ class ProductSeeder extends Seeder
                     }
                 }
             }
+
             return $allCategories->first();
         };
 
@@ -263,7 +262,7 @@ class ProductSeeder extends Seeder
                 'show_on_home' => false,
                 'ar' => [
                     'name' => 'وحدة رفوف ميدي ديوتي ارتفاع 2.5م وعمق 60سم سمك 1.5مم (أزرق)',
-                    'description' => "وحدة تخزين ميدي ديوتي بارتفاع خاص 2.5 متر وعمق 60 سم وقوائم سمك 1.5 مم باللون الأزرق المميز، حمولة 250 كجم للمستوى، بضاعة حاضرة.",
+                    'description' => 'وحدة تخزين ميدي ديوتي بارتفاع خاص 2.5 متر وعمق 60 سم وقوائم سمك 1.5 مم باللون الأزرق المميز، حمولة 250 كجم للمستوى، بضاعة حاضرة.',
                 ],
                 'en' => [
                     'name' => 'Medium Duty Racking Unit H2.5m x D60cm (1.5mm Blue)',
@@ -318,7 +317,7 @@ class ProductSeeder extends Seeder
                 'show_on_home' => false,
                 'ar' => [
                     'name' => 'وحدة رفوف هيفي ديوتي ارتفاع 2.5م وعمق 80سم سمك 2مم (حمولة 500 كجم/مستوى)',
-                    'description' => "وحدة تخزين هيفي ديوتي عملاقة بارتفاع 2.5 متر وعمق 80 سم وقوائم سمك 2 مم للمعدات والمخازن الصناعية الكبرى، حمولة المستوى 500 كجم، بضاعة حاضرة.",
+                    'description' => 'وحدة تخزين هيفي ديوتي عملاقة بارتفاع 2.5 متر وعمق 80 سم وقوائم سمك 2 مم للمعدات والمخازن الصناعية الكبرى، حمولة المستوى 500 كجم، بضاعة حاضرة.',
                 ],
                 'en' => [
                     'name' => 'Heavy Duty Racking Unit - H2.5m x D80cm (2mm Upright)',
@@ -620,8 +619,8 @@ class ProductSeeder extends Seeder
                 'locale' => 'ar',
                 'name' => $data['ar']['name'],
                 'description' => $data['ar']['description'],
-                'slug' => Str::slug($data['ar']['name']) . '-' . $product->id,
-                'meta_title' => $data['ar']['name'] . ' | قايم ورف',
+                'slug' => Str::slug($data['ar']['name']).'-'.$product->id,
+                'meta_title' => $data['ar']['name'].' | قايم ورف',
                 'meta_description' => Str::limit($data['ar']['description'], 160),
                 'meta_keywords' => 'قايم ورف, ارفف تخزين, ارفف مخازن, استاندات حديد, لوكرات, شانونات, دواليب مستندات, هيفي ديوتي, ميدي ديوتي',
             ]);
@@ -631,14 +630,14 @@ class ProductSeeder extends Seeder
                 'locale' => 'en',
                 'name' => $data['en']['name'],
                 'description' => $data['en']['description'],
-                'slug' => Str::slug($data['en']['name']) . '-' . $product->id,
-                'meta_title' => $data['en']['name'] . ' | Qayem W Raf',
+                'slug' => Str::slug($data['en']['name']).'-'.$product->id,
+                'meta_title' => $data['en']['name'].' | Qayem W Raf',
                 'meta_description' => Str::limit($data['en']['description'], 160),
                 'meta_keywords' => 'shelving, racking, storage units, metal lockers, document cabinets, heavy duty, medium duty',
             ]);
 
             // Attach Category
-            if (!empty($data['category'])) {
+            if (! empty($data['category'])) {
                 $product->categories()->attach($data['category']->id);
             }
 

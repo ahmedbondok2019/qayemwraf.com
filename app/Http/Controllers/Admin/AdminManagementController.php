@@ -13,12 +13,14 @@ class AdminManagementController extends Controller
     public function index()
     {
         $admins = Admin::with('group')->latest()->paginate(10);
+
         return view('dashboard.admin.admins.index', compact('admins'));
     }
 
     public function create()
     {
         $roles = Group::all();
+
         return view('dashboard.admin.admins.create', compact('roles'));
     }
 
@@ -46,6 +48,7 @@ class AdminManagementController extends Controller
     public function edit(Admin $admin)
     {
         $roles = Group::all();
+
         return view('dashboard.admin.admins.edit', compact('admin', 'roles'));
     }
 
@@ -53,7 +56,7 @@ class AdminManagementController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email,' . $admin->id,
+            'email' => 'required|email|unique:admins,email,'.$admin->id,
             'password' => 'nullable|string|min:8|confirmed',
             'permission_group' => 'required|exists:groups,id',
             'status' => 'required|in:0,1',
@@ -81,6 +84,7 @@ class AdminManagementController extends Controller
             return redirect()->back()->with('error', trans_db('dashboard.Cannot delete this admin.'));
         }
         $admin->delete();
+
         return redirect()->route('admin.admins.index')->with('success', trans_db('dashboard.Admin deleted successfully.'));
     }
 }

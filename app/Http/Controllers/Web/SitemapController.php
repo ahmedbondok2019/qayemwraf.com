@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Page;
-use App\Models\Blog;
-use Illuminate\Http\Response;
+use App\Models\Product;
 
 class SitemapController extends Controller
 {

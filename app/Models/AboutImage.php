@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\HandleImageStorageTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AboutImage extends Model
 {
+    use HandleImageStorageTrait;
     use HasFactory;
     use SoftDeletes;
-    use \App\Traits\HandleImageStorageTrait;
 
     protected $guarded = [];
 }

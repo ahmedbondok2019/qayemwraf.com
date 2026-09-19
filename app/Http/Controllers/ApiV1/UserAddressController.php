@@ -3,28 +3,29 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserAddress;
 use App\Http\Requests\ApiV1\Address\AddressStoreRequest;
 use App\Http\Requests\ApiV1\Address\AddressUpdateRequest;
-use App\Traits\ApiResponseTrait;
-use App\Traits\ApiPaginationTrait;
 use App\Http\Resources\ApiV1\AddressResource;
+use App\Models\UserAddress;
+use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
 
 /**
  * @group 13. عناوين المستخدم (User Addresses)
- * 
+ *
  * يتولى جلب قائمة العناوين، إضافة عنوان جديد، تعديل عنوان، حذف عنوان، وتحديد العنوان الرئيسي للشحن.
  */
 class UserAddressController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب قائمة عناوين المستخدم
-     * 
+     *
      * يعيد قائمة بجميع عناوين الشحن المسجلة للمستخدم الحالي مع أسماء الدولة والمحافظة والمدينة.
      */
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $addresses = $request->user()->address()
             ->with(['country_rel.translation', 'governorate_rel.translation', 'city_rel.translation'])
@@ -35,7 +36,7 @@ class UserAddressController extends Controller
 
     /**
      * إضافة عنوان شحن جديد
-     * 
+     *
      * ينشئ عنوان شحن جديد للمستخدم ويحفظ البيانات الجغرافية ورقم التواصل.
      */
     public function store(AddressStoreRequest $request)
@@ -51,14 +52,14 @@ class UserAddressController extends Controller
 
     /**
      * تعديل بيانات عنوان شحن
-     * 
+     *
      * يحدّث تفاصيل عنوان شحن محدد للمستخدم.
      */
     public function update(AddressUpdateRequest $request, $id)
     {
         $address = $request->user()->address()->find($id);
 
-        if (!$address) {
+        if (! $address) {
             return $this->errorResponse('العنوان غير موجود', 404);
         }
 
@@ -73,14 +74,14 @@ class UserAddressController extends Controller
 
     /**
      * حذف عنوان شحن
-     * 
+     *
      * يزيل عنوان شحن محدد للمستخدم من النظام.
      */
-    public function destroy(\Illuminate\Http\Request $request, $id)
+    public function destroy(Request $request, $id)
     {
         $address = $request->user()->address()->find($id);
 
-        if (!$address) {
+        if (! $address) {
             return $this->errorResponse('العنوان غير موجود', 404);
         }
 
@@ -91,14 +92,14 @@ class UserAddressController extends Controller
 
     /**
      * تعيين عنوان كعنوان رئيسي
-     * 
+     *
      * يحدد عنواناً معيناً ليكون عنوان الشحن الرئيسي الافتراضي للمستخدم.
      */
-    public function setMain(\Illuminate\Http\Request $request, $id)
+    public function setMain(Request $request, $id)
     {
         $address = $request->user()->address()->find($id);
 
-        if (!$address) {
+        if (! $address) {
             return $this->errorResponse('العنوان غير موجود', 404);
         }
 

@@ -43,10 +43,10 @@ return [
         'redirect' => env('FRONTEND_URL', 'https://qayemwraf.com').'/'.app()->getLocale().'/user/login/google/callback',
     ],
 
- 'jnt' => [
-    'api_account' => '292508153084379141',
-    'customer_code' => 'J0086004218',
-    'private_key' => 'a0a1047cce70493c9d5d29704f05d0d9',
-    'base_url' => 'https://demoopenapi.jtjms-mx.com/webopenplatformapi/api/order/addOrder',
-],
+    'jnt' => [
+        'api_account' => '292508153084379141',
+        'customer_code' => 'J0086004218',
+        'private_key' => 'a0a1047cce70493c9d5d29704f05d0d9',
+        'base_url' => 'https://demoopenapi.jtjms-mx.com/webopenplatformapi/api/order/addOrder',
+    ],
 ];

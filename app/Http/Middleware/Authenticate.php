@@ -26,7 +26,7 @@ class Authenticate extends Middleware
         if ($request->routeIs(LaravelLocalization::transRoute('user.*'))) {
             return route('login');
         }
-        
+
         return route('login');
     }
 }

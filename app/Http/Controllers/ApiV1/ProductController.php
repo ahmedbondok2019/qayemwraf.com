@@ -4,67 +4,69 @@ namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiV1\ProductResource;
-use App\Models\Product;
 use App\Models\Category;
-use App\Traits\ApiResponseTrait;
+use App\Models\Product;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 /**
  * @group 03. المنتجات (Products)
- * 
+ *
  * يتولى جلب قائمة المنتجات مع دعم الفلترة (حسب القسم، البراند، السعر، الفلاش سيل)،
  * والبحث، والمنتجات الأكثر مبيعاً، وأحدث المنتجات، وتفاصيل المنتج المحدد.
  */
 class ProductController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب قائمة المنتجات مع الفلترة والبحث
-     * 
+     *
      * يعيد قائمة مفلترة ومقسمة صفحات من المنتجات النشطة بناءً على القسم، العلامة التجارية،
      * نطاق السعر، الخصائص، أو البحث بالاسم.
      */
     public function index(Request $request)
     {
         $query = Product::active()->with([
-            'translation', 
-            'brand.translation', 
-            'categories.translation', 
+            'translation',
+            'brand.translation',
+            'categories.translation',
             'images',
             'productOptions.option.translation',
             'productOptions.values.optionValue.translation',
-            'flashSales' => function($q) {
+            'flashSales' => function ($q) {
                 $q->where('start_at', '<=', now())
-                  ->where('end_at', '>=', now())
-                  ->where('is_active', 1);
-            }
+                    ->where('end_at', '>=', now())
+                    ->where('is_active', 1);
+            },
         ]);
 
         // الفلترة حسب القسم (يدعم المعرف الرقمي، الرابط Slug، الأقسام الفرعية، والقوائم المتعددة)
-        $categoryInput = $request->get('category_id') 
-            ?? $request->get('category_slug') 
-            ?? $request->get('category') 
-            ?? $request->get('categories') 
-            ?? $request->get('sub_category_id') 
-            ?? $request->get('subcategory_id') 
+        $categoryInput = $request->get('category_id')
+            ?? $request->get('category_slug')
+            ?? $request->get('category')
+            ?? $request->get('categories')
+            ?? $request->get('sub_category_id')
+            ?? $request->get('subcategory_id')
             ?? $request->get('parent');
 
-        if (!empty($categoryInput)) {
-            $catIdentifiers = is_array($categoryInput) ? $categoryInput : explode(',', (string)$categoryInput);
-            
+        if (! empty($categoryInput)) {
+            $catIdentifiers = is_array($categoryInput) ? $categoryInput : explode(',', (string) $categoryInput);
+
             $targetCategoryIds = [];
             foreach ($catIdentifiers as $ident) {
-                $ident = trim((string)$ident);
-                if ($ident === '') continue;
-                
+                $ident = trim((string) $ident);
+                if ($ident === '') {
+                    continue;
+                }
+
                 $decoded = urldecode($ident);
-                $foundCategories = Category::where(function($q) use ($ident, $decoded) {
+                $foundCategories = Category::where(function ($q) use ($ident, $decoded) {
                     if (is_numeric($ident)) {
                         $q->where('id', $ident);
                     }
-                    $q->orWhereHas('translations', function($qt) use ($ident, $decoded) {
+                    $q->orWhereHas('translations', function ($qt) use ($ident, $decoded) {
                         $qt->where('slug', $ident)->orWhere('slug', $decoded);
                     });
                 })->with('children')->get();
@@ -77,13 +79,13 @@ class ProductController extends Controller
                 }
 
                 if (is_numeric($ident)) {
-                    $targetCategoryIds[] = (int)$ident;
+                    $targetCategoryIds[] = (int) $ident;
                 }
             }
 
             $targetCategoryIds = array_unique($targetCategoryIds);
 
-            if (!empty($targetCategoryIds)) {
+            if (! empty($targetCategoryIds)) {
                 $query->whereHas('categories', function ($q) use ($targetCategoryIds) {
                     $q->whereIn('categories.id', $targetCategoryIds);
                 });
@@ -95,11 +97,11 @@ class ProductController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->whereHas('translations', function ($qt) use ($search) {
-                    $qt->where('name', 'like', '%' . $search . '%');
+                    $qt->where('name', 'like', '%'.$search.'%');
                 })
-                ->orWhereHas('brand.translations', function ($qb) use ($search) {
-                    $qb->where('title', 'like', '%' . $search . '%');
-                });
+                    ->orWhereHas('brand.translations', function ($qb) use ($search) {
+                        $qb->where('title', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -123,11 +125,11 @@ class ProductController extends Controller
             if (is_string($options)) {
                 $options = json_decode($options, true);
             }
-            
+
             if (is_array($options)) {
                 foreach ($options as $optionId => $valueIds) {
                     $query->whereHas('productOptions.values', function ($q) use ($valueIds) {
-                        $q->whereIn('option_value_id', (array)$valueIds);
+                        $q->whereIn('option_value_id', (array) $valueIds);
                     });
                 }
             }
@@ -142,15 +144,15 @@ class ProductController extends Controller
         if ($request->filled('flash_sale_id')) {
             $query->whereHas('flashSales', function ($q) use ($request) {
                 $q->where('flash_sales.id', $request->flash_sale_id)
-                  ->where('start_at', '<=', now())
-                  ->where('end_at', '>=', now())
-                  ->where('is_active', 1);
+                    ->where('start_at', '<=', now())
+                    ->where('end_at', '>=', now())
+                    ->where('is_active', 1);
             });
         } elseif ($request->boolean('flash_sale')) {
             $query->whereHas('flashSales', function ($q) {
                 $q->where('start_at', '<=', now())
-                  ->where('end_at', '>=', now())
-                  ->where('is_active', 1);
+                    ->where('end_at', '>=', now())
+                    ->where('is_active', 1);
             });
         }
 
@@ -180,26 +182,26 @@ class ProductController extends Controller
 
     /**
      * جلب المنتجات الأكثر مبيعاً
-     * 
+     *
      * يعيد قائمة بالمنتجات الأكثر مبيعاً في النظام.
      */
     public function bestSellers()
     {
         $bestSellers = Product::active()
             ->where('is_best_seller', true)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('best_seller_start')
-                  ->orWhere('best_seller_start', '<=', now());
+                    ->orWhere('best_seller_start', '<=', now());
             })
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('best_seller_end')
-                  ->orWhere('best_seller_end', '>=', now());
+                    ->orWhere('best_seller_end', '>=', now());
             })
-            ->with(['translation', 'brand.translation', 'productOptions.option.translation', 'productOptions.values.optionValue.translation', 'flashSales' => function($q) {
+            ->with(['translation', 'brand.translation', 'productOptions.option.translation', 'productOptions.values.optionValue.translation', 'flashSales' => function ($q) {
                 $q->where('start_at', '<=', now())
-                  ->where('end_at', '>=', now())
-                  ->where('is_active', 1)
-                  ->with('translation');
+                    ->where('end_at', '>=', now())
+                    ->where('is_active', 1)
+                    ->with('translation');
             }])
             ->take(8)
             ->get();
@@ -209,18 +211,18 @@ class ProductController extends Controller
 
     /**
      * جلب أحدث المنتجات المضافة
-     * 
+     *
      * يعيد قائمة بأحدث المنتجات المضافة حديثاً للنظام.
      */
     public function latestProducts()
     {
         $latestProducts = Product::active()
             ->latest()
-            ->with(['translation', 'brand.translation', 'productOptions.option.translation', 'productOptions.values.optionValue.translation', 'flashSales' => function($q) {
+            ->with(['translation', 'brand.translation', 'productOptions.option.translation', 'productOptions.values.optionValue.translation', 'flashSales' => function ($q) {
                 $q->where('start_at', '<=', now())
-                  ->where('end_at', '>=', now())
-                  ->where('is_active', 1)
-                  ->with('translation');
+                    ->where('end_at', '>=', now())
+                    ->where('is_active', 1)
+                    ->with('translation');
             }])
             ->take(8)
             ->get();
@@ -230,7 +232,7 @@ class ProductController extends Controller
 
     /**
      * جلب تفاصيل منتج محدد
-     * 
+     *
      * يعيد كامل بيانات وتفاصيل المنتج والصور التوضيحية والخيارات والمنتجات المشابهة برقم المنتج (ID).
      */
     public function show($id)
@@ -250,19 +252,19 @@ class ProductController extends Controller
                 'relatedProducts.translation',
                 'relatedProducts.translations',
                 'relatedProducts.images',
-                'flashSales' => function($q) {
+                'flashSales' => function ($q) {
                     $q->where('start_at', '<=', now())
-                      ->where('end_at', '>=', now())
-                      ->where('is_active', 1)
-                      ->with('translation');
-                }
+                        ->where('end_at', '>=', now())
+                        ->where('is_active', 1)
+                        ->with('translation');
+                },
             ])
             ->where(function ($q) use ($rawId, $decodedId) {
                 if (is_numeric($rawId)) {
                     $q->where('id', $rawId)
-                      ->orWhereHas('translations', function ($qt) use ($rawId, $decodedId) {
-                          $qt->where('slug', $rawId)->orWhere('slug', $decodedId);
-                      });
+                        ->orWhereHas('translations', function ($qt) use ($rawId, $decodedId) {
+                            $qt->where('slug', $rawId)->orWhere('slug', $decodedId);
+                        });
                 } else {
                     $q->whereHas('translations', function ($qt) use ($rawId, $decodedId) {
                         $qt->where('slug', $rawId)->orWhere('slug', $decodedId);
@@ -271,7 +273,7 @@ class ProductController extends Controller
             })
             ->first();
 
-        if (!$product) {
+        if (! $product) {
             return $this->errorResponse('المنتج غير موجود', 404);
         }
 

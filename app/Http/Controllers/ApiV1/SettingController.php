@@ -3,32 +3,33 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
+use App\Http\Resources\ApiV1\PageResource;
 use App\Http\Resources\ApiV1\SettingResource;
-use Illuminate\Http\Request;
-use App\Traits\ApiResponseTrait;
+use App\Models\Page;
+use App\Models\Setting;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 
 /**
  * @group 17. الإعدادات العامة (Settings)
- * 
- * يوفر الواجهات الخاصة بجلب معلومات وإعدادات التطبيق، وسائل التواصل الاجتماعي، 
+ *
+ * يوفر الواجهات الخاصة بجلب معلومات وإعدادات التطبيق، وسائل التواصل الاجتماعي،
  * الكتالوج الطبي بصيغة PDF، مميزات لماذا تختارنا، وسياسات الاستخدام.
  */
 class SettingController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب إعدادات التطبيق التفصيلية
-     * 
+     *
      * يعيد جميع إعدادات التطبيق وروابط التواصل الاجتماعي وقسم لماذا تختارنا والكتالوج.
      */
     public function index()
     {
         $setting = Setting::first();
 
-        if (!$setting) {
+        if (! $setting) {
             return $this->errorResponse('الإعدادات غير موجودة', 404);
         }
 
@@ -37,23 +38,23 @@ class SettingController extends Controller
 
     /**
      * جلب التكوينات العامة للتطبيق
-     * 
+     *
      * واجهة مخصصة لتزويد التطبيق بالتكوينات العامة كاللغات، الشروط، سياسة الخصوصية، الكتالوج، وإمكانية التسجيل.
      */
     public function configuration()
     {
         $setting = Setting::first();
 
-        if (!$setting) {
-             return response()->json([
+        if (! $setting) {
+            return response()->json([
                 'status' => false,
                 'data' => null,
                 'error' => 'الإعدادات غير موجودة',
-                'code' => '404'
+                'code' => '404',
             ], 404);
         }
 
-        $aboutPage = \App\Models\Page::active()->whereHas('translations', function($q) {
+        $aboutPage = Page::active()->whereHas('translations', function ($q) {
             $q->where('slug', 'like', 'about%');
         })->with(['translations', 'translation'])->first();
 
@@ -74,7 +75,7 @@ class SettingController extends Controller
                 'about_title' => $aboutPage ? $aboutPage->title : 'من نحن',
                 'about_image' => $aboutImageUrl,
                 'about_images' => $aboutImageUrl ? [$aboutImageUrl] : [],
-                'about_details' => $aboutPage ? new \App\Http\Resources\ApiV1\PageResource($aboutPage) : null,
+                'about_details' => $aboutPage ? new PageResource($aboutPage) : null,
                 'privacy' => $setting->translate('privacy') ?: 'سياسة الخصوصية',
                 'terms' => $setting->translate('terms') ?: 'الشروط والأحكام',
                 'contact' => $setting->phone,
@@ -94,7 +95,7 @@ class SettingController extends Controller
                 ],
             ],
             'error' => null,
-            'code' => '200'
+            'code' => '200',
         ], 200);
     }
 }

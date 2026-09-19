@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\UserAddress;
+use App\Models\City;
 use App\Models\Country;
 use App\Models\Governorate;
-use App\Models\City;
+use App\Models\Order;
+use App\Models\UserAddress;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -21,16 +22,17 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $countries = Country::active()->with('translations')->get();
+
         return view('frontend.profile.index', compact('user', 'countries'));
     }
 
     public function update(Request $request)
     {
         $user = Auth::user();
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'phone' => 'required|string|max:20',
             'country_id' => 'required|exists:countries,id',
         ]);
@@ -48,11 +50,12 @@ class ProfileController extends Controller
     public function addresses()
     {
         $user = Auth::user();
-        if (!$user->country_id) {
+        if (! $user->country_id) {
             return redirect()->route('user.home')->with('error', trans_db('frontend.Please select your country first'));
         }
         $addresses = UserAddress::where('user_id', $user->id)->with(['city_rel', 'governorate_rel'])->get();
         $governorates = Governorate::active()->where('country_id', $user->country_id)->with('translations')->get();
+
         return view('frontend.profile.addresses', compact('user', 'addresses', 'governorates'));
     }
 
@@ -117,6 +120,7 @@ class ProfileController extends Controller
     public function deleteAddress($id)
     {
         UserAddress::where('user_id', Auth::id())->findOrFail($id)->delete();
+
         return redirect()->back()->with('success', trans_db('frontend.Address deleted successfully'));
     }
 
@@ -124,6 +128,7 @@ class ProfileController extends Controller
     {
         UserAddress::where('user_id', Auth::id())->update(['is_main' => false]);
         UserAddress::where('user_id', Auth::id())->findOrFail($id)->update(['is_main' => true]);
+
         return redirect()->back()->with('success', trans_db('frontend.Main address set successfully'));
     }
 
@@ -155,16 +160,17 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $notifications = $user->notifications()->paginate(10);
-        
+
         // Mark as read when viewing
         $user->unreadNotifications->markAsRead();
 
         return view('frontend.profile.notifications', compact('user', 'notifications'));
     }
-    public function orders(\Illuminate\Http\Request $request)
+
+    public function orders(Request $request)
     {
         $user = Auth::user();
-        $query = \App\Models\Order::where('user_id', $user->id);
+        $query = Order::where('user_id', $user->id);
 
         // Filter by Status
         if ($request->filled('status') && $request->status !== 'all') {
@@ -176,9 +182,9 @@ class ProfileController extends Controller
             if ($request->type === 'gift') {
                 $query->where('payment_method', 'gift');
             } else {
-                $query->where(function($q) {
+                $query->where(function ($q) {
                     $q->whereNull('payment_method')
-                      ->orWhere('payment_method', '!=', 'gift');
+                        ->orWhere('payment_method', '!=', 'gift');
                 });
             }
         }
@@ -195,10 +201,10 @@ class ProfileController extends Controller
     public function show_order($id)
     {
         $user = Auth::user();
-        $order = \App\Models\Order::where('user_id', $user->id)
+        $order = Order::where('user_id', $user->id)
             ->with(['order_details.product.translations', 'city', 'governorate', 'order_statuses'])
             ->findOrFail($id);
-            
+
         return view('frontend.profile.order_show', compact('user', 'order'));
     }
 }

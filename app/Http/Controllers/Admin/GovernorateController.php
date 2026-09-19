@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\Governorate;
 use App\Models\GovernorateTranslation;
-use App\Models\Country;
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -17,6 +17,7 @@ class GovernorateController extends Controller
     public function index()
     {
         $governorates = Governorate::with(['translation', 'country.translation'])->orderBy('sort_order')->get();
+
         return view('dashboard.admin.governorates.index', compact('governorates'));
     }
 
@@ -26,6 +27,7 @@ class GovernorateController extends Controller
     public function create()
     {
         $countries = Country::active()->get();
+
         return view('dashboard.admin.governorates.create', compact('countries'));
     }
 
@@ -78,6 +80,7 @@ class GovernorateController extends Controller
     public function edit(Governorate $governorate)
     {
         $countries = Country::active()->get();
+
         return view('dashboard.admin.governorates.edit', compact('governorate', 'countries'));
     }
 
@@ -108,12 +111,12 @@ class GovernorateController extends Controller
         // Update translations
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $translation = GovernorateTranslation::where('governorate_id', $governorate->id)->where('locale', $localeCode)->first();
-            
+
             $transData = [
                 'name' => $request->input("name_$localeCode"),
             ];
 
-             if ($translation) {
+            if ($translation) {
                 $translation->update($transData);
             } else {
                 $transData['governorate_id'] = $governorate->id;
@@ -131,6 +134,7 @@ class GovernorateController extends Controller
     public function destroy(Governorate $governorate)
     {
         $governorate->delete();
+
         return redirect()->route('admin.governorates.index')->with('success', trans_db('dashboard.deleted successfully'));
     }
 }

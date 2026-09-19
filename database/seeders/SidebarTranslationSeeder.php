@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\StaticTranslation;
+use Illuminate\Database\Seeder;
 
 class SidebarTranslationSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class SidebarTranslationSeeder extends Seeder
         $translations = [
             // Home
             ['key' => 'dashboard.Home', 'ar' => 'الرئيسية', 'en' => 'Home'],
-            
+
             // Users Management Group
             ['key' => 'dashboard.UsersManagement', 'ar' => 'إدارة المستخدمين', 'en' => 'Users Management'],
             ['key' => 'dashboard.roles', 'ar' => 'الصلاحيات', 'en' => 'Roles'],
@@ -28,6 +28,7 @@ class SidebarTranslationSeeder extends Seeder
             // General Group
             ['key' => 'dashboard.General', 'ar' => 'عام', 'en' => 'General'],
             ['key' => 'dashboard.pages', 'ar' => 'الصفحات', 'en' => 'Pages'],
+            ['key' => 'dashboard.projects', 'ar' => 'المشروعات', 'en' => 'Projects'],
             ['key' => 'dashboard.blog_categories', 'ar' => 'أقسام المقالات', 'en' => 'Blog Categories'],
             ['key' => 'dashboard.blogs', 'ar' => 'المدونة', 'en' => 'Blogs'],
             ['key' => 'dashboard.contacts', 'ar' => 'وسائل التواصل', 'en' => 'Contacts'],
@@ -73,7 +74,7 @@ class SidebarTranslationSeeder extends Seeder
             ['key' => 'dashboard.payment_methods', 'ar' => 'طرق الدفع', 'en' => 'Payment Methods'],
             ['key' => 'dashboard.static_translations', 'ar' => 'الترجمات الثابتة', 'en' => 'Static Translations'],
             ['key' => 'dashboard.languages', 'ar' => 'اللغات', 'en' => 'Languages'],
-            
+
             // Other
             ['key' => 'dashboard.Stock Update', 'ar' => 'تحديث المخزون', 'en' => 'Stock Update'],
         ];
@@ -84,8 +85,8 @@ class SidebarTranslationSeeder extends Seeder
                 [
                     'translations' => [
                         'ar' => $trans['ar'],
-                        'en' => $trans['en']
-                    ]
+                        'en' => $trans['en'],
+                    ],
                 ]
             );
         }

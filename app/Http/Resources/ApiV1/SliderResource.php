@@ -27,7 +27,7 @@ class SliderResource extends JsonResource
             ] : null,
             'sort_order' => $this->sort_order,
             // Legacy fields for Flutter
-            'link' => $this->link_id ? (string)$this->link_id : '',
+            'link' => $this->link_id ? (string) $this->link_id : '',
             'category_id' => $this->category ? $this->category->id : null,
             'category_title' => $this->category ? ($this->category->translation->title ?? '') : '',
             'type' => $this->link_type ?? 'category',

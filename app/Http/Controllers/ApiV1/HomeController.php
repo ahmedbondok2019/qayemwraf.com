@@ -7,40 +7,41 @@ use App\Http\Resources\ApiV1\AdvertisementResource;
 use App\Http\Resources\ApiV1\BlogResource;
 use App\Http\Resources\ApiV1\BrandResource;
 use App\Http\Resources\ApiV1\CategoryResource;
-use App\Http\Resources\ApiV1\OfferResource;
-use App\Http\Resources\ApiV1\SliderResource;
-use App\Http\Resources\ApiV1\ProductResource;
 use App\Http\Resources\ApiV1\FlashSaleResource;
+use App\Http\Resources\ApiV1\OfferResource;
 use App\Http\Resources\ApiV1\PageResource;
+use App\Http\Resources\ApiV1\ProductResource;
+use App\Http\Resources\ApiV1\ProjectResource;
+use App\Http\Resources\ApiV1\SliderResource;
 use App\Models\Advertisement;
 use App\Models\Blog;
 use App\Models\Category;
+use App\Models\FlashSale;
 use App\Models\Offer;
+use App\Models\OrderDetail;
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductBrand;
-use App\Models\Slider;
-use App\Models\FlashSale;
-use App\Models\OrderDetail;
+use App\Models\Project;
 use App\Models\Setting;
-use App\Models\Page;
-use App\Traits\ApiResponseTrait;
+use App\Models\Slider;
 use App\Traits\ApiPaginationTrait;
-use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Support\Facades\DB;
 
 /**
  * @group 02. الصفحة الرئيسية (Home)
- * 
+ *
  * يوفر الواجهات الخاصة بجلب كافة محتويات الصفحة الرئيسية مثل السلايدرز، الأقسام، العروض،
  * الفلاش سيل، المنتجات المميزة، الأكثر مبيعاً، العلامات التجارية، قسم لماذا تختارنا، وتحميل الكتالوج.
  */
 class HomeController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * الصفحة الرئيسية
-     * 
+     *
      * يجلب جميع البيانات المدمجة المطلوبة لعرض الصفحة الرئيسية في تطبيق الهاتف المحمول:
      * - السلايدرز (sliders)
      * - الأقسام المتاحة للعرض في الصفحة الرئيسية (categories / home_categories)
@@ -101,15 +102,15 @@ class HomeController extends Controller
             ->pluck('id');
 
         $flashProducts = Product::active()
-            ->whereHas('flashSales', function($q) use ($flashSaleIds) {
+            ->whereHas('flashSales', function ($q) use ($flashSaleIds) {
                 $q->whereIn('flash_sales.id', $flashSaleIds);
             })
-            ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+            ->with(['translation', 'brand.translation', 'flashSales' => function ($q) {
                 $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
             }])
             ->take(10)
             ->get();
-            
+
         $data['flash_sales'] = ProductResource::collection($flashProducts);
         $data['flash_sale_module'] = $activeFlashSale ? new FlashSaleResource($activeFlashSale) : null;
 
@@ -123,20 +124,20 @@ class HomeController extends Controller
         // 6. المنتجات المميزة والعروض الخاصة (Featured Products / Special Offers)
         // أي منتج مفعّل عليه خيار المعروضات الخاصة أو العرض على الرئيسية
         $featuredProducts = Product::active()
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->where('show_on_home', 1)
-                  ->orWhere(function($sq) {
-                      $sq->whereNotNull('special_price')
-                         ->where('special_price', '>', 0)
-                         ->where(function($dq) {
-                             $dq->whereNull('special_price_start')->orWhere('special_price_start', '<=', now());
-                         })
-                         ->where(function($dq) {
-                             $dq->whereNull('special_price_end')->orWhere('special_price_end', '>=', now());
-                         });
-                  });
+                    ->orWhere(function ($sq) {
+                        $sq->whereNotNull('special_price')
+                            ->where('special_price', '>', 0)
+                            ->where(function ($dq) {
+                                $dq->whereNull('special_price_start')->orWhere('special_price_start', '<=', now());
+                            })
+                            ->where(function ($dq) {
+                                $dq->whereNull('special_price_end')->orWhere('special_price_end', '>=', now());
+                            });
+                    });
             })
-            ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+            ->with(['translation', 'brand.translation', 'flashSales' => function ($q) {
                 $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
             }])
             ->take(10)
@@ -151,14 +152,14 @@ class HomeController extends Controller
             ->pluck('product_id')
             ->toArray();
 
-        if (!empty($topSoldProductIds)) {
+        if (! empty($topSoldProductIds)) {
             $topSellerProducts = Product::active()
                 ->whereIn('id', $topSoldProductIds)
-                ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+                ->with(['translation', 'brand.translation', 'flashSales' => function ($q) {
                     $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
                 }])
                 ->get()
-                ->sortBy(function($model) use ($topSoldProductIds) {
+                ->sortBy(function ($model) use ($topSoldProductIds) {
                     return array_search($model->id, $topSoldProductIds);
                 })
                 ->values();
@@ -166,7 +167,7 @@ class HomeController extends Controller
             // في حال عدم وجود طلبات بعد، يتم جلب المنتجات المحددة كأكثر مبيعاً أو أحدث المنتجات
             $topSellerProducts = Product::active()
                 ->where('is_best_seller', true)
-                ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+                ->with(['translation', 'brand.translation', 'flashSales' => function ($q) {
                     $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
                 }])
                 ->take(10)
@@ -177,7 +178,7 @@ class HomeController extends Controller
         // 8. أحدث المنتجات المضافة (Latest Products)
         $latestProducts = Product::active()
             ->latest()
-            ->with(['translation', 'brand.translation', 'flashSales' => function($q) {
+            ->with(['translation', 'brand.translation', 'flashSales' => function ($q) {
                 $q->where('start_at', '<=', now())->where('end_at', '>=', now())->where('is_active', 1)->with('translation');
             }])
             ->take(10)
@@ -190,7 +191,7 @@ class HomeController extends Controller
         $data['partners'] = $data['brands'];
 
         // 10. قسم لماذا تختارنا (Why Choose Us) - مميزات الخدمة والشركة
-        $setting = Setting::first() ?: new Setting();
+        $setting = Setting::first() ?: new Setting;
         $data['why_choose_us'] = $setting->getWhyChooseUsFormatted();
 
         // 11. قسم تحميل الكتالوج الطبي بصيغة PDF (Catalog Download)
@@ -211,8 +212,13 @@ class HomeController extends Controller
             Blog::active()->with('BlogTranslation')->latest()->take(3)->get()
         );
 
-        // 14. معلومات عن الشركة (About Us)
-        $aboutPage = Page::active()->whereHas('translations', function($q) {
+        // 14. المشروعات والأعمال المنفذة (Projects)
+        $data['projects'] = ProjectResource::collection(
+            Project::active()->with(['translation', 'translations'])->take(12)->get()
+        );
+
+        // 15. معلومات عن الشركة (About Us)
+        $aboutPage = Page::active()->whereHas('translations', function ($q) {
             $q->where('slug', 'like', 'about%');
         })->with(['translations', 'translation'])->first();
 
@@ -226,6 +232,7 @@ class HomeController extends Controller
             'top_offers' => $data['offers'],
             'categories' => $data['categories'],
             'brands' => $data['brands'],
+            'projects' => $data['projects'],
             'latestProducts' => $data['latest_products'],
             'topSeller' => $data['top_sellers'],
             'best_sellers' => $data['top_sellers'],
@@ -242,13 +249,13 @@ class HomeController extends Controller
             'status' => true,
             'data' => $responseData,
             'error' => null,
-            'code' => '200'
+            'code' => '200',
         ], 200);
     }
 
     /**
      * جلب قائمة عروض التخفيضات السريعة (فلاش سيل)
-     * 
+     *
      * يعيد قائمة بجميع حملات الفلاش سيل المتاحة والقادمة مع المنتجات المدرجة بها.
      */
     public function flashSales()

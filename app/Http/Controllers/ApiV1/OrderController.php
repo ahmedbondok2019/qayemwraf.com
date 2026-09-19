@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use App\Http\Resources\ApiV1\OrderResource;
-use App\Traits\ApiResponseTrait;
+use App\Models\Order;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 /**
  * @group 11. الطلبات (Orders)
- * 
+ *
  * يتولى جلب قائمة طلبات المستخدم، استعراض تفاصيل طلب محدد، وإلغاء الطلبات القابلة للإلغاء.
  */
 class OrderController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب قائمة الطلبات للمستخدم
-     * 
+     *
      * يعيد قائمة مفلترة ومقسمة صفحات لطلبات المستخدم الحالي.
      */
     public function index(Request $request)
@@ -37,9 +37,9 @@ class OrderController extends Controller
             if ($request->type === 'gift') {
                 $query->where('payment_method', 'gift');
             } else {
-                $query->where(function($q) {
+                $query->where(function ($q) {
                     $q->whereNull('payment_method')
-                      ->orWhere('payment_method', '!=', 'gift');
+                        ->orWhere('payment_method', '!=', 'gift');
                 });
             }
         }
@@ -51,7 +51,7 @@ class OrderController extends Controller
 
     /**
      * جلب تفاصيل طلب محدد
-     * 
+     *
      * يعيد كامل بيانات وتفاصيل المنتج وعنوان الشحن وحالة الطلب لرقم طلب محدد.
      */
     public function show($id, Request $request)
@@ -61,7 +61,7 @@ class OrderController extends Controller
             ->with(['order_details.product.translation', 'order_details.product.brand.translation', 'city.translation', 'governorate.translation', 'order_statuses'])
             ->find($id);
 
-        if (!$order) {
+        if (! $order) {
             return $this->errorResponse('الطلب غير موجود', 404);
         }
 
@@ -70,7 +70,7 @@ class OrderController extends Controller
 
     /**
      * إلغاء طلب مسبق
-     * 
+     *
      * يلغي الطلب المكتوب إذا كان لا يزال في حالة قيد الانتظار ولم يتم تجهيزه أو شحنه بعد.
      */
     public function cancel(Request $request)
@@ -78,7 +78,7 @@ class OrderController extends Controller
         $user = $request->user();
         $order = Order::where('user_id', $user->id)->find($request->id);
 
-        if (!$order) {
+        if (! $order) {
             return $this->errorResponse(__('website.Order Not Found'), 404);
         }
 

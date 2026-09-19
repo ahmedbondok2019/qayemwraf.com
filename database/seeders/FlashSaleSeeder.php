@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\FlashSale;
 use App\Models\FlashSaleTranslation;
 use App\Models\Product;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class FlashSaleSeeder extends Seeder
@@ -40,7 +40,7 @@ class FlashSaleSeeder extends Seeder
                     'ar' => 'عروض عيد الفطر',
                 ],
             ],
-             [
+            [
                 'start_at' => Carbon::now()->subDays(20),
                 'end_at' => Carbon::now()->subDays(15),
                 'is_active' => false, // Expired

@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Models\Rating;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NewRatingNotification extends Notification
 {
@@ -50,7 +49,7 @@ class NewRatingNotification extends Notification
             'rating_value' => $this->rating->rating,
             'comment' => $this->rating->comment,
             'title' => 'تقييم جديد للمنتج',
-            'message' => 'قام ' . ($this->rating->user->name ?? 'عميل') . ' بتقييم منتج ' . ($this->rating->product->translation->name ?? '') . ' بـ ' . $this->rating->rating . ' نجوم.',
+            'message' => 'قام '.($this->rating->user->name ?? 'عميل').' بتقييم منتج '.($this->rating->product->translation->name ?? '').' بـ '.$this->rating->rating.' نجوم.',
             'url' => route('admin.ratings.index'), // Assuming there's an admin route for ratings
         ];
     }

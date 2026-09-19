@@ -5,6 +5,7 @@ namespace App\Http\Resources\orders;
 use App\Models\ProductTranslation;
 use App\Models\Rating;
 use App\Models\Vendor;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class order_details extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

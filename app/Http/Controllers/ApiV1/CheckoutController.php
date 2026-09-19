@@ -3,48 +3,47 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\HelperController;
+use App\Http\Requests\ApiV1\Checkout\CheckoutStoreRequest;
+use App\Http\Requests\ApiV1\Checkout\CheckoutSummaryRequest;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderDetail;
-use App\Models\OrderStatus;
-use App\Models\UserAddress;
-use App\Models\PaymentMethod;
-use App\Models\ShippingRule;
-use App\Models\OrderSetting;
-use App\Models\Coupon;
 use App\Models\OrderService as OrderServiceModel;
 use App\Models\OrderServiceItem;
+use App\Models\OrderSetting;
+use App\Models\OrderStatus;
+use App\Models\PaymentMethod;
 use App\Models\Setting;
+use App\Models\ShippingRule;
 use App\Models\User;
+use App\Models\UserAddress;
+use App\Models\Vendor;
+use App\Notifications\OrderNotification;
 use App\Services\OrderService;
-use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
-use App\Http\Requests\ApiV1\Checkout\CheckoutSummaryRequest;
-use App\Http\Requests\ApiV1\Checkout\CheckoutStoreRequest;
+use App\Traits\ApiResponseTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use App\Models\Admin;
-use App\Models\Vendor;
-use App\Notifications\OrderNotification;
-use App\Http\Controllers\helper\HelperController;
 
 /**
  * @group 10. ملخص الشراء والخصومات (Checkout & Coupons)
- * 
+ *
  * يتولى حساب إجمالي ملخص الطلب وشامل مصاريف الشحن والخصومات والخدمات الإضافية،
  * والتحقق من صحة وتطبيق كوبونات الخصم، وتأكيد وإنشاء الطلبات الجديدة للمستخدم.
  */
 class CheckoutController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * حساب ملخص إنهاء الشراء
-     * 
-     * يحسب إجمالي المبلغ المطلوب للطلب شاملاً السعر الفرعي للمنتجات، مصاريف الشحن، 
+     *
+     * يحسب إجمالي المبلغ المطلوب للطلب شاملاً السعر الفرعي للمنتجات، مصاريف الشحن،
      * خصومات طرق الدفع، خصم الكوبون، وإجمالي الخدمات الإضافية.
      */
     public function summary(CheckoutSummaryRequest $request)
@@ -52,10 +51,13 @@ class CheckoutController extends Controller
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
         $tempUserId = $request->temp_user_id;
 
-        $cartItems = Cart::where(function($q) use ($userId, $tempUserId) {
-                if ($userId) $q->where('user_id', $userId);
-                else $q->where('temp_user_id', $tempUserId);
-            })->with('product')->get();
+        $cartItems = Cart::where(function ($q) use ($userId, $tempUserId) {
+            if ($userId) {
+                $q->where('user_id', $userId);
+            } else {
+                $q->where('temp_user_id', $tempUserId);
+            }
+        })->with('product')->get();
 
         if ($cartItems->isEmpty()) {
             return $this->errorResponse(__('frontend.your_cart_is_empty'), 400);
@@ -68,16 +70,16 @@ class CheckoutController extends Controller
 
     /**
      * تأكيد وإنشاء الطلب (Checkout Store)
-     * 
+     *
      * ينشئ طلباً جديداً في النظام بناءً على عناصر سلة التسوق للمستخدم والعنوان وطريقة الدفع المحددة،
      * ويعيد تفاصيل الطلب بالإضافة إلى رابط التوجيه للبوابة الإلكترونية (redirect_url) إن وجدت.
-     * 
+     *
      * Endpoint: POST /api/v1/checkout/store
      * Headers:
      *   - Authorization: Bearer {token} (مطلوب)
      *   - Accept: application/json (مطلوب)
      *   - Content-Type: application/json (مطلوب)
-     * 
+     *
      * Response Format (نجاح العملية):
      * {
      *   "status": "success",
@@ -95,8 +97,8 @@ class CheckoutController extends Controller
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
         $tempUserId = $request->temp_user_id;
 
-        if (!$userId) {
-             return $this->errorResponse(__('frontend.please_login_first'), 401);
+        if (! $userId) {
+            return $this->errorResponse(__('frontend.please_login_first'), 401);
         }
 
         $cartItems = Cart::where('user_id', $userId)->with('product')->get();
@@ -105,13 +107,13 @@ class CheckoutController extends Controller
         }
 
         $breakdown = $this->calculateOrderBreakdown($request, $cartItems);
-        
+
         if (isset($breakdown['error'])) {
             return $this->errorResponse($breakdown['error'], 400);
         }
 
         $addressId = $request->address_id ?: ($breakdown['address_id'] ?? null);
-        if (!$addressId) {
+        if (! $addressId) {
             return $this->errorResponse(__('frontend.please_select_address'), 400);
         }
 
@@ -150,7 +152,7 @@ class CheckoutController extends Controller
             foreach ($cartItems as $item) {
                 [$flashPrice] = OrderService::getFlashSaleValue($item->product_id);
                 $finalPrice = ($flashPrice > 0) ? $flashPrice : ($item->product->special_price ?: $item->product->price);
-                
+
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
@@ -161,7 +163,7 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            if (!empty($breakdown['selected_services_ids'])) {
+            if (! empty($breakdown['selected_services_ids'])) {
                 $services = OrderServiceModel::whereIn('id', $breakdown['selected_services_ids'])->get();
                 foreach ($services as $service) {
                     OrderServiceItem::create([
@@ -180,7 +182,7 @@ class CheckoutController extends Controller
             ]);
 
             Cart::where('user_id', $userId)->delete();
-            
+
             if ($breakdown['coupon_code']) {
                 Coupon::where('code', $breakdown['coupon_code'])->increment('usage_count');
             }
@@ -210,7 +212,7 @@ class CheckoutController extends Controller
                     Notification::send($vendors, new OrderNotification($order));
                 }
             } catch (\Exception $e) {
-                Log::error('Order notification failed: ' . $e->getMessage());
+                Log::error('Order notification failed: '.$e->getMessage());
             }
 
             // فحص هل طريقة الدفع إلكترونية (أونلاين)
@@ -220,31 +222,32 @@ class CheckoutController extends Controller
             if ($paymentMethod) {
                 $methodCode = strtolower($paymentMethod->code ?? '');
                 $methodType = strtolower($paymentMethod->type ?? '');
-                if (in_array($methodCode, ['paymob', 'online', 'card', 'kashier', 'fawry', 'credit_card', 'visa']) || 
-                    in_array($methodType, ['online', 'gateway', 'electronic']) || 
-                    !empty($paymentMethod->is_online)) {
+                if (in_array($methodCode, ['paymob', 'online', 'card', 'kashier', 'fawry', 'credit_card', 'visa']) ||
+                    in_array($methodType, ['online', 'gateway', 'electronic']) ||
+                    ! empty($paymentMethod->is_online)) {
                     $isOnlinePayment = true;
                     // رابط التوجيه لبوابة الدفع (مثل Paymob iframe / redirect link)
-                    $redirectUrl = config('app.url') . "/payment/paymob/initiate/{$order->id}";
+                    $redirectUrl = config('app.url')."/payment/paymob/initiate/{$order->id}";
                 }
             }
 
             return $this->successResponse([
-                'order_id'          => $order->id,
+                'order_id' => $order->id,
                 'is_online_payment' => $isOnlinePayment,
-                'redirect_url'      => $redirectUrl,
-                'gift_unlocked'     => $giftPageUnlocked
+                'redirect_url' => $redirectUrl,
+                'gift_unlocked' => $giftPageUnlocked,
             ], 'تم إنشاء الطلب بنجاح');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->errorResponse(__('frontend.something_went_wrong') . ': ' . $e->getMessage(), 500);
+
+            return $this->errorResponse(__('frontend.something_went_wrong').': '.$e->getMessage(), 500);
         }
     }
 
     /**
      * تطبيق وفحص كود كوبون الخصم
-     * 
+     *
      * يفحص مدى صلاحية وتأثير كود الكوبون المدخل ويعيد تفاصيل قيمة الخصومات.
      */
     public function applyCoupon(Request $request)
@@ -257,31 +260,37 @@ class CheckoutController extends Controller
 
         $coupon = Coupon::active()->where('code', $request->code)->first();
 
-        if (!$coupon) {
+        if (! $coupon) {
             return $this->errorResponse(__('frontend.invalid_coupon'), 400);
         }
 
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
         $tempUserId = $request->temp_user_id;
-        $cartItems = Cart::where(function($q) use ($userId, $tempUserId) {
-                if ($userId) $q->where('user_id', $userId);
-                else $q->where('temp_user_id', $tempUserId);
-            })->pluck('product_id')->toArray();
+        $cartItems = Cart::where(function ($q) use ($userId, $tempUserId) {
+            if ($userId) {
+                $q->where('user_id', $userId);
+            } else {
+                $q->where('temp_user_id', $tempUserId);
+            }
+        })->pluck('product_id')->toArray();
 
-        if (!empty($coupon->payment_method_id) && is_array($coupon->payment_method_id)) {
-            if (!$request->payment_method_id) {
+        if (! empty($coupon->payment_method_id) && is_array($coupon->payment_method_id)) {
+            if (! $request->payment_method_id) {
                 return $this->errorResponse(__('frontend.please_select_payment_first'), 400);
             }
-            if (!in_array($request->payment_method_id, $coupon->payment_method_id)) {
+            if (! in_array($request->payment_method_id, $coupon->payment_method_id)) {
                 return $this->errorResponse(__('frontend.coupon_not_valid_for_payment_method'), 400);
             }
         }
 
         $subtotal = 0;
-        $cartItems = Cart::where(function($q) use ($userId, $tempUserId) {
-                if ($userId) $q->where('user_id', $userId);
-                else $q->where('temp_user_id', $tempUserId);
-            })->with('product')->get();
+        $cartItems = Cart::where(function ($q) use ($userId, $tempUserId) {
+            if ($userId) {
+                $q->where('user_id', $userId);
+            } else {
+                $q->where('temp_user_id', $tempUserId);
+            }
+        })->with('product')->get();
 
         foreach ($cartItems as $item) {
             [$flashPrice] = OrderService::getFlashSaleValue($item->product_id);
@@ -293,7 +302,7 @@ class CheckoutController extends Controller
             return $this->errorResponse(__('frontend.coupon_not_valid_for_total', ['amount' => $coupon->max_discount]), 400);
         }
 
-        if (!empty($coupon->product_id) && is_array($coupon->product_id)) {
+        if (! empty($coupon->product_id) && is_array($coupon->product_id)) {
             $hasValidProduct = false;
             foreach ($cartItems as $pid) {
                 if (in_array($pid, $coupon->product_id)) {
@@ -301,7 +310,7 @@ class CheckoutController extends Controller
                     break;
                 }
             }
-            if (!$hasValidProduct) {
+            if (! $hasValidProduct) {
                 return $this->errorResponse(__('frontend.coupon_not_valid_for_cart'), 400);
             }
         }
@@ -312,11 +321,11 @@ class CheckoutController extends Controller
 
         return $this->successResponse([
             'code' => $coupon->code,
-            'discount_value' => (float)$coupon->discount_value,
+            'discount_value' => (float) $coupon->discount_value,
             'discount_type' => $coupon->discount_type,
-            'max_discount' => (float)$coupon->max_discount,
-            'include_shipping' => (bool)$coupon->include_shipping,
-            'include_services' => (bool)$coupon->include_services,
+            'max_discount' => (float) $coupon->max_discount,
+            'include_shipping' => (bool) $coupon->include_shipping,
+            'include_services' => (bool) $coupon->include_services,
         ], __('frontend.coupon_applied_successfully'));
     }
 
@@ -335,9 +344,9 @@ class CheckoutController extends Controller
         // Shipping
         $shippingCost = 0;
         $addressId = $request->address_id;
-        
+
         $userId = $request->user('sanctum') ? $request->user('sanctum')->id : null;
-        if (!$addressId && $userId) {
+        if (! $addressId && $userId) {
             $mainAddress = UserAddress::where('user_id', $userId)->where('is_main', 1)->first();
             if ($mainAddress) {
                 $addressId = $mainAddress->id;
@@ -349,7 +358,9 @@ class CheckoutController extends Controller
             $shippingRule = ShippingRule::where('country_id', $address->country_id)->where('is_active', 1)->first();
             if ($shippingRule) {
                 $govRate = $shippingRule->governorateRates()->where('governorate_id', $address->governorate_id)->first();
-                if ($govRate) $shippingCost = (float)$govRate->rate;
+                if ($govRate) {
+                    $shippingCost = (float) $govRate->rate;
+                }
             }
 
             // Free shipping check
@@ -367,7 +378,7 @@ class CheckoutController extends Controller
         $selectedServicesIds = [];
         if ($request->has('services') && is_array($request->services)) {
             $services = OrderServiceModel::whereIn('id', $request->services)->get();
-            $servicesTotal = (float)$services->sum('price');
+            $servicesTotal = (float) $services->sum('price');
             $selectedServicesIds = $services->pluck('id')->toArray();
         }
 
@@ -380,7 +391,7 @@ class CheckoutController extends Controller
             if ($paymentMethod->discount_type === 'percentage') {
                 $paymentDiscount = ($baseForPaymentDiscount * $paymentMethod->discount) / 100;
             } else {
-                $paymentDiscount = (float)$paymentMethod->discount;
+                $paymentDiscount = (float) $paymentMethod->discount;
             }
         }
 
@@ -391,20 +402,24 @@ class CheckoutController extends Controller
             $coupon = Coupon::active()->where('code', $request->coupon_code)->first();
             if ($coupon) {
                 $isValid = true;
-                
+
                 // Payment restriction
-                if (!empty($coupon->payment_method_id) && is_array($coupon->payment_method_id)) {
-                    if (!$paymentMethodId || !in_array($paymentMethodId, $coupon->payment_method_id)) $isValid = false;
+                if (! empty($coupon->payment_method_id) && is_array($coupon->payment_method_id)) {
+                    if (! $paymentMethodId || ! in_array($paymentMethodId, $coupon->payment_method_id)) {
+                        $isValid = false;
+                    }
                 }
-                
+
                 // Max discount vs Subtotal validation (Exact Web match)
-                if ($coupon->max_discount && $coupon->max_discount < $subtotal) $isValid = false;
+                if ($coupon->max_discount && $coupon->max_discount < $subtotal) {
+                    $isValid = false;
+                }
 
                 if ($isValid) {
                     $discountableTotal = $subtotal;
-                    
+
                     // Product restriction
-                    if (!empty($coupon->product_id) && is_array($coupon->product_id)) {
+                    if (! empty($coupon->product_id) && is_array($coupon->product_id)) {
                         $discountableTotal = 0;
                         foreach ($cartItems as $item) {
                             if (in_array($item->product_id, $coupon->product_id)) {
@@ -415,17 +430,23 @@ class CheckoutController extends Controller
                         }
                     }
 
-                    if ($coupon->include_shipping) $discountableTotal += $shippingCost;
-                    if ($coupon->include_services) $discountableTotal += $servicesTotal;
+                    if ($coupon->include_shipping) {
+                        $discountableTotal += $shippingCost;
+                    }
+                    if ($coupon->include_services) {
+                        $discountableTotal += $servicesTotal;
+                    }
 
                     if ($coupon->discount_type === 'percentage') {
                         $couponDiscount = ($discountableTotal * $coupon->discount_value) / 100;
                         if ($coupon->max_discount && $couponDiscount > $coupon->max_discount) {
-                            $couponDiscount = (float)$coupon->max_discount;
+                            $couponDiscount = (float) $coupon->max_discount;
                         }
                     } else {
-                        $couponDiscount = (float)$coupon->discount_value;
-                        if ($couponDiscount > $discountableTotal) $couponDiscount = (float)$discountableTotal;
+                        $couponDiscount = (float) $coupon->discount_value;
+                        if ($couponDiscount > $discountableTotal) {
+                            $couponDiscount = (float) $discountableTotal;
+                        }
                     }
                     $couponCode = $coupon->code;
                 }

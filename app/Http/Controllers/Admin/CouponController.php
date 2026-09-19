@@ -16,6 +16,7 @@ class CouponController extends Controller
     public function index()
     {
         $coupons = Coupon::latest()->get();
+
         return view('dashboard.admin.coupons.index', compact('coupons'));
     }
 
@@ -27,6 +28,7 @@ class CouponController extends Controller
         $products = Product::all(); // Assuming Product has translation via accessor or scope?
         // Checking if PaymentMethod has translations, yes.
         $paymentMethods = PaymentMethod::with('translation')->active()->get();
+
         return view('dashboard.admin.coupons.create', compact('products', 'paymentMethods'));
     }
 
@@ -69,6 +71,7 @@ class CouponController extends Controller
     {
         $products = Product::all();
         $paymentMethods = PaymentMethod::with('translation')->active()->get();
+
         return view('dashboard.admin.coupons.edit', compact('coupon', 'products', 'paymentMethods'));
     }
 
@@ -79,7 +82,7 @@ class CouponController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:coupons,code,' . $coupon->id,
+            'code' => 'required|string|max:50|unique:coupons,code,'.$coupon->id,
             'discount_value' => 'required|numeric|min:0',
             'discount_type' => 'required|in:percentage,fixed',
             'max_discount' => 'nullable|numeric|min:0',
@@ -97,10 +100,10 @@ class CouponController extends Controller
         $input['payment_method_id'] = $request->input('payment_method_id');
         $input['product_id'] = $request->input('product_id');
 
-        if (!$request->has('is_active')) {
+        if (! $request->has('is_active')) {
             $input['is_active'] = false;
         } else {
-             $input['is_active'] = true;
+            $input['is_active'] = true;
         }
 
         $input['include_shipping'] = $request->has('include_shipping');
@@ -117,6 +120,7 @@ class CouponController extends Controller
     public function destroy(Coupon $coupon)
     {
         $coupon->delete();
+
         return redirect()->route('admin.coupons.index')->with('success', trans_db('dashboard.deleted'));
     }
 }

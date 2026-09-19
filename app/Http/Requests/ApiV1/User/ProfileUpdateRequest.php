@@ -3,6 +3,7 @@
 namespace App\Http\Requests\ApiV1\User;
 
 use App\Http\Requests\ApiV1\BaseApiV1Request;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends BaseApiV1Request
@@ -18,7 +19,7 @@ class ProfileUpdateRequest extends BaseApiV1Request
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

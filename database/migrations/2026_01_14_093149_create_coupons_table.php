@@ -23,12 +23,12 @@ return new class extends Migration
             $table->date('valid_until')->nullable();
             $table->integer('usage_limit')->nullable();
             $table->integer('usage_count')->default(0);
-            $table->string('usage_limitation')->nullable()->comment('User vs All'); 
+            $table->string('usage_limitation')->nullable()->comment('User vs All');
             // Or maybe user_id if specific? UI says "Select Usage" -> likely a type
-            
+
             $table->foreignId('payment_method_id')->nullable()->index();
             $table->foreignId('product_id')->nullable()->index();
-            
+
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps();

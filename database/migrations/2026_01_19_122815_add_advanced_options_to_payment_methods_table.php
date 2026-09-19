@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payment_methods', function (Blueprint $table) {
-            $table->decimal('discount', 10, 2)->nullable()->default(0); //خصم
+            $table->decimal('discount', 10, 2)->nullable()->default(0); // خصم
             $table->string('discount_type')->nullable()->default('percentage'); // نوع الخصم
-            $table->decimal('cod_limit', 10, 2)->nullable(); //حد COD
+            $table->decimal('cod_limit', 10, 2)->nullable(); // حد COD
         });
     }
 

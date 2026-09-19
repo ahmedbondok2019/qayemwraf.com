@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\PaymentMethod;
 use App\Models\PaymentMethodTranslation;
+use Illuminate\Database\Seeder;
 
 class PaymentMethodSeeder extends Seeder
 {
@@ -68,7 +68,7 @@ class PaymentMethodSeeder extends Seeder
                     ['locale' => 'ar', 'name' => 'فودافون كاش', 'description' => 'ادفع عن طريق محفظة فودافون كاش.'],
                 ],
             ],
-             [
+            [
                 'keyword' => 'instapay',
                 'is_active' => true,
                 'sort_order' => 5,

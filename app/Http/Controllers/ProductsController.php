@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use stdClass;
 
 class ProductsController extends WebController
 {
@@ -113,7 +112,7 @@ class ProductsController extends WebController
         $data['options'] = Option::whereHas('translations')->whereHas('option_items')->get();
 
         if ($category != null) {
-            Session::put(['baseEndPoint' => '/products/' . $category]);
+            Session::put(['baseEndPoint' => '/products/'.$category]);
         } else {
             Session::put(['baseEndPoint' => '/products']);
         }
@@ -209,7 +208,7 @@ class ProductsController extends WebController
         $data['options'] = Option::whereHas('translations')->whereHas('option_items')->get();
 
         if ($category != null) {
-            Session::put(['baseEndPoint' => '/videos/products/' . $category]);
+            Session::put(['baseEndPoint' => '/videos/products/'.$category]);
         } else {
             Session::put(['baseEndPoint' => '/videos/products']);
         }
@@ -243,7 +242,6 @@ class ProductsController extends WebController
             ->whereHas('categories')
             ->orderByDesc('id')
             ->get();
-
 
         $offers = Offer::query();
         $data['offers'] = $offers->whereHas('offer_translations', function ($queries) {
@@ -292,7 +290,7 @@ class ProductsController extends WebController
         // Only apply custom ordering if there are bestseller products
         if ($bestOrder->isNotEmpty()) {
             $productsQuery->whereIn('id', $bestOrder->keys())
-                ->orderByRaw('FIELD(id, ' . implode(',', $bestOrder->keys()->toArray()) . ')');
+                ->orderByRaw('FIELD(id, '.implode(',', $bestOrder->keys()->toArray()).')');
         }
 
         $data['products'] = $productsQuery->get();
@@ -392,7 +390,7 @@ class ProductsController extends WebController
         $data['options'] = Option::whereHas('translations')->whereHas('option_items')->get();
 
         if ($category != null) {
-            Session::put(['baseEndPoint' => '/products/' . $category]);
+            Session::put(['baseEndPoint' => '/products/'.$category]);
         } else {
             Session::put(['baseEndPoint' => '/products']);
         }
@@ -475,7 +473,7 @@ class ProductsController extends WebController
         $data['options'] = Option::whereHas('translations')->whereHas('option_items')->get();
 
         if ($category != null) {
-            Session::put(['baseEndPoint' => '/videos/products/' . $category]);
+            Session::put(['baseEndPoint' => '/videos/products/'.$category]);
         } else {
             Session::put(['baseEndPoint' => '/videos/products']);
         }
@@ -522,7 +520,7 @@ class ProductsController extends WebController
             })->get();
 
             if ($request->id != null) {
-                Session::put(['baseEndPoint' => '/brand/' . $request->id . '/' . $brands]);
+                Session::put(['baseEndPoint' => '/brand/'.$request->id.'/'.$brands]);
             } else {
                 Session::put(['baseEndPoint' => '/brands']);
             }
@@ -610,14 +608,14 @@ class ProductsController extends WebController
             }
 
             if ($checkDate->between($startDate, $endDate)) {
-                $proIDS .= ',' . implode(',', collect($deals->sale_products)->pluck('product_id')->toArray());
+                $proIDS .= ','.implode(',', collect($deals->sale_products)->pluck('product_id')->toArray());
                 // $data['days'][] = Carbon::createFromFormat('Y-m-d H:i:s' , $deals->valid_from)->format('d M');
                 $data['percentage'] = $deals->percentage;
                 $dates = CarbonPeriod::create($startDate, $endDate);
 
                 foreach ($dates as $date) {
                     if (! in_array($date->format('M d'), $data['days']) && $checkDate < $date) {
-                        $data['days'][] = $date->format('d ') . HelperController::GetMonth($date->format('M'));
+                        $data['days'][] = $date->format('d ').HelperController::GetMonth($date->format('M'));
                         $data['days_route'][] = $date->format('d-M');
                     }
                 }
@@ -745,7 +743,7 @@ class ProductsController extends WebController
 
             $keyword = str_replace(' ', '-', $request->keywords);
 
-            return redirect(LaravelLocalization::localizeUrl('products/search/' . $keyword . '/0'));
+            return redirect(LaravelLocalization::localizeUrl('products/search/'.$keyword.'/0'));
         } catch (ValidationException $e) {
             // return new JsonResponse([
             //     'success' => false,
@@ -780,7 +778,7 @@ class ProductsController extends WebController
         $data['secondCat'] = '';
         $data['activeCategory'] = '';
 
-        Session::put(['baseEndPoint' => '/products/search/' . $keyword]);
+        Session::put(['baseEndPoint' => '/products/search/'.$keyword]);
 
         if ($request->method() !== 'POST') {
             return view('products', $data);
@@ -825,7 +823,7 @@ class ProductsController extends WebController
         $data['products'] = Product::active();
         if (! empty($keyword)) {
             $data['products'] = $data['products']->whereHas('translations', function ($query) use ($keyword) {
-                $query->where('title', 'like', '%' . $keyword . '%');
+                $query->where('title', 'like', '%'.$keyword.'%');
             });
         }
 
@@ -1037,7 +1035,7 @@ class ProductsController extends WebController
 
         if ($validator->fails()) {
             return response()->json(
-                ['msg' => '<div class="alert alert-danger">' . __('website.All_Required_Fields') . '</div>']
+                ['msg' => '<div class="alert alert-danger">'.__('website.All_Required_Fields').'</div>']
             );
         }
 
@@ -1049,16 +1047,16 @@ class ProductsController extends WebController
         if (empty($test)) {
             Contact::create($request->all());
 
-            return response()->json(['msg' => '<div class="alert alert-success">' . __('website.Send_Successfully') . '</div>']);
+            return response()->json(['msg' => '<div class="alert alert-success">'.__('website.Send_Successfully').'</div>']);
         } else {
-            return response()->json(['msg' => '<div class="alert alert-danger">' . __('website.Duplicate_Fields') . '</div>']);
+            return response()->json(['msg' => '<div class="alert alert-danger">'.__('website.Duplicate_Fields').'</div>']);
         }
     }
 
     public function product_pdf($fileName = null)
     {
-        if ($fileName != null && file_exists(public_path() . '/website/uploads/pdf/' . $fileName)) {
-            $file = public_path() . '/website/uploads/pdf/' . $fileName;
+        if ($fileName != null && file_exists(public_path().'/website/uploads/pdf/'.$fileName)) {
+            $file = public_path().'/website/uploads/pdf/'.$fileName;
             $headers = [
                 'Content-Type: application/pdf',
             ];
@@ -1162,14 +1160,14 @@ class ProductsController extends WebController
         $rating = self::count_rating($request->rowid, $request->order_id, $request->business_id);
         $color = '';
         //  <h3 class="text-primary"> ' . __('dashboard.Rate') . ' :</h3>
-        $output .= '<ul class="list-inline" style="display: inline-flex;" data-rating="' . $rating . '" title="Average Rating - ' . $rating . '">';
+        $output .= '<ul class="list-inline" style="display: inline-flex;" data-rating="'.$rating.'" title="Average Rating - '.$rating.'">';
         for ($count = 1; $count <= 5; $count++) {
             if ($count <= $rating) {
                 $color = 'color:#ffcc00;';
             } else {
                 $color = 'color:#ccc;';
             }
-            $output .= '<li title="' . $count . '" id="' . $request->business_id . '_' . $count . '" data-rowid="' . $request->rowid . '" data-order_id="' . $request->order_id . '" data-index="' . $count . '"  data-business_id="' . $request->business_id . '" data-rating="' . $rating . '" class="rating" style="cursor:pointer;padding: 0.1rem; ' . $color . ' font-size:30px;">&#9733;</li>';
+            $output .= '<li title="'.$count.'" id="'.$request->business_id.'_'.$count.'" data-rowid="'.$request->rowid.'" data-order_id="'.$request->order_id.'" data-index="'.$count.'"  data-business_id="'.$request->business_id.'" data-rating="'.$rating.'" class="rating" style="cursor:pointer;padding: 0.1rem; '.$color.' font-size:30px;">&#9733;</li>';
         }
         $output .= '</ul>';
 
@@ -1189,7 +1187,7 @@ class ProductsController extends WebController
     {
         $output = 0;
         // /// فى هذه الحالة فقط نضيف هذا الشرط -- غير مطلوب أكثر من تقييم واحد فقط -- للمنتجات يحذف ///////
-        $result = rating::select('rating')
+        $result = Rating::select('rating')
             ->where('order_id', $order_id)
             ->where('user_id', Auth::id())
             ->where('product_id', $business_id)
@@ -1248,14 +1246,14 @@ class ProductsController extends WebController
         $rating = self::count_rating($rowid, $order_id, $business_id);
         $color = '';
         //  <h3 class="text-primary"> ' . __('dashboard.Rate') . ' :</h3>
-        $output .= '<ul class="list-inline" style="display: inline-flex;" data-rating="' . $rating . '" title="Average Rating - ' . $rating . '">';
+        $output .= '<ul class="list-inline" style="display: inline-flex;" data-rating="'.$rating.'" title="Average Rating - '.$rating.'">';
         for ($count = 1; $count <= 5; $count++) {
             if ($count <= $rating) {
                 $color = 'color:#ffcc00;';
             } else {
                 $color = 'color:#ccc;';
             }
-            $output .= '<li title="' . $count . '" id="' . $business_id . '_' . $count . '" data-rowid="' . $rowid . '" data-order_id="' . $order_id . '" data-index="' . $count . '"  data-business_id="' . $business_id . '" data-rating="' . $rating . '" class="rating" style="cursor:pointer;padding: 0.1rem; ' . $color . ' font-size:30px;">&#9733;</li>';
+            $output .= '<li title="'.$count.'" id="'.$business_id.'_'.$count.'" data-rowid="'.$rowid.'" data-order_id="'.$order_id.'" data-index="'.$count.'"  data-business_id="'.$business_id.'" data-rating="'.$rating.'" class="rating" style="cursor:pointer;padding: 0.1rem; '.$color.' font-size:30px;">&#9733;</li>';
         }
         $output .= '</ul>';
         echo $output;

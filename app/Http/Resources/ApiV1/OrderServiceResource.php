@@ -15,12 +15,12 @@ class OrderServiceResource extends JsonResource
     public function toArray(Request $request): array
     {
         $locale = app()->getLocale();
-        
+
         return [
             'id' => $this->id,
             'name' => $locale === 'ar' ? ($this->name_ar ?? $this->name) : ($this->name ?? $this->name_ar),
-            'price' => (float)$this->price,
-            'is_active' => (bool)$this->is_active,
+            'price' => (float) $this->price,
+            'is_active' => (bool) $this->is_active,
         ];
     }
 }

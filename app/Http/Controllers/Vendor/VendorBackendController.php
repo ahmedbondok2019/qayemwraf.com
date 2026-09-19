@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\HelperController;
 use App\Models\Blog;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Currency;
-use App\Models\CurrencyTranslation;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -34,13 +35,13 @@ class VendorBackendController extends Controller
             }
 
             View::share([
-                'Setting' => \App\Models\Setting::find(1),
-                'Categories' => \App\Models\Category::active()->get(),
-                'search_categories' => \App\Models\Category::active()->whereNotIn('id', $parents)->get(),
+                'Setting' => Setting::find(1),
+                'Categories' => Category::active()->get(),
+                'search_categories' => Category::active()->whereNotIn('id', $parents)->get(),
                 'Currency' => $currency,
                 'cart' => $cart,
                 'sum' => $sum,
-                'arabic' => \App\Http\Controllers\helper\HelperController::getArabicLangs(),
+                'arabic' => HelperController::getArabicLangs(),
                 'footer_blogs' => Blog::limit(5)->latest()->get(),
             ]);
         } catch (\Exception $e) {

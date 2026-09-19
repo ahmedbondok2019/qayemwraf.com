@@ -3,29 +3,29 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cart;
-use App\Models\Product;
-use Illuminate\Support\Facades\Validator;
-use App\Traits\ApiResponseTrait;
-use App\Traits\ApiPaginationTrait;
-use App\Http\Resources\ApiV1\ProductResource;
 use App\Http\Requests\ApiV1\Cart\CartIndexRequest;
 use App\Http\Requests\ApiV1\Cart\CartStoreRequest;
 use App\Http\Requests\ApiV1\Cart\CartUpdateRequest;
+use App\Http\Resources\ApiV1\ProductResource;
+use App\Models\Cart;
+use App\Services\OrderService;
+use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
 
 /**
  * @group 08. سلة التسوق (Cart)
- * 
- * يتولى العمليات المتعلقة باستعراض عناصر سلة التسوق، إضافة المنتجات للسلة، 
+ *
+ * يتولى العمليات المتعلقة باستعراض عناصر سلة التسوق، إضافة المنتجات للسلة،
  * تعديل كميات العناصر، وحذف العناصر من السلة للمستخدم المسجل أو الزائر.
  */
 class CartController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب محتويات سلة التسوق
-     * 
+     *
      * يعيد جميع المنتجات الموجودة بسلة التسوق الحالية مع المجموع الكلي وإجمالي السعر للمستخدم أو الزائر.
      */
     public function index(CartIndexRequest $request)
@@ -41,20 +41,20 @@ class CartController extends Controller
         $items = $query->get();
         $total = 0;
         foreach ($items as $item) {
-            [$flashPrice] = \App\Services\OrderService::getFlashSaleValue($item->product_id);
+            [$flashPrice] = OrderService::getFlashSaleValue($item->product_id);
             $price = ($flashPrice > 0) ? $flashPrice : ($item->product->special_price ?: $item->product->price);
             $total += $price * $item->quantity;
         }
 
         return $this->successResponse([
-            'items' => $items->map(function($item) {
+            'items' => $items->map(function ($item) {
                 return [
                     'id' => $item->id,
                     'quantity' => $item->quantity,
                     'product' => new ProductResource($item->product),
                 ];
             }),
-            'total' => (float)$total,
+            'total' => (float) $total,
             'formatted_total' => format_price($total),
             'currency' => [
                 'code' => config('app.currency_code'),
@@ -66,7 +66,7 @@ class CartController extends Controller
 
     /**
      * إضافة منتج إلى سلة التسوق
-     * 
+     *
      * يضيف منتجاً جديداً أو يزيد كمية منتج موجود بالفعل داخل سلة التسوق.
      */
     public function store(CartStoreRequest $request)
@@ -75,7 +75,7 @@ class CartController extends Controller
         $tempUserId = $request->temp_user_id;
 
         $cartItem = Cart::where('product_id', $request->product_id)
-            ->where(function($q) use ($userId, $tempUserId) {
+            ->where(function ($q) use ($userId, $tempUserId) {
                 if ($userId) {
                     $q->where('user_id', $userId);
                 } else {
@@ -99,7 +99,7 @@ class CartController extends Controller
 
     /**
      * تحديث عنصر في سلة التسوق
-     * 
+     *
      * يغيّر كمية عنصر محدد داخل سلة التسوق.
      */
     public function update(CartUpdateRequest $request, $id)
@@ -113,10 +113,10 @@ class CartController extends Controller
 
     /**
      * حذف عنصر من سلة التسوق
-     * 
+     *
      * يزيل عنصراً معيناً من سلة التسوق نهائياً.
      */
-    public function destroy(\Illuminate\Http\Request $request, $id)
+    public function destroy(Request $request, $id)
     {
         $cartItem = Cart::findOrFail($id);
         $cartItem->delete();

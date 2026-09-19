@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 /**
  * @group 07. تقييمات المنتجات (Product Ratings)
- * 
+ *
  * يتولى استقبال وتخزين تقييمات وتعليقات المستخدمين المسجلين على المنتجات بعد الشراء.
  */
 class RatingController extends Controller
@@ -20,7 +20,7 @@ class RatingController extends Controller
 
     /**
      * إضافة تقييم ومراجعة لمنتج
-     * 
+     *
      * يحفظ التقييم الرقمي والتعليق الخاص بالمستخدم على منتج تم شراؤه واستلامه مسبقاً.
      */
     public function store(Request $request)
@@ -39,12 +39,12 @@ class RatingController extends Controller
 
         $hasPurchased = $user->orders()
             ->where('status', 3)
-            ->whereHas('order_details', function($q) use ($request) {
+            ->whereHas('order_details', function ($q) use ($request) {
                 $q->where('product_id', $request->product_id);
             })->exists();
 
-        if (!$hasPurchased) {
-             return $this->NewApiResponse(null, __('website.You must purchase and receive this product to rate it'), 'false', 403);
+        if (! $hasPurchased) {
+            return $this->NewApiResponse(null, __('website.You must purchase and receive this product to rate it'), 'false', 403);
         }
 
         $rating = Rating::updateOrCreate(

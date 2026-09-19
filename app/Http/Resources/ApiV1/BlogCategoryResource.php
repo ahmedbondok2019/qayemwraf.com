@@ -17,7 +17,7 @@ class BlogCategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->translation->title ?? '',
-            'image' => $this->image ? asset('uploads/blog_categories/' . $this->image) : null,
+            'image' => $this->image ? asset('uploads/blog_categories/'.$this->image) : null,
             'blogs_count' => $this->blogs_count,
         ];
     }

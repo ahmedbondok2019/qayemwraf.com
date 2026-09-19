@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Laravel\Firebase\Facades\Firebase;
-use Illuminate\Support\Facades\Log;
 
 class FirebaseService
 {
@@ -16,7 +17,7 @@ class FirebaseService
         try {
             $this->messaging = Firebase::messaging();
         } catch (\Exception $e) {
-            Log::error('Firebase initialization failed: ' . $e->getMessage());
+            Log::error('Firebase initialization failed: '.$e->getMessage());
             $this->messaging = null;
         }
     }
@@ -26,7 +27,9 @@ class FirebaseService
      */
     public function sendToToken($token, $title, $body, $data = [])
     {
-        if (!$this->messaging || !$token) return null;
+        if (! $this->messaging || ! $token) {
+            return null;
+        }
 
         try {
             $notification = Notification::create($title, $body);
@@ -36,7 +39,8 @@ class FirebaseService
 
             return $this->messaging->send($message);
         } catch (\Exception $e) {
-            Log::error('Firebase sendToToken failed: ' . $e->getMessage());
+            Log::error('Firebase sendToToken failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -46,7 +50,9 @@ class FirebaseService
      */
     public function sendToTokens(array $tokens, $title, $body, $data = [])
     {
-        if (!$this->messaging || empty($tokens)) return null;
+        if (! $this->messaging || empty($tokens)) {
+            return null;
+        }
 
         try {
             $notification = Notification::create($title, $body);
@@ -56,7 +62,8 @@ class FirebaseService
 
             return $this->messaging->sendMulticast($message, $tokens);
         } catch (\Exception $e) {
-            Log::error('Firebase sendToTokens failed: ' . $e->getMessage());
+            Log::error('Firebase sendToTokens failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -66,7 +73,9 @@ class FirebaseService
      */
     public function sendToTopic($topic, $title, $body, $data = [])
     {
-        if (!$this->messaging) return null;
+        if (! $this->messaging) {
+            return null;
+        }
 
         try {
             $notification = Notification::create($title, $body);
@@ -76,7 +85,8 @@ class FirebaseService
 
             return $this->messaging->send($message);
         } catch (\Exception $e) {
-            Log::error('Firebase sendToTopic failed: ' . $e->getMessage());
+            Log::error('Firebase sendToTopic failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -86,12 +96,15 @@ class FirebaseService
      */
     public function subscribeToTopic($token, $topic)
     {
-        if (!$this->messaging || !$token) return null;
+        if (! $this->messaging || ! $token) {
+            return null;
+        }
 
         try {
             return $this->messaging->subscribeToTopic($topic, $token);
         } catch (\Exception $e) {
-            Log::error('Firebase subscribeToTopic failed: ' . $e->getMessage());
+            Log::error('Firebase subscribeToTopic failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -99,10 +112,12 @@ class FirebaseService
     /**
      * Send notification to all devices of a user
      */
-    public function sendToUser(\App\Models\User $user, $title, $body, $data = [])
+    public function sendToUser(User $user, $title, $body, $data = [])
     {
         $tokens = $user->fcmTokens()->pluck('fcm_token')->toArray();
-        if (empty($tokens)) return null;
+        if (empty($tokens)) {
+            return null;
+        }
 
         return $this->sendToTokens($tokens, $title, $body, $data);
     }

@@ -8,19 +8,20 @@ use App\Models\AdvertisementTranslation;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class AdvertisementController extends Controller
 {
     public function index()
     {
         $advertisements = Advertisement::with('translation', 'translations')->latest()->get();
+
         return view('dashboard.admin.advertisements.index', compact('advertisements'));
     }
 
     public function create()
     {
         $categories = Category::with('translation')->whereNull('parent_id')->get();
+
         return view('dashboard.admin.advertisements.create', compact('categories'));
     }
 
@@ -46,7 +47,7 @@ class AdvertisementController extends Controller
             // Upload Image
             $path = '';
             if ($request->hasFile('image')) {
-                 $path = $request->file('image')->store('advertisements', 'public');
+                $path = $request->file('image')->store('advertisements', 'public');
             }
 
             // Save Translations
@@ -61,10 +62,12 @@ class AdvertisementController extends Controller
             }
 
             DB::commit();
+
             return redirect()->route('admin.advertisements.index')->with('success', trans_db('dashboard.saved'));
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -72,12 +75,13 @@ class AdvertisementController extends Controller
     public function edit(Advertisement $advertisement)
     {
         $categories = Category::with('translation')->whereNull('parent_id')->get();
+
         return view('dashboard.admin.advertisements.edit', compact('advertisement', 'categories'));
     }
 
     public function update(Request $request, Advertisement $advertisement)
     {
-         $request->validate([
+        $request->validate([
             'location' => 'required|in:home,category,popup',
             'start_at' => 'nullable|date',
             'end_at' => 'nullable|date|after_or_equal:start_at',
@@ -96,9 +100,9 @@ class AdvertisementController extends Controller
 
             // Handle Image Upload
             if ($request->hasFile('image')) {
-                 $path = $request->file('image')->store('advertisements', 'public');
-                 // Update all translations with new image
-                 $advertisement->translations()->update(['image' => $path]);
+                $path = $request->file('image')->store('advertisements', 'public');
+                // Update all translations with new image
+                $advertisement->translations()->update(['image' => $path]);
             }
 
             // Update Translations
@@ -111,7 +115,7 @@ class AdvertisementController extends Controller
                     ]);
                 } else {
                     // Create if missing
-                     AdvertisementTranslation::create([
+                    AdvertisementTranslation::create([
                         'advertisement_id' => $advertisement->id,
                         'locale' => $locale,
                         'title' => $request->input("title_$locale"),
@@ -122,10 +126,12 @@ class AdvertisementController extends Controller
             }
 
             DB::commit();
+
             return redirect()->route('admin.advertisements.index')->with('success', trans_db('dashboard.updated'));
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -133,6 +139,7 @@ class AdvertisementController extends Controller
     public function destroy(Advertisement $advertisement)
     {
         $advertisement->delete();
+
         return redirect()->route('admin.advertisements.index')->with('success', trans_db('dashboard.deleted'));
     }
 }

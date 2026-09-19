@@ -3,43 +3,43 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Option;
-use App\Models\Product;
 use App\Http\Resources\ApiV1\OptionResource;
 use App\Http\Resources\ApiV1\ProductOptionResource;
-use App\Traits\ApiResponseTrait;
+use App\Models\Option;
+use App\Models\Product;
 use App\Traits\ApiPaginationTrait;
-use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
 
 /**
  * @group 06. خيارات المنتجات (Product Options)
- * 
+ *
  * يتولى جلب خيارات ومواصفات المنتجات (مثل الألوان والأنواع والمقاسات) وقيمها.
  */
 class OptionController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب جميع خيارات المنتجات العامة
-     * 
+     *
      * يعيد قائمة بجميع المواصفات والخيارات العامة المتاحة للنظام وقيم كل منها.
      */
     public function index()
     {
         $options = Option::with(['translation', 'values.translation'])->get();
+
         return $this->successResponse(OptionResource::collection($options));
     }
 
     /**
      * جلب خيارات ومواصفات منتج محدد
-     * 
+     *
      * يعيد الخيارات والمواصفات والقيم المتاحة لمنتج محدد برقم المنتج (product_id).
      */
     public function productOptions($product_id)
     {
         $product = Product::find($product_id);
-        if (!$product) {
+        if (! $product) {
             return $this->errorResponse('المنتج غير موجود', 404);
         }
 

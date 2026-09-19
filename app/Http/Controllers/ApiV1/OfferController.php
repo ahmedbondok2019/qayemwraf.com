@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Offer;
 use App\Http\Resources\ApiV1\OfferResource;
-use Illuminate\Http\Request;
-use App\Traits\ApiResponseTrait;
+use App\Models\Offer;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 
 /**
  * @group 20. العروض والتخفيضات (Offers)
- * 
+ *
  * يتولى جلب قائمة العروض الخاصة والبنرات الترويجية النشطة في النظام.
  */
 class OfferController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب العروض الخاصة
-     * 
+     *
      * يعيد قائمة بجميع العروض الترويجية النشطة المتاحة.
      */
     public function index()

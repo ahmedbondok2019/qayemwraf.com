@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('locale')->index();
             $table->string('title');
             $table->text('content')->nullable();
-            
+
             // SEO
             $table->string('slug')->unique();
             $table->string('meta_title')->nullable();

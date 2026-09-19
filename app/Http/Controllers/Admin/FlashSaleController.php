@@ -8,6 +8,7 @@ use App\Models\FlashSaleTranslation;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -17,29 +18,32 @@ class FlashSaleController extends Controller
     {
         if ($request->ajax()) {
             $data = FlashSale::with('translation')->select('flash_sales.*');
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('name', function ($row) {
                     return $row->name;
                 })
                 ->addColumn('duration', function ($row) {
-                    return $row->start_at->format('Y-m-d H:i') . ' - ' . $row->end_at->format('Y-m-d H:i');
+                    return $row->start_at->format('Y-m-d H:i').' - '.$row->end_at->format('Y-m-d H:i');
                 })
                 ->addColumn('status', function ($row) {
-                     return $row->is_active 
-                        ? '<span class="badge badge-success">' . trans_db('dashboard.active') . '</span>' 
-                        : '<span class="badge badge-danger">' . trans_db('dashboard.inactive') . '</span>';
+                    return $row->is_active
+                       ? '<span class="badge badge-success">'.trans_db('dashboard.active').'</span>'
+                       : '<span class="badge badge-danger">'.trans_db('dashboard.inactive').'</span>';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="btn-group">';
-                    $btn .= '<a href="' . route('admin.flash_sales.edit', $row->id) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>';
-                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>';
+                    $btn .= '<a href="'.route('admin.flash_sales.edit', $row->id).'" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>';
+                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem('.$row->id.')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>';
                     $btn .= '</div>';
+
                     return $btn;
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);
         }
+
         return view('dashboard.admin.flash_sales.index');
     }
 
@@ -51,19 +55,19 @@ class FlashSaleController extends Controller
     public function searchProducts(Request $request)
     {
         $term = $request->term;
-        $products = Product::whereHas('translations', function($q) use ($term) {
-            $q->where('name', 'like', '%' . $term . '%');
+        $products = Product::whereHas('translations', function ($q) use ($term) {
+            $q->where('name', 'like', '%'.$term.'%');
         })->active()->take(20)->get();
 
         $results = [];
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $results[] = [
                 'id' => $product->id,
-                'text' => $product->translation->name ?? $product->translations->first()->name ?? 'Product #' . $product->id,
-                'price' => $product->price
+                'text' => $product->translation->name ?? $product->translations->first()->name ?? 'Product #'.$product->id,
+                'price' => $product->price,
             ];
         }
-        
+
         return response()->json(['results' => $results]);
     }
 
@@ -85,15 +89,15 @@ class FlashSaleController extends Controller
             // Handle Image Upload if implemented (placeholder for now)
             $imagePath = null;
             if ($request->hasFile('image')) {
-                 $file = $request->file('image');
-                 $filename = time() . '.' . $file->getClientOriginalExtension();
-                 $path = 'uploads' . DIRECTORY_SEPARATOR . 'flash_sales';
-                 $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                 if (!file_exists($fullStoragePath)) {
-                     mkdir($fullStoragePath, 0755, true);
-                 }
-                 $file->move($fullStoragePath, $filename);
-                 $imagePath = 'storage/uploads/flash_sales/' . $filename;
+                $file = $request->file('image');
+                $filename = time().'.'.$file->getClientOriginalExtension();
+                $path = 'uploads'.DIRECTORY_SEPARATOR.'flash_sales';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                $file->move($fullStoragePath, $filename);
+                $imagePath = 'storage/uploads/flash_sales/'.$filename;
             }
 
             $flashSale = FlashSale::create([
@@ -114,15 +118,17 @@ class FlashSaleController extends Controller
             if ($request->has('products')) {
                 foreach ($request->products as $key => $productId) {
                     $price = $request->prices[$productId] ?? 0;
-                     $flashSale->products()->attach($productId, ['price' => $price]);
+                    $flashSale->products()->attach($productId, ['price' => $price]);
                 }
             }
 
             DB::commit();
+
             return redirect()->route('admin.flash_sales.index')->with('success', trans_db('dashboard.created_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
@@ -130,6 +136,7 @@ class FlashSaleController extends Controller
     public function edit($id)
     {
         $flashSale = FlashSale::with(['translations', 'products.translation'])->findOrFail($id);
+
         return view('dashboard.admin.flash_sales.edit', compact('flashSale'));
     }
 
@@ -137,7 +144,7 @@ class FlashSaleController extends Controller
     {
         $flashSale = FlashSale::findOrFail($id);
 
-         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
+        foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $request->validate(["name_$localeCode" => 'required|string|max:255']);
         }
         $request->validate([
@@ -147,30 +154,30 @@ class FlashSaleController extends Controller
 
         DB::beginTransaction();
         try {
-            
-             if ($request->hasFile('image')) {
-                 // Delete old image
-                 if ($flashSale->image) {
-                     $oldPath = str_replace('storage/', '', $flashSale->image);
-                     if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                         \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-                     } elseif (file_exists(public_path($flashSale->image))) {
-                         unlink(public_path($flashSale->image));
-                     } elseif (file_exists(public_path('uploads/flash_sales/' . $flashSale->image))) {
-                         unlink(public_path('uploads/flash_sales/' . $flashSale->image));
-                     }
-                 }
 
-                 $file = $request->file('image');
-                 $filename = time() . '.' . $file->getClientOriginalExtension();
-                 $path = 'uploads' . DIRECTORY_SEPARATOR . 'flash_sales';
-                 $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                 if (!file_exists($fullStoragePath)) {
-                     mkdir($fullStoragePath, 0755, true);
-                 }
-                 $file->move($fullStoragePath, $filename);
-                 $imagePath = 'storage/uploads/flash_sales/' . $filename;
-                 $flashSale->image = $imagePath;
+            if ($request->hasFile('image')) {
+                // Delete old image
+                if ($flashSale->image) {
+                    $oldPath = str_replace('storage/', '', $flashSale->image);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    } elseif (file_exists(public_path($flashSale->image))) {
+                        unlink(public_path($flashSale->image));
+                    } elseif (file_exists(public_path('uploads/flash_sales/'.$flashSale->image))) {
+                        unlink(public_path('uploads/flash_sales/'.$flashSale->image));
+                    }
+                }
+
+                $file = $request->file('image');
+                $filename = time().'.'.$file->getClientOriginalExtension();
+                $path = 'uploads'.DIRECTORY_SEPARATOR.'flash_sales';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
+                    mkdir($fullStoragePath, 0755, true);
+                }
+                $file->move($fullStoragePath, $filename);
+                $imagePath = 'storage/uploads/flash_sales/'.$filename;
+                $flashSale->image = $imagePath;
             }
 
             $flashSale->update([
@@ -185,11 +192,11 @@ class FlashSaleController extends Controller
                     ['name' => $request->input("name_$localeCode")]
                 );
             }
-            
+
             // Sync products
             // Detach all first or sync with values
             $syncData = [];
-             if ($request->has('products')) {
+            if ($request->has('products')) {
                 foreach ($request->products as $key => $productId) {
                     $price = $request->prices[$productId] ?? 0;
                     $syncData[$productId] = ['price' => $price];
@@ -198,10 +205,12 @@ class FlashSaleController extends Controller
             $flashSale->products()->sync($syncData);
 
             DB::commit();
+
             return redirect()->route('admin.flash_sales.index')->with('success', trans_db('dashboard.updated_successfully'));
 
         } catch (\Exception $e) {
-             DB::rollback();
+            DB::rollback();
+
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
@@ -211,15 +220,16 @@ class FlashSaleController extends Controller
         $flashSale = FlashSale::findOrFail($id);
         if ($flashSale->image) {
             $oldPath = str_replace('storage/', '', $flashSale->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             } elseif (file_exists(public_path($flashSale->image))) {
                 unlink(public_path($flashSale->image));
-            } elseif (file_exists(public_path('uploads/flash_sales/' . $flashSale->image))) {
-                unlink(public_path('uploads/flash_sales/' . $flashSale->image));
+            } elseif (file_exists(public_path('uploads/flash_sales/'.$flashSale->image))) {
+                unlink(public_path('uploads/flash_sales/'.$flashSale->image));
             }
         }
         $flashSale->delete();
+
         return response()->json(['success' => trans_db('dashboard.deleted_successfully')]);
     }
 }

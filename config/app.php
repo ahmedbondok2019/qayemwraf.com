@@ -1,7 +1,20 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
+use App\Providers\EventServiceProvider;
+use App\Providers\RouteServiceProvider;
+use App\Providers\SocialLoginServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageServiceProvider;
+use Maatwebsite\Excel\ExcelServiceProvider;
+use Maatwebsite\Excel\Facades\Excel;
+use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf;
+use Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider;
+use RealRashid\SweetAlert\Facades\Alert;
+use RealRashid\SweetAlert\SweetAlertServiceProvider;
 
 return [
 
@@ -169,17 +182,17 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+        AppServiceProvider::class,
+        AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        App\Providers\SocialLoginServiceProvider::class,
+        EventServiceProvider::class,
+        RouteServiceProvider::class,
+        SocialLoginServiceProvider::class,
 
-        Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
-        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        LaravelMpdfServiceProvider::class,
+        ExcelServiceProvider::class,
+        SweetAlertServiceProvider::class,
+        ImageServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -196,10 +209,10 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
 
-        'PDF' => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
-        'Image' => Intervention\Image\Facades\Image::class,
+        'PDF' => LaravelMpdf::class,
+        'Excel' => Excel::class,
+        'Alert' => Alert::class,
+        'Image' => Image::class,
     ])->toArray(),
 
 ];

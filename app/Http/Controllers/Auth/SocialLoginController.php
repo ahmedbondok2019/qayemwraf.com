@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class SocialLoginController extends Controller
 {
@@ -29,21 +30,20 @@ class SocialLoginController extends Controller
     /**
      * Obtain the user information from the provider.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string  $provider
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function handleProviderCallback(Request $request, $provider)
     {
         try {
             $socialUser = Socialite::driver($provider)->stateless()->user();
-            
+
             if (! isset($socialUser) || $socialUser == false) {
                 return redirect()->route('login');
             }
 
             // Determine the column name based on provider
-            $idColumn = match($provider) {
+            $idColumn = match ($provider) {
                 'google' => 'google_id',
                 'facebook' => 'facebook_id',
                 'apple' => 'apple_id',
@@ -56,11 +56,11 @@ class SocialLoginController extends Controller
             // If not found by ID, check by email
             if (empty($userData)) {
                 $userData = User::where('email', $socialUser->getEmail())->first();
-                
+
                 if ($userData) {
                     // User exists with email, link the social ID
                     $userData->update([
-                        $idColumn => $socialUser->getId()
+                        $idColumn => $socialUser->getId(),
                     ]);
                 } else {
                     // Create new user
@@ -84,10 +84,11 @@ class SocialLoginController extends Controller
 
             return redirect($targetUrl);
         } catch (\Throwable $th) {
-            \Illuminate\Support\Facades\Log::error('Social Login Error: ' . $th->getMessage(), [
+            Log::error('Social Login Error: '.$th->getMessage(), [
                 'provider' => $provider,
-                'exception' => $th
+                'exception' => $th,
             ]);
+
             return redirect('/login')->withErrors(['msg' => __('website.Login Failed')]);
         }
     }

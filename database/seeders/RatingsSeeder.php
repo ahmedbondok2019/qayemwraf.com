@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\Rating;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class RatingsSeeder extends Seeder
 {
@@ -17,9 +17,9 @@ class RatingsSeeder extends Seeder
     public function run()
     {
         $userId = 9;
-        
+
         $user = User::find($userId);
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'id' => $userId,
                 'name' => 'Reviewer User',
@@ -42,7 +42,7 @@ class RatingsSeeder extends Seeder
             'Average product.',
             'Highly recommended!',
             'Will buy again.',
-            'Terrible experience.'
+            'Terrible experience.',
         ];
 
         foreach ($products as $product) {
@@ -51,7 +51,7 @@ class RatingsSeeder extends Seeder
                 Rating::updateOrCreate(
                     [
                         'user_id' => $userId,
-                        'product_id' => $product->id
+                        'product_id' => $product->id,
                     ],
                     [
                         'rating' => rand(1, 5),

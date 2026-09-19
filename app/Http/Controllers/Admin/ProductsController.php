@@ -55,13 +55,14 @@ class ProductsController extends BackendController
         $parents = Category::select('parent_id')->pluck('parent_id');
         $data['categories'] = Category::whereNotIn('id', $parents)->whereNull('deleted_at')->with('childs')
             ->with('CategoryTranslation')->orderby('view')->get();
-   
+
         $data['brands'] = Brand::whereHas('BrandTranslations')->get();
         $data['shipping_categories'] = ShippingCategory::whereHas('translations')->get();
 
         return view('dashboard.admin.products.create', $data);
     }
-// 
+
+    //
     public function edit($id)
     {
         if (! in_array('43', Session::get('permissionData'))) {
@@ -85,6 +86,7 @@ class ProductsController extends BackendController
         $data['options'] = Option::all();
         $data['vendors'] = Vendor::all();
         $data['shipping_categories'] = ShippingCategory::whereHas('translations')->get();
+
         return view('dashboard.admin.products.edit', $data);
     }
 
@@ -101,25 +103,25 @@ class ProductsController extends BackendController
             $tempPath = public_path("website/images/temporary/{$tempName}");
             if (file_exists($tempPath)) {
                 $finalName = Str::random(15).'.jpg';
-                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
-                rename($tempPath, $fullStoragePath . DIRECTORY_SEPARATOR . $finalName);
-                $primaryImage = 'storage/website/images/products/' . $finalName;
+                rename($tempPath, $fullStoragePath.DIRECTORY_SEPARATOR.$finalName);
+                $primaryImage = 'storage/website/images/products/'.$finalName;
             }
         } elseif ($request->hasFile('primary_image')) {
             $file = $request->file('primary_image');
             $finalName = Str::random(15).'.'.$file->getClientOriginalExtension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $finalName);
-            \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $finalName, 'products/' . $finalName);
-            $primaryImage = 'storage/website/images/products/' . $finalName;
+            HelperController::syncToRootImages($fullStoragePath.DIRECTORY_SEPARATOR.$finalName, 'products/'.$finalName);
+            $primaryImage = 'storage/website/images/products/'.$finalName;
         }
 
         // --- الصور الإضافية ---
@@ -127,14 +129,14 @@ class ProductsController extends BackendController
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $img) {
                 $name = Str::random(15).'.'.$img->getClientOriginalExtension();
-                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
                 $img->move($fullStoragePath, $name);
-                \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $name, 'products/' . $name);
-                $galleryImages[] = 'storage/website/images/products/' . $name;
+                HelperController::syncToRootImages($fullStoragePath.DIRECTORY_SEPARATOR.$name, 'products/'.$name);
+                $galleryImages[] = 'storage/website/images/products/'.$name;
             }
         }
 
@@ -142,13 +144,13 @@ class ProductsController extends BackendController
         if ($request->hasFile('pdf_file')) {
             $pdf = $request->file('pdf_file');
             $pdfName = Str::random(15).'.'.$pdf->getClientOriginalExtension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'pdf';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'pdf';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $pdf->move($fullStoragePath, $pdfName);
-            $pdfFile = 'storage/website/pdf/' . $pdfName;
+            $pdfFile = 'storage/website/pdf/'.$pdfName;
         }
 
         $cat = array_filter(explode(',', $request->product_categories), fn ($value) => ! is_null($value) && $value !== '');
@@ -268,14 +270,14 @@ class ProductsController extends BackendController
                         LaravelLocalization::localizeUrl(
                             'product/'.intval($product->id).'/'.
                                 htmlentities(urlencode(
-                                    \App\Http\Controllers\helper\HelperController::make_slug($productTitle).
-                                        '/'.\App\Http\Controllers\helper\HelperController::make_slug($activeCategory)
+                                    HelperController::make_slug($productTitle).
+                                        '/'.HelperController::make_slug($activeCategory)
                                 ))
                         )
                     );
                 $output_file = 'img-'.time().'.svg';
                 Storage::disk('MyDisk')->put($output_file, $image);
-                $path = public_path('website/images/BarCode/').\Illuminate\Support\Carbon::now()->format('M-Y').'/';
+                $path = public_path('website/images/BarCode/').Carbon::now()->format('M-Y').'/';
                 $toRemove = HelperController::getResourcePath().'public/';
                 $url = str_replace($toRemove, '', $path);
                 $fullUrl = env('APP_URL').$url.$output_file;
@@ -319,23 +321,23 @@ class ProductsController extends BackendController
                 if ($oldTrans && $oldTrans->primary_image) {
                     $oldImage = $oldTrans->primary_image;
                     $oldPath = str_replace('storage/', '', $oldImage);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path($oldImage))) {
                         unlink(public_path($oldImage));
-                    } elseif (file_exists(public_path('website/images/products/' . $oldImage))) {
-                        unlink(public_path('website/images/products/' . $oldImage));
+                    } elseif (file_exists(public_path('website/images/products/'.$oldImage))) {
+                        unlink(public_path('website/images/products/'.$oldImage));
                     }
                 }
 
                 $finalName = Str::random(15).'.jpg';
-                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
-                rename($tempPath, $fullStoragePath . DIRECTORY_SEPARATOR . $finalName);
-                $primaryImage = 'storage/website/images/products/' . $finalName;
+                rename($tempPath, $fullStoragePath.DIRECTORY_SEPARATOR.$finalName);
+                $primaryImage = 'storage/website/images/products/'.$finalName;
             }
         } elseif ($request->hasFile('primary_image')) {
             // احذف الصورة القديمة
@@ -343,50 +345,50 @@ class ProductsController extends BackendController
             if ($oldTrans && $oldTrans->primary_image) {
                 $oldImage = $oldTrans->primary_image;
                 $oldPath = str_replace('storage/', '', $oldImage);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path($oldImage))) {
                     unlink(public_path($oldImage));
-                } elseif (file_exists(public_path('website/images/products/' . $oldImage))) {
-                    unlink(public_path('website/images/products/' . $oldImage));
+                } elseif (file_exists(public_path('website/images/products/'.$oldImage))) {
+                    unlink(public_path('website/images/products/'.$oldImage));
                 }
             }
 
             $file = $request->file('primary_image');
             $finalName = Str::random(15).'.'.$file->getClientOriginalExtension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $finalName);
-            \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $finalName, 'products/' . $finalName);
-            $primaryImage = 'storage/website/images/products/' . $finalName;
+            HelperController::syncToRootImages($fullStoragePath.DIRECTORY_SEPARATOR.$finalName, 'products/'.$finalName);
+            $primaryImage = 'storage/website/images/products/'.$finalName;
         }
 
         // --- الملف PDF ---
         if ($request->hasFile('pdf_file')) {
             // احذف الملف القديم
             if ($product->pdf_file) {
-                 $oldPdf = $product->pdf_file;
-                 $oldPath = str_replace('storage/', '', $oldPdf);
-                 if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                     \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-                 } elseif (file_exists(public_path($oldPdf))) {
-                     unlink(public_path($oldPdf));
-                 } elseif (file_exists(public_path("website/pdf/{$oldPdf}"))) {
-                     unlink(public_path("website/pdf/{$oldPdf}"));
-                 }
+                $oldPdf = $product->pdf_file;
+                $oldPath = str_replace('storage/', '', $oldPdf);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path($oldPdf))) {
+                    unlink(public_path($oldPdf));
+                } elseif (file_exists(public_path("website/pdf/{$oldPdf}"))) {
+                    unlink(public_path("website/pdf/{$oldPdf}"));
+                }
             }
             $pdf = $request->file('pdf_file');
             $pdfName = Str::random(15).'.'.$pdf->getClientOriginalExtension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'pdf';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'pdf';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $pdf->move($fullStoragePath, $pdfName);
-            $pdfFile = 'storage/website/pdf/' . $pdfName;
+            $pdfFile = 'storage/website/pdf/'.$pdfName;
         }
 
         $cat = array_filter(explode(',', $request->product_categories), fn ($value) => ! is_null($value) && $value !== '');
@@ -475,12 +477,12 @@ class ProductsController extends BackendController
                 if ($img && $img->image) {
                     $oldImage = $img->image;
                     $oldPath = str_replace('storage/', '', $oldImage);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path($oldImage))) {
                         unlink(public_path($oldImage));
-                    } elseif (file_exists(public_path('website/images/products/' . $oldImage))) {
-                        unlink(public_path('website/images/products/' . $oldImage));
+                    } elseif (file_exists(public_path('website/images/products/'.$oldImage))) {
+                        unlink(public_path('website/images/products/'.$oldImage));
                     }
                     $img->delete();
                 }
@@ -490,14 +492,14 @@ class ProductsController extends BackendController
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $img) {
                 $name = Str::random(15).'.'.$img->getClientOriginalExtension();
-                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
                 $img->move($fullStoragePath, $name);
-                \App\Http\Controllers\helper\HelperController::syncToRootImages($fullStoragePath . DIRECTORY_SEPARATOR . $name, 'products/' . $name);
-                ProductImage::create(['product_id' => $product->id, 'image' => 'storage/website/images/products/' . $name]);
+                HelperController::syncToRootImages($fullStoragePath.DIRECTORY_SEPARATOR.$name, 'products/'.$name);
+                ProductImage::create(['product_id' => $product->id, 'image' => 'storage/website/images/products/'.$name]);
             }
         }
 
@@ -593,14 +595,14 @@ class ProductsController extends BackendController
                 LaravelLocalization::localizeUrl(
                     'product/'.intval($Createproduct->id).'/'.
                         htmlentities(urlencode(
-                            \App\Http\Controllers\helper\HelperController::make_slug($Createproduct->translations->title).
-                                '/'.\App\Http\Controllers\helper\HelperController::make_slug($data['activeCategory'])
+                            HelperController::make_slug($Createproduct->translations->title).
+                                '/'.HelperController::make_slug($data['activeCategory'])
                         ))
                 )
             );
         $output_file = 'img-'.time().'.svg';
         Storage::disk('MyDisk')->put($output_file, $image); // storage/app/public/img/qr-code/img-1557309130.png
-        $path = public_path('website/images/BarCode/').\Illuminate\Support\Carbon::now()->format('M-Y').'/';
+        $path = public_path('website/images/BarCode/').Carbon::now()->format('M-Y').'/';
         $toRemove = HelperController::getResourcePath().'public/';
         $url = str_replace($toRemove, '', $path);
         $data['fullUrl'] = env('APP_URL').$url.$output_file;
@@ -935,7 +937,7 @@ class ProductsController extends BackendController
 
             $path = public_path('website'.$ds.'images'.$ds.'products');
             $destination = public_path('website'.$ds.'images'.$ds.'products'.$ds.$primary_image);
-            helperController::upload_images($path, $destination, $request->file('primary_image'), '576', '786', 'png');
+            HelperController::upload_images($path, $destination, $request->file('primary_image'), '576', '786', 'png');
 
             // $watermark = Image::make(public_path('WATER MARK.png'))->resize(576 , 1000);
             // $img = Image::make($destination)->insert($watermark);
@@ -971,14 +973,14 @@ class ProductsController extends BackendController
                     $imageSlug = HelperController::make_slug($product_price.rand(10, 100).'_'.str_replace(' ', '', Carbon::today()));
                     $image_name = str_replace(' ', '', $imageSlug).'.jpg';
 
-                    $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-                    $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                    if (!file_exists($fullStoragePath)) {
+                    $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+                    $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                    if (! file_exists($fullStoragePath)) {
                         mkdir($fullStoragePath, 0755, true);
                     }
-                    $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+                    $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$image_name;
                     HelperController::upload_images($fullStoragePath, $destination, $image, '1000', '1000');
-                    $relativePath = 'storage/website/images/products/' . $image_name;
+                    $relativePath = 'storage/website/images/products/'.$image_name;
 
                     ProductImage::create([
                         'image' => $relativePath,
@@ -1112,11 +1114,11 @@ class ProductsController extends BackendController
 
         foreach ($images as $files) {
             $path = str_replace('storage/', '', $files->image);
-            $fullPath = storage_path('app/public/' . $path);
+            $fullPath = storage_path('app/public/'.$path);
 
             if (file_exists($fullPath)) {
                 $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
-                if (in_array('image/' . $extension, $file_ext) || in_array($extension, ['png', 'jpg', 'jpeg', 'avif', 'webp', 'jfif'])) {
+                if (in_array('image/'.$extension, $file_ext) || in_array($extension, ['png', 'jpg', 'jpeg', 'avif', 'webp', 'jfif'])) {
                     $size = filesize($fullPath);
                     $sizeinMB = round($size / (1024 * 1024), 2);
 
@@ -1125,7 +1127,7 @@ class ProductsController extends BackendController
                             'id' => $files->id,
                             'name' => basename($fullPath),
                             'size' => $size,
-                            'path' => 'data:image/' . $extension . ';base64,' . base64_encode(file_get_contents($fullPath)),
+                            'path' => 'data:image/'.$extension.';base64,'.base64_encode(file_get_contents($fullPath)),
                         ];
                     }
                 }
@@ -1144,14 +1146,14 @@ class ProductsController extends BackendController
 
                 $productId = $request->random_id;
 
-                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
-                $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+                $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$image_name;
                 HelperController::upload_images($fullStoragePath, $destination, $file);
-                $relativePath = 'storage/website/images/products/' . $image_name;
+                $relativePath = 'storage/website/images/products/'.$image_name;
 
                 $data = [
                     'image' => $relativePath,
@@ -1172,14 +1174,14 @@ class ProductsController extends BackendController
 
             $productId = $request->random_id;
 
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'products';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
-            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+            $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$image_name;
             HelperController::upload_images($fullStoragePath, $destination, $file);
-            $relativePath = 'storage/website/images/products/' . $image_name;
+            $relativePath = 'storage/website/images/products/'.$image_name;
 
             $data = [
                 'image' => $relativePath,

@@ -30,8 +30,8 @@ class Coupon extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true)
-                     ->whereDate('valid_from', '<=', now())
-                     ->whereDate('valid_until', '>=', now());
+            ->whereDate('valid_from', '<=', now())
+            ->whereDate('valid_until', '>=', now());
     }
 
     /**

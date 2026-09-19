@@ -2,31 +2,33 @@
 
 namespace App\Traits;
 
-use Intervention\Image\Facades\Image;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 trait UploadImageTrait
 {
     /**
-     * Upload an image, convert it to WebP, and save it to the specified folder.
+     * Upload an image, convert it to WebP, apply optional watermark, and save it.
      *
-     * @param \Illuminate\Http\UploadedFile $file The image file to upload.
-     * @param string $folderName The folder name within public/uploads.
-     * @param int|null $width The width to resize to (optional).
-     * @param int|null $height The height to resize to (optional).
-     * @return string The filename of the uploaded image.
+     * @param  UploadedFile|string  $file  The image file to upload.
+     * @param  string  $folderName  The folder name within public/uploads.
+     * @param  int|null  $width  The width to resize to (optional).
+     * @param  int|null  $height  The height to resize to (optional).
+     * @param  bool  $withWatermark  Whether to stamp the watermark.
+     * @return string The storage relative path of the uploaded image.
      */
-    public function uploadImage($file, $folderName, $width = null, $height = null)
+    public function uploadImage($file, $folderName, $width = null, $height = null, $withWatermark = false)
     {
         // Create the directory if it doesn't exist
-        $path = 'uploads' . DIRECTORY_SEPARATOR . $folderName;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        if (!File::exists($fullStoragePath)) {
+        $path = 'uploads'.DIRECTORY_SEPARATOR.$folderName;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        if (! File::exists($fullStoragePath)) {
             File::makeDirectory($fullStoragePath, 0755, true, true);
         }
 
         // Generate a unique filename
-        $filename = uniqid() . '.webp';
+        $filename = uniqid().'.webp';
 
         // Initialize Intervention Image
         $image = Image::make($file);
@@ -39,9 +41,44 @@ trait UploadImageTrait
             });
         }
 
-        // Encode as WebP and save
-        $image->encode('webp', 80)->save($fullStoragePath . DIRECTORY_SEPARATOR . $filename);
+        // Apply watermark if requested
+        if ($withWatermark) {
+            $this->applyWatermark($image);
+        }
 
-        return 'storage/uploads/' . $folderName . '/' . $filename;
+        // Encode as WebP and save
+        $image->encode('webp', 85)->save($fullStoragePath.DIRECTORY_SEPARATOR.$filename);
+
+        return 'storage/uploads/'.$folderName.'/'.$filename;
+    }
+
+    /**
+     * Apply watermark to Intervention Image instance
+     *
+     * @param  \Intervention\Image\Image  $image
+     * @param  int  $opacity
+     * @return void
+     */
+    public function applyWatermark(&$image, $opacity = 35)
+    {
+        $watermarkPath = public_path('_fixed/watermark.png');
+        if (File::exists($watermarkPath)) {
+            $watermark = Image::make($watermarkPath);
+
+            $imgWidth = $image->width();
+            $imgHeight = $image->height();
+
+            $targetWidth = (int) ($imgWidth * 0.55);
+            $targetHeight = (int) ($imgHeight * 0.65);
+
+            $watermark->resize($targetWidth, $targetHeight, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            $watermark->opacity($opacity);
+
+            $image->insert($watermark, 'center');
+        }
     }
 }

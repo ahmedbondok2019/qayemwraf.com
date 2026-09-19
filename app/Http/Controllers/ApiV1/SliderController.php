@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Slider;
 use App\Http\Resources\ApiV1\SliderResource;
-use Illuminate\Http\Request;
-use App\Traits\ApiResponseTrait;
+use App\Models\Slider;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 
 /**
  * @group 18. شرائح العرض (Sliders)
- * 
+ *
  * يتولى جلب الشرائح والبنرات التفاعلية المتحركة في الصفحة الرئيسية.
  */
 class SliderController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب السلايدرز
-     * 
+     *
      * يعيد قائمة بجميع شرائح العرض النشطة المتاحة مع ترجماتها والأقسام المرتبطة بها.
      */
     public function index()

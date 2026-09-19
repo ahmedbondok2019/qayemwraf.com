@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\helper\HelperController;
 use App\Http\Controllers\User\CartController as UserCartController;
-use App\Http\Controllers\WebController;
 use App\Models\Cart;
 use App\Models\CartOption;
 use App\Models\Currency;
@@ -13,13 +12,14 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderSetting;
 use App\Models\OrderStatus;
+use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductOptionItem;
 use App\Models\ProfitGroup;
 use App\Models\Rating;
 use App\Models\Setting;
-use App\Models\ShippingCategoryArea;
+use App\Models\ShippingRule;
 use App\Models\Tax;
 use App\Models\User;
 use App\Models\UserAddress;
@@ -34,11 +34,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Mail;
-use App\Models\PaymentMethod;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
-class OrderController 
+class OrderController
 {
     public function order_information()
     {
@@ -119,9 +117,9 @@ class OrderController
 
         foreach ($data['cart'] as $cart) {
             $product = Product::find($cart->product_id);
-            $optionId = \App\Models\CartOption::where('cart_id', $cart->id)->where('product_id', $cart->product_id)->first();
+            $optionId = CartOption::where('cart_id', $cart->id)->where('product_id', $cart->product_id)->first();
             $optionId == null ? $cartOption = null : $cartOption = $optionId->option_item_id;
-            $ProQty = \App\Http\Controllers\helper\HelperController::getProductQuantiy($cart->product_id, $cartOption, false, null);
+            $ProQty = HelperController::getProductQuantiy($cart->product_id, $cartOption, false, null);
             if ($ProQty != null) {
                 $FlashSale = OrderService::getFlashSaleValue($product->id);
                 if ($FlashSale[0] == 0) {
@@ -326,8 +324,8 @@ class OrderController
             if ($paymentMethod && ($paymentMethod->keyword == 'cash' || $paymentMethod->keyword == 'cod')) {
                 if ($paymentMethod->cod_limit && $order['total'] > $paymentMethod->cod_limit) {
                     return $this->errorResponse(
-                        LaravelLocalization::localizeUrl('user/checkout'), 
-                        __('frontend.Not Available for orders over') . ' ' . $paymentMethod->cod_limit
+                        LaravelLocalization::localizeUrl('user/checkout'),
+                        __('frontend.Not Available for orders over').' '.$paymentMethod->cod_limit
                     );
                 }
             }
@@ -676,10 +674,10 @@ class OrderController
             $rate = $currency->rate;
 
             foreach ($userCart as $cart) {
-                $optionId = \App\Models\CartOption::where('cart_id', $cart->id)
+                $optionId = CartOption::where('cart_id', $cart->id)
                     ->where('product_id', $cart->product_id)->first();
                 $cartOption = $optionId == null ? null : $optionId->option_item_id;
-                $ProQty = \App\Http\Controllers\helper\HelperController::getProductQuantiy(
+                $ProQty = HelperController::getProductQuantiy(
                     $cart->product_id,
                     $cartOption,
                     false,
@@ -701,8 +699,8 @@ class OrderController
             // New Shipping Calculation Logic based on ShippingRule (Country & Governorate)
             $shippingCost = 0;
             $shippingCostArray = []; // Kept for compatibility if needed, though mostly unused now
-            
-            $shippingRule = \App\Models\ShippingRule::where('country_id', $userAddress->country_id)
+
+            $shippingRule = ShippingRule::where('country_id', $userAddress->country_id)
                 ->where('is_active', 1)
                 ->first();
 
@@ -720,7 +718,7 @@ class OrderController
             // Free Shipping Logic taking OrderSettings into account
             $order_setting = OrderSetting::first();
             if ($order_setting) {
-                 if (
+                if (
                     Carbon::now() > Carbon::createFromFormat('Y-m-d H:i:s', $order_setting->date_from) &&
                     Carbon::now() < Carbon::createFromFormat('Y-m-d H:i:s', $order_setting->date_to) &&
                     $order['sum'] >= $order_setting->free_min_amount

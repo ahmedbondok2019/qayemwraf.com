@@ -34,7 +34,7 @@ return new class extends Migration
             $table->foreignId('governorate_id')->constrained('governorates')->onDelete('cascade');
             $table->decimal('rate', 10, 2)->default(0);
             $table->timestamps();
-            
+
             $table->unique(['shipping_rule_id', 'governorate_id'], 'sh_rule_gov_unique');
         });
     }

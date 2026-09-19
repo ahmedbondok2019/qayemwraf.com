@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('subtitle')->nullable();
             $table->string('button_text')->nullable();
-            
+
             $table->unique(['slider_id', 'locale']);
             $table->softDeletes();
             $table->timestamps();

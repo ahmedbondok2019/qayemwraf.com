@@ -30,10 +30,10 @@ class CreateCurrenciesTables extends Migration
             $table->string('locale')->index();
             $table->string('name');
             $table->string('symbol'); // $, £, ج.م
-            
+
             $table->unique(['currency_id', 'locale']);
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('cascade');
-            
+
             $table->softDeletes();
             $table->timestamps();
         });

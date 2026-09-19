@@ -344,7 +344,7 @@ class CartController extends WebController
 
     public function WishList(Request $request)
     {
-        $data['wishlist'] = WishList::where('user_id', Auth::user()->id)->whereHas('product')->get();
+        $data['wishlist'] = Wishlist::where('user_id', Auth::user()->id)->whereHas('product')->get();
 
         return view('dashboard.user.wishlist', $data);
     }
@@ -437,9 +437,9 @@ class CartController extends WebController
             //         return $carry + ($item["tax"] * $item["quantity"] * $rate);
             //     }, 0);
 
-            wishlist::where('user_id', Auth::user()->id)->where('product_id', $id)->delete();
+            Wishlist::where('user_id', Auth::user()->id)->where('product_id', $id)->delete();
 
-            $data['wishlist'] = wishlist::where('user_id', Auth::user()->id)->get();
+            $data['wishlist'] = Wishlist::where('user_id', Auth::user()->id)->get();
 
             // if($request->ajax()){
             return response()->json(['status' => true, 'id' => $id]);

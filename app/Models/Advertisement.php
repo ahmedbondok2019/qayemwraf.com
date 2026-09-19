@@ -46,11 +46,11 @@ class Advertisement extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true)
-                     ->where(function ($q) {
-                         $q->whereNull('start_at')->orWhere('start_at', '<=', now());
-                     })
-                     ->where(function ($q) {
-                         $q->whereNull('end_at')->orWhere('end_at', '>=', now());
-                     });
+            ->where(function ($q) {
+                $q->whereNull('start_at')->orWhere('start_at', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('end_at')->orWhere('end_at', '>=', now());
+            });
     }
 }

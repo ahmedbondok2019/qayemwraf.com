@@ -52,7 +52,10 @@ class Admin extends Authenticatable
 
     public function hasPermission($permission)
     {
-        if (!$this->group) return false;
+        if (! $this->group) {
+            return false;
+        }
+
         return $this->group->permissions()->where('name', $permission)->exists();
     }
 }

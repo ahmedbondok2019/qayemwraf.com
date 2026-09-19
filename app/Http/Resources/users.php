@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class users extends JsonResource
@@ -9,7 +10,7 @@ class users extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -31,7 +32,7 @@ class users extends JsonResource
             'permission_phone_call' => (bool) $this->permission_phone_call,
             'accept' => (bool) $this->accept,
             'gift_page_enabled' => (bool) $this->gift_page_enabled,
-            'image' => $this->image ? 'users/' . $this->image : '',
+            'image' => $this->image ? 'users/'.$this->image : '',
             'type' => 'user',
             'token' => $token,
         ];

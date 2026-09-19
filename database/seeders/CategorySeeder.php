@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\CategoryTranslation;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
@@ -35,7 +35,7 @@ class CategorySeeder extends Seeder
                         'en' => ['title' => 'Custom & Individual Shelves', 'description' => 'Individual shelf panels in various depths (30cm, 60cm) and heavy duty specs.'],
                         'ar' => ['title' => 'أرفف ومقاسات خاصة', 'description' => 'بلاطات أرفف مفردة بأعماق مختلفة (30 سم، 60 سم) ومقاسات محملة.'],
                     ],
-                ]
+                ],
             ],
             [
                 'en' => [
@@ -46,7 +46,7 @@ class CategorySeeder extends Seeder
                     'title' => 'وحدات تخزين ميدي ديوتي (لايت ميدي)',
                     'description' => 'وحدات تخزين ورفوف ميدي ديوتي حمولة 250 كجم للمستوى الواحد. متوفرة بـ 3 و 4 مستويات وبارتفاعات حتى 2.5 متر، متصلة أو منفصلة وبضاعة حاضرة.',
                 ],
-                'children' => []
+                'children' => [],
             ],
             [
                 'en' => [
@@ -57,7 +57,7 @@ class CategorySeeder extends Seeder
                     'title' => 'وحدات تخزين هيفي ديوتي (مخازن ثقيلة)',
                     'description' => 'وحدات أرفف ومخازن هيفي ديوتي حمولة 500 كجم للمستوى. قوايم 1.5 مم وعوارض 1.25 مم معصبة بـ 8 تنايات وبلاطات محملة بدعامات، وحدات متصلة أو منفصلة.',
                 ],
-                'children' => []
+                'children' => [],
             ],
             [
                 'en' => [
@@ -81,7 +81,7 @@ class CategorySeeder extends Seeder
                         'en' => ['title' => 'Filing Cabinets (Shanons)', 'description' => '4-drawer metal and wood filing cabinets.'],
                         'ar' => ['title' => 'شانونات حفظ ملفات', 'description' => 'شانونات معدنية وخشبية 4 أدراج للأرشيف والملفات.'],
                     ],
-                ]
+                ],
             ],
             [
                 'en' => [
@@ -92,7 +92,7 @@ class CategorySeeder extends Seeder
                     'title' => 'أرفف وقوائم واكسسوارات منفصلة',
                     'description' => 'قوائم حديد مثقبة مفردة، أرفف بالكوابيل، أرفف شبك سلك، ودعامات ومسامير تثبيت للأرفف.',
                 ],
-                'children' => []
+                'children' => [],
             ],
         ];
 
@@ -110,14 +110,14 @@ class CategorySeeder extends Seeder
                     'locale' => $locale,
                     'title' => $catData[$locale]['title'],
                     'description' => $catData[$locale]['description'],
-                    'slug' => Str::slug($catData['en']['title'] . '-' . $locale . '-' . $parent->id),
+                    'slug' => Str::slug($catData['en']['title'].'-'.$locale.'-'.$parent->id),
                     'meta_title' => $catData[$locale]['title'],
                     'meta_description' => $catData[$locale]['description'],
                     'meta_keywords' => str_replace(' ', ',', $catData[$locale]['title']),
                 ]);
             }
 
-            if (!empty($catData['children'])) {
+            if (! empty($catData['children'])) {
                 foreach ($catData['children'] as $childIndex => $childData) {
                     $child = Category::create([
                         'parent_id' => $parent->id,
@@ -132,7 +132,7 @@ class CategorySeeder extends Seeder
                             'locale' => $locale,
                             'title' => $childData[$locale]['title'],
                             'description' => $childData[$locale]['description'],
-                            'slug' => Str::slug($childData['en']['title'] . '-' . $locale . '-' . $child->id),
+                            'slug' => Str::slug($childData['en']['title'].'-'.$locale.'-'.$child->id),
                             'meta_title' => $childData[$locale]['title'],
                             'meta_description' => $childData[$locale]['description'],
                             'meta_keywords' => str_replace(' ', ',', $childData[$locale]['title']),

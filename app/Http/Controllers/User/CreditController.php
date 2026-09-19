@@ -13,6 +13,7 @@ use App\Models\OrderDetail;
 use App\Models\Payment;
 use App\Models\Payments;
 use App\Models\Setting;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -38,7 +39,7 @@ class CreditController extends WebController
         // }
         // $image_name = $data['image'];
 
-        $data['cart'] = cart::where('user_id', Auth::id())->orderByDesc('id')->get();
+        $data['cart'] = Cart::where('user_id', Auth::id())->orderByDesc('id')->get();
         if (empty($data['cart'])) {
             return redirect(\LaravelLocalization::localizeUrl('/'));
         }
@@ -48,7 +49,7 @@ class CreditController extends WebController
         $OrderPrice = 0;
         foreach ($data['sections'] as $key => $value) {
             foreach ($value as $i => $items) {
-                $itemPriceArray = \App\Http\Controllers\User\CartController::getCartItemPrice($items['item_type'], $items['item_id'], $items['price_for'], $items['adults'], $items['children'], $items['date_from'], $items['date_to'], $items['room_id'], $items['room_count']);
+                $itemPriceArray = CartController::getCartItemPrice($items['item_type'], $items['item_id'], $items['price_for'], $items['adults'], $items['children'], $items['date_from'], $items['date_to'], $items['room_id'], $items['room_count']);
                 $OrderPrice += $itemPriceArray['total'];
             }
         }
@@ -66,7 +67,7 @@ class CreditController extends WebController
         $Price = 0;
         foreach ($data['sections'] as $key => $value) {
             foreach ($value as $i => $items) {
-                $itemPriceArray = \App\Http\Controllers\User\CartController::getCartItemPrice($items['item_type'], $items['item_id'], $items['price_for'], $items['adults'], $items['children'], $items['date_from'], $items['date_to'], $items['room_id'], $items['room_count']);
+                $itemPriceArray = CartController::getCartItemPrice($items['item_type'], $items['item_id'], $items['price_for'], $items['adults'], $items['children'], $items['date_from'], $items['date_to'], $items['room_id'], $items['room_count']);
                 $Price += $itemPriceArray['total'];
                 $itemPrice = $itemPriceArray['price'];
 
@@ -615,7 +616,7 @@ class CreditController extends WebController
         $merchantRefNumber = '765325778';
         $merchant_sec_key = '7063f687-0a44-4213-bff8-c3f53d8ed68a'; // For the sake of demonstration
         $signature = hash('sha256', $merchantCode.$merchantRefNumber.$merchant_sec_key);
-        $httpClient = new \GuzzleHttp\Client; // guzzle 6.3
+        $httpClient = new Client; // guzzle 6.3
         $response = $httpClient->request('GET', 'https://atfawry.fawrystaging.com/ECommerceWeb/Fawry/payments/status/v2', [
             'query' => [
                 'merchantCode' => $merchantCode,

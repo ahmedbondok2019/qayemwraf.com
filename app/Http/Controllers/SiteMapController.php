@@ -11,18 +11,19 @@ use App\Models\SiteMap;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class SiteMapController extends Controller
 {
     public static function create_sitemap(Request $request)
     {
         // //// delete old data.
-        siteMap::truncate();
+        SiteMap::truncate();
         // dd(resource_path());
         // File::deleteDirectory('/home/izosw0ytauwy/public_html/mini-youtube.com/sitemap');
 
         // /////// create blogs sitemaps
-        $path = HelperController::getResourcePath().'sitemap';
+        $path = helperController::getResourcePath().'sitemap';
 
         if (! File::isDirectory($path)) {
             File::makeDirectory($path, 0777, true, true);
@@ -42,7 +43,7 @@ class SiteMapController extends Controller
         $count_arrays = count($products);
 
         for ($i = 0; $i < $count_arrays; $i++) {
-            $sitemap = siteMap::count();
+            $sitemap = SiteMap::count();
             $count = $sitemap + 1;
             $name = 'sitemap_'.$count.'.xml';
 
@@ -51,7 +52,7 @@ class SiteMapController extends Controller
             $products_sitemap .= '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
             foreach ($products[$i] as $vid) {
-                $replaced_title = HelperController::make_slug($vid['title']);
+                $replaced_title = helperController::make_slug($vid['title']);
                 $products_sitemap .= '<url>';
                 $products_sitemap .= '<loc>https://souqelmlabes.com/'.app()->getLocale().'/products/'.$replaced_title.'</loc>';
                 $products_sitemap .= '<changefreq>monthly</changefreq>';
@@ -63,7 +64,7 @@ class SiteMapController extends Controller
 
             File::put($path.'/'.$name, $products_sitemap);
 
-            $insert_map = new siteMap;
+            $insert_map = new SiteMap;
             $insert_map->file_name = $name;
             $insert_map->category_id = $vid['id'];
             $insert_map->lang_id = app()->getLocale();
@@ -72,7 +73,7 @@ class SiteMapController extends Controller
 
         // //////// create blog sitemaps
 
-        $sitemap_blog_id = siteMap::where('blog_id', '<>', '')
+        $sitemap_blog_id = SiteMap::where('blog_id', '<>', '')
             ->where('lang_id', app()->getLocale())
             ->orderBy('id', 'desc')->first();
 
@@ -86,7 +87,7 @@ class SiteMapController extends Controller
         $count_arrays_blog = count($blogs);
 
         for ($i = 0; $i < $count_arrays_blog; $i++) {
-            $sitemap = siteMap::count();
+            $sitemap = SiteMap::count();
             $count = $sitemap + 1;
             $name = 'sitemap_'.$count.'.xml';
 
@@ -108,7 +109,7 @@ class SiteMapController extends Controller
 
             File::put($path.'/'.$name, $blog_sitemap);
 
-            $insert_map = new siteMap;
+            $insert_map = new SiteMap;
             $insert_map->file_name = $name;
             $insert_map->blog_id = $blog['id'];
             $insert_map->lang_id = app()->getLocale();
@@ -117,7 +118,7 @@ class SiteMapController extends Controller
 
         // //////// create products sitemaps
 
-        $sitemap_product_id = siteMap::where('product_id', '<>', '')
+        $sitemap_product_id = SiteMap::where('product_id', '<>', '')
             ->where('lang_id', app()->getLocale())
             ->orderBy('id', 'desc')->first();
 
@@ -131,7 +132,7 @@ class SiteMapController extends Controller
         $count_arrays_product = count($products);
 
         for ($i = 0; $i < $count_arrays_product; $i++) {
-            $sitemap = siteMap::count();
+            $sitemap = SiteMap::count();
             $count = $sitemap + 1;
             $name = 'sitemap_'.$count.'.xml';
 
@@ -153,7 +154,7 @@ class SiteMapController extends Controller
 
             File::put($path.'/'.$name, $product_sitemap);
 
-            $insert_map = new siteMap;
+            $insert_map = new SiteMap;
             $insert_map->file_name = $name;
             $insert_map->product_id = $product['id'];
             $insert_map->lang_id = app()->getLocale();
@@ -167,7 +168,7 @@ class SiteMapController extends Controller
     public function index(Request $request)
     {
         // //////// create index file.
-        $sitemap = siteMap::all();
+        $sitemap = SiteMap::all();
 
         $index = '<?xml version="1.0" encoding="UTF-8"?>';
         $index .= '<?xml-stylesheet type="text/xsl" href="'.env('APP_URL').'"public/css/sitemap_css/main-sitemap.xsl"?>';
@@ -190,7 +191,7 @@ class SiteMapController extends Controller
     public function view_sitemap(Request $request)
     {
         $path = HelperHelperController::getResourcePath().'sitemap';
-        $sitemap = siteMap::where('file_name', $request->name)->firstOrFail();
+        $sitemap = SiteMap::where('file_name', $request->name)->firstOrFail();
 
         if (isset($sitemap->file_name) && $sitemap->file_name != '') {
             if (file_exists($path.'/'.$sitemap->file_name)) {
@@ -200,6 +201,6 @@ class SiteMapController extends Controller
             }
         }
 
-        return redirect(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeURL('/'));
+        return redirect(LaravelLocalization::localizeURL('/'));
     }
 }

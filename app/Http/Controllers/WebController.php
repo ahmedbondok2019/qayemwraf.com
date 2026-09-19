@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\helper\HelperController;
 use App\Models\Blog;
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\CategoryTranslation;
 use App\Models\Currency;
 use App\Models\CurrencyTranslation;
+use App\Models\Setting;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +40,7 @@ class WebController extends Controller
             $cart = Cart::where('user_id', Auth::id())->with('options')->get();
             $sum = collect($cart)
                 ->reduce(function ($carry, $item) {
-                   return $carry + ($item['price'] + $item['tax']) * $item['quantity'];
+                    return $carry + ($item['price'] + $item['tax']) * $item['quantity'];
                 }, 0);
         } else {
             $cart = new stdClass;
@@ -45,13 +48,13 @@ class WebController extends Controller
         }
 
         View::share([
-            'Setting' => \App\Models\Setting::first(),
-            'Categories' => \App\Models\CategoryTranslation::where('locale', app()->getLocale())->whereIn('category_id', $parents)->get(),
+            'Setting' => Setting::first(),
+            'Categories' => CategoryTranslation::where('locale', app()->getLocale())->whereIn('category_id', $parents)->get(),
             'search_categories' => Category::where('is_active', true)->whereHas('CategoryTranslation')->whereNotIn('id', $parents)->get(),
             'Currency' => $currency_trans,
             'cart' => $cart,
             'sum' => $sum,
-            'arabic' => \App\Http\Controllers\helper\HelperController::getArabicLangs(),
+            'arabic' => HelperController::getArabicLangs(),
             'footer_blogs' => Blog::whereHas('BlogTranslation')->limit(5)->latest()->get(),
         ]);
 

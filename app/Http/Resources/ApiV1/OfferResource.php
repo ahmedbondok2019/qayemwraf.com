@@ -20,17 +20,17 @@ class OfferResource extends JsonResource
             'name' => $this->translation->name ?? ($this->translations->first()->name ?? $this->name),
             'description' => $this->translation->description ?? ($this->translations->first()->description ?? ''),
             'image' => $this->image ? asset($this->image) : null,
-            'link' => $this->link ? (string)$this->link : ($this->link_id ? (string)$this->link_id : ''),
-            'url' => $this->link ? (string)$this->link : '',
+            'link' => $this->link ? (string) $this->link : ($this->link_id ? (string) $this->link_id : ''),
+            'url' => $this->link ? (string) $this->link : '',
             'link_type' => $this->link_type ?? ($this->link ? 'custom' : 'category'),
             'link_id' => $this->link_id,
             'category_id' => $this->category_id,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'filters' => [
-                'flash_sale' => 1
+                'flash_sale' => 1,
             ],
-            'is_active' => (bool)$this->is_active,
-            'slug' => (string)$this->id,
+            'is_active' => (bool) $this->is_active,
+            'slug' => (string) $this->id,
         ];
     }
 }

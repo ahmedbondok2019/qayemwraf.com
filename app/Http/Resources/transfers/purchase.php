@@ -3,6 +3,7 @@
 namespace App\Http\Resources\transfers;
 
 use App\Models\ProductTranslation;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class purchase extends JsonResource
@@ -10,7 +11,7 @@ class purchase extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

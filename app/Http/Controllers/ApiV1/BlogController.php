@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiV1\BlogCategoryResource;
+use App\Http\Resources\ApiV1\BlogResource;
 use App\Models\Blog;
 use App\Models\BlogCategory;
-use App\Http\Resources\ApiV1\BlogResource;
-use App\Http\Resources\ApiV1\BlogCategoryResource;
-use Illuminate\Http\Request;
-use App\Traits\ApiResponseTrait;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
 
 /**
  * @group 15. المدونة والمقالات (Blog & Articles)
- * 
+ *
  * يتولى جلب أقسام المدونة، قائمة المقالات مع دعم الفلترة بحسب القسم، وتفاصيل المقال المكتوب.
  */
 class BlogController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب أقسام المدونة
-     * 
+     *
      * يعيد قائمة بأقسام المدونة المتاحة مع عدد المقالات لكل قسم.
      */
     public function categories()
@@ -34,7 +34,7 @@ class BlogController extends Controller
 
     /**
      * جلب المقالات والمدونة
-     * 
+     *
      * يعيد قائمة مقسمة صفحات من المقالات النشطة، مع إمكانية الفلترة حسب قسم المدونة.
      */
     public function index(Request $request)
@@ -52,7 +52,7 @@ class BlogController extends Controller
 
     /**
      * جلب تفاصيل مقال محدد
-     * 
+     *
      * يعيد كامل بيانات ومحتوى مقال محدد برقم المقال (ID) أو بالرابط الصديق (Slug).
      */
     public function show($idOrSlug)
@@ -71,7 +71,7 @@ class BlogController extends Controller
             })
             ->first();
 
-        if (!$blog) {
+        if (! $blog) {
             return $this->errorResponse('المقال غير موجود', 404);
         }
 

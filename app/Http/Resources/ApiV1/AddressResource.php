@@ -21,7 +21,7 @@ class AddressResource extends JsonResource
             'address' => $this->address,
             'lat' => $this->lat,
             'lng' => $this->lng,
-            'is_main' => (bool)$this->is_main,
+            'is_main' => (bool) $this->is_main,
             'country' => [
                 'id' => $this->country_id,
                 'name' => $this->country_rel->name ?? null,

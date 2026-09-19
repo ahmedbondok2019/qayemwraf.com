@@ -118,7 +118,7 @@ class FawryController extends Controller
                 'click_action' => '/',
             ];
 
-            \App\Http\Controllers\helper\HelperController::pushNotification($notification);
+            HelperController::pushNotification($notification);
 
             return $this->NewApiResponse('', 'sent successfully...', 'true', '200');
         }

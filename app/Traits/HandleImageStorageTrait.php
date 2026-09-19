@@ -9,7 +9,7 @@ trait HandleImageStorageTrait
      */
     protected function resolvePath($value, $attribute = 'image')
     {
-        if (!$value) {
+        if (! $value) {
             return null;
         }
 
@@ -68,6 +68,10 @@ trait HandleImageStorageTrait
             case 'FlashSale':
                 $prefix = 'uploads/flash_sales/';
                 break;
+            case 'Project':
+            case 'ProjectTranslation':
+                $prefix = 'uploads/projects/';
+                break;
             default:
                 return $value;
         }
@@ -76,7 +80,7 @@ trait HandleImageStorageTrait
             return $value;
         }
 
-        return $prefix . $value;
+        return $prefix.$value;
     }
 
     /**
@@ -94,12 +98,12 @@ trait HandleImageStorageTrait
     {
         return $this->resolvePath($value, 'video');
     }
-    
+
     /**
      * Accessor for 'primary_image' attribute (used in some models)
      */
     public function getPrimaryImageAttribute($value)
     {
-         return $this->resolvePath($value, 'primary_image');
+        return $this->resolvePath($value, 'primary_image');
     }
 }

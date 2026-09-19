@@ -3,13 +3,14 @@
 namespace App\Http\Requests\ApiV1\Auth;
 
 use App\Http\Requests\ApiV1\BaseApiV1Request;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class SocialLoginRequest extends BaseApiV1Request
 {
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

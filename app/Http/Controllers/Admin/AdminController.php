@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin;
-use App\Models\Cart;
 use App\Models\Category;
-use App\Models\Contact;
 use App\Models\Group;
+use App\Models\GroupPermission;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Vendor;
-use App\Models\Visitor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,30 +22,28 @@ use Illuminate\Support\Str;
 
 class AdminController extends BackendController
 {
-
     public function home(Request $request)
     {
 
-        
         // Existing Dashboard Data (keeping commented out as per original file, just in case)
         // ... (previous commented code) ...
 
         // Sales Statistics
         $deliveredStatuses = ['delivered', 3, 'completed'];
-        
+
         $todaySales = Order::whereIn('status', $deliveredStatuses)
-                           ->whereDate('created_at', now()->today())
-                           ->sum('total');
+            ->whereDate('created_at', now()->today())
+            ->sum('total');
 
         $thisMonthSales = Order::whereIn('status', $deliveredStatuses)
-                               ->whereMonth('created_at', now()->month)
-                               ->whereYear('created_at', now()->year)
-                               ->sum('total');
-                               
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('total');
+
         $lastMonthSales = Order::whereIn('status', $deliveredStatuses)
-                               ->whereMonth('created_at', now()->subMonth()->month)
-                               ->whereYear('created_at', now()->subMonth()->year)
-                               ->sum('total');
+            ->whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->sum('total');
 
         $difference = $thisMonthSales - $lastMonthSales;
         $growth = 0;
@@ -62,7 +60,7 @@ class AdminController extends BackendController
         } elseif ($growth < 0) {
             $growthDirection = 'down';
         }
-        
+
         $growth = abs($growth); // Use absolute value for display, direction handles sign
 
         // Orders Statistics
@@ -75,8 +73,8 @@ class AdminController extends BackendController
         // Customer Statistics
         $totalCustomers = User::count();
         $newCustomersThisMonth = User::whereMonth('created_at', now()->month)
-                                     ->whereYear('created_at', now()->year)
-                                     ->count();
+            ->whereYear('created_at', now()->year)
+            ->count();
 
         // Product Statistics
         $totalProducts = Product::count();
@@ -84,27 +82,27 @@ class AdminController extends BackendController
         $outOfStockProducts = Product::where('quantity', '<=', 0)->count();
 
         // Top Selling Products
-        $topSellingProducts = \App\Models\OrderDetail::whereHas('order', function($q) use ($deliveredStatuses) {
-                $q->whereIn('status', $deliveredStatuses);
-            })
+        $topSellingProducts = OrderDetail::whereHas('order', function ($q) use ($deliveredStatuses) {
+            $q->whereIn('status', $deliveredStatuses);
+        })
             ->select('product_id', DB::raw('SUM(quantity) as total_sold'))
             ->groupBy('product_id')
             ->orderByDesc('total_sold')
             ->take(5)
-            ->with(['product' => function($q) {
+            ->with(['product' => function ($q) {
                 $q->with('translation');
             }])
             ->get();
 
         // Least Selling Products (Bottom 5)
-        $leastSellingProducts = \App\Models\OrderDetail::whereHas('order', function($q) use ($deliveredStatuses) {
-                $q->whereIn('status', $deliveredStatuses);
-            })
+        $leastSellingProducts = OrderDetail::whereHas('order', function ($q) use ($deliveredStatuses) {
+            $q->whereIn('status', $deliveredStatuses);
+        })
             ->select('product_id', DB::raw('SUM(quantity) as total_sold'))
             ->groupBy('product_id')
             ->orderBy('total_sold', 'asc')
             ->take(5)
-            ->with(['product' => function($q) {
+            ->with(['product' => function ($q) {
                 $q->with('translation');
             }])
             ->get();
@@ -134,17 +132,17 @@ class AdminController extends BackendController
         // Chart Data: Last 30 Days Sales & Orders
         $dates = collect();
         foreach (range(-29, 0) as $i) {
-            $date = \Carbon\Carbon::now()->addDays($i)->format('Y-m-d');
+            $date = Carbon::now()->addDays($i)->format('Y-m-d');
             $dates->put($date, 0);
         }
 
-        $salesRaw = Order::where('created_at', '>=', \Carbon\Carbon::now()->subDays(30))
+        $salesRaw = Order::where('created_at', '>=', Carbon::now()->subDays(30))
             ->whereIn('status', $deliveredStatuses)
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(total) as revenue'))
             ->groupBy('date')
             ->pluck('revenue', 'date');
-        
-        $ordersRaw = Order::where('created_at', '>=', \Carbon\Carbon::now()->subDays(30))
+
+        $ordersRaw = Order::where('created_at', '>=', Carbon::now()->subDays(30))
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->pluck('count', 'date');
@@ -159,7 +157,6 @@ class AdminController extends BackendController
 
         return view('dashboard.admin.home', compact('todaySales', 'thisMonthSales', 'lastMonthSales', 'growth', 'growthDirection', 'todayOrdersCount', 'totalOrdersCount', 'totalProfit', 'totalCustomers', 'newCustomersThisMonth', 'totalProducts', 'availableProducts', 'outOfStockProducts', 'topSellingProducts', 'leastSellingProducts', 'topSellingCategories', 'ordersProcessing', 'ordersShipped', 'ordersDelivered', 'ordersCancelled', 'latestOrders', 'chartDates', 'chartSales', 'chartOrders', 'pieLabels', 'pieSeries'));
     }
-
 
     public function MarkAsRead()
     {
@@ -333,7 +330,7 @@ class AdminController extends BackendController
         }
         $deleted = false;
         if (Group::count() > 1) {
-            $GroupPermission = \App\Models\GroupPermission::pluck('permission_id')->toArray();
+            $GroupPermission = GroupPermission::pluck('permission_id')->toArray();
             if (in_array('1', $GroupPermission)) {
                 $deleted = true;
                 $data = Group::where('id', $request->id)->delete();
@@ -606,16 +603,17 @@ class AdminController extends BackendController
     public function profile()
     {
         $admin = Admin::find(auth('admin')->id());
+
         return view('dashboard.admin.profile', compact('admin'));
     }
 
     public function update_profile(Request $request)
     {
         $admin = Admin::find(auth('admin')->id());
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email,' . $admin->id,
+            'email' => 'required|email|unique:admins,email,'.$admin->id,
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 

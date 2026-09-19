@@ -3,30 +3,31 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\HelperController;
 use App\Models\Cart;
+use App\Models\Coupon;
+use App\Models\Governorate;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\OrderServiceItem;
+use App\Models\OrderSetting;
 use App\Models\OrderStatus;
-use App\Models\UserAddress;
-use App\Models\Governorate;
 use App\Models\PaymentMethod;
+use App\Models\Product;
+use App\Models\Setting;
+use App\Models\ShippingRule;
+use App\Models\User;
+use App\Models\UserAddress;
+use App\Models\Vendor;
+use App\Notifications\OrderNotification;
+use App\Services\OrderService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use App\Models\ShippingRule;
-use App\Models\OrderSetting;
-use Carbon\Carbon;
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\ShippingCategoryArea;
-use App\Services\OrderService;
-use Illuminate\Support\Facades\Notification;
-use App\Models\Admin;
-use App\Models\Vendor;
-use App\Notifications\OrderNotification;
-use App\Http\Controllers\helper\HelperController;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
@@ -81,9 +82,9 @@ class CheckoutController extends Controller
             }
 
             // Simple shipping calculation (can be improved based on area)
-            $shippingCost = 0; 
-            $discount = 0; 
-            $tax = 0; 
+            $shippingCost = 0;
+            $discount = 0;
+            $tax = 0;
 
             // Calculate Services Cost
             $servicesTotal = 0;
@@ -97,22 +98,24 @@ class CheckoutController extends Controller
             $discountableTotal = $subtotal;
             if (session()->has('coupon')) {
                 $couponData = session('coupon');
-                
+
                 // Validate coupon again against subtotal
                 if ($couponData['max_discount'] && $couponData['max_discount'] < $subtotal) {
                     Session::forget('coupon');
+
                     return back()->with('error', trans_db('frontend.coupon_not_valid_for_total', ['amount' => $couponData['max_discount']]));
                 }
 
                 // Validate payment method
-                if (!empty($couponData['payment_method_id']) && is_array($couponData['payment_method_id'])) {
-                    if (!in_array($request->payment_method, $couponData['payment_method_id'])) {
+                if (! empty($couponData['payment_method_id']) && is_array($couponData['payment_method_id'])) {
+                    if (! in_array($request->payment_method, $couponData['payment_method_id'])) {
                         Session::forget('coupon');
+
                         return back()->with('error', trans_db('frontend.coupon_not_valid_for_payment_method'));
                     }
                 }
 
-                if (!empty($couponData['product_id']) && is_array($couponData['product_id'])) {
+                if (! empty($couponData['product_id']) && is_array($couponData['product_id'])) {
                     $discountableTotal = 0;
                     foreach ($cartItems as $item) {
                         if (in_array($item->product_id, $couponData['product_id'])) {
@@ -177,7 +180,7 @@ class CheckoutController extends Controller
             foreach ($cartItems as $item) {
                 [$flashPrice, $flashId] = OrderService::getFlashSaleValue($item->product_id);
                 $finalPrice = ($flashPrice > 0) ? $flashPrice : ($item->product->special_price ?: $item->product->price);
-                
+
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
@@ -190,7 +193,7 @@ class CheckoutController extends Controller
 
             // Save Order Services
             foreach ($selectedServices as $service) {
-                \App\Models\OrderServiceItem::create([
+                OrderServiceItem::create([
                     'order_id' => $order->id,
                     'order_service_id' => $service->id,
                     'price' => $service->price,
@@ -206,15 +209,15 @@ class CheckoutController extends Controller
 
             Cart::where('user_id', $userId)->delete();
             if (session()->has('coupon')) {
-                \App\Models\Coupon::where('code', session('coupon')['code'])->increment('usage_count');
+                Coupon::where('code', session('coupon')['code'])->increment('usage_count');
                 Session::forget('coupon');
             }
 
             // Check for Gift Page Eligibility
-            $setting = \App\Models\Setting::first();
+            $setting = Setting::first();
             $giftPageUnlocked = false;
             if ($setting && $setting->min_order_for_gift && $total >= $setting->min_order_for_gift) {
-                $user = \App\Models\User::find($userId);
+                $user = User::find($userId);
                 $user->update(['gift_page_enabled' => 1]);
                 $giftPageUnlocked = true;
             }
@@ -240,21 +243,23 @@ class CheckoutController extends Controller
                 }
             } catch (\Exception $e) {
                 // Silently fail notification to not break the response
-                Log::error('Web Order notification failed: ' . $e->getMessage());
+                Log::error('Web Order notification failed: '.$e->getMessage());
             }
 
             return redirect()->route('frontend.user.checkout.success', ['order_id' => $order->id])
-                             ->with('gift_unlocked', $giftPageUnlocked);
+                ->with('gift_unlocked', $giftPageUnlocked);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', trans_db('frontend.something_went_wrong') . ': ' . $e->getMessage());
+
+            return back()->with('error', trans_db('frontend.something_went_wrong').': '.$e->getMessage());
         }
     }
 
     public function success($order_id)
     {
         $order = Order::where('user_id', Auth::id())->findOrFail($order_id);
+
         return view('frontend.checkout.success', compact('order'));
     }
 
@@ -271,24 +276,23 @@ class CheckoutController extends Controller
         $userId = Auth::id();
         $userCart = Cart::where('user_id', $userId)->with('options')->get(); // Re-query cart for calculation
         $userAddress = UserAddress::find($request->address);
-        
-        if (!$userAddress) {
-             return 0;
+
+        if (! $userAddress) {
+            return 0;
         }
 
         // Calculate Cart Sum for Free Shipping Check
-        $cartSum = 0; 
+        $cartSum = 0;
         foreach ($userCart as $cart) {
             [$flashPrice, $flashId] = OrderService::getFlashSaleValue($cart->product_id);
             $price = ($flashPrice > 0) ? $flashPrice : ($cart->product->special_price ?: $cart->product->price);
             // Add option price logic if needed here, assuming basic price for now or consistent with store method
-             $cartSum += $price * $cart->quantity;
+            $cartSum += $price * $cart->quantity;
         }
-
 
         // New Shipping Calculation Logic based on ShippingRule (Country & Governorate)
         $shippingCost = 0;
-        
+
         $shippingRule = ShippingRule::where('country_id', $userAddress->country_id)
             ->where('is_active', 1)
             ->first();
@@ -307,7 +311,7 @@ class CheckoutController extends Controller
         // Free Shipping Logic taking OrderSettings into account
         $order_setting = OrderSetting::first();
         if ($order_setting) {
-                if (
+            if (
                 Carbon::now() > Carbon::createFromFormat('Y-m-d H:i:s', $order_setting->date_from) &&
                 Carbon::now() < Carbon::createFromFormat('Y-m-d H:i:s', $order_setting->date_to) &&
                 $cartSum >= $order_setting->free_min_amount
@@ -326,9 +330,9 @@ class CheckoutController extends Controller
             'payment_method' => 'nullable|exists:payment_methods,id',
         ]);
 
-        $coupon = \App\Models\Coupon::active()->where('code', $request->code)->first();
+        $coupon = Coupon::active()->where('code', $request->code)->first();
 
-        if (!$coupon) {
+        if (! $coupon) {
             return response()->json([
                 'success' => false,
                 'message' => trans_db('frontend.invalid_coupon'),
@@ -336,15 +340,15 @@ class CheckoutController extends Controller
         }
 
         // Check if payment method is required first
-        if (!empty($coupon->payment_method_id) && is_array($coupon->payment_method_id)) {
-            if (!$request->has('payment_method') || empty($request->payment_method)) {
+        if (! empty($coupon->payment_method_id) && is_array($coupon->payment_method_id)) {
+            if (! $request->has('payment_method') || empty($request->payment_method)) {
                 return response()->json([
                     'success' => false,
                     'message' => trans_db('frontend.please_select_payment_first'),
                 ]);
             }
 
-            if (!in_array($request->payment_method, $coupon->payment_method_id)) {
+            if (! in_array($request->payment_method, $coupon->payment_method_id)) {
                 return response()->json([
                     'success' => false,
                     'message' => trans_db('frontend.coupon_not_valid_for_payment_method'),
@@ -353,7 +357,7 @@ class CheckoutController extends Controller
         }
 
         // Check product restriction if any
-        if (!empty($coupon->product_id) && is_array($coupon->product_id)) {
+        if (! empty($coupon->product_id) && is_array($coupon->product_id)) {
             $cartItems = Cart::where('user_id', Auth::id())->pluck('product_id')->toArray();
             $hasValidProduct = false;
             foreach ($cartItems as $pid) {
@@ -362,7 +366,7 @@ class CheckoutController extends Controller
                     break;
                 }
             }
-            if (!$hasValidProduct) {
+            if (! $hasValidProduct) {
                 return response()->json([
                     'success' => false,
                     'message' => trans_db('frontend.coupon_not_valid_for_cart'),
@@ -383,7 +387,7 @@ class CheckoutController extends Controller
         $cartItems = Cart::where('user_id', $userId)->with('product')->get();
         $subtotal = 0;
         foreach ($cartItems as $item) {
-            [$flashPrice, $flashId] = \App\Services\OrderService::getFlashSaleValue($item->product_id);
+            [$flashPrice, $flashId] = OrderService::getFlashSaleValue($item->product_id);
             $price = ($flashPrice > 0) ? $flashPrice : ($item->product->special_price ?: $item->product->price);
             $subtotal += $price * $item->quantity;
         }
@@ -420,6 +424,7 @@ class CheckoutController extends Controller
     public function removeCoupon()
     {
         Session::forget('coupon');
+
         return response()->json([
             'success' => true,
             'message' => trans_db('frontend.coupon_removed_successfully'),

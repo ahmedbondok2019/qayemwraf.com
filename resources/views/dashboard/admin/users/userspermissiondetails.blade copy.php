@@ -25,15 +25,18 @@
                                         @csrf
                                         <input type="hidden" name="id" value="{{$PermissionGroupsDetails->id}}">
 
-                                        <?php $group_array = []; ?>
+                                        <?php
+use App\Models\Permission;
+
+$group_array = []; ?>
                                         @foreach($PermissionGroupsDetails->permission as $per)
                                             <?php
-                                            if (isset($per)) {
-                                                $permission = \App\Models\Permission::where('id', $per->permission_id)->pluck('id');
-                                                if (isset($permission[0])) {
-                                                    $group_array[] = $permission[0];
-                                                }
-                                            }
+                                                                                    if (isset($per)) {
+                                                                                        $permission = Permission::where('id', $per->permission_id)->pluck('id');
+                                                                                        if (isset($permission[0])) {
+                                                                                            $group_array[] = $permission[0];
+                                                                                        }
+                                                                                    }
                                         ?>
                                         @endforeach
 
@@ -58,7 +61,7 @@
                                                     <br/>
                                                     
                                                     <?php
-                                                    $permissionsEdit = \App\Models\Permission::get()->toArray();
+                                                    $permissionsEdit = Permission::get()->toArray();
                                         $PermissionRow = array_chunk($permissionsEdit, 4);
                                         $count_arrays = count($PermissionRow);
                                         ?>

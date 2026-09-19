@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Models\PageTranslation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -17,6 +18,7 @@ class PageController extends Controller
     public function index()
     {
         $pages = Page::with('translation')->orderBy('sort_order')->get();
+
         return view('dashboard.admin.pages.index', compact('pages'));
     }
 
@@ -52,14 +54,14 @@ class PageController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $imageName = time() . '.' . $file->extension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'pages';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $imageName = time().'.'.$file->extension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'pages';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $imageName);
-            $data['image'] = 'storage/website/images/pages/' . $imageName;
+            $data['image'] = 'storage/website/images/pages/'.$imageName;
         }
 
         $page = Page::create($data);
@@ -70,7 +72,7 @@ class PageController extends Controller
                 'locale' => $localeCode,
                 'title' => $request->input("title_$localeCode"),
                 'content' => $request->input("content_$localeCode"),
-                'slug' => Str::slug($request->input("title_en") . '-' . $localeCode), // Simple slug gen
+                'slug' => Str::slug($request->input('title_en').'-'.$localeCode), // Simple slug gen
                 'meta_title' => $request->input("meta_title_$localeCode"),
                 'meta_description' => $request->input("meta_description_$localeCode"),
                 'meta_keywords' => $request->input("meta_keywords_$localeCode"),
@@ -122,24 +124,24 @@ class PageController extends Controller
             // Delete old image
             if ($page->image) {
                 $oldPath = str_replace('storage/', '', $page->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path($page->image))) {
                     unlink(public_path($page->image));
-                } elseif (file_exists(public_path('website/images/pages/' . $page->image))) {
-                    unlink(public_path('website/images/pages/' . $page->image));
+                } elseif (file_exists(public_path('website/images/pages/'.$page->image))) {
+                    unlink(public_path('website/images/pages/'.$page->image));
                 }
             }
-            
+
             $file = $request->file('image');
-            $imageName = time() . '.' . $file->extension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'pages';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $imageName = time().'.'.$file->extension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'pages';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $imageName);
-            $data['image'] = 'storage/website/images/pages/' . $imageName;
+            $data['image'] = 'storage/website/images/pages/'.$imageName;
         }
 
         $page->update($data);
@@ -147,23 +149,23 @@ class PageController extends Controller
         // Update translations
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $translation = PageTranslation::where('page_id', $page->id)->where('locale', $localeCode)->first();
-            
+
             $transData = [
                 'title' => $request->input("title_$localeCode"),
                 'content' => $request->input("content_$localeCode"),
                 // Keep existing slug or update, let's keep it simple for now, maybe update provided slug?
-                // 'slug' => ... 
+                // 'slug' => ...
                 'meta_title' => $request->input("meta_title_$localeCode"),
                 'meta_description' => $request->input("meta_description_$localeCode"),
                 'meta_keywords' => $request->input("meta_keywords_$localeCode"),
             ];
 
-             if ($translation) {
+            if ($translation) {
                 $translation->update($transData);
             } else {
                 $transData['page_id'] = $page->id;
                 $transData['locale'] = $localeCode;
-                $transData['slug'] = Str::slug($request->input("title_$localeCode") . '-' . $localeCode);
+                $transData['slug'] = Str::slug($request->input("title_$localeCode").'-'.$localeCode);
                 PageTranslation::create($transData);
             }
         }
@@ -176,17 +178,18 @@ class PageController extends Controller
      */
     public function destroy(Page $page)
     {
-         if ($page->image) {
+        if ($page->image) {
             $oldPath = str_replace('storage/', '', $page->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             } elseif (file_exists(public_path($page->image))) {
                 unlink(public_path($page->image));
-            } elseif (file_exists(public_path('website/images/pages/' . $page->image))) {
-                unlink(public_path('website/images/pages/' . $page->image));
+            } elseif (file_exists(public_path('website/images/pages/'.$page->image))) {
+                unlink(public_path('website/images/pages/'.$page->image));
             }
         }
         $page->delete();
+
         return redirect()->route('admin.pages.index')->with('success', trans_db('dashboard.deleted successfully'));
     }
 }

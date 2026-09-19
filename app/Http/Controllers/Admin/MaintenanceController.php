@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class MaintenanceController extends BackendController
 {
@@ -17,9 +18,9 @@ class MaintenanceController extends BackendController
     public function activatesite(Request $request)
     {
         if ($request->site_status == 1) {
-            \Illuminate\Support\Facades\Artisan::call('up');
+            Artisan::call('up');
         } else {
-            \Illuminate\Support\Facades\Artisan::call('down --secret="1630542a-246b-4b66-afa1-dd72a4c43666"');
+            Artisan::call('down --secret="1630542a-246b-4b66-afa1-dd72a4c43666"');
         }
 
         $site_status = Setting::first();

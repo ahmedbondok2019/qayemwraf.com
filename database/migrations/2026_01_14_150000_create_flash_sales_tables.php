@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('flash_sales')) {
+        if (! Schema::hasTable('flash_sales')) {
             Schema::create('flash_sales', function (Blueprint $table) {
                 $table->id();
                 $table->dateTime('start_at')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('flash_sale_translations')) {
+        if (! Schema::hasTable('flash_sale_translations')) {
             Schema::create('flash_sale_translations', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('flash_sale_id')->constrained('flash_sales')->onDelete('cascade');
@@ -34,14 +34,14 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('flash_sale_products')) {
+        if (! Schema::hasTable('flash_sale_products')) {
             Schema::create('flash_sale_products', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('flash_sale_id')->constrained('flash_sales')->onDelete('cascade');
                 $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
                 $table->decimal('price', 10, 2)->default(0);
                 $table->timestamps();
-                
+
                 $table->unique(['flash_sale_id', 'product_id']);
             });
         }

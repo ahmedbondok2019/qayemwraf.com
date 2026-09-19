@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             OrderServiceSeeder::class,
             PermissionSeeder::class,
             BlogSeeder::class,
+            ProjectSeeder::class,
             StaticTranslationSqlSeeder::class,
         ]);
 

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
             $table->boolean('is_main')->default(false);
-            
+
             $table->softDeletes();
             $table->timestamps();
         });

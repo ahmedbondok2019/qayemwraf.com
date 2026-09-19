@@ -16,7 +16,7 @@ class SettingSeeder extends Seeder
     {
         $setting = Setting::first();
 
-        if (!$setting) {
+        if (! $setting) {
             Setting::create([
                 'app_name' => 'qayemwraf',
                 'app_meta_title' => 'qayemwraf',

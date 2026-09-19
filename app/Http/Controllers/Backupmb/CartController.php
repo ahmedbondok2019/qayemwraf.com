@@ -204,20 +204,20 @@ class CartController extends ApiController
         $user_type = 1;
         $user = UserApiToken::where('api_token', $token)->where('user_type', $user_type)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '200');
         }
 
         if (! is_numeric($request->product_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         $product = Product::find($request->product_id);
         if (! is_numeric($request->product_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.Product NotFound'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.Product NotFound'), 'false', '200');
         }
 
         if ($request->qty > $product->max_order) {
-            return $this->NewApiResponse(new \stdClass, __('dashboard.can not exceeds max order'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('dashboard.can not exceeds max order'), 'false', '200');
         }
 
         // product_id,user_id,quantity,price,tax,shipping_cost,subtotal,option_id,option_item_id

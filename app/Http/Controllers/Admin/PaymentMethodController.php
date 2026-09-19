@@ -14,6 +14,7 @@ class PaymentMethodController extends Controller
     public function index()
     {
         $paymentMethods = PaymentMethod::with('translation')->orderBy('sort_order')->get();
+
         return view('dashboard.admin.payment_methods.index', compact('paymentMethods'));
     }
 
@@ -23,6 +24,7 @@ class PaymentMethodController extends Controller
     public function edit($id)
     {
         $paymentMethod = PaymentMethod::findOrFail($id);
+
         return view('dashboard.admin.payment_methods.edit', compact('paymentMethod'));
     }
 
@@ -39,7 +41,7 @@ class PaymentMethodController extends Controller
         ]);
 
         $paymentMethod = PaymentMethod::findOrFail($id);
-        
+
         $paymentMethod->update([
             'discount' => $request->discount ?? 0,
             'discount_type' => $request->discount_type ?? 'percentage',

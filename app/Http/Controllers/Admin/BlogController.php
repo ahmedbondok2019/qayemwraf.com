@@ -7,9 +7,8 @@ use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\BlogTranslation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -19,6 +18,7 @@ class BlogController extends BackendController
     {
         if ($request->ajax()) {
             $data = Blog::with(['BlogTranslation', 'category.translation'])->orderByDesc('id');
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('title', function ($row) {
@@ -29,30 +29,32 @@ class BlogController extends BackendController
                 })
                 ->addColumn('status', function ($row) {
                     $checked = $row->status ? 'checked' : '';
+
                     return '<div class="custom-control custom-switch custom-control-inline">
                                 <input type="checkbox" class="custom-control-input status-switch" 
-                                       id="status_' . $row->id . '" 
-                                       data-id="' . $row->id . '"
-                                       ' . $checked . '>
-                                <label class="custom-control-label" for="status_' . $row->id . '"></label>
+                                       id="status_'.$row->id.'" 
+                                       data-id="'.$row->id.'"
+                                       '.$checked.'>
+                                <label class="custom-control-label" for="status_'.$row->id.'"></label>
                             </div>';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="btn-group">
-                                <a href="' . route('admin.blogs.edit', $row->id) . '" class="btn btn-sm btn-warning">
+                                <a href="'.route('admin.blogs.edit', $row->id).'" class="btn btn-sm btn-warning">
                                     <i data-feather="edit"></i>
                                 </a>
-                                <a href="' . route('admin.blogs.addTrans', $row->id) . '" class="btn btn-sm btn-info" title="' . trans_db('dashboard.Translations') . '">
+                                <a href="'.route('admin.blogs.addTrans', $row->id).'" class="btn btn-sm btn-info" title="'.trans_db('dashboard.Translations').'">
                                     <i data-feather="globe"></i>
                                 </a>
-                                <form action="' . route('admin.blogs.delete', $row->id) . '" method="POST" class="d-inline delete-form">
-                                    ' . csrf_field() . '
-                                    ' . method_field('DELETE') . '
+                                <form action="'.route('admin.blogs.delete', $row->id).'" method="POST" class="d-inline delete-form">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
                                     <button type="submit" class="btn btn-sm btn-danger confirm-delete">
                                         <i data-feather="trash"></i>
                                     </button>
                                 </form>
                             </div>';
+
                     return $btn;
                 })
                 ->rawColumns(['status', 'action'])
@@ -65,6 +67,7 @@ class BlogController extends BackendController
     public function create()
     {
         $categories = BlogCategory::with('translation')->where('status', 1)->get();
+
         return view('dashboard.admin.blogs.create', compact('categories'));
     }
 
@@ -104,6 +107,7 @@ class BlogController extends BackendController
         ]);
 
         alert()->success(trans_db('dashboard.saved'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.blogs.index');
     }
 
@@ -111,13 +115,14 @@ class BlogController extends BackendController
     {
         $blog = Blog::with('BlogTranslation')->findOrFail($id);
         $categories = BlogCategory::with('translation')->where('status', 1)->get();
+
         return view('dashboard.admin.blogs.edit', compact('blog', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
         $blog = Blog::findOrFail($id);
-        
+
         $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
@@ -128,10 +133,10 @@ class BlogController extends BackendController
             $oldImage = $blog->BlogTranslation->image;
             if ($oldImage) {
                 $oldPath = str_replace('storage/', '', $oldImage);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-                } elseif (file_exists(public_path('website/images/blog/' . $oldImage))) {
-                    unlink(public_path('website/images/blog/' . $oldImage));
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path('website/images/blog/'.$oldImage))) {
+                    unlink(public_path('website/images/blog/'.$oldImage));
                 }
             }
 
@@ -163,6 +168,7 @@ class BlogController extends BackendController
         );
 
         alert()->success(trans_db('dashboard.updated'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.blogs.index');
     }
 
@@ -172,14 +178,15 @@ class BlogController extends BackendController
         $oldImage = $blog->BlogTranslation->image ?? null;
         if ($oldImage) {
             $oldPath = str_replace('storage/', '', $oldImage);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-            } elseif (file_exists(public_path('website/images/blog/' . $oldImage))) {
-                unlink(public_path('website/images/blog/' . $oldImage));
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path('website/images/blog/'.$oldImage))) {
+                unlink(public_path('website/images/blog/'.$oldImage));
             }
         }
         $blog->delete();
         alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.blogs.index');
     }
 
@@ -187,12 +194,14 @@ class BlogController extends BackendController
     {
         $blog = Blog::find($request->blog_id);
         $blog->update(['status' => $request->status]);
+
         return response()->json(['data' => 'success']);
     }
 
     public function addTrans($id)
     {
         $blog = Blog::findOrFail($id);
+
         return view('dashboard.admin.blogs.trans', compact('blog'));
     }
 
@@ -215,19 +224,20 @@ class BlogController extends BackendController
         ]);
 
         alert()->success(trans_db('dashboard.saved'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.blogs.index');
     }
 
     public static function imageUpload(Request $request)
     {
         $file = $request->file('image');
-        $fileName = \Illuminate\Support\Str::slug($request->title) . '-' . time() . '.' . $file->getClientOriginalExtension();
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'blog';
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
+        $fileName = Str::slug($request->title).'-'.time().'.'.$file->getClientOriginalExtension();
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'blog';
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$fileName;
 
-        \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
+        HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
 
-        return ['image' => 'storage/website/images/blog/' . $fileName];
+        return ['image' => 'storage/website/images/blog/'.$fileName];
     }
 }

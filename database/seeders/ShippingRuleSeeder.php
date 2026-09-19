@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\ShippingRule;
-use App\Models\ShippingRuleTranslation;
 use App\Models\Country;
 use App\Models\Governorate;
+use App\Models\ShippingRule;
+use App\Models\ShippingRuleTranslation;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class ShippingRuleSeeder extends Seeder
@@ -20,8 +20,9 @@ class ShippingRuleSeeder extends Seeder
     {
         // Ensure we have a country
         $country = Country::first();
-        if (!$country) {
+        if (! $country) {
             $this->command->info('No country found, skipping ShippingRuleSeeder.');
+
             return;
         }
 
@@ -52,9 +53,9 @@ class ShippingRuleSeeder extends Seeder
             // Adjust rate based on simple logic or keywords if available
             // Note: This relies on translations usually, but checking model direct attributes if available.
             // Assuming governorates might have names in translations, but for seeding generic logic:
-            
+
             // Just for variation:
-            if ($gov->id <= 3) { 
+            if ($gov->id <= 3) {
                 $rate = 30.00; // Cairo/Giza/Alex usually early IDs
             } elseif ($gov->id > 20) {
                 $rate = 80.00; // Upper Egypt/Remote

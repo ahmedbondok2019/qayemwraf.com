@@ -2,14 +2,15 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ProductsTemplateExport implements FromCollection, WithHeadings
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return Collection
+     */
     public function collection()
     {
         return collect([
@@ -39,7 +40,7 @@ class ProductsTemplateExport implements FromCollection, WithHeadings
                 'meta_title_en' => 'Meta Title',
                 'meta_description_ar' => 'وصف الميتا',
                 'meta_description_en' => 'Meta Description',
-            ]
+            ],
         ]);
     }
 

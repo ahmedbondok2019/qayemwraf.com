@@ -8,6 +8,9 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatus;
 use App\Models\Product;
+use App\Models\ShippingCategoryArea;
+use App\Models\User;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
@@ -74,7 +77,7 @@ class LandingPageController extends Controller
         $rate = $currency->rate;
 
         // 1. العثور على المستخدم أو إنشاؤه
-        $user = \App\Models\User::firstOrCreate(
+        $user = User::firstOrCreate(
             ['email' => $request->email],
             [
                 'name' => $request->name,
@@ -87,7 +90,7 @@ class LandingPageController extends Controller
         );
 
         // 2. إضافة العنوان
-        $address = \App\Models\UserAddress::create([
+        $address = UserAddress::create([
             'user_id' => $user->id,
             'city' => $request->userCity, // city = city_id
             'area' => $request->userArea,   // area = area_id
@@ -97,12 +100,12 @@ class LandingPageController extends Controller
         ]);
 
         // 3. جلب المنتج
-        $product = \App\Models\Product::findOrFail($request->product_id);
+        $product = Product::findOrFail($request->product_id);
         $price = $product->sale_price ?? $product->price;
         $subtotal = $price * $request->quantity;
 
         // 4. حساب الشحن (بنفس منطق النظام)
-        $shippingCost = \App\Models\ShippingCategoryArea::where('area_id', $request->userArea)
+        $shippingCost = ShippingCategoryArea::where('area_id', $request->userArea)
             ->where('shipping_category_id', $product->shipping_category)
             ->first()?->value ?? 50;
 

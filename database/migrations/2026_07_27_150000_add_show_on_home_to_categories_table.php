@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('categories', 'show_on_home')) {
+        if (! Schema::hasColumn('categories', 'show_on_home')) {
             Schema::table('categories', function (Blueprint $table) {
                 $table->boolean('show_on_home')->default(true)->after('is_active');
             });

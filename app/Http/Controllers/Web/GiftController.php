@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\OrderStatus;
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,13 +17,13 @@ class GiftController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->gift_page_enabled) {
+        if (! $user->gift_page_enabled) {
             return redirect()->route('user.home')->with('error', trans_db('frontend.You do not have permission to access the Gift Page.'));
         }
 
         $gifts = Product::active()->where('is_gift', 1)->with('translation')->paginate(12);
-        
-        $setting = \App\Models\Setting::first();
+
+        $setting = Setting::first();
         $maxGiftItems = $setting->max_gift_items ?? 1;
 
         return view('frontend.gifts.index', compact('gifts', 'maxGiftItems'));
@@ -32,7 +36,7 @@ class GiftController extends Controller
             'gift_ids.*' => 'exists:products,id',
         ]);
 
-        $setting = \App\Models\Setting::first();
+        $setting = Setting::first();
         $maxGiftItems = $setting->max_gift_items ?? 1;
 
         if (count($request->gift_ids) > $maxGiftItems) {
@@ -44,8 +48,8 @@ class GiftController extends Controller
         // Create a new order for gifts (Price 0)
         // You might want to wrap this in a transaction
         // Assuming standard order creation logic with 0 price
-        
-        $order = \App\Models\Order::create([
+
+        $order = Order::create([
             'user_id' => $user->id,
             'first_name' => $user->name, // parse name if needed
             'email' => $user->email,
@@ -63,7 +67,7 @@ class GiftController extends Controller
 
         foreach ($request->gift_ids as $giftId) {
             $product = Product::find($giftId);
-            \App\Models\OrderDetail::create([
+            OrderDetail::create([
                 'order_id' => $order->id,
                 'product_id' => $giftId,
                 'quantity' => 1,
@@ -72,16 +76,16 @@ class GiftController extends Controller
                 'rate' => session('exchange_rate', 1),
             ]);
         }
-        
-        \App\Models\OrderStatus::create([
+
+        OrderStatus::create([
             'order_id' => $order->id,
             'user_id' => $user->id,
             'status' => 'pending',
             'notes' => 'Gift request placed',
         ]);
-        
+
         // Disable gift page after claiming
-        $user->update(['gift_page_enabled' => 0]); 
+        $user->update(['gift_page_enabled' => 0]);
 
         return redirect()->route('frontend.user.gifts.success');
     }

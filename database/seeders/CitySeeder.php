@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Governorate;
-use App\Models\GovernorateTranslation;
 use App\Models\City;
 use App\Models\CityTranslation;
+use App\Models\Governorate;
+use Illuminate\Database\Seeder;
 
 class CitySeeder extends Seeder
 {

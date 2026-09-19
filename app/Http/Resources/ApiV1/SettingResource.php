@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\ApiV1;
 
+use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,7 +15,7 @@ class SettingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $aboutPage = \App\Models\Page::active()->whereHas('translations', function($q) {
+        $aboutPage = Page::active()->whereHas('translations', function ($q) {
             $q->where('slug', 'like', 'about%');
         })->with(['translations', 'translation'])->first();
 
@@ -51,8 +52,8 @@ class SettingResource extends JsonResource
                 'delivered' => $this->translate('msg_delivered'),
             ],
             'gift_settings' => [
-                'max_gift_items' => (int)($this->max_gift_items ?? 1),
-                'min_order_for_gift' => (float)($this->min_order_for_gift ?? 0),
+                'max_gift_items' => (int) ($this->max_gift_items ?? 1),
+                'min_order_for_gift' => (float) ($this->min_order_for_gift ?? 0),
             ],
             'why_choose_us' => $this->getWhyChooseUsFormatted(),
             'catalog_download' => [

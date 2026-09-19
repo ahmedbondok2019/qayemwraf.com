@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\BackendController;
 use App\Models\Currency;
 use App\Models\CurrencyTranslation;
 use Illuminate\Http\Request;
@@ -14,6 +13,7 @@ class CurrenciesController extends BackendController
     public function index()
     {
         $currencies = Currency::with('translations')->get();
+
         return view('dashboard.admin.currencies.index', compact('currencies'));
     }
 
@@ -63,11 +63,13 @@ class CurrenciesController extends BackendController
 
             DB::commit();
             alert()->success(trans_db('dashboard.saved'), trans_db('dashboard.congratulation'));
+
             return redirect()->route('admin.currencies.index');
 
         } catch (\Exception $e) {
             DB::rollback();
             alert()->error(trans_db('dashboard.error'), trans_db('dashboard.notsaved'));
+
             return redirect()->back();
         }
     }
@@ -75,6 +77,7 @@ class CurrenciesController extends BackendController
     public function edit($id)
     {
         $currency = Currency::with('translations')->findOrFail($id);
+
         return view('dashboard.admin.currencies.edit', compact('currency'));
     }
 
@@ -122,11 +125,13 @@ class CurrenciesController extends BackendController
 
             DB::commit();
             alert()->success(trans_db('dashboard.saved'), trans_db('dashboard.congratulation'));
+
             return redirect()->route('admin.currencies.index');
 
         } catch (\Exception $e) {
             DB::rollback();
             alert()->error(trans_db('dashboard.error'), trans_db('dashboard.notsaved'));
+
             return redirect()->back();
         }
     }
@@ -137,9 +142,11 @@ class CurrenciesController extends BackendController
             $currency = Currency::findOrFail($id);
             $currency->delete();
             alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.congratulation'));
+
             return redirect()->route('admin.currencies.index');
         } catch (\Exception $e) {
             alert()->error(trans_db('dashboard.error'), trans_db('dashboard.notdeleted'));
+
             return redirect()->back();
         }
     }

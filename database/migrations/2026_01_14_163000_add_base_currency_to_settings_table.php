@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('settings', function (Blueprint $table) {
-            if (!Schema::hasColumn('settings', 'base_currency')) {
+            if (! Schema::hasColumn('settings', 'base_currency')) {
                 $table->string('base_currency')->default('EGP')->nullable()->after('app_name');
             }
         });

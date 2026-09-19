@@ -12,9 +12,10 @@ use App\Models\VendorImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class VendorsController extends BackendController
 {
@@ -161,13 +162,13 @@ class VendorsController extends BackendController
 
         if (! empty($request->contract)) {
             $pdf_contract_name = HelperController::make_slug($request->name).'-'.time().'.pdf';
-            $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'contract';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'contract';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $request->file('contract')->move($fullStoragePath, $pdf_contract_name);
-            $pdf_contract = 'storage/website/uploads/contract/' . $pdf_contract_name;
+            $pdf_contract = 'storage/website/uploads/contract/'.$pdf_contract_name;
         }
 
         $vendor = Vendor::find($request->id);
@@ -228,12 +229,12 @@ class VendorsController extends BackendController
             // Delete contract if exists
             if ($vendor->contract) {
                 $oldPath = str_replace('storage/', '', $vendor->contract);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path($vendor->contract))) {
                     unlink(public_path($vendor->contract));
-                } elseif (file_exists(public_path('website/uploads/contract/' . $vendor->contract))) {
-                    unlink(public_path('website/uploads/contract/' . $vendor->contract));
+                } elseif (file_exists(public_path('website/uploads/contract/'.$vendor->contract))) {
+                    unlink(public_path('website/uploads/contract/'.$vendor->contract));
                 }
             }
 
@@ -242,12 +243,12 @@ class VendorsController extends BackendController
             foreach ($images as $image) {
                 if ($image->image) {
                     $oldPath = str_replace('storage/', '', $image->image);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path($image->image))) {
                         unlink(public_path($image->image));
-                    } elseif (file_exists(public_path('website/images/users/' . $image->image))) {
-                        unlink(public_path('website/images/users/' . $image->image));
+                    } elseif (file_exists(public_path('website/images/users/'.$image->image))) {
+                        unlink(public_path('website/images/users/'.$image->image));
                     }
                 }
             }
@@ -265,8 +266,8 @@ class VendorsController extends BackendController
         $data = VendorImage::find($request->id);
         if ($data && $data->image) {
             $oldPath = str_replace('storage/', '', $data->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             } elseif (file_exists(public_path($data->image))) {
                 unlink(public_path($data->image));
             } elseif (file_exists(public_path('website/images/users/'.$data->image))) {
@@ -290,20 +291,22 @@ class VendorsController extends BackendController
         $contractPath = $vendor->contract;
         if (strpos($contractPath, 'storage/') === 0) {
             $path = str_replace('storage/', '', $contractPath);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
-                return \Illuminate\Support\Facades\Storage::disk('public')->download($path);
+            if (Storage::disk('public')->exists($path)) {
+                return Storage::disk('public')->download($path);
             }
         }
-        
+
         $file = public_path().'/website/uploads/contract/'.$vendor->contract;
         if (file_exists($file)) {
             $headers = [
                 'Content-Type: application/pdf',
             ];
+
             return Response::download($file, 'contract_'.$vendor->contract, $headers);
         }
 
         alert()->error(trans_db('dashboard.not found'), trans_db('dashboard.attention'));
+
         return redirect()->back();
     }
 
@@ -362,8 +365,8 @@ class VendorsController extends BackendController
 
                 if (isset($oldImage) && $oldImage != null) {
                     $oldPath = str_replace('storage/', '', $oldImage);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path('website/images/users/'.$oldImage))) {
                         unlink(public_path('website/images/users/'.$oldImage));
                     }
@@ -383,13 +386,13 @@ class VendorsController extends BackendController
 
     public static function UploadImagesVendor($image, $name, $folder, $width = null, $height = null)
     {
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$name;
 
         HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
-        
-        return 'storage/website/images/' . $folder . '/' . $name;
+
+        return 'storage/website/images/'.$folder.'/'.$name;
     }
 
     public function cropSlider(Request $request)

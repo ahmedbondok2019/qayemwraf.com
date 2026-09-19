@@ -12,5 +12,6 @@ class Visitor extends Model
     use SoftDeletes;
 
     protected $table = 'visit_logs';
+
     protected $guarded = [];
 }

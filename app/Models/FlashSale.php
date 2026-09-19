@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HandleImageStorageTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FlashSale extends Model
 {
+    use HandleImageStorageTrait;
     use HasFactory;
-    use \App\Traits\HandleImageStorageTrait;
 
     protected $guarded = [];
 
@@ -31,10 +32,10 @@ class FlashSale extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'flash_sale_products')
-                    ->withPivot('price')
-                    ->withTimestamps();
+            ->withPivot('price')
+            ->withTimestamps();
     }
-    
+
     public function getNameAttribute()
     {
         return $this->translation->name ?? $this->translations->first()->name ?? '';

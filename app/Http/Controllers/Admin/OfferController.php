@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Offer;
 use App\Models\OfferTranslation;
-use App\Models\Category;
 use Illuminate\Http\Request;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class OfferController extends Controller
 {
@@ -18,6 +19,7 @@ class OfferController extends Controller
     public function index()
     {
         $offers = Offer::with(['translation', 'category.translations'])->orderBy('sort_order')->get();
+
         return view('dashboard.admin.offers.index', compact('offers'));
     }
 
@@ -27,7 +29,8 @@ class OfferController extends Controller
     public function create()
     {
         // Assuming Category translates via separate table or similar pattern
-        $categories = Category::with('translations')->get(); 
+        $categories = Category::with('translations')->get();
+
         return view('dashboard.admin.offers.create', compact('categories'));
     }
 
@@ -59,29 +62,29 @@ class OfferController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $imageName = time() . '.' . $file->extension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'offers';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $imageName = time().'.'.$file->extension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'offers';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $imageName);
-            $data['image'] = 'storage/website/images/offers/' . $imageName;
+            $data['image'] = 'storage/website/images/offers/'.$imageName;
         }
 
         $offer = Offer::create($data);
 
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
-             $name = $request->input("name_$localeCode");
-             // Generate slug if not provided? Or just from name.
-             // Usually slugs should be unique.
-             $slug = Str::slug($name);
-             
-             // Ensure uniqueness
-             $count = OfferTranslation::where('slug', $slug)->count();
-             if ($count > 0) {
-                 $slug .= '-' . time();
-             }
+            $name = $request->input("name_$localeCode");
+            // Generate slug if not provided? Or just from name.
+            // Usually slugs should be unique.
+            $slug = Str::slug($name);
+
+            // Ensure uniqueness
+            $count = OfferTranslation::where('slug', $slug)->count();
+            if ($count > 0) {
+                $slug .= '-'.time();
+            }
 
             OfferTranslation::create([
                 'offer_id' => $offer->id,
@@ -108,6 +111,7 @@ class OfferController extends Controller
     public function edit(Offer $offer)
     {
         $categories = Category::with('translations')->get();
+
         return view('dashboard.admin.offers.edit', compact('offer', 'categories'));
     }
 
@@ -140,24 +144,24 @@ class OfferController extends Controller
             // Delete old image
             if ($offer->image) {
                 $oldPath = str_replace('storage/', '', $offer->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path($offer->image))) {
                     unlink(public_path($offer->image));
-                } elseif (file_exists(public_path('website/images/offers/' . $offer->image))) {
-                    unlink(public_path('website/images/offers/' . $offer->image));
+                } elseif (file_exists(public_path('website/images/offers/'.$offer->image))) {
+                    unlink(public_path('website/images/offers/'.$offer->image));
                 }
             }
 
             $file = $request->file('image');
-            $imageName = time() . '.' . $file->extension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'offers';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $imageName = time().'.'.$file->extension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'offers';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $imageName);
-            $data['image'] = 'storage/website/images/offers/' . $imageName;
+            $data['image'] = 'storage/website/images/offers/'.$imageName;
         }
 
         $offer->update($data);
@@ -165,23 +169,23 @@ class OfferController extends Controller
         // Update translations
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $translation = OfferTranslation::where('offer_id', $offer->id)->where('locale', $localeCode)->first();
-            
+
             $name = $request->input("name_$localeCode");
             $transData = [
                 'name' => $name,
             ];
 
-             if ($translation) {
-                 // Should we update slug? usually no unless explicitly asked, or if it changed?
-                 // For now let's keep slug as is or update if needed. 
-                 // If we update name, good practice to update slug ?? debatable.
-                 // Often better not to break old links.
-                 $translation->update($transData);
+            if ($translation) {
+                // Should we update slug? usually no unless explicitly asked, or if it changed?
+                // For now let's keep slug as is or update if needed.
+                // If we update name, good practice to update slug ?? debatable.
+                // Often better not to break old links.
+                $translation->update($transData);
             } else {
                 $slug = Str::slug($name);
                 $count = OfferTranslation::where('slug', $slug)->count();
                 if ($count > 0) {
-                     $slug .= '-' . time();
+                    $slug .= '-'.time();
                 }
 
                 $transData['offer_id'] = $offer->id;
@@ -201,15 +205,16 @@ class OfferController extends Controller
     {
         if ($offer->image) {
             $oldPath = str_replace('storage/', '', $offer->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             } elseif (file_exists(public_path($offer->image))) {
                 unlink(public_path($offer->image));
-            } elseif (file_exists(public_path('website/images/offers/' . $offer->image))) {
-                unlink(public_path('website/images/offers/' . $offer->image));
+            } elseif (file_exists(public_path('website/images/offers/'.$offer->image))) {
+                unlink(public_path('website/images/offers/'.$offer->image));
             }
         }
         $offer->delete();
+
         return redirect()->route('admin.offers.index')->with('success', trans_db('dashboard.deleted successfully'));
     }
 }

@@ -5,9 +5,7 @@ namespace App\Notifications;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Session;
 
 class OrderNotification extends Notification
 {
@@ -46,9 +44,9 @@ class OrderNotification extends Notification
     {
         return [
             'order_id' => $this->order->id,
-            'title' => 'طلب جديد #' . $this->order->id,
+            'title' => 'طلب جديد #'.$this->order->id,
             'amount' => $this->order->total,
-            'user' => $this->order->name ?? ($this->order->first_name . ' ' . $this->order->last_name),
+            'user' => $this->order->name ?? ($this->order->first_name.' '.$this->order->last_name),
             'date' => Carbon::now()->toDateTimeString(),
             'type' => 'order',
             'url' => route('admin.orders.show', $this->order->id),

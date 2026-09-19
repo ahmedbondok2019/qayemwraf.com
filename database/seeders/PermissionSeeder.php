@@ -31,7 +31,7 @@ class PermissionSeeder extends Seeder
 
         $arrayPermission = [
             // Format: ['sidebar_key' => ['base_permission_name', 'group_name/header']]
-            
+
             // Users Management Group
             ['roles' => ['roles', 'UsersManagement']],
             ['admins' => ['admins', 'UsersManagement']],
@@ -39,32 +39,33 @@ class PermissionSeeder extends Seeder
             ['customers' => ['customers', 'UsersManagement']],
 
             ['pages' => ['pages', 'General']],
+            ['projects' => ['projects', 'General']],
             ['blog_categories' => ['blog_categories', 'General']],
             ['blogs' => ['blogs', 'General']],
             ['contacts' => ['contacts', 'General']],
-            
+
             ['countries' => ['countries', 'Location']],
             ['governorates' => ['governorates', 'Location']],
             ['cities' => ['cities', 'Location']],
-            
+
             ['categories' => ['categories', 'Products']],
             ['products' => ['products', 'Products']],
             ['product_brands' => ['product_brands', 'Products']],
             ['options' => ['options', 'Products']],
-            
+
             ['offers' => ['offers', 'Offers']],
             ['coupons' => ['coupons', 'Offers']],
             ['flash_sales' => ['flash_sales', 'Offers']],
-            
+
             ['orders' => ['orders', 'Orders']],
             ['gifts' => ['gifts', 'Orders']],
             ['order_services' => ['order_services', 'Orders']],
-            
+
             ['advertisements' => ['advertisements', 'Marketing']],
             ['sliders' => ['sliders', 'Marketing']],
-            
+
             ['shipping_rules' => ['shipping_rules', 'Shipping']],
-            
+
             ['currencies' => ['currencies', 'Settings']],
         ];
 

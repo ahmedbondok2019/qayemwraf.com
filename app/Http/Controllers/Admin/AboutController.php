@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -254,10 +255,10 @@ class AboutController extends BackendController
         }
         if (! empty($data->image)) {
             $oldPath = str_replace('storage/', '', $data->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-            } elseif (file_exists(public_path('website/images/about/' . $data->image))) {
-                unlink(public_path('website/images/about/' . $data->image));
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path('website/images/about/'.$data->image))) {
+                unlink(public_path('website/images/about/'.$data->image));
             }
         }
 
@@ -324,8 +325,8 @@ class AboutController extends BackendController
         if ($image) {
             if (isset($oldImage) && $oldImage != null) {
                 $oldPath = str_replace('storage/', '', $oldImage);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path('website/images/about/'.$oldImage))) {
                     unlink(public_path('website/images/about/'.$oldImage));
                 }
@@ -340,13 +341,13 @@ class AboutController extends BackendController
 
     public static function UploadImagesAbout($image, $name, $folder, $width = null, $height = null)
     {
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$name;
 
         HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
-        
-        return 'storage/website/images/' . $folder . '/' . $name;
+
+        return 'storage/website/images/'.$folder.'/'.$name;
     }
 
     public function cropAbout(Request $request)
@@ -386,10 +387,10 @@ class AboutController extends BackendController
         $data = AboutImage::find($request->id);
         if ($data->image) {
             $oldPath = str_replace('storage/', '', $data->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-            } elseif (file_exists(public_path('website/images/about/' . $data->image))) {
-                unlink(public_path('website/images/about/' . $data->image));
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            } elseif (file_exists(public_path('website/images/about/'.$data->image))) {
+                unlink(public_path('website/images/about/'.$data->image));
             }
         }
         $data->delete();

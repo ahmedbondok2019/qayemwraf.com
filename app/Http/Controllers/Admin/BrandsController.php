@@ -10,6 +10,7 @@ use App\Models\BrandTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BrandsController extends BackendController
@@ -159,7 +160,7 @@ class BrandsController extends BackendController
 
         $Trans = BrandTranslation::where('brand_id', $request->brand_id)
             ->where('lang_id', app()->getLocale());
-        
+
         $oldTrans = $Trans->first();
         $oldImage = $oldTrans ? $oldTrans->image : null;
 
@@ -187,8 +188,8 @@ class BrandsController extends BackendController
             foreach ($translations as $trans) {
                 if ($trans->image) {
                     $oldPath = str_replace('storage/', '', $trans->image);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path('website/images/brands/'.$trans->image))) {
                         unlink(public_path('website/images/brands/'.$trans->image));
                     }
@@ -219,8 +220,8 @@ class BrandsController extends BackendController
 
                 if (isset($oldImage) && $oldImage != null) {
                     $oldPath = str_replace('storage/', '', $oldImage);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path('website/images/brands/'.$oldImage))) {
                         unlink(public_path('website/images/brands/'.$oldImage));
                     }
@@ -239,18 +240,18 @@ class BrandsController extends BackendController
 
     public static function UploadImagesBrand($image, $name, $folder, $width = null, $height = null)
     {
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        
-        if (!file_exists($fullStoragePath)) {
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+
+        if (! file_exists($fullStoragePath)) {
             mkdir($fullStoragePath, 0755, true);
         }
 
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$name;
 
         HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
-        
-        return 'storage/website/images/' . $folder . '/' . $name;
+
+        return 'storage/website/images/'.$folder.'/'.$name;
     }
 
     public function cropBrand(Request $request)

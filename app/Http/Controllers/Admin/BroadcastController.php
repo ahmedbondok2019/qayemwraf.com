@@ -15,6 +15,7 @@ class BroadcastController extends Controller
     public function index()
     {
         $broadcasts = Broadcast::latest()->paginate(10);
+
         return view('dashboard.admin.broadcasts.index', compact('broadcasts'));
     }
 
@@ -51,7 +52,7 @@ class BroadcastController extends Controller
             'scheduled_at' => $request->input('schedule_at'),
         ]);
 
-        if (!$request->input('schedule_at')) {
+        if (! $request->input('schedule_at')) {
             $this->sendBroadcast($broadcast);
         }
 
@@ -92,11 +93,11 @@ class BroadcastController extends Controller
     {
         $broadcast = Broadcast::findOrFail($id);
         $broadcast->increment('clicks_count');
-        
+
         if ($broadcast->link) {
             return redirect()->away($broadcast->link);
         }
-        
+
         return redirect()->route('frontend.index');
     }
 
@@ -106,6 +107,7 @@ class BroadcastController extends Controller
             Storage::disk('public')->delete($broadcast->image);
         }
         $broadcast->delete();
+
         return redirect()->route('admin.broadcasts.index')->with('success', 'Broadcast deleted successfully!');
     }
 }

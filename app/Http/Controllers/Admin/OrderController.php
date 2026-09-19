@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Services\FirebaseService;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends BackendController
@@ -13,18 +14,18 @@ class OrderController extends BackendController
         if ($request->ajax()) {
             $orders = Order::with(['user', 'order_details.product.translation'])
                 ->select('orders.*');
-            
+
             return DataTables::of($orders)
                 ->addIndexColumn()
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at ? $row->created_at->format('Y-m-d H:i') : '';
                 })
                 ->addColumn('user_name', function ($row) {
-                    return $row->user ? $row->user->name : ($row->first_name . ' ' . $row->last_name);
+                    return $row->user ? $row->user->name : ($row->first_name.' '.$row->last_name);
                 })
                 ->addColumn('details', function ($row) {
-                    return $row->order_details->map(function($detail) {
-                        return ($detail->product->translation->name ?? $detail->product->id) . ' (' . $detail->quantity . ')';
+                    return $row->order_details->map(function ($detail) {
+                        return ($detail->product->translation->name ?? $detail->product->id).' ('.$detail->quantity.')';
                     })->implode(', ');
                 })
                 ->editColumn('status', function ($row) {
@@ -35,13 +36,15 @@ class OrderController extends BackendController
                         $select .= '<option value="'.$status.'" '.$selected.'>'.trans_db('dashboard.'.$status).'</option>';
                     }
                     $select .= '</select>';
+
                     return $select;
                 })
-                ->addColumn('total_formatted', function($row) {
-                    return $row->total . ' ' . ($row->currency ?? 'EGP');
+                ->addColumn('total_formatted', function ($row) {
+                    return $row->total.' '.($row->currency ?? 'EGP');
                 })
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $btn = '<a href="'.route('admin.orders.show', $row->id).'" class="btn btn-primary btn-sm">'.trans_db('dashboard.show').'</a>';
+
                     return $btn;
                 })
                 ->rawColumns(['status', 'action'])
@@ -54,10 +57,11 @@ class OrderController extends BackendController
     public function show($id)
     {
         $order = Order::with(['order_details.product.translation', 'user', 'governorate_rel', 'city_rel'])->findOrFail($id);
+
         return view('dashboard.admin.orders.show', compact('order'));
     }
 
-    public function updateStatus(Request $request, \App\Services\FirebaseService $firebaseService)
+    public function updateStatus(Request $request, FirebaseService $firebaseService)
     {
         $order = Order::with('user', 'order_details.product')->findOrFail($request->id);
         $oldStatus = $order->status;
@@ -68,11 +72,11 @@ class OrderController extends BackendController
 
         // Send Firebase Notification if user exists
         if ($order->user) {
-            $title = 'تحديث حالة الطلب #' . $order->id;
-            $body = 'حالة طلبك الآن هي: ' . __('dashboard.' . $newStatus);
+            $title = 'تحديث حالة الطلب #'.$order->id;
+            $body = 'حالة طلبك الآن هي: '.__('dashboard.'.$newStatus);
             $firebaseService->sendToUser($order->user, $title, $body, [
-                'order_id' => (string)$order->id,
-                'type' => 'order_status'
+                'order_id' => (string) $order->id,
+                'type' => 'order_status',
             ]);
         }
 
@@ -80,17 +84,17 @@ class OrderController extends BackendController
         if ($newStatus == 'delivered' && $oldStatus != 'delivered') {
             foreach ($order->order_details as $detail) {
                 $product = $detail->product;
-                if ($product && !$product->ignore_quantity) {
+                if ($product && ! $product->ignore_quantity) {
                     $product->decrement('quantity', $detail->quantity);
                 }
             }
         }
-        
+
         // Optional: If status changed FROM delivered to something else (e.g. cancelled), increase product quantity
         if ($oldStatus == 'delivered' && $newStatus != 'delivered') {
             foreach ($order->order_details as $detail) {
                 $product = $detail->product;
-                if ($product && !$product->ignore_quantity) {
+                if ($product && ! $product->ignore_quantity) {
                     $product->increment('quantity', $detail->quantity);
                 }
             }

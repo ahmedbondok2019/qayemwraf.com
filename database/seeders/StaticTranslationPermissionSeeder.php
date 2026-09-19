@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Permission;
 use App\Models\GroupPermission;
+use App\Models\Permission;
+use Illuminate\Database\Seeder;
 
 class StaticTranslationPermissionSeeder extends Seeder
 {
@@ -25,25 +24,25 @@ class StaticTranslationPermissionSeeder extends Seeder
 
             // Create permissions
             $read = Permission::firstOrCreate([
-                'name' => $baseName . '_read',
+                'name' => $baseName.'_read',
                 'parent_permission' => $key,
                 'group_permission' => $groupName,
             ]);
 
             $create = Permission::firstOrCreate([
-                'name' => $baseName . '_create',
+                'name' => $baseName.'_create',
                 'parent_permission' => $key,
                 'group_permission' => $groupName,
             ]);
 
             $update = Permission::firstOrCreate([
-                'name' => $baseName . '_update',
+                'name' => $baseName.'_update',
                 'parent_permission' => $key,
                 'group_permission' => $groupName,
             ]);
 
             $delete = Permission::firstOrCreate([
-                'name' => $baseName . '_delete',
+                'name' => $baseName.'_delete',
                 'parent_permission' => $key,
                 'group_permission' => $groupName,
             ]);

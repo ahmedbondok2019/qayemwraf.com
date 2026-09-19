@@ -16,6 +16,7 @@ use App\Models\ProductRelate;
 use App\Models\ProductTranslation;
 use App\Models\UserApiToken;
 use App\Models\Vendor;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -80,7 +81,7 @@ class ShopController extends ApiController
         // }
 
         // $request->page_number == 1;
-        $allItems = new \Illuminate\Database\Eloquent\Collection;
+        $allItems = new Collection;
         $skippedData = intval($request->page_number) * 10 - 10;
         $Category = Category::query();
         if ($request->sub == 0) {

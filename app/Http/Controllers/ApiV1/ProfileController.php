@@ -4,23 +4,25 @@ namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiV1\User\ProfileUpdateRequest;
-use App\Traits\ApiResponseTrait;
+use App\Models\UserFcmToken;
+use App\Services\FirebaseService;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 /**
  * @group 12. الملف الشخصي (Profile)
- * 
+ *
  * يتولى جلب بيانات الملف الشخصي، تحديث المعلومات الشخصية وكلمة المرور، وتحديث رموز الإشعارات (FCM Token).
  */
 class ProfileController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب الملف الشخصي
-     * 
+     *
      * يعيد كافة البيانات والعلومات الشخصية الخاصة بالمستخدم الحالي المسجل.
      */
     public function show(Request $request)
@@ -30,7 +32,7 @@ class ProfileController extends Controller
 
     /**
      * تحديث البيانات الشخصية
-     * 
+     *
      * يحدّث الاسم، البريد، رقم الهاتف، الدولة، أو كلمة المرور الخاصة بالمستخدم.
      */
     public function update(ProfileUpdateRequest $request)
@@ -51,7 +53,7 @@ class ProfileController extends Controller
 
     /**
      * تحديث رمز الإشعارات (FCM Token)
-     * 
+     *
      * يحدّث رمز الإشعارات التنبيهية الخاصة بجهاز المستخدم لارسال الإشعارات عبر Firebase.
      */
     public function updateFcmToken(Request $request)
@@ -63,8 +65,8 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-        
-        \App\Models\UserFcmToken::updateOrCreate(
+
+        UserFcmToken::updateOrCreate(
             ['fcm_token' => $request->fcm_token],
             [
                 'user_id' => $user->id,
@@ -74,7 +76,7 @@ class ProfileController extends Controller
         );
 
         try {
-            app(\App\Services\FirebaseService::class)->subscribeToTopic($request->fcm_token, 'offers');
+            app(FirebaseService::class)->subscribeToTopic($request->fcm_token, 'offers');
         } catch (\Exception $e) {
         }
 

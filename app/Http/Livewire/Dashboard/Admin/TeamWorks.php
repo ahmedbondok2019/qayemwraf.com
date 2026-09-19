@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Dashboard\Admin;
 use App\Models\TeamWork;
 use App\Models\TeamWorkImage;
 use App\Models\TeamWorkTranslation;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -94,7 +95,7 @@ class TeamWorks extends Component
 
     public function deleteConfirm($team_workID)
     {
-        if (! in_array('145', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('145', Session::get('permissionData'))) {
             return redirect()->back();
         }
         TeamWork::where('id', $team_workID)->delete();
@@ -115,7 +116,7 @@ class TeamWorks extends Component
 
     public function delete()
     {
-        if (! in_array('145', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('145', Session::get('permissionData'))) {
             return redirect()->back();
         }
 
@@ -130,7 +131,7 @@ class TeamWorks extends Component
 
     public function multiStatus()
     {
-        if (! in_array('144', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('144', Session::get('permissionData'))) {
             return redirect()->back();
         }
 

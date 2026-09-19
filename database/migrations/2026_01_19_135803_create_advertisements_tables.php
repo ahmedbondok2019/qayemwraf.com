@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('image')->nullable();
             $table->string('link')->nullable();
-            
+
             $table->unique(['advertisement_id', 'locale']);
             $table->timestamps();
             $table->softDeletes();

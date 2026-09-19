@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Product;
 use App\Models\Coupon;
+use App\Models\Product;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class CouponSeeder extends Seeder
 {

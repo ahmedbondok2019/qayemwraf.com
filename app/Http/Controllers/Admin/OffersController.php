@@ -11,6 +11,7 @@ use App\Models\OfferTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class OffersController extends BackendController
@@ -222,12 +223,12 @@ class OffersController extends BackendController
             foreach ($translations as $trans) {
                 if ($trans->image) {
                     $oldPath = str_replace('storage/', '', $trans->image);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path($trans->image))) {
                         unlink(public_path($trans->image));
-                    } elseif (file_exists(public_path('website/images/offers/' . $trans->image))) {
-                        unlink(public_path('website/images/offers/' . $trans->image));
+                    } elseif (file_exists(public_path('website/images/offers/'.$trans->image))) {
+                        unlink(public_path('website/images/offers/'.$trans->image));
                     }
                 }
             }
@@ -267,13 +268,13 @@ class OffersController extends BackendController
 
     public static function UploadImagesOffer($image, $name, $folder, $width = null, $height = null)
     {
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$name;
 
         HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
-        
-        return 'storage/website/images/offers/' . $name;
+
+        return 'storage/website/images/offers/'.$name;
     }
 
     public function cropOffer(Request $request)

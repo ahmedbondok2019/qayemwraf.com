@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HandleImageStorageTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
+    use HandleImageStorageTrait;
     use HasFactory, SoftDeletes;
-    use \App\Traits\HandleImageStorageTrait;
 
     protected $guarded = [];
 
@@ -89,6 +90,4 @@ class Category extends Model
     {
         return $this->translation->title ?? $this->translations->first()->title ?? '';
     }
-
-  
 }

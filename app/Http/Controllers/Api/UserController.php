@@ -47,11 +47,11 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         $userData = User::find($user->user_id);
         if (! $userData) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         if ($userData->wishlist != null) {
@@ -69,7 +69,7 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'true', '200');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'true', '200');
         }
 
         $data = Wishlist::where('product_id', $request->id)->first();
@@ -89,7 +89,7 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'true', '200');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'true', '200');
         }
 
         $data = Wishlist::where('product_id', $request->product_id)->first();
@@ -107,11 +107,11 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         $userData = User::find($user->user_id);
         if (! $userData) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         Session::put(['user_notification_title' => 'مرحبا بك فى موقعنا : '.$userData->name]);
         Session::put(['user_notification_image' => 'products/test.jpg']);
@@ -126,7 +126,7 @@ class UserController extends ApiController
                 'count_unRead' => $userData->unreadNotifications->count(),
             ], '', 'true', '200');
         } else {
-            return $this->NewApiResponse(new \stdClass, '', 'false', '200');
+            return $this->NewApiResponse(new stdClass, '', 'false', '200');
         }
     }
 
@@ -135,11 +135,11 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         $userData = User::find($user->user_id);
         if (! $userData) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         // $userData->unreadNotifications()->update(['read_at' => now()]);
@@ -153,7 +153,7 @@ class UserController extends ApiController
             return $this->NewApiResponse(true, '', 'true', '200');
             // return $this->NewApiResponse(alerts::collection($notifications), '' , "true", '200');
         } else {
-            return $this->NewApiResponse(new \stdClass, '', 'false', '200');
+            return $this->NewApiResponse(new stdClass, '', 'false', '200');
         }
     }
 
@@ -162,11 +162,11 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         $userData = User::find($user->user_id);
         if (! $userData) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         $userData = User::find($user->user_id);
@@ -174,9 +174,9 @@ class UserController extends ApiController
             ->where('status', 1)
             ->first();
         if ($theCode == null) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not verified'), 'true', '200');
+            return $this->NewApiResponse(new stdClass, __('website.account not verified'), 'true', '200');
         } else {
-            return $this->NewApiResponse(new \stdClass, '', 'true', '200');
+            return $this->NewApiResponse(new stdClass, '', 'true', '200');
         }
     }
 
@@ -222,11 +222,11 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         $userData = User::find($user->user_id);
         if (! $userData) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         $userData = User::find($user->user_id);
@@ -241,9 +241,9 @@ class UserController extends ApiController
                     'status' => 1,
                 ]);
 
-            return $this->NewApiResponse(new \stdClass, 'valid', 'true', '200');
+            return $this->NewApiResponse(new stdClass, 'valid', 'true', '200');
         } else {
-            return $this->NewApiResponse(new \stdClass, 'invalid', 'false', '200');
+            return $this->NewApiResponse(new stdClass, 'invalid', 'false', '200');
         }
     }
 
@@ -294,12 +294,12 @@ class UserController extends ApiController
         ]);
 
         if ($validator->fails()) {
-            return $this->NewApiResponse(new \stdClass, $validator->errors()->first(), 'false', '200');
+            return $this->NewApiResponse(new stdClass, $validator->errors()->first(), 'false', '200');
         }
 
         $test = User::where('phone', $request->phone)->where('status', 1)->first();
         if (empty($test)) {
-            return $this->NewApiResponse(new \stdClass, __('validation.attributes.InValidUser'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('validation.attributes.InValidUser'), 'false', '200');
         } else {
             $random = substr(str_shuffle('0123456789'), 0, 4);
             $theCode = PhoneCheck::create([
@@ -323,7 +323,7 @@ class UserController extends ApiController
 
         if ($validator->fails()) {
             return $this->NewApiResponse(
-                new \stdClass,
+                new stdClass,
                 $validator->errors()->first(),
                 'false',
                 '200'
@@ -340,7 +340,7 @@ class UserController extends ApiController
 
         if ($validPhone == false) {
             return $this->NewApiResponse(
-                new \stdClass,
+                new stdClass,
                 'رقم الهاتف يجب ان يكون صحيحاً',
                 'false',
                 '200'
@@ -349,7 +349,7 @@ class UserController extends ApiController
 
         if (! ctype_digit($request->phone)) {
             return $this->NewApiResponse(
-                new \stdClass,
+                new stdClass,
                 'الهاتف أرقام فقط',
                 'false',
                 '200'
@@ -412,7 +412,7 @@ class UserController extends ApiController
 
             return $this->NewApiResponse($userData, '', 'true', '200');
         } else {
-            return $this->NewApiResponse(new \stdClass, __('api.RegisterFailed'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('api.RegisterFailed'), 'false', '200');
         }
     }
 
@@ -423,7 +423,7 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user_id = UserApiToken::where('api_token', $token)->where('user_type', $user_type)->first();
         if (! isset($user_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'true', '200');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'true', '200');
         }
 
         if ($user_type == 1) {
@@ -450,7 +450,7 @@ class UserController extends ApiController
             if ($request->phone != null) {
                 $DubplicatePhone = Vendor::where('phone', $request->phone)->where('id', '<>', $data->id)->first();
                 if ($DubplicatePhone) {
-                    return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'true', '200');
+                    return $this->NewApiResponse(new stdClass, __('website.account not found'), 'true', '200');
                 }
             }
         }
@@ -538,7 +538,7 @@ class UserController extends ApiController
         User::where('id', $user_id->user_id)->delete();
 
         // }
-        return $this->NewApiResponse(new \stdClass, '', 'true', '200');
+        return $this->NewApiResponse(new stdClass, '', 'true', '200');
     }
 
     public static function getUserStatus(Request $request)
@@ -684,7 +684,7 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user_id = UserApiToken::where('api_token', $token)->where('user_type', $user_type)->first();
         if (! isset($user_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         $phones = Input::json()->all();
@@ -732,7 +732,7 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user_id = UserApiToken::where('api_token', $token)->where('user_type', $user_type)->first();
         if (! isset($user_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         if ($user_type == 2) {
@@ -750,7 +750,7 @@ class UserController extends ApiController
             'firebase_token' => 'required|string',
         ]);
         if ($validator->fails()) {
-            return $this->NewApiResponse(new \stdClass, $validator->errors()->first(), 'false', '200');
+            return $this->NewApiResponse(new stdClass, $validator->errors()->first(), 'false', '200');
         }
 
         // $user_type = $request->header('user_type') == 'user' ? 1 : 2;
@@ -758,13 +758,13 @@ class UserController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user_id = UserApiToken::where('api_token', $token)->where('user_type', $user_type)->first();
         if (! isset($user_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         $user_id->update([
             'firebase_token' => $request->firebase_token,
         ]);
 
-        return $this->NewApiResponse(new \stdClass, '', 'true', '200');
+        return $this->NewApiResponse(new stdClass, '', 'true', '200');
     }
 
     public function ResetPassword(Request $request)
@@ -788,7 +788,7 @@ class UserController extends ApiController
         ]);
 
         if ($validator->fails()) {
-            return $this->NewApiResponse(new \stdClass, $validator->errors()->first(), 'false', '200');
+            return $this->NewApiResponse(new stdClass, $validator->errors()->first(), 'false', '200');
         }
         // if ($request->password != $request->confirm_password){
         //     return $this->NewApiResponse( $request->header('Authorization') ,  "كلمة المرور الجديدة غير متطابقة" , 'false', '200');
@@ -814,12 +814,12 @@ class UserController extends ApiController
                 'password' => Hash::make($request->password),
             ])->save();
 
-            return $this->NewApiResponse(new \stdClass, 'تم تعديل كلمة المرور بنجاح', 'true', '200');
+            return $this->NewApiResponse(new stdClass, 'تم تعديل كلمة المرور بنجاح', 'true', '200');
             // } else {
             //     return $this->NewApiResponse(new \stdClass(), "كلمة المرور الحالية غير صحيحة", 'false', '200');
             // }
         } else {
-            return $this->NewApiResponse(new \stdClass, 'حساب غير موجود', 'false', '200');
+            return $this->NewApiResponse(new stdClass, 'حساب غير موجود', 'false', '200');
         }
     }
 
@@ -872,7 +872,7 @@ class UserController extends ApiController
         ]);
 
         if ($validator->fails()) {
-            return $this->NewApiResponse(new \stdClass, $validator->errors()->first(), 'false', '200');
+            return $this->NewApiResponse(new stdClass, $validator->errors()->first(), 'false', '200');
         }
 
         // $user_type = $request->header('user_type') == 'user' ? 1 : 2;
@@ -912,7 +912,7 @@ class UserController extends ApiController
 
         if (! (Auth::user()) && ! isset($user)) {
             // dd(Auth::user());
-            return $this->NewApiResponse(new \stdClass, __('website.FailedToLogin'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.FailedToLogin'), 'false', '200');
         }
 
         $token = Str::random(80);
@@ -973,7 +973,7 @@ class UserController extends ApiController
         ]);
 
         if ($validator->fails()) {
-            return $this->NewApiResponse(new \stdClass, $validator->errors()->first(), 'false', '200');
+            return $this->NewApiResponse(new stdClass, $validator->errors()->first(), 'false', '200');
         }
 
         $user = User::where('phone', $request->phone)->orwhere('email', $request->email)->first();
@@ -1000,7 +1000,7 @@ class UserController extends ApiController
 
             return $this->NewApiResponse($random, '', 'true', '200');
         } else {
-            return $this->NewApiResponse(new \stdClass, __('website.data error'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.data error'), 'false', '200');
         }
     }
 

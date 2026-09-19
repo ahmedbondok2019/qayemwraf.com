@@ -155,7 +155,7 @@ class ProductImport implements ToCollection
 
                     $path = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products');
                     $destination = public_path('website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'products'.DIRECTORY_SEPARATOR.$primary_image);
-                    helperController::upload_images($path, $destination, $content, '500', '500', 'png');
+                    HelperController::upload_images($path, $destination, $content, '500', '500', 'png');
                 } catch (Exception $ex) {
                     $primary_image = $image;
                 }

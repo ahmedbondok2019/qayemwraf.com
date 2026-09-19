@@ -20,7 +20,7 @@ class CountryResource extends JsonResource
             'code' => $this->code,
             'phone_code' => $this->phone_code,
             'image' => $this->image ? asset($this->image) : null,
-            'is_active' => (bool)$this->is_active,
+            'is_active' => (bool) $this->is_active,
         ];
     }
 }

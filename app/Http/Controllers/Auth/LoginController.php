@@ -3,8 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\Wishlist;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class LoginController extends Controller
@@ -57,12 +63,11 @@ class LoginController extends Controller
     /**
      * Validate the user login request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    protected function validateLogin(\Illuminate\Http\Request $request)
+    protected function validateLogin(Request $request)
     {
         $request->validate([
             $this->username() => 'required|string',
@@ -73,10 +78,9 @@ class LoginController extends Controller
     /**
      * Get the needed authorization credentials from the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    protected function credentials(\Illuminate\Http\Request $request)
+    protected function credentials(Request $request)
     {
         $loginValue = $request->input($this->username());
         $field = filter_var($loginValue, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
@@ -92,50 +96,50 @@ class LoginController extends Controller
         return view('frontend.auth.login');
     }
 
-    protected function authenticated(\Illuminate\Http\Request $request, $user)
+    protected function authenticated(Request $request, $user)
     {
         $tempUserId = $request->cookie('temp_user_id');
 
         if ($tempUserId) {
             // Migrate Cart
-            $guestCartItems = \App\Models\Cart::where('temp_user_id', $tempUserId)->get();
+            $guestCartItems = Cart::where('temp_user_id', $tempUserId)->get();
             foreach ($guestCartItems as $item) {
-                \App\Models\Cart::updateOrCreate(
+                Cart::updateOrCreate(
                     [
                         'user_id' => $user->id,
                         'product_id' => $item->product_id,
                     ],
                     [
-                        'quantity' => \Illuminate\Support\Facades\DB::raw('quantity + ' . $item->quantity)
+                        'quantity' => DB::raw('quantity + '.$item->quantity),
                     ]
                 );
                 $item->forceDelete(); // Remove guest item after migrating
             }
 
             // Migrate Wishlist
-            $guestWishlistItems = \App\Models\Wishlist::where('temp_user_id', $tempUserId)->get();
+            $guestWishlistItems = Wishlist::where('temp_user_id', $tempUserId)->get();
             foreach ($guestWishlistItems as $item) {
                 // Check if already in user's wishlist
-                $exists = \App\Models\Wishlist::where('user_id', $user->id)
+                $exists = Wishlist::where('user_id', $user->id)
                     ->where('product_id', $item->product_id)
                     ->exists();
-                
-                if (!$exists) {
-                    \App\Models\Wishlist::create([
+
+                if (! $exists) {
+                    Wishlist::create([
                         'user_id' => $user->id,
-                        'product_id' => $item->product_id
+                        'product_id' => $item->product_id,
                     ]);
                 }
                 $item->forceDelete();
             }
-            
+
             // Clear the cookie
             // We can't easily clear non-http-only cookies from server if set that way, but we can expire it
-            \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('temp_user_id'));
+            Cookie::queue(Cookie::forget('temp_user_id'));
         }
     }
 
-    protected function loggedOut(\Illuminate\Http\Request $request)
+    protected function loggedOut(Request $request)
     {
         return redirect(LaravelLocalization::localizeURL('/'));
     }

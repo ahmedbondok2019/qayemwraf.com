@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\city as ResourcesCity;
 use App\Models\City;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class area extends JsonResource
@@ -11,7 +12,7 @@ class area extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

@@ -49,7 +49,7 @@ class OfferSeeder extends Seeder
                     'offer_id' => $offer->id,
                     'locale' => $locale,
                     'name' => $data[$locale]['name'],
-                    'slug' => Str::slug($data['en']['name'] . '-' . $locale . '-' . $offer->id),
+                    'slug' => Str::slug($data['en']['name'].'-'.$locale.'-'.$offer->id),
                 ]);
             }
         }

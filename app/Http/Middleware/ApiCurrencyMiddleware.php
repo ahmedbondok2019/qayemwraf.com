@@ -2,18 +2,16 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Currency;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Models\Currency;
 
 class ApiCurrencyMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -21,10 +19,10 @@ class ApiCurrencyMiddleware
         // 1. Priority: Check Header (Flutter can send X-Currency: SAR)
         $code = $request->header('X-Currency');
 
-        if (!$code) {
+        if (! $code) {
             // 2. Detect Country by IP (Stateless)
             $countryCode = 'EG'; // Default
-            
+
             if ($request->header('CF-IPCountry')) {
                 $countryCode = $request->header('CF-IPCountry');
             } else {
@@ -53,8 +51,8 @@ class ApiCurrencyMiddleware
 
         // 3. Get Currency from DB
         $currency = Currency::where('code', $code)->active()->first();
-        
-        if (!$currency) {
+
+        if (! $currency) {
             $currency = Currency::where('is_default', 1)->first() ?? Currency::first();
         }
 

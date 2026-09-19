@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -66,7 +67,7 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @return \App\Models\User
+     * @return User
      */
     protected function create(array $data)
     {
@@ -78,9 +79,11 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+
     public function showRegistrationForm()
     {
-        $countries = \App\Models\Country::active()->with('translations')->get();
+        $countries = Country::active()->with('translations')->get();
+
         return view('frontend.auth.register', compact('countries'));
     }
 }

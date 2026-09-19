@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ReviewsController extends BackendController
@@ -75,13 +76,13 @@ class ReviewsController extends BackendController
         if (! empty($request->video)) {
             $name = $request->file('video')->getClientOriginalName();
             $video_name = HelperController::make_slug($name).'.mp4';
-            $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR . 'reviews';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'videos'.DIRECTORY_SEPARATOR.'reviews';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $request->file('video')->move($fullStoragePath, $video_name);
-            $video_name = 'storage/website/uploads/videos/reviews/' . $video_name;
+            $video_name = 'storage/website/uploads/videos/reviews/'.$video_name;
         }
 
         $data = self::imageUpload($request);
@@ -127,13 +128,13 @@ class ReviewsController extends BackendController
         if (! empty($request->video)) {
             $name = $request->file('video')->getClientOriginalName();
             $video = HelperController::make_slug($name).'.mp4';
-            $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR . 'reviews';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'videos'.DIRECTORY_SEPARATOR.'reviews';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $request->file('video')->move($fullStoragePath, $video);
-            $video_name = 'storage/website/uploads/videos/reviews/' . $video;
+            $video_name = 'storage/website/uploads/videos/reviews/'.$video;
         }
         // / check if not upload any image get the first image.
         if (empty($image_name)) {
@@ -187,13 +188,13 @@ class ReviewsController extends BackendController
         if (! empty($request->video)) {
             $name = $request->file('video')->getClientOriginalName();
             $video_name = HelperController::make_slug($name).'.mp4';
-            $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR . 'reviews';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'videos'.DIRECTORY_SEPARATOR.'reviews';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $request->file('video')->move($fullStoragePath, $video_name);
-            $video_name = 'storage/website/uploads/videos/reviews/' . $video_name;
+            $video_name = 'storage/website/uploads/videos/reviews/'.$video_name;
         }
 
         if (isset($request->image) || isset($request->cropped_image)) {
@@ -254,8 +255,8 @@ class ReviewsController extends BackendController
         if ($data) {
             if ($data->image) {
                 $oldPath = str_replace('storage/', '', $data->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path('website/images/Review/small/'.$data->image))) {
                     unlink(public_path('website/images/Review/small/'.$data->image));
                 } elseif (file_exists(public_path('website/images/Review/'.$data->image))) {
@@ -264,8 +265,8 @@ class ReviewsController extends BackendController
             }
             if ($data->video) {
                 $oldVideo = str_replace('storage/', '', $data->video);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldVideo)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldVideo);
+                if (Storage::disk('public')->exists($oldVideo)) {
+                    Storage::disk('public')->delete($oldVideo);
                 } elseif (file_exists(public_path($data->video))) {
                     unlink(public_path($data->video));
                 }
@@ -294,8 +295,8 @@ class ReviewsController extends BackendController
 
                 if (isset($oldImage) && $oldImage != null) {
                     $oldPath = str_replace('storage/', '', $oldImage);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     }
                     if (file_exists(public_path('website/images/Review/small/'.$oldImage))) {
                         unlink(public_path('website/images/Review/small/'.$oldImage));
@@ -319,12 +320,12 @@ class ReviewsController extends BackendController
 
     public static function UploadImagesReview($image, $name, $folder, $width = null, $height = null)
     {
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        if (!file_exists($fullStoragePath)) {
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        if (! file_exists($fullStoragePath)) {
             mkdir($fullStoragePath, 0755, true);
         }
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$name;
 
         return HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
     }

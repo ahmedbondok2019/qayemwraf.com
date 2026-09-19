@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Product;
 
 class QayemWrafCatalogSeeder extends Seeder
 {
@@ -19,6 +19,7 @@ class QayemWrafCatalogSeeder extends Seeder
         // Safety guard: If the new catalog is already seeded, skip to avoid repeating on every deployment
         if (Product::where('sku', 'HD-PALLET-1TON')->exists()) {
             $this->command->info('✅ تم العثور على كتالوج المنتجات مسبقاً. تم تخطي السيدر تلقائياً لمنع التكرار والحفاظ على التعديلات.');
+
             return;
         }
 

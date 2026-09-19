@@ -745,7 +745,7 @@ return [
     'cancelled' => 'تم الإلغاء',
     'processing' => 'قيد المعالجة',
     'shipped' => 'تم الشحن',
-    
+
     // Dashboard Stats Keys
     'Today Sales' => 'مبيعات اليوم',
     'This Month Sales' => 'مبيعات هذا الشهر',
@@ -799,7 +799,7 @@ return [
     'Search Option' => 'بحث عن خيار',
     'Include Shipping' => 'يشمل مصاريف الشحن',
     'Include Services' => 'يشمل خدمات الطلب',
-    
+
     'Sliders List' => 'قائمة العروض',
 
     'Subtitle' => 'العنوان الفرعي',
@@ -997,7 +997,7 @@ return [
     'Update Details' => 'تفاصيل التحديث',
     'Stock updated successfully.' => 'تم تحديث المخزون بنجاح.',
     'Download Template' => 'تحميل القالب',
-    'Social Login'=> 'تسجيل الدخول عبر الشبكات الاجتماعية',
+    'Social Login' => 'تسجيل الدخول عبر الشبكات الاجتماعية',
     'Google' => 'جوجل',
     'Facebook' => 'فيسبوك',
     'Apple' => 'آبل',

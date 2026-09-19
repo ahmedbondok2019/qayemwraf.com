@@ -14,16 +14,16 @@ use App\Models\Rating;
 use App\Models\UserApiToken;
 use App\Models\Vendor;
 use App\Models\Wishlist;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class products extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -100,7 +100,7 @@ class products extends JsonResource
                 'isFavorite' => $isFavorite,
                 'countFavorite' => $countFavorite,
                 'countOrder' => $countOrder,
-                'product_link' => frontend_site_url(url(app()->getLocale() . '/products/' . (helperController::make_slug($this->translations['title'] ?? '') ?: ($this->slug ?? $this->id)))),
+                'product_link' => frontend_site_url(url(app()->getLocale().'/products/'.(helperController::make_slug($this->translations['title'] ?? '') ?: ($this->slug ?? $this->id)))),
                 'product_rates' => productRates::collection($this->rates),
                 'deal_of_day_end' => $this->deal_of_day_end,
             ];

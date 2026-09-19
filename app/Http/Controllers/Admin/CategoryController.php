@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\HelperController;
 use App\Models\Category;
 use App\Models\CategoryTranslation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -17,6 +20,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::with('translation', 'parent')->latest()->paginate(10);
+
         return view('dashboard.admin.categories.index', compact('categories'));
     }
 
@@ -26,6 +30,7 @@ class CategoryController extends Controller
     public function create()
     {
         $categories = Category::with('translation')->whereNull('parent_id')->get();
+
         return view('dashboard.admin.categories.create', compact('categories'));
     }
 
@@ -43,13 +48,13 @@ class CategoryController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $fileName = \App\Http\Controllers\helper\HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . \Illuminate\Support\Carbon::now()) . '.' . $file->getClientOriginalExtension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'category';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
-            
-            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null, 'category/' . $fileName);
-            $imagePath = 'storage/website/images/category/' . $fileName;
+            $fileName = HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME).Carbon::now()).'.'.$file->getClientOriginalExtension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'category';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$fileName;
+
+            HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null, 'category/'.$fileName);
+            $imagePath = 'storage/website/images/category/'.$fileName;
         }
 
         $category = Category::create([
@@ -84,6 +89,7 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         $categories = Category::with('translation')->whereNull('parent_id')->where('id', '!=', $category->id)->get();
+
         return view('dashboard.admin.categories.edit', compact('category', 'categories'));
     }
 
@@ -101,22 +107,22 @@ class CategoryController extends Controller
             // Delete old image
             if ($category->image) {
                 $oldImagePath = str_replace('storage/', '', $category->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldImagePath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldImagePath);
-                } elseif (file_exists(public_path('website/images/category/' . $category->image))) {
+                if (Storage::disk('public')->exists($oldImagePath)) {
+                    Storage::disk('public')->delete($oldImagePath);
+                } elseif (file_exists(public_path('website/images/category/'.$category->image))) {
                     // Fallback for old style paths
-                    unlink(public_path('website/images/category/' . $category->image));
+                    unlink(public_path('website/images/category/'.$category->image));
                 }
             }
 
             $file = $request->file('image');
-            $fileName = \App\Http\Controllers\helper\HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . \Illuminate\Support\Carbon::now()) . '.' . $file->getClientOriginalExtension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'category';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $fileName;
-            
-            \App\Http\Controllers\helper\HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null, 'category/' . $fileName);
-            $category->image = 'storage/website/images/category/' . $fileName;
+            $fileName = HelperController::make_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME).Carbon::now()).'.'.$file->getClientOriginalExtension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'category';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$fileName;
+
+            HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null, 'category/'.$fileName);
+            $category->image = 'storage/website/images/category/'.$fileName;
         }
 
         $category->parent_id = $request->parent_id;
@@ -126,7 +132,7 @@ class CategoryController extends Controller
 
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $title = $request->input("title_$localeCode");
-            
+
             if ($title) {
                 CategoryTranslation::updateOrCreate(
                     ['category_id' => $category->id, 'locale' => $localeCode],
@@ -152,14 +158,14 @@ class CategoryController extends Controller
     {
         if ($category->image) {
             $oldImagePath = str_replace('storage/', '', $category->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldImagePath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldImagePath);
-            } elseif (file_exists(public_path('website/images/category/' . $category->image))) {
+            if (Storage::disk('public')->exists($oldImagePath)) {
+                Storage::disk('public')->delete($oldImagePath);
+            } elseif (file_exists(public_path('website/images/category/'.$category->image))) {
                 // Fallback for old style paths
-                unlink(public_path('website/images/category/' . $category->image));
+                unlink(public_path('website/images/category/'.$category->image));
             }
         }
-        
+
         $category->translations()->delete();
         $category->delete();
 

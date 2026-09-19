@@ -17,6 +17,7 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::with(['translation', 'governorate.translation'])->orderBy('sort_order')->get();
+
         return view('dashboard.admin.cities.index', compact('cities'));
     }
 
@@ -26,6 +27,7 @@ class CityController extends Controller
     public function create()
     {
         $governorates = Governorate::active()->get();
+
         return view('dashboard.admin.cities.create', compact('governorates'));
     }
 
@@ -78,6 +80,7 @@ class CityController extends Controller
     public function edit(City $city)
     {
         $governorates = Governorate::active()->get();
+
         return view('dashboard.admin.cities.edit', compact('city', 'governorates'));
     }
 
@@ -108,12 +111,12 @@ class CityController extends Controller
         // Update translations
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $translation = CityTranslation::where('city_id', $city->id)->where('locale', $localeCode)->first();
-            
+
             $transData = [
                 'name' => $request->input("name_$localeCode"),
             ];
 
-             if ($translation) {
+            if ($translation) {
                 $translation->update($transData);
             } else {
                 $transData['city_id'] = $city->id;
@@ -131,6 +134,7 @@ class CityController extends Controller
     public function destroy(City $city)
     {
         $city->delete();
+
         return redirect()->route('admin.cities.index')->with('success', trans_db('dashboard.deleted successfully'));
     }
 }

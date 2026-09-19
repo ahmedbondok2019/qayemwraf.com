@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Web\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class LoginController extends Controller
 {
@@ -21,7 +25,7 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
-    
+
     /**
      * Get the login username to be used by the controller.
      *
@@ -35,7 +39,6 @@ class LoginController extends Controller
     /**
      * Get the needed authorization credentials from the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     protected function credentials(Request $request)
@@ -48,7 +51,6 @@ class LoginController extends Controller
             'password' => $request->input('password'),
         ];
     }
-
 
     /**
      * Where to redirect users after login.
@@ -70,7 +72,7 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function showLoginForm()
     {
@@ -80,8 +82,7 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
     public function logout(Request $request)
     {
@@ -96,7 +97,7 @@ class LoginController extends Controller
         }
 
         return $request->wantsJson()
-            ? new \Illuminate\Http\JsonResponse([], 204)
-            : redirect(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeURL('/'));
+            ? new JsonResponse([], 204)
+            : redirect(LaravelLocalization::localizeURL('/'));
     }
 }

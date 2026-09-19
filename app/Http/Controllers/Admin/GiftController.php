@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Order;
+use App\Models\Setting;
+use App\Notifications\GiftStatusUpdated;
+use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
-
-use App\Models\Order;
-use DataTables;
 
 class GiftController extends BackendController
 {
     public function index(Request $request)
     {
-      
 
         if ($request->ajax()) {
             $gifts = Order::where('payment_method', 'Gift')
                 ->with(['user', 'order_details.product.translation'])
                 ->select('orders.*');
-            
-            return Datatables::of($gifts)
+
+            return DataTables::of($gifts)
                 ->addIndexColumn()
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('Y-m-d H:i');
@@ -29,7 +28,7 @@ class GiftController extends BackendController
                     return $row->user ? $row->user->name : __('Unknown');
                 })
                 ->addColumn('book_name', function ($row) {
-                    return $row->order_details->map(function($detail) {
+                    return $row->order_details->map(function ($detail) {
                         return $detail->product->translation->name ?? $detail->product->id;
                     })->implode(', ');
                 })
@@ -42,10 +41,12 @@ class GiftController extends BackendController
                         $select .= '<option value="'.$status.'" '.$selected.'>'.trans_db('dashboard.'.$status).'</option>';
                     }
                     $select .= '</select>';
+
                     return $select;
                 })
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $btn = '<a href="'.route('admin.gifts.show', $row->id).'" class="btn btn-primary btn-sm">'.trans_db('dashboard.show').'</a>';
+
                     return $btn;
                 })
                 ->rawColumns(['status', 'action'])
@@ -57,29 +58,29 @@ class GiftController extends BackendController
 
     public function updateStatus(Request $request)
     {
-   
+
         $order = Order::find($request->id);
         if ($order) {
             $order->status = $request->status;
             $order->save();
 
-            $setting = \App\Models\Setting::find(1);
+            $setting = Setting::find(1);
             $message = trans_db('dashboard.updated'); // Default message
-            
+
             if ($setting) {
-                $statusMsgField = 'msg_' . $request->status;
-                if (!empty($setting->$statusMsgField)) {
+                $statusMsgField = 'msg_'.$request->status;
+                if (! empty($setting->$statusMsgField)) {
                     $message = $setting->$statusMsgField;
                 }
             }
 
             if ($order->user) {
-                $order->user->notify(new \App\Notifications\GiftStatusUpdated($order, $message, $request->status));
+                $order->user->notify(new GiftStatusUpdated($order, $message, $request->status));
             }
 
             return response()->json(['success' => true, 'message' => $message]);
         }
-        
+
         return response()->json(['success' => false, 'message' => trans_db('dashboard.error')]);
     }
 

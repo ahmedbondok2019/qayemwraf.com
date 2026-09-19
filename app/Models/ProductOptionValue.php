@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProductOptionValue extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
-    
+
     protected $casts = [
         'subtract_stock' => 'boolean',
         'price_increment' => 'boolean',
@@ -21,7 +21,7 @@ class ProductOptionValue extends Model
     {
         return $this->belongsTo(ProductOption::class);
     }
-    
+
     public function optionValue()
     {
         return $this->belongsTo(OptionValue::class);

@@ -18,6 +18,7 @@ class OptionController extends Controller
     {
         if ($request->ajax()) {
             $data = Option::with(['translation', 'values.translation'])->select('options.*');
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('name', function ($row) {
@@ -28,19 +29,21 @@ class OptionController extends Controller
                 })
                 ->addColumn('values', function ($row) {
                     return $row->values->map(function ($value) {
-                        return '<span class="badge badge-light-primary mb-1 mr-1">' . $value->value . '</span>';
+                        return '<span class="badge badge-light-primary mb-1 mr-1">'.$value->value.'</span>';
                     })->implode(' ');
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="btn-group">';
-                    $btn .= '<a href="' . route('admin.options.edit', $row->id) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>';
-                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem(' . $row->id . ')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>';
+                    $btn .= '<a href="'.route('admin.options.edit', $row->id).'" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>';
+                    $btn .= '<a href="javascript:void(0)" onclick="deleteItem('.$row->id.')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>';
                     $btn .= '</div>';
+
                     return $btn;
                 })
                 ->rawColumns(['values', 'action'])
                 ->make(true);
         }
+
         return view('dashboard.admin.options.index');
     }
 
@@ -55,12 +58,11 @@ class OptionController extends Controller
         $request->validate([
             'type' => 'required|in:single,multiple',
         ]);
-        
+
         // Custom validaton for localized names
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $request->validate(["name_$localeCode" => 'required|string|max:255']);
         }
-
 
         DB::beginTransaction();
         try {
@@ -81,7 +83,7 @@ class OptionController extends Controller
                 foreach ($request->values as $key => $valueData) {
                     // Check if at least one language value is present to valid entry
                     // Assuming valueData contains arrays like [ar => val, en => val, color => #...]
-                    
+
                     $val = OptionValue::create([
                         'option_id' => $option->id,
                         'color_code' => $valueData['color'] ?? null,
@@ -91,16 +93,18 @@ class OptionController extends Controller
                         OptionValueTranslation::create([
                             'option_value_id' => $val->id,
                             'locale' => $localeCode,
-                            'value' => $valueData[$localeCode] ?? '', 
+                            'value' => $valueData[$localeCode] ?? '',
                         ]);
                     }
                 }
             }
 
             DB::commit();
+
             return redirect()->route('admin.options.index')->with('success', trans_db('dashboard.created_successfully'));
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
@@ -108,21 +112,21 @@ class OptionController extends Controller
     public function edit($id)
     {
         $option = Option::with(['translations', 'values.translations'])->findOrFail($id);
+
         return view('dashboard.admin.options.edit', compact('option'));
     }
 
     public function update(Request $request, $id)
     {
         $option = Option::findOrFail($id);
-        
+
         $request->validate([
             'type' => 'required|in:single,multiple',
         ]);
-         
-         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
+
+        foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $request->validate(["name_$localeCode" => 'required|string|max:255']);
         }
-
 
         DB::beginTransaction();
         try {
@@ -132,28 +136,28 @@ class OptionController extends Controller
 
             // Update Translations
             foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
-                 OptionTranslation::updateOrCreate(
+                OptionTranslation::updateOrCreate(
                     ['option_id' => $option->id, 'locale' => $localeCode],
                     ['name' => $request->input("name_$localeCode")]
                 );
             }
 
             // Handle Option Values Sync
-            // Strategy: 
+            // Strategy:
             // 1. Get IDs of values sent in request.
             // 2. Delete values not in request IDs.
             // 3. Update existing values.
             // 4. Create new values (those without ID).
-            
+
             $existingValueIds = [];
-            
+
             if ($request->has('values')) {
                 foreach ($request->values as $key => $valueData) {
-                    
+
                     if (isset($valueData['id']) && $valueData['id']) {
                         // Update
                         $val = OptionValue::find($valueData['id']);
-                        if($val) {
+                        if ($val) {
                             $val->update(['color_code' => $valueData['color'] ?? null]);
                             $existingValueIds[] = $val->id;
 
@@ -166,7 +170,7 @@ class OptionController extends Controller
                         }
                     } else {
                         // Create
-                         $val = OptionValue::create([
+                        $val = OptionValue::create([
                             'option_id' => $option->id,
                             'color_code' => $valueData['color'] ?? null,
                         ]);
@@ -176,21 +180,23 @@ class OptionController extends Controller
                             OptionValueTranslation::create([
                                 'option_value_id' => $val->id,
                                 'locale' => $localeCode,
-                                'value' => $valueData[$localeCode] ?? '', 
+                                'value' => $valueData[$localeCode] ?? '',
                             ]);
                         }
                     }
                 }
             }
-            
+
             // Delete values not present in the update
             $option->values()->whereNotIn('id', $existingValueIds)->delete();
 
             DB::commit();
+
             return redirect()->route('admin.options.index')->with('success', trans_db('dashboard.updated_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
@@ -199,6 +205,7 @@ class OptionController extends Controller
     {
         $option = Option::findOrFail($id);
         $option->delete();
+
         return response()->json(['success' => trans_db('dashboard.deleted_successfully')]);
     }
 }

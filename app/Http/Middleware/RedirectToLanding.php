@@ -42,7 +42,7 @@ class RedirectToLanding
             // Clean up /public from request URI if present
             $requestUri = preg_replace('/^\/public(\/|$)/', '/', $requestUri);
 
-            $targetUrl = rtrim($frontendUrl, '/') . $requestUri;
+            $targetUrl = rtrim($frontendUrl, '/').$requestUri;
 
             return redirect()->away($targetUrl);
         }

@@ -34,7 +34,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        if (!Schema::hasTable('blogs')) {
+        if (! Schema::hasTable('blogs')) {
             Schema::create('blogs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('blog_category_id')->nullable()->constrained()->onDelete('set null');
@@ -49,7 +49,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('blog_translations')) {
+        if (! Schema::hasTable('blog_translations')) {
             Schema::create('blog_translations', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('blog_id')->constrained()->onDelete('cascade');

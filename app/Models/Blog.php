@@ -12,6 +12,7 @@ class Blog extends Model
     use SoftDeletes;
 
     protected $fillable = ['blog_category_id', 'status', 'view_index'];
+
     protected $guarded = [];
 
     public function category()

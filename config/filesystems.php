@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Carbon;
+
 return [
 
     /*
@@ -45,7 +47,7 @@ return [
 
         'MyDisk' => [
             'driver' => 'local',
-            'root' => public_path('website/images/BarCode/').\Illuminate\Support\Carbon::now()->format('M-Y').'/',
+            'root' => public_path('website/images/BarCode/').Carbon::now()->format('M-Y').'/',
             'url' => env('APP_URL'),
             'visibility' => 'public',
         ],

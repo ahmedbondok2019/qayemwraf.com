@@ -1,32 +1,31 @@
 <?php
 
-
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ApiV1\AuthController;
-use App\Http\Controllers\ApiV1\UserAddressController;
-use App\Http\Controllers\ApiV1\LocationController;
-use App\Http\Controllers\ApiV1\CartController;
-use App\Http\Controllers\ApiV1\WishlistController;
-use App\Http\Controllers\ApiV1\SliderController;
-use App\Http\Controllers\ApiV1\CategoryController;
-use App\Http\Controllers\ApiV1\BrandController;
-use App\Http\Controllers\ApiV1\SettingController;
-use App\Http\Controllers\ApiV1\BlogController;
-use App\Http\Controllers\ApiV1\ContactController;
 use App\Http\Controllers\ApiV1\AdvertisementController;
-use App\Http\Controllers\ApiV1\OfferController;
-use App\Http\Controllers\ApiV1\ProductController;
-use App\Http\Controllers\ApiV1\HomeController;
+use App\Http\Controllers\ApiV1\AuthController;
+use App\Http\Controllers\ApiV1\BlogController;
+use App\Http\Controllers\ApiV1\BrandController;
+use App\Http\Controllers\ApiV1\CartController;
+use App\Http\Controllers\ApiV1\CategoryController;
 use App\Http\Controllers\ApiV1\CheckoutController;
-use App\Http\Controllers\ApiV1\ProfileController;
-use App\Http\Controllers\ApiV1\OrderController;
-use App\Http\Controllers\ApiV1\GiftController;
-use App\Http\Controllers\ApiV1\OptionController;
-use App\Http\Controllers\ApiV1\OrderServiceController;
-use App\Http\Controllers\ApiV1\PaymentMethodController;
-use App\Http\Controllers\ApiV1\PageController;
-use App\Http\Controllers\ApiV1\RatingController;
+use App\Http\Controllers\ApiV1\ContactController;
 use App\Http\Controllers\ApiV1\FeedExportController;
+use App\Http\Controllers\ApiV1\GiftController;
+use App\Http\Controllers\ApiV1\HomeController;
+use App\Http\Controllers\ApiV1\LocationController;
+use App\Http\Controllers\ApiV1\OfferController;
+use App\Http\Controllers\ApiV1\OptionController;
+use App\Http\Controllers\ApiV1\OrderController;
+use App\Http\Controllers\ApiV1\OrderServiceController;
+use App\Http\Controllers\ApiV1\PageController;
+use App\Http\Controllers\ApiV1\PaymentMethodController;
+use App\Http\Controllers\ApiV1\ProductController;
+use App\Http\Controllers\ApiV1\ProfileController;
+use App\Http\Controllers\ApiV1\RatingController;
+use App\Http\Controllers\ApiV1\SettingController;
+use App\Http\Controllers\ApiV1\SliderController;
+use App\Http\Controllers\ApiV1\UserAddressController;
+use App\Http\Controllers\ApiV1\WishlistController;
+use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['Language']], function () {
     Route::prefix('v1')->group(function () {
@@ -59,7 +58,7 @@ Route::group(['middleware' => ['Language']], function () {
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
         // الاشتراك في الإشعارات عبر Firebase (FCM)
         Route::post('/fcm-subscribe', [AuthController::class, 'subscribeToTopic']);
-        
+
         // === الصفحة الرئيسية والعروض السريعة ===
         // جلب جميع بيانات الصفحة الرئيسية (السلايدرز، الأقسام الرئيسية، الفلاش سيل، العروض، الأفضل مبيعاً، لماذا تختارنا، الكتالوج)
         Route::get('/home', [HomeController::class, 'index']);
@@ -89,7 +88,11 @@ Route::group(['middleware' => ['Language']], function () {
         Route::get('/blogs', [BlogController::class, 'index']);
         // جلب تفاصيل مقال محدد بالمعرف
         Route::get('/blogs/{id}', [BlogController::class, 'show']);
-        
+        // جلب قائمة المشروعات المنفذة
+        Route::get('/projects', [ProjectController::class, 'index']);
+        // جلب تفاصيل مشروع محدد
+        Route::get('/projects/{id}', [ProjectController::class, 'show']);
+
         // === الصفحات التعريفية والتنظيمية ===
         // جلب صفحة من نحن ومعلومات الشركة والصور
         Route::get('/about', [PageController::class, 'about']);
@@ -98,7 +101,7 @@ Route::group(['middleware' => ['Language']], function () {
         Route::get('/pages', [PageController::class, 'index']);
         // جلب تفاصيل صفحة تعريفية بواسطة الرابط الصديق (Slug)
         Route::get('/pages/{slug}', [PageController::class, 'show']);
-        
+
         // === الأقسام والمنتجات والتصفح ===
         // جلب الأقسام الرئيسية المتاحة للعرض
         Route::get('/categories', [CategoryController::class, 'index']);
@@ -118,7 +121,7 @@ Route::group(['middleware' => ['Language']], function () {
         Route::get('/products/{id}/options', [OptionController::class, 'productOptions']);
         // جلب جميع الخيارات المتاحة للمنتجات
         Route::get('/options', [OptionController::class, 'index']);
-        
+
         // === تقييمات المنتجات ===
         // إضافة تقييم ومراجعة لمنتج (يتطلب تسجيل الدخول)
         Route::middleware('auth:sanctum')->post('/rate-product', [RatingController::class, 'store']);
@@ -146,12 +149,12 @@ Route::group(['middleware' => ['Language']], function () {
         Route::post('/cart/{id}', [CartController::class, 'update']);
         // حذف عنصر من سلة التسوق
         Route::delete('/cart/{id}', [CartController::class, 'destroy']);
-        
+
         // جلب قائمة الرغبات / المفضلة
         Route::get('/wishlist', [WishlistController::class, 'index']);
         // إضافة أو إزالة منتج من قائمة الرغبات
         Route::post('/wishlist/toggle', [WishlistController::class, 'toggle']);
-        
+
         // === المسارات الخاصة بالمستخدمين المسجلين فقط ===
         Route::middleware('auth:sanctum')->group(function () {
             // إنهاء الشراء وتأكيد الطلب
@@ -180,7 +183,7 @@ Route::group(['middleware' => ['Language']], function () {
             Route::post('/logout', [AuthController::class, 'logout']);
             // حذف حساب المستخدم نهائياً
             Route::post('/delete_account', [AuthController::class, 'deleteAccount']);
-            
+
             // جلب العناوين المسجلة للمستخدم
             Route::get('/addresses', [UserAddressController::class, 'index']);
             // إضافة عنوان شحن جديد

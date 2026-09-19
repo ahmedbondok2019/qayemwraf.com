@@ -12,8 +12,8 @@ use App\Models\TeamWorkTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class TeamWorkController extends BackendController
@@ -227,8 +227,8 @@ class TeamWorkController extends BackendController
 
             if ($data->image) {
                 $oldPath = str_replace('storage/', '', $data->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path('website/images/team_work/'.$data->image))) {
                     unlink(public_path('website/images/team_work/'.$data->image));
                 }
@@ -254,36 +254,36 @@ class TeamWorkController extends BackendController
 
         if ($request->has('primary_image')) {
             $primary_image_name = HelperController::make_slug($request->title).rand(10, 100).'.jpg';
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'team_work';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'team_work';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
-            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $primary_image_name;
+            $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$primary_image_name;
             HelperController::upload_images($fullStoragePath, $destination, $request->file('primary_image'));
-            $primary_image = 'storage/website/images/team_work/' . $primary_image_name;
+            $primary_image = 'storage/website/images/team_work/'.$primary_image_name;
         }
 
         if ($request->hasFile('pdf_file')) {
             $pdf_name = HelperController::make_slug($request->title).'.pdf';
-            $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'pdf';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'pdf';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $request->file('pdf_file')->move($fullStoragePath, $pdf_name);
-            $pdf_file = 'storage/website/uploads/pdf/' . $pdf_name;
+            $pdf_file = 'storage/website/uploads/pdf/'.$pdf_name;
         }
 
         if ($request->hasFile('video_file')) {
             $video_name = HelperController::make_slug($request->title).'.mp4';
-            $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'videos';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'videos';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $request->file('video_file')->move($fullStoragePath, $video_name);
-            $video_file = 'storage/website/uploads/videos/' . $video_name;
+            $video_file = 'storage/website/uploads/videos/'.$video_name;
         }
 
         return [$primary_image, $pdf_file, $video_file];
@@ -296,14 +296,14 @@ class TeamWorkController extends BackendController
                 $imageSlug = HelperController::make_slug($team_work_price.rand(10, 100).'_'.str_replace(' ', '', Carbon::today()));
                 $image_name = str_replace(' ', '', $imageSlug).'.jpg';
 
-                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'team_work';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'team_work';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
-                $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+                $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$image_name;
                 HelperController::upload_images($fullStoragePath, $destination, $image, '1000', '1000');
-                $relativePath = 'storage/website/images/team_work/' . $image_name;
+                $relativePath = 'storage/website/images/team_work/'.$image_name;
 
                 TeamWorkImage::create([
                     'image' => $relativePath,
@@ -372,14 +372,14 @@ class TeamWorkController extends BackendController
 
                 $team_workId = $request->random_id;
 
-                $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'team_work';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'team_work';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
-                $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+                $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$image_name;
                 HelperController::upload_images($fullStoragePath, $destination, $file);
-                $relativePath = 'storage/website/images/team_work/' . $image_name;
+                $relativePath = 'storage/website/images/team_work/'.$image_name;
 
                 $data = [
                     'image' => $relativePath,
@@ -400,14 +400,14 @@ class TeamWorkController extends BackendController
 
             $team_workId = $request->random_id;
 
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'team_work';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'team_work';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
-            $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $image_name;
+            $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$image_name;
             HelperController::upload_images($fullStoragePath, $destination, $file);
-            $relativePath = 'storage/website/images/team_work/' . $image_name;
+            $relativePath = 'storage/website/images/team_work/'.$image_name;
 
             $data = [
                 'image' => $relativePath,

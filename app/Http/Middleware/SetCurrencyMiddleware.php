@@ -2,25 +2,27 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Currency;
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class SetCurrencyMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @param  Closure(Request): (Response|RedirectResponse)  $next
+     * @return Response|RedirectResponse
      */
     public function handle(Request $request, Closure $next)
     {
         $currentIp = $request->ip();
 
-        if (!Session::has('currency_code') || Session::get('last_ip') !== $currentIp) {
+        if (! Session::has('currency_code') || Session::get('last_ip') !== $currentIp) {
             // 1. Detect Country
             $countryCode = 'EG'; // Default
             // Cloudflare Header
@@ -51,12 +53,12 @@ class SetCurrencyMiddleware
             }
 
             // 3. Fetch Currency from DB
-            $currency = \App\Models\Currency::where('code', $code)->active()->first();
-            
+            $currency = Currency::where('code', $code)->active()->first();
+
             // Fallback if not found in DB
-            if (!$currency) {
-                $currency = \App\Models\Currency::where('is_default', 1)->first() 
-                            ?? \App\Models\Currency::first();
+            if (! $currency) {
+                $currency = Currency::where('is_default', 1)->first()
+                            ?? Currency::first();
             }
 
             if ($currency) {

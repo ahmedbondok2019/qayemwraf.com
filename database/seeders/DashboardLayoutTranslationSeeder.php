@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\StaticTranslation;
+use Illuminate\Database\Seeder;
 
 class DashboardLayoutTranslationSeeder extends Seeder
 {
@@ -22,7 +22,7 @@ class DashboardLayoutTranslationSeeder extends Seeder
             ['key' => 'dashboard.No notifications', 'ar' => 'لا توجد تنبيهات', 'en' => 'No notifications'],
             ['key' => 'dashboard.Profile', 'ar' => 'الملف الشخصي', 'en' => 'Profile'],
             ['key' => 'dashboard.Logout', 'ar' => 'تسجيل الخروج', 'en' => 'Logout'],
-            
+
             // Login Page
             ['key' => 'login.Page Title', 'ar' => 'تسجيل الدخول | لوحة إدارة مكتبة الكتب', 'en' => 'Login | Library Management Dashboard'],
             ['key' => 'login.Sidebar Welcome Header', 'ar' => 'لوحة إدارة مكتبة الكتب', 'en' => 'Library Management Dashboard'],
@@ -50,8 +50,8 @@ class DashboardLayoutTranslationSeeder extends Seeder
                 [
                     'translations' => [
                         'ar' => $trans['ar'],
-                        'en' => $trans['en']
-                    ]
+                        'en' => $trans['en'],
+                    ],
                 ]
             );
         }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\CountryTranslation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class CountryController extends Controller
@@ -16,6 +17,7 @@ class CountryController extends Controller
     public function index()
     {
         $countries = Country::with('translation')->orderBy('sort_order')->get();
+
         return view('dashboard.admin.countries.index', compact('countries'));
     }
 
@@ -54,14 +56,14 @@ class CountryController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $imageName = time() . '.' . $file->extension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'countries';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $imageName = time().'.'.$file->extension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'countries';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $imageName);
-            $data['image'] = 'storage/website/images/countries/' . $imageName;
+            $data['image'] = 'storage/website/images/countries/'.$imageName;
         }
 
         $country = Country::create($data);
@@ -122,24 +124,24 @@ class CountryController extends Controller
             // Delete old image
             if ($country->image) {
                 $oldPath = str_replace('storage/', '', $country->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 } elseif (file_exists(public_path($country->image))) {
                     unlink(public_path($country->image));
-                } elseif (file_exists(public_path('website/images/countries/' . $country->image))) {
-                    unlink(public_path('website/images/countries/' . $country->image));
+                } elseif (file_exists(public_path('website/images/countries/'.$country->image))) {
+                    unlink(public_path('website/images/countries/'.$country->image));
                 }
             }
-            
+
             $file = $request->file('image');
-            $imageName = time() . '.' . $file->extension();
-            $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'countries';
-            $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-            if (!file_exists($fullStoragePath)) {
+            $imageName = time().'.'.$file->extension();
+            $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'countries';
+            $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+            if (! file_exists($fullStoragePath)) {
                 mkdir($fullStoragePath, 0755, true);
             }
             $file->move($fullStoragePath, $imageName);
-            $data['image'] = 'storage/website/images/countries/' . $imageName;
+            $data['image'] = 'storage/website/images/countries/'.$imageName;
         }
 
         $country->update($data);
@@ -147,12 +149,12 @@ class CountryController extends Controller
         // Update translations
         foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) {
             $translation = CountryTranslation::where('country_id', $country->id)->where('locale', $localeCode)->first();
-            
+
             $transData = [
                 'name' => $request->input("name_$localeCode"),
             ];
 
-             if ($translation) {
+            if ($translation) {
                 $translation->update($transData);
             } else {
                 $transData['country_id'] = $country->id;
@@ -169,17 +171,18 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
-         if ($country->image) {
+        if ($country->image) {
             $oldPath = str_replace('storage/', '', $country->image);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             } elseif (file_exists(public_path($country->image))) {
                 unlink(public_path($country->image));
-            } elseif (file_exists(public_path('website/images/countries/' . $country->image))) {
-                unlink(public_path('website/images/countries/' . $country->image));
+            } elseif (file_exists(public_path('website/images/countries/'.$country->image))) {
+                unlink(public_path('website/images/countries/'.$country->image));
             }
         }
         $country->delete(); // Or forceDelete if soft deletes not used, I used standard model but let's check. Assuming standard delete is fine.
+
         return redirect()->route('admin.countries.index')->with('success', trans_db('dashboard.deleted successfully'));
     }
 }

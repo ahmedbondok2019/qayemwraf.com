@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\helper;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Category;
+use App\Models\GroupPermission;
 use App\Models\Order;
+use App\Models\Permission;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductOptionItem;
@@ -15,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -37,7 +41,7 @@ class HelperController extends Controller
                 base_path('../images'),                                               // if nested under admin/
                 base_path('../../qayemwraf.com/public_html/images'),                // if sibling subdomain folder
                 '/home/u373210132/domains/qayemwraf.com/public_html/images',          // absolute server path
-                public_path('images')                                                 // fallback to public/images
+                public_path('images'),                                                 // fallback to public/images
             ];
 
             $rootImagesDir = base_path('../images');
@@ -49,10 +53,10 @@ class HelperController extends Controller
             }
 
             if ($relativePath) {
-                $targetFile = $rootImagesDir . DIRECTORY_SEPARATOR . ltrim($relativePath, '/\\');
+                $targetFile = $rootImagesDir.DIRECTORY_SEPARATOR.ltrim($relativePath, '/\\');
             } else {
                 $filename = basename($sourceFilePath);
-                $targetFile = $rootImagesDir . DIRECTORY_SEPARATOR . $filename;
+                $targetFile = $rootImagesDir.DIRECTORY_SEPARATOR.$filename;
             }
 
             $targetDir = dirname($targetFile);
@@ -61,9 +65,11 @@ class HelperController extends Controller
             }
 
             File::copy($sourceFilePath, $targetFile);
+
             return true;
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Root image sync failed: ' . $e->getMessage());
+            Log::error('Root image sync failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -85,7 +91,7 @@ class HelperController extends Controller
                 }
                 // save file as jpg with medium quality
                 $img->save($destination, 100, $format);
-                
+
                 // Automatically copy uploaded image to root /images directory outside admin
                 if ($relativePath) {
                     self::syncToRootImages($destination, $relativePath);
@@ -232,19 +238,19 @@ class HelperController extends Controller
     public static function getPermissions()
     {
         if (auth()->check()) {
-            $user_per = \App\Models\GroupPermission::where('group_id', \Illuminate\Support\Facades\Auth::user()->permission_group)->get();
+            $user_per = GroupPermission::where('group_id', Auth::user()->permission_group)->get();
             $permission = [];
 
             if (isset($user_per)) {
                 foreach ($user_per as $per) {
-                    $permissions = \App\Models\Permission::where('id', $per->permission_id)->pluck('id');
+                    $permissions = Permission::where('id', $per->permission_id)->pluck('id');
                     if (isset($permissions[0])) {
                         $permission[] = $permissions[0];
                     }
                 }
             }
 
-            $url = (new \Illuminate\Http\Request)->fullUrl();
+            $url = (new Request)->fullUrl();
             $admin = explode('admin-2023', $url);
             if (isset($admin[1])) {
                 $permissionUrl = explode('/', $admin[1]);
@@ -259,16 +265,16 @@ class HelperController extends Controller
     public static function getAllowedAdmins($permission, $permissions = null)
     {
         if ($permission || $permissions) {
-            $query = \App\Models\GroupPermission::query();
+            $query = GroupPermission::query();
             if ($permissions) {
                 $query->whereIn('permission_id', $permissions);
             } else {
                 $query->where('permission_id', $permission);
             }
             $groupIds = $query->pluck('group_id')->toArray();
-            $admins = \App\Models\Admin::whereIn('permission_group', $groupIds)->where('status', 1)->get();
+            $admins = Admin::whereIn('permission_group', $groupIds)->where('status', 1)->get();
         } else {
-            $admins = \App\Models\Admin::where('status', 1)->get();
+            $admins = Admin::where('status', 1)->get();
         }
 
         return $admins;

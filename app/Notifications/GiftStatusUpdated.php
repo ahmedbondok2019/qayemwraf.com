@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class GiftStatusUpdated extends Notification
@@ -15,7 +13,9 @@ class GiftStatusUpdated extends Notification
      * Create a new notification instance.
      */
     public $order;
+
     public $message;
+
     public $status;
 
     /**

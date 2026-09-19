@@ -12,12 +12,14 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Group::latest()->paginate(10);
+
         return view('dashboard.admin.roles.index', compact('roles'));
     }
 
     public function create()
     {
         $permissions = Permission::where('status', 1)->get()->groupBy('group_permission');
+
         return view('dashboard.admin.roles.create', compact('permissions'));
     }
 
@@ -41,13 +43,14 @@ class RoleController extends Controller
     {
         $permissions = Permission::where('status', 1)->get()->groupBy('group_permission');
         $rolePermissions = $role->permissions->pluck('id')->toArray();
+
         return view('dashboard.admin.roles.edit', compact('role', 'permissions', 'rolePermissions'));
     }
 
     public function update(Request $request, Group $role)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:groups,name,' . $role->id,
+            'name' => 'required|string|max:255|unique:groups,name,'.$role->id,
             'permissions' => 'required|array',
         ]);
 
@@ -66,6 +69,7 @@ class RoleController extends Controller
             return redirect()->back()->with('error', trans_db('dashboard.Cannot delete Super Admin role.'));
         }
         $role->delete();
+
         return redirect()->route('admin.roles.index')->with('success', trans_db('dashboard.Role deleted successfully.'));
     }
 }

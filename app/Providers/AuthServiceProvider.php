@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\Admin;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -23,16 +25,17 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
-            if ($user instanceof \App\Models\Admin && $user->permission_group == 1) {
+        Gate::before(function ($user, $ability) {
+            if ($user instanceof Admin && $user->permission_group == 1) {
                 return true;
             }
         });
 
-        \Illuminate\Support\Facades\Gate::define('check-permission', function ($user, $permission) {
-            if ($user instanceof \App\Models\Admin) {
+        Gate::define('check-permission', function ($user, $permission) {
+            if ($user instanceof Admin) {
                 return $user->hasPermission($permission);
             }
+
             return false;
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\HelperController;
 use App\Http\Resources\users;
 use App\Http\Resources\vendors;
 use App\Models\ApplicationCashback;
@@ -14,6 +15,7 @@ use App\Models\User;
 use App\Models\users_api_tokens;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -151,7 +153,7 @@ class GenerateQrCodeController extends Controller
             'click_action' => '/',
         ];
 
-        $result = \App\Http\Controllers\helper\HelperController::pushNotification($notification);
+        $result = HelperController::pushNotification($notification);
         LogApi::create([
             'url' => $request->url(),
             'body' => $request,
@@ -203,7 +205,7 @@ class GenerateQrCodeController extends Controller
             $output_file = 'img-'.time().'.png';
             Storage::disk('MyDisk')->put($output_file, $image); // storage/app/public/img/qr-code/img-1557309130.png
 
-            $path = public_path('website/images/BarCode/').\Illuminate\Support\Carbon::now()->format('M-Y').'/';
+            $path = public_path('website/images/BarCode/').Carbon::now()->format('M-Y').'/';
             $toRemove = '/home/hsuy27cy5ovw/jaguar/public/';
             $url = str_replace($toRemove, '', $path);
 
@@ -330,7 +332,7 @@ class GenerateQrCodeController extends Controller
         $output_file = 'img-'.time().'.png';
         Storage::disk('MyDisk')->put($output_file, $image); // storage/app/public/img/qr-code/img-1557309130.png
 
-        $path = public_path('website/images/BarCode/').\Illuminate\Support\Carbon::now()->format('M-Y').'/';
+        $path = public_path('website/images/BarCode/').Carbon::now()->format('M-Y').'/';
         $toRemove = '/home/hsuy27cy5ovw/jaguar/public/';
         $url = str_replace($toRemove, '', $path);
 

@@ -12,27 +12,30 @@ class ContactController extends BackendController
     {
         if ($request->ajax()) {
             $data = Contact::orderByDesc('id');
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
                     if ($row->is_read) {
-                        return '<span class="badge badge-light-success">' . trans_db('dashboard.Read') . '</span>';
+                        return '<span class="badge badge-light-success">'.trans_db('dashboard.Read').'</span>';
                     }
-                    return '<span class="badge badge-light-danger">' . trans_db('dashboard.Unread') . '</span>';
+
+                    return '<span class="badge badge-light-danger">'.trans_db('dashboard.Unread').'</span>';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="btn-group">
-                                <a href="' . route('admin.contacts.show', $row->id) . '" class="btn btn-sm btn-info">
+                                <a href="'.route('admin.contacts.show', $row->id).'" class="btn btn-sm btn-info">
                                     <i data-feather="eye"></i>
                                 </a>
-                                <form action="' . route('admin.contacts.destroy', $row->id) . '" method="POST" class="d-inline delete-form">
-                                    ' . csrf_field() . '
-                                    ' . method_field('DELETE') . '
+                                <form action="'.route('admin.contacts.destroy', $row->id).'" method="POST" class="d-inline delete-form">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
                                     <button type="submit" class="btn btn-sm btn-danger confirm-delete">
                                         <i data-feather="trash"></i>
                                     </button>
                                 </form>
                             </div>';
+
                     return $btn;
                 })
                 ->rawColumns(['status', 'action'])
@@ -46,6 +49,7 @@ class ContactController extends BackendController
     {
         $contact = Contact::findOrFail($id);
         $contact->update(['is_read' => 1]);
+
         return view('dashboard.admin.contacts.show', compact('contact'));
     }
 
@@ -53,6 +57,7 @@ class ContactController extends BackendController
     {
         Contact::findOrFail($id)->delete();
         alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.contacts.index');
     }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use League\OAuth2\Client\Grant\RefreshToken;
+use League\OAuth2\Client\Provider\Google;
+
 /**
  * PHPMailer - PHP email creation and transport class.
  * PHP Version 5.4
@@ -58,7 +61,7 @@ class PHPMailerOAuthGoogle
 
     private function getProvider()
     {
-        return new League\OAuth2\Client\Provider\Google([
+        return new Google([
             'clientId' => $this->oauthClientId,
             'clientSecret' => $this->oauthClientSecret,
         ]);
@@ -66,7 +69,7 @@ class PHPMailerOAuthGoogle
 
     private function getGrant()
     {
-        return new \League\OAuth2\Client\Grant\RefreshToken;
+        return new RefreshToken;
     }
 
     private function getToken()

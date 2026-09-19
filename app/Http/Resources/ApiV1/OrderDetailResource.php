@@ -17,9 +17,9 @@ class OrderDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
-            'quantity' => (int)$this->quantity,
-            'price' => (float)$this->price,
-            'subtotal' => (float)$this->subtotal,
+            'quantity' => (int) $this->quantity,
+            'price' => (float) $this->price,
+            'subtotal' => (float) $this->subtotal,
         ];
     }
 }

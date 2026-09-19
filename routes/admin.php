@@ -5,24 +5,31 @@ use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\AuthAdminController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\CurrenciesController;
 use App\Http\Controllers\Admin\FlashSaleController;
+use App\Http\Controllers\Admin\GiftController;
 use App\Http\Controllers\Admin\GovernorateController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\OptionController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OrderServiceController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PaymentMethodController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductStockController;
+use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShippingRuleController;
-use App\Http\Controllers\Admin\BroadcastController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\StaticTranslationController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -41,7 +48,7 @@ Route::group([
     // Authenticated Routes (Logout, Dashboard, Categories)
     Route::group(['prefix' => 'admin-2026', 'as' => 'admin.', 'middleware' => ['auth:admin', 'Language']], function () {
         Route::post('logout', [AuthAdminController::class, 'logout'])->name('logout');
-        
+
         // Dashboard
         Route::get('/', [AdminController::class, 'home'])->name('home');
 
@@ -51,11 +58,15 @@ Route::group([
         // Pages
         Route::resource('pages', PageController::class);
 
+        // Projects
+        Route::post('projects/change-status', [ProjectController::class, 'change_status'])->name('projects.change_status');
+        Route::resource('projects', ProjectController::class);
+
         // Countries
         Route::resource('countries', CountryController::class);
 
         // Governorates
-        Route::resource('governorates',GovernorateController::class);
+        Route::resource('governorates', GovernorateController::class);
 
         // Cities
         Route::resource('cities', CityController::class);
@@ -74,7 +85,7 @@ Route::group([
 
         // Product Brands
         Route::resource('product_brands', ProductBrandController::class);
-        
+
         // Products
         Route::get('products/import', [ProductController::class, 'import'])->name('products.import');
         Route::post('products/import', [ProductController::class, 'importProcess'])->name('products.import_process');
@@ -96,7 +107,7 @@ Route::group([
         // Shipping Rules
         Route::resource('shipping_rules', ShippingRuleController::class);
         Route::get('shipping_rules/get/governorates', [ShippingRuleController::class, 'getGovernorates'])->name('shipping_rules.get_governorates');
-        
+
         // Flash Sales
         Route::get('flash_sales/search/products', [FlashSaleController::class, 'searchProducts'])->name('flash_sales.search_products');
         Route::resource('flash_sales', FlashSaleController::class);
@@ -106,34 +117,34 @@ Route::group([
         Route::post('settings/update', [SettingController::class, 'update'])->name('settings.update');
 
         // Static Translations
-        Route::resource('static_translations', App\Http\Controllers\Admin\StaticTranslationController::class);
+        Route::resource('static_translations', StaticTranslationController::class);
 
         // Currencies
-        Route::resource('currencies', App\Http\Controllers\Admin\CurrenciesController::class);
+        Route::resource('currencies', CurrenciesController::class);
 
         // Order Services
-        Route::resource('order_services', App\Http\Controllers\Admin\OrderServiceController::class);
+        Route::resource('order_services', OrderServiceController::class);
 
         // Orders
-        Route::get('orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
-        Route::get('orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
-        Route::post('orders/update-status', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update_status');
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+        Route::post('orders/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
 
         // Gifts
-        Route::get('gifts', [App\Http\Controllers\Admin\GiftController::class, 'index'])->name('gifts.index');
-        Route::get('gifts/{id}', [App\Http\Controllers\Admin\GiftController::class, 'show'])->name('gifts.show');
-        Route::post('gifts/update-status', [App\Http\Controllers\Admin\GiftController::class, 'updateStatus'])->name('gifts.update_status');
+        Route::get('gifts', [GiftController::class, 'index'])->name('gifts.index');
+        Route::get('gifts/{id}', [GiftController::class, 'show'])->name('gifts.show');
+        Route::post('gifts/update-status', [GiftController::class, 'updateStatus'])->name('gifts.update_status');
 
         // Advertisements
-        Route::resource('advertisements', App\Http\Controllers\Admin\AdvertisementController::class);
+        Route::resource('advertisements', AdvertisementController::class);
 
         // Roles & Permissions
-        Route::resource('roles', App\Http\Controllers\Admin\RoleController::class);
+        Route::resource('roles', RoleController::class);
 
         // Blog & Categories
-        Route::post('blog_categories/change-status', [App\Http\Controllers\Admin\BlogCategoryController::class, 'change_status'])->name('blog_categories.change_status');
+        Route::post('blog_categories/change-status', [BlogCategoryController::class, 'change_status'])->name('blog_categories.change_status');
         Route::resource('blog_categories', BlogCategoryController::class);
-        
+
         Route::get('blogs', [BlogController::class, 'index'])->name('blogs.index');
         Route::get('blogs/create', [BlogController::class, 'create'])->name('blogs.create');
         Route::post('blogs/store', [BlogController::class, 'store'])->name('blogs.store');

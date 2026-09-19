@@ -10,13 +10,16 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class ProductStockImport implements ToCollection, WithHeadingRow
 {
     public $successful = 0;
+
     public $failed = 0;
+
     public $total = 0;
+
     public $details = [];
 
     /**
-    * @param Collection $collection
-    */
+     * @param  Collection  $collection
+     */
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
@@ -24,14 +27,15 @@ class ProductStockImport implements ToCollection, WithHeadingRow
             $sku = $row['sku'] ?? null;
             $quantity = $row['quantity'] ?? null;
 
-            if (!$sku || !is_numeric($quantity)) {
+            if (! $sku || ! is_numeric($quantity)) {
                 $this->failed++;
                 $this->details[] = [
                     'sku' => $sku,
                     'quantity' => $quantity,
                     'status' => 'failed',
-                    'reason' => 'Invalid SKU or quantity'
+                    'reason' => 'Invalid SKU or quantity',
                 ];
+
                 continue;
             }
 
@@ -39,7 +43,7 @@ class ProductStockImport implements ToCollection, WithHeadingRow
 
             if ($product) {
                 $old_qty = $product->quantity;
-                $product->quantity += (int)$quantity;
+                $product->quantity += (int) $quantity;
                 $product->save();
 
                 $this->successful++;
@@ -48,7 +52,7 @@ class ProductStockImport implements ToCollection, WithHeadingRow
                     'added' => $quantity,
                     'old_qty' => $old_qty,
                     'new_qty' => $product->quantity,
-                    'status' => 'success'
+                    'status' => 'success',
                 ];
             } else {
                 $this->failed++;
@@ -56,7 +60,7 @@ class ProductStockImport implements ToCollection, WithHeadingRow
                     'sku' => $sku,
                     'quantity' => $quantity,
                     'status' => 'failed',
-                    'reason' => 'Product not found'
+                    'reason' => 'Product not found',
                 ];
             }
         }

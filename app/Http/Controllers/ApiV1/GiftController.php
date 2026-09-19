@@ -3,52 +3,52 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Setting;
+use App\Http\Resources\ApiV1\ProductResource;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatus;
-use App\Http\Resources\ApiV1\ProductResource;
-use App\Traits\ApiResponseTrait;
+use App\Models\Product;
+use App\Models\Setting;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
  * @group 14. الهدايا والمكافآت (Gifts)
- * 
+ *
  * يتولى استعراض الهدايا المتاحة للمستخدمين المؤهلين والمطالبة بالهدايا المجانية.
  */
 class GiftController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * جلب قائمة الهدايا المتاحة
-     * 
+     *
      * يعيد قائمة بالمنتجات المحددة كـ هدايا للمستخدم في حال تفعيل الصفحة له بناءً على قيمة الطلبات.
      */
     public function index(Request $request)
     {
         $user = $request->user();
 
-        if (!$user->gift_page_enabled) {
+        if (! $user->gift_page_enabled) {
             return $this->errorResponse(__('frontend.You do not have permission to access the Gift Page.'), 403);
         }
 
         $gifts = Product::active()->where('is_gift', 1)->with(['translation', 'brand.translation'])->paginate(12);
-        
+
         $setting = Setting::first();
         $maxGiftItems = $setting->max_gift_items ?? 1;
 
         return $this->successResponse($this->paginateResponse($gifts, ProductResource::collection($gifts), [
-            'max_gift_items' => (int)$maxGiftItems,
+            'max_gift_items' => (int) $maxGiftItems,
         ]));
     }
 
     /**
      * المطالبة بالهدايا المحددة
-     * 
+     *
      * ينشئ طلباً مجانياً بالهدايا التي اختارها المستخدم بعد استيفاء الشروط.
      */
     public function store(Request $request)
@@ -60,7 +60,7 @@ class GiftController extends Controller
 
         $user = $request->user();
 
-        if (!$user->gift_page_enabled) {
+        if (! $user->gift_page_enabled) {
             return $this->errorResponse(__('frontend.You do not have permission to access the Gift Page.'), 412);
         }
 
@@ -99,25 +99,26 @@ class GiftController extends Controller
                     'rate' => session('exchange_rate', 1),
                 ]);
             }
-            
+
             OrderStatus::create([
                 'order_id' => $order->id,
                 'user_id' => $user->id,
                 'status' => 'pending',
                 'notes' => 'Gift request placed via API',
             ]);
-            
-            $user->update(['gift_page_enabled' => 0]); 
+
+            $user->update(['gift_page_enabled' => 0]);
 
             DB::commit();
 
             return $this->successResponse([
-                'order_id' => $order->id
+                'order_id' => $order->id,
             ], 'تم اختيار الهدايا بنجاح');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->errorResponse(__('frontend.something_went_wrong') . ': ' . $e->getMessage(), 500);
+
+            return $this->errorResponse(__('frontend.something_went_wrong').': '.$e->getMessage(), 500);
         }
     }
 }

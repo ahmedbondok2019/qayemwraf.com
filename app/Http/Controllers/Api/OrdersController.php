@@ -70,7 +70,7 @@ class OrdersController extends ApiController
 
         $userData = User::find(self::getUserStatus($request)['user_id']);
         if (! $userData) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
         if (self::getUserStatus($request)['user_type'] == 2) {
             $orders = Order::where('vendor_id', self::getUserStatus($request)['user_id'])->orderByDesc('id')->get();
@@ -88,18 +88,18 @@ class OrdersController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->where('user_type', $user_type)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         if (! is_numeric($request->order_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         $order = Order::where('id', $request->order_id)->whereHas('order_details')->first();
         if ($order) {
             return $this->NewApiResponse(new orders($order), '', 'true', '200');
         } else {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
     }
 
@@ -110,11 +110,11 @@ class OrdersController extends ApiController
         $token = str_replace('Bearer ', '', $request->header('Authorization'));
         $user = UserApiToken::where('api_token', $token)->where('user_type', $user_type)->first();
         if (! isset($user)) {
-            return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+            return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
         }
 
         if (! is_numeric($request->order_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         Order::where('id', $request->order_id)->update(['status' => $request->status]);
@@ -126,7 +126,7 @@ class OrdersController extends ApiController
             'notes' => 'تم تحديث حالة الطلب من العميل',
         ]);
 
-        return $this->NewApiResponse(new \stdClass, __('website.order updated successfully'), 'true', '200');
+        return $this->NewApiResponse(new stdClass, __('website.order updated successfully'), 'true', '200');
     }
 
     public function shipping_cost(Request $request)
@@ -136,7 +136,7 @@ class OrdersController extends ApiController
         }
 
         if (! is_numeric($request->address_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         // address_id required.
@@ -162,22 +162,22 @@ class OrdersController extends ApiController
         }
 
         if (! is_numeric($request->address_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         if ($request->payment_method == null) {
-            return $this->NewApiResponse(new \stdClass, __('website.Payment Method Required'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.Payment Method Required'), 'false', '200');
         }
 
         if ($request->address_id == null || $request->address_id == '') {
-            return $this->NewApiResponse(new \stdClass, __('website.Address Required'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.Address Required'), 'false', '200');
         }
 
         // / shipping cost.
         $order['shipping_cost'] = 0;
         $getShippingCost = self::getShippingCost($request);
         if (empty($getShippingCost['userCart']) || $getShippingCost['userCart'] == null) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         if ($getShippingCost != null) {
@@ -246,18 +246,18 @@ class OrdersController extends ApiController
         }
 
         if ($request->payment_method == null) {
-            return $this->NewApiResponse(new \stdClass, __('website.Payment Method Required'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.Payment Method Required'), 'false', '200');
         }
 
         if ($request->address_id == null || $request->address_id == '') {
-            return $this->NewApiResponse(new \stdClass, __('website.Address Required'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.Address Required'), 'false', '200');
         }
 
         // / shipping cost.
         $order['shipping_cost'] = 0;
         $getShippingCost = self::getShippingCost($request);
         if (empty($getShippingCost['userCart']) || $getShippingCost['userCart'] == null) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         if ($getShippingCost != null) {
@@ -281,10 +281,10 @@ class OrdersController extends ApiController
 
         Session::put(['Productmsg' => '']);
         foreach ($userCart as $cart) {
-            $optionId = \App\Models\CartOption::where('cart_id', $cart->id)
+            $optionId = CartOption::where('cart_id', $cart->id)
                 ->where('product_id', $cart->product_id)->first();
             $cartOption = $optionId == null ? null : $optionId->option_item_id;
-            $ProQty = \App\Http\Controllers\helper\HelperController::getProductQuantiy(
+            $ProQty = HelperController::getProductQuantiy(
                 $cart->product_id,
                 $cartOption,
                 true,
@@ -627,20 +627,20 @@ class OrdersController extends ApiController
         // }
 
         if ($request->payment_method == null) {
-            return $this->NewApiResponse(new \stdClass, __('website.Payment Method Required'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.Payment Method Required'), 'false', '200');
         }
 
         if ($request->address_id == null || $request->address_id == '') {
-            return $this->NewApiResponse(new \stdClass, __('website.Address Required'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.Address Required'), 'false', '200');
         }
         $create = $this->readFirst($request);
 
         if (in_array($request->payment_method, ['fawry', 'fawry_visa', 'fawry_pay', 'fawry_installment', 'paymob', 'payabs'])) {
             if ($create == null) {
-                return $this->NewApiResponse(new \stdClass, Session::get('Productmsg'), 'false', '201');
+                return $this->NewApiResponse(new stdClass, Session::get('Productmsg'), 'false', '201');
             } else {
                 if ($create['orderID'] == null) {
-                    return $this->NewApiResponse(new \stdClass, Session::get('Productmsg'), 'false', '202');
+                    return $this->NewApiResponse(new stdClass, Session::get('Productmsg'), 'false', '202');
                 }
                 $OrderID = $create['orderID'];
             }
@@ -648,7 +648,7 @@ class OrdersController extends ApiController
 
         if ($request->payment_method == 'cash') {
             if ($create == null) {
-                return $this->NewApiResponse(new \stdClass, Session::get('Productmsg'), 'false', '203');
+                return $this->NewApiResponse(new stdClass, Session::get('Productmsg'), 'false', '203');
             } else {
                 if (isset($create['orderID'])) {
                     $settings = Setting::first();
@@ -684,7 +684,7 @@ class OrdersController extends ApiController
                         'click_action' => '/',
                     ];
 
-                    $sendTest = \App\Http\Controllers\helper\HelperController::pushNotification($notification);
+                    $sendTest = HelperController::pushNotification($notification);
                     LogApi::create([
                         'notification' => 'send notification after order',
                         'url' => $request->url(),
@@ -695,10 +695,10 @@ class OrdersController extends ApiController
                     Session::put(['order_title' => $text]);
                     Notification::send(User::find($userID), new OrderNotification($create['orderID']));
 
-                    return $this->NewApiResponse(new \stdClass, __('website.added successfully'), 'true', '200');
+                    return $this->NewApiResponse(new stdClass, __('website.added successfully'), 'true', '200');
                 }
 
-                return $this->NewApiResponse(new \stdClass, Session::get('Productmsg'), 'false', '200');
+                return $this->NewApiResponse(new stdClass, Session::get('Productmsg'), 'false', '200');
             }
         }
 
@@ -791,7 +791,7 @@ class OrdersController extends ApiController
                 'badge' => 0,
                 'click_action' => '/',
             ];
-            $sendTest = \App\Http\Controllers\helper\HelperController::pushNotification($notification);
+            $sendTest = HelperController::pushNotification($notification);
             // LogApi::create([
             //     'notification' => 'send notification after order',
             //     'url' => $request->url(),
@@ -827,7 +827,7 @@ class OrdersController extends ApiController
             );
         }
 
-        return $this->NewApiResponse(new \stdClass, __('dashboard.notsaved'), 'true', '200');
+        return $this->NewApiResponse(new stdClass, __('dashboard.notsaved'), 'true', '200');
     }
 
     public static function getProductTax($product, $payment_method, $price = null)
@@ -961,10 +961,10 @@ class OrdersController extends ApiController
             $rate = $currency->rate;
 
             foreach ($userCart as $cart) {
-                $optionId = \App\Models\CartOption::where('cart_id', $cart->id)
+                $optionId = CartOption::where('cart_id', $cart->id)
                     ->where('product_id', $cart->product_id)->first();
                 $cartOption = $optionId == null ? null : $optionId->option_item_id;
-                $ProQty = \App\Http\Controllers\helper\HelperController::getProductQuantiy(
+                $ProQty = HelperController::getProductQuantiy(
                     $cart->product_id,
                     $cartOption,
                     false,
@@ -1047,12 +1047,12 @@ class OrdersController extends ApiController
         if (! isset($user_id)) {
             $user = User::find($user_id->user_id);
             if (! $user) {
-                return $this->NewApiResponse(new \stdClass, __('website.account not found'), 'false', '404');
+                return $this->NewApiResponse(new stdClass, __('website.account not found'), 'false', '404');
             }
         }
 
         if (! is_numeric($request->product_id)) {
-            return $this->NewApiResponse(new \stdClass, __('website.invalid data'), 'false', '200');
+            return $this->NewApiResponse(new stdClass, __('website.invalid data'), 'false', '200');
         }
 
         $test = Rating::where('user_id', $user_id->user_id)

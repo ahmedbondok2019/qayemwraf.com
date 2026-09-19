@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Contact;
 use App\Http\Requests\ApiV1\Contact\ContactStoreRequest;
-use App\Traits\ApiResponseTrait;
+use App\Models\Contact;
 use App\Traits\ApiPaginationTrait;
+use App\Traits\ApiResponseTrait;
 
 /**
  * @group 22. تواصل معنا (Contact Us)
- * 
+ *
  * يتولى استقبال وتخزين رسائل واستفسارات المستخدمين والزوار من نموذج اتصل بنا.
  */
 class ContactController extends Controller
 {
-    use ApiResponseTrait, ApiPaginationTrait;
+    use ApiPaginationTrait, ApiResponseTrait;
 
     /**
      * إرسال رسالة تواصل معنا
-     * 
+     *
      * ينشئ ويحفظ رسالة جديدة من المستخدم المشتملة على الاسم، البريد، رقم التواصل، والموضوع.
      */
     public function store(ContactStoreRequest $request)

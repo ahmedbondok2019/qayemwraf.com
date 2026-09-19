@@ -16,14 +16,14 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'order_number' => '#' . $this->id, // Simple order number for now
+            'order_number' => '#'.$this->id, // Simple order number for now
             'status' => $this->status,
             'status_text' => $this->getOrderStatusAttribute(),
-            'total' => (float)$this->total,
-            'subtotal' => (float)$this->subtotal,
-            'discount' => (float)$this->discount,
-            'shipping_cost' => (float)$this->shipping_cost,
-            'tax' => (float)$this->tax,
+            'total' => (float) $this->total,
+            'subtotal' => (float) $this->subtotal,
+            'discount' => (float) $this->discount,
+            'shipping_cost' => (float) $this->shipping_cost,
+            'tax' => (float) $this->tax,
             'payment_method' => $this->payment_method,
             'payment_status' => $this->payment_status,
             'currency' => $this->currency,

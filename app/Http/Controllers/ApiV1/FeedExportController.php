@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Page;
-use App\Models\Blog;
+use App\Models\Product;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
  * @group 18. التصدير والتغذية (Feeds & Exports)
- * 
+ *
  * واجهات تصدير خريطة الموقع Sitemap، خريطة منتجات Google Merchant، وتغدية منتجات Facebook Catalog.
  */
 class FeedExportController extends Controller
 {
     /**
      * تصدير خريطة الموقع (Sitemap XML / JSON)
-     * 
+     *
      * يعيد خريطة الموقع بجميع روابط المنتجات والأقسام والصفحات والمدونات بتنسيق XML أو JSON.
      */
     public function sitemap(Request $request)
@@ -48,7 +48,7 @@ class FeedExportController extends Controller
             foreach ($products as $product) {
                 $slug = $product->translation->slug ?? $product->slug ?? $product->id;
                 $urls[] = [
-                    'loc' => frontend_site_url(url($locale . '/product/' . $product->id . '/' . $slug)),
+                    'loc' => frontend_site_url(url($locale.'/product/'.$product->id.'/'.$slug)),
                     'lastmod' => ($product->updated_at ?? now())->toIso8601String(),
                     'changefreq' => 'weekly',
                     'priority' => '0.8',
@@ -59,7 +59,7 @@ class FeedExportController extends Controller
             foreach ($categories as $category) {
                 $slug = $category->translation->slug ?? $category->slug ?? $category->id;
                 $urls[] = [
-                    'loc' => frontend_site_url(url($locale . '/products/' . $slug)),
+                    'loc' => frontend_site_url(url($locale.'/products/'.$slug)),
                     'lastmod' => ($category->updated_at ?? now())->toIso8601String(),
                     'changefreq' => 'weekly',
                     'priority' => '0.7',
@@ -70,7 +70,7 @@ class FeedExportController extends Controller
             foreach ($pages as $page) {
                 $slug = $page->translation->slug ?? $page->slug ?? $page->id;
                 $urls[] = [
-                    'loc' => url($locale . '/page/' . $slug),
+                    'loc' => url($locale.'/page/'.$slug),
                     'lastmod' => ($page->updated_at ?? now())->toIso8601String(),
                     'changefreq' => 'monthly',
                     'priority' => '0.5',
@@ -81,7 +81,7 @@ class FeedExportController extends Controller
             foreach ($blogs as $blog) {
                 $slug = $blog->translation->slug ?? $blog->slug ?? $blog->id;
                 $urls[] = [
-                    'loc' => url($locale . '/blog/' . $blog->id . '/' . $slug),
+                    'loc' => url($locale.'/blog/'.$blog->id.'/'.$slug),
                     'lastmod' => ($blog->updated_at ?? now())->toIso8601String(),
                     'changefreq' => 'monthly',
                     'priority' => '0.5',
@@ -108,7 +108,7 @@ class FeedExportController extends Controller
 
     /**
      * تصدير المنتجات لمنصة Google Merchant Center (CSV)
-     * 
+     *
      * ينشئ ملف CSV متوافق مع مواصفات Google Merchant Center لشراء جوجل (Google Shopping).
      */
     public function googleMerchant(Request $request)
@@ -140,11 +140,11 @@ class FeedExportController extends Controller
 
         foreach ($products as $product) {
             $trans = $product->translation ?? $product->translations->first();
-            $title = $trans->name ?? 'Product #' . $product->id;
+            $title = $trans->name ?? 'Product #'.$product->id;
             $description = strip_tags($trans->description ?? $trans->name ?? '');
 
             $slug = $trans->slug ?? $product->slug ?? $product->id;
-            $link = frontend_site_url(url($locale . '/product/' . $product->id . '/' . $slug));
+            $link = frontend_site_url(url($locale.'/product/'.$product->id.'/'.$slug));
 
             $imageLink = $product->image ? asset($product->image) : '';
 
@@ -154,8 +154,8 @@ class FeedExportController extends Controller
             [$flashPrice, $flashId] = OrderService::getFlashSaleValue($product->id);
             $effectiveSalePrice = $flashPrice > 0 ? $flashPrice : ($product->special_price ?: null);
 
-            $priceFormatted = number_format($product->price, 2, '.', '') . ' ' . $currencyCode;
-            $salePriceFormatted = $effectiveSalePrice ? number_format($effectiveSalePrice, 2, '.', '') . ' ' . $currencyCode : '';
+            $priceFormatted = number_format($product->price, 2, '.', '').' '.$currencyCode;
+            $salePriceFormatted = $effectiveSalePrice ? number_format($effectiveSalePrice, 2, '.', '').' '.$currencyCode : '';
 
             $brandName = $product->brand->name ?? config('app.name', 'EG Medical');
             $categoryName = $product->categories->first()->name ?? '';
@@ -181,13 +181,13 @@ class FeedExportController extends Controller
 
         return response($csvData, 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'inline; filename="google_merchant_' . $locale . '.csv"',
+            'Content-Disposition' => 'inline; filename="google_merchant_'.$locale.'.csv"',
         ]);
     }
 
     /**
      * تصدير منتجات كتالوج فيسبوك / ميتة (Facebook Catalog CSV)
-     * 
+     *
      * ينشئ ملف CSV متوافق مع مواصفات Facebook Commerce Manager لربط منتجات الكتالوج والإعلانات الديناميكية.
      */
     public function facebookCatalog(Request $request)
@@ -219,11 +219,11 @@ class FeedExportController extends Controller
 
         foreach ($products as $product) {
             $trans = $product->translation ?? $product->translations->first();
-            $title = $trans->name ?? 'Product #' . $product->id;
+            $title = $trans->name ?? 'Product #'.$product->id;
             $description = strip_tags($trans->description ?? $trans->name ?? '');
 
             $slug = $trans->slug ?? $product->slug ?? $product->id;
-            $link = frontend_site_url(url($locale . '/product/' . $product->id . '/' . $slug));
+            $link = frontend_site_url(url($locale.'/product/'.$product->id.'/'.$slug));
 
             $imageLink = $product->image ? asset($product->image) : '';
 
@@ -233,8 +233,8 @@ class FeedExportController extends Controller
             [$flashPrice, $flashId] = OrderService::getFlashSaleValue($product->id);
             $effectiveSalePrice = $flashPrice > 0 ? $flashPrice : ($product->special_price ?: null);
 
-            $priceFormatted = number_format($product->price, 2, '.', '') . ' ' . $currencyCode;
-            $salePriceFormatted = $effectiveSalePrice ? number_format($effectiveSalePrice, 2, '.', '') . ' ' . $currencyCode : '';
+            $priceFormatted = number_format($product->price, 2, '.', '').' '.$currencyCode;
+            $salePriceFormatted = $effectiveSalePrice ? number_format($effectiveSalePrice, 2, '.', '').' '.$currencyCode : '';
 
             $brandName = $product->brand->name ?? config('app.name', 'EG Medical');
             $categoryName = $product->categories->first()->name ?? '';
@@ -260,7 +260,7 @@ class FeedExportController extends Controller
 
         return response($csvData, 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'inline; filename="facebook_catalog_' . $locale . '.csv"',
+            'Content-Disposition' => 'inline; filename="facebook_catalog_'.$locale.'.csv"',
         ]);
     }
 }

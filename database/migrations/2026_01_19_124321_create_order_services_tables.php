@@ -28,12 +28,12 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('order_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
 
             $table->foreignId('order_service_id')
-                  ->constrained('order_services')
-                  ->cascadeOnDelete();
+                ->constrained('order_services')
+                ->cascadeOnDelete();
 
             // السعر وقت الطلب (مهم جدًا)
             $table->decimal('price', 10, 2);

@@ -11,6 +11,8 @@ use App\Models\Area;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\City;
+use App\Models\CityTranslation;
+use App\Models\Country;
 use App\Models\LogApi;
 use App\Models\Newsletter;
 use App\Models\Offer;
@@ -32,7 +34,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Socialite;
 
 class UsersController extends WebController
 {
@@ -51,7 +52,7 @@ class UsersController extends WebController
             return redirect(LaravelLocalization::localizeUrl('user/home'));
         }
 
-        $countries = \App\Models\Country::active()->with('translations')->get();
+        $countries = Country::active()->with('translations')->get();
 
         return view('dashboard.user.register', compact('countries'));
     }
@@ -608,7 +609,7 @@ class UsersController extends WebController
     public static function getCityOptions($area)
     {
         $cities = City::where('parent_id', $area)->pluck('id');
-        $cityTrans = \App\Models\CityTranslation::where('lang_id', app()->getLocale())->whereIn('city_id', $cities)->get();
+        $cityTrans = CityTranslation::where('lang_id', app()->getLocale())->whereIn('city_id', $cities)->get();
         $select = '';
         foreach ($cityTrans as $trans) {
             $select .= "<option value='".$trans->city_id."'>".$trans->title.'</option>';
@@ -697,8 +698,6 @@ class UsersController extends WebController
         // return redirect()->back()->with('msg', __('website.deleted successfully'));
     }
 
-
-
     public static function randomCode($phone)
     {
         $random = substr(str_shuffle('0123456789'), 0, 4);
@@ -757,11 +756,11 @@ class UsersController extends WebController
 
     public function setMainAddress(Request $request, $id)
     {
-        $address = \App\Models\UserAddress::where('user_id', \auth()->id())->findOrFail($id);
-        
+        $address = UserAddress::where('user_id', \auth()->id())->findOrFail($id);
+
         // Reset all addresses to not main
-        \App\Models\UserAddress::where('user_id', \auth()->id())->update(['is_main' => false]);
-        
+        UserAddress::where('user_id', \auth()->id())->update(['is_main' => false]);
+
         // Set this one as main
         $address->update(['is_main' => true]);
 
@@ -774,22 +773,24 @@ class UsersController extends WebController
 
     public function getCities($country_id)
     {
-        $cities = \App\Models\City::active()->where('country_id', $country_id)->with('translations')->get();
-        return response()->json($cities->map(function($city) {
+        $cities = City::active()->where('country_id', $country_id)->with('translations')->get();
+
+        return response()->json($cities->map(function ($city) {
             return [
                 'id' => $city->id,
-                'name' => $city->translation->name ?? $city->translations->first()->name ?? ''
+                'name' => $city->translation->name ?? $city->translations->first()->name ?? '',
             ];
         }));
     }
 
     public function getAreas($city_id)
     {
-        $areas = \App\Models\Area::where('city_id', $city_id)->with('translations')->get();
-        return response()->json($areas->map(function($area) {
+        $areas = Area::where('city_id', $city_id)->with('translations')->get();
+
+        return response()->json($areas->map(function ($area) {
             return [
                 'id' => $area->id,
-                'name' => $area->translation->name ?? $area->translations->first()->name ?? ''
+                'name' => $area->translation->name ?? $area->translations->first()->name ?? '',
             ];
         }));
     }

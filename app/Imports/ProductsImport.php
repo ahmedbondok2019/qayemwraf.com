@@ -2,43 +2,39 @@
 
 namespace App\Imports;
 
+use App\Models\Category;
+use App\Models\CategoryTranslation;
+use App\Models\Country;
 use App\Models\Product;
-use App\Models\ProductTranslation;
 use App\Models\ProductBrand;
 use App\Models\ProductBrandTranslation;
+use App\Models\ProductImage;
+use App\Models\ProductTranslation;
 use App\Models\ShippingRule;
 use App\Models\ShippingRuleTranslation;
-use App\Models\Country;
-use App\Models\ProductImage;
-use Illuminate\Support\Facades\File;
-use com_exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use App\Models\Category;
-use App\Models\CategoryTranslation;
-use Illuminate\Support\Facades\DB;
 
 class ProductsImport implements ToCollection, WithHeadingRow
 {
-    /**
-     * @param Collection $rows
-     */
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            if (!isset($row['name_ar']) || empty($row['name_ar'])) {
+            if (! isset($row['name_ar']) || empty($row['name_ar'])) {
                 continue;
             }
 
             DB::beginTransaction();
-            
+
             try {
                 // Handle Brand
                 $brandId = null;
                 $brandName = $row['brand'] ?? $row['brand_ar'] ?? $row['brand_en'] ?? null;
-                
+
                 if ($brandName) {
                     $brandId = $this->findOrCreateBrand($brandName);
                 }
@@ -46,7 +42,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 // Handle Shipping Rule (Section)
                 $shippingRuleId = null;
                 $shippingRuleName = $row['shipping_section'] ?? $row['shipping_rule'] ?? null;
-                
+
                 if ($shippingRuleName) {
                     $shippingRuleId = $this->findOrCreateShippingRule($shippingRuleName);
                 }
@@ -55,27 +51,27 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 $mainImage = null;
                 $galleryImages = [];
                 $folderName = $row['image_folder'] ?? null;
-                
+
                 if ($folderName) {
-                    $importPath = public_path('imports/' . $folderName);
+                    $importPath = public_path('imports/'.$folderName);
                     if (File::isDirectory($importPath)) {
                         $files = File::files($importPath);
-                        usort($files, function($a, $b) {
+                        usort($files, function ($a, $b) {
                             return strnatcmp($a->getFilename(), $b->getFilename());
                         });
-                        
+
                         foreach ($files as $index => $file) {
-                            $filename = Str::random(20) . '.' . $file->getExtension();
-                            $destinationPath = public_path('uploads/products/' . $filename);
-                            
+                            $filename = Str::random(20).'.'.$file->getExtension();
+                            $destinationPath = public_path('uploads/products/'.$filename);
+
                             // Ensure directory exists
-                            if (!File::isDirectory(public_path('uploads/products/'))) {
+                            if (! File::isDirectory(public_path('uploads/products/'))) {
                                 File::makeDirectory(public_path('uploads/products/'), 0755, true);
                             }
-                            
+
                             File::copy($file->getRealPath(), $destinationPath);
-                            $relativeImagePath = 'uploads/products/' . $filename;
-                            
+                            $relativeImagePath = 'uploads/products/'.$filename;
+
                             if ($index === 0) {
                                 $mainImage = $relativeImagePath;
                             } else {
@@ -125,7 +121,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 ]);
 
                 // Create English Translation if provided
-                if (isset($row['name_en']) && !empty($row['name_en'])) {
+                if (isset($row['name_en']) && ! empty($row['name_en'])) {
                     ProductTranslation::create([
                         'product_id' => $product->id,
                         'locale' => 'en',
@@ -142,17 +138,17 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $galleryImage,
-                        'sort_order' => $index + 1
+                        'sort_order' => $index + 1,
                     ]);
                 }
 
                 // Sync Categories
-                if (!empty($categoryIds)) {
+                if (! empty($categoryIds)) {
                     $product->categories()->sync($categoryIds);
                 }
 
                 DB::commit();
-                
+
             } catch (\Exception $e) {
                 DB::rollBack();
             }
@@ -162,7 +158,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
     private function findOrCreateBrand($brandName)
     {
         $translation = ProductBrandTranslation::where('title', $brandName)->first();
-        
+
         if ($translation) {
             return $translation->product_brand_id;
         }
@@ -190,14 +186,14 @@ class ProductsImport implements ToCollection, WithHeadingRow
     private function findOrCreateShippingRule($name)
     {
         $translation = ShippingRuleTranslation::where('name', $name)->first();
-        
+
         if ($translation) {
             return $translation->shipping_rule_id;
         }
 
         // Create new shipping rule
         $country = Country::first(); // Default to first country
-        
+
         $shippingRule = ShippingRule::create([
             'country_id' => $country ? $country->id : null,
             'is_active' => 1,
@@ -223,27 +219,30 @@ class ProductsImport implements ToCollection, WithHeadingRow
     {
         $ids = [];
         $parts = explode(',', $categoriesInput);
-        
+
         foreach ($parts as $part) {
             $part = trim($part);
-            if (empty($part)) continue;
-            
+            if (empty($part)) {
+                continue;
+            }
+
             // Try as ID
             if (is_numeric($part)) {
                 $category = Category::find($part);
                 if ($category) {
                     $ids[] = $category->id;
+
                     continue;
                 }
             }
-            
+
             // Try as Name
             $translation = CategoryTranslation::where('title', $part)->first();
             if ($translation) {
                 $ids[] = $translation->category_id;
             }
         }
-        
+
         return array_unique($ids);
     }
 }

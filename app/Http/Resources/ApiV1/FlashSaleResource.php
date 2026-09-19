@@ -24,8 +24,8 @@ class FlashSaleResource extends JsonResource
             'image' => $this->image ? asset($this->image) : null,
             'start_at' => $this->start_at ? $this->start_at->toDateTimeString() : null,
             'end_at' => $this->end_at ? $this->end_at->toDateTimeString() : null,
-            'remaining_seconds' => (int)$remainingSeconds,
-            'is_active' => (bool)$this->is_active,
+            'remaining_seconds' => (int) $remainingSeconds,
+            'is_active' => (bool) $this->is_active,
             'products_count' => $this->relationLoaded('products') ? $this->products->count() : ($this->whenCounted('products') ?? 0),
             'products' => ProductResource::collection($this->whenLoaded('products')),
             // Legacy fields for Flutter

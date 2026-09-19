@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\helper\HelperController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Resources\brands\brands;
 use App\Http\Resources\categories\categories;
@@ -41,7 +42,7 @@ class HomePageController extends ApiController
             'click_action' => '/',
         ];
 
-        $result = \App\Http\Controllers\helper\HelperController::pushNotification($notification);
+        $result = HelperController::pushNotification($notification);
         LogApi::create([
             'url' => $request->url(),
             'body' => $request,
@@ -49,7 +50,7 @@ class HomePageController extends ApiController
             'userFireBaseTokens' => empty($userFireBaseTokens) ? null : json_encode($userFireBaseTokens),
         ]);
 
-        $result = \App\Http\Controllers\helper\HelperController::pushNotification($notification);
+        $result = HelperController::pushNotification($notification);
 
         return $result;
     }
@@ -143,7 +144,7 @@ class HomePageController extends ApiController
             'click_action' => '/',
         ];
 
-        $result = \App\Http\Controllers\helper\HelperController::pushNotification($notification);
+        $result = HelperController::pushNotification($notification);
 
         return $this->NewApiResponse(products::collection($bestProducts), '', 'true', '200');
     }

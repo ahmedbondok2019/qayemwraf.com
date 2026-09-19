@@ -33,7 +33,7 @@ class LogVisitsMiddleware
                 $geo = null;
             } else {
                 // 2) Cache ip-api result for this IP to reduce calls
-                $cacheKey = 'geoip:ipapi:' . $ip;
+                $cacheKey = 'geoip:ipapi:'.$ip;
 
                 $geo = Cache::remember($cacheKey, now()->addHours(12), function () use ($ip) {
                     // ip-api free endpoint is http; if you have pro, use https
@@ -56,61 +56,61 @@ class LogVisitsMiddleware
                 });
             }
 
-             $currency = Currency::where('type', $geo['countryCode'])->first() ?? Currency::first();
-             $currency_trans = CurrencyTranslation::where('currency_id', $currency->id)->where('lang_id', app()->getLocale())->first();
-             $rate = $currency->rate;
+            $currency = Currency::where('type', $geo['countryCode'])->first() ?? Currency::first();
+            $currency_trans = CurrencyTranslation::where('currency_id', $currency->id)->where('lang_id', app()->getLocale())->first();
+            $rate = $currency->rate;
 
-             switch ($geo['countryCode'] ) {
-                 case 'EG':
-                     $rate = 1;
-                     break;
-                 case 'SA':
-                     $rate = 15;
-                     break;
-                 case 'AE':
-                     $rate = 25;
-                     break;
-                 default:
-                     $rate = 50;
-                     break;
-             }
-             
+            switch ($geo['countryCode']) {
+                case 'EG':
+                    $rate = 1;
+                    break;
+                case 'SA':
+                    $rate = 15;
+                    break;
+                case 'AE':
+                    $rate = 25;
+                    break;
+                default:
+                    $rate = 50;
+                    break;
+            }
+
             View::share([
-                'currency' => $currency ?? "",
-                'Currency' => $currency_trans ?? "",
-                'rate' => $rate ?? "",
+                'currency' => $currency ?? '',
+                'Currency' => $currency_trans ?? '',
+                'rate' => $rate ?? '',
             ]);
 
             // 3) Insert log row
             VisitLog::create([
-                'user_id'      => optional($request->user())->id,
-                'ip'           => $ip,
-                'session_id'   => $request->hasSession() ? $request->session()->getId() : null,
+                'user_id' => optional($request->user())->id,
+                'ip' => $ip,
+                'session_id' => $request->hasSession() ? $request->session()->getId() : null,
 
-                'method'       => $request->getMethod(),
-                'url'          => $request->fullUrl(),
-                'referer'      => $request->headers->get('referer'),
-                'user_agent'   => $request->userAgent(),
+                'method' => $request->getMethod(),
+                'url' => $request->fullUrl(),
+                'referer' => $request->headers->get('referer'),
+                'user_agent' => $request->userAgent(),
 
-                'status'       => $geo['status'] ?? null,
-                'country'      => $geo['country'] ?? null,
+                'status' => $geo['status'] ?? null,
+                'country' => $geo['country'] ?? null,
                 'country_code' => $geo['countryCode'] ?? null,
-                'region'       => $geo['region'] ?? null,
-                'region_name'  => $geo['regionName'] ?? null,
-                'city'         => $geo['city'] ?? null,
-                'zip'          => $geo['zip'] ?? null,
-                'lat'          => $geo['lat'] ?? null,
-                'lon'          => $geo['lon'] ?? null,
-                'timezone'     => $geo['timezone'] ?? null,
-                'isp'          => $geo['isp'] ?? null,
-                'org'          => $geo['org'] ?? null,
-                'as'           => $geo['as'] ?? null,
-                'query'        => $geo['query'] ?? $ip,
+                'region' => $geo['region'] ?? null,
+                'region_name' => $geo['regionName'] ?? null,
+                'city' => $geo['city'] ?? null,
+                'zip' => $geo['zip'] ?? null,
+                'lat' => $geo['lat'] ?? null,
+                'lon' => $geo['lon'] ?? null,
+                'timezone' => $geo['timezone'] ?? null,
+                'isp' => $geo['isp'] ?? null,
+                'org' => $geo['org'] ?? null,
+                'as' => $geo['as'] ?? null,
+                'query' => $geo['query'] ?? $ip,
 
-                'raw'          => $geo,
+                'raw' => $geo,
             ]);
         } catch (\Throwable $e) {
-            Log::warning('Visit logging failed: ' . $e->getMessage());
+            Log::warning('Visit logging failed: '.$e->getMessage());
         }
     }
 

@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Page;
 use App\Models\PageTranslation;
-use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
 
 class PageSeeder extends Seeder
 {
@@ -35,8 +34,8 @@ class PageSeeder extends Seeder
                         'meta_title' => 'من نحن - المكتبة',
                         'meta_description' => 'تعرف على المزيد حول رسالتنا وقيمنا.',
                         'meta_keywords' => 'من نحن, مكتبة, رسالة',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'order' => 2,
@@ -56,8 +55,8 @@ class PageSeeder extends Seeder
                         'meta_title' => 'سياسة الخصوصية',
                         'meta_description' => 'اقرأ سياسة الخصوصية الخاصة بنا.',
                         'meta_keywords' => 'خصوصية, سياسة, بيانات',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'order' => 3,
@@ -77,9 +76,9 @@ class PageSeeder extends Seeder
                         'meta_title' => 'الشروط والأحكام',
                         'meta_description' => 'شروط الخدمة الخاصة بنا.',
                         'meta_keywords' => 'شروط, أحكام, خدمة',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         foreach ($pages as $data) {
@@ -88,9 +87,9 @@ class PageSeeder extends Seeder
             $existingTranslation = PageTranslation::where('slug', $enSlug)->first();
             $page = $existingTranslation ? Page::find($existingTranslation->page_id) : null;
 
-            if (!$page) {
+            if (! $page) {
                 $page = Page::create([
-                    'image' => null, 
+                    'image' => null,
                     'is_active' => true,
                     'sort_order' => $data['order'],
                 ]);

@@ -53,22 +53,22 @@ class WelcomeController extends WebController
         $active_products = Product::active()->pluck('id');
         $Cat = ProductCategory::whereIn('product_id', $active_products)->pluck('category_id')->unique();
         $data['top_categories'] = Category::whereNotNull('show_category')->static()
-            ->where('parent_id','!=', 0)->whereHas('CategoryTranslation')->get();
+            ->where('parent_id', '!=', 0)->whereHas('CategoryTranslation')->get();
         // $data['home_categories'] = Category::whereNotNull('show_category')->where('parent_id', 0)->static()->whereIN('id', $Cat)->whereHas('CategoryTranslation')->limit(16)->get();
         $data['home_categories'] = Category::whereNotNull('show_category')
-                                            ->where('parent_id', '!=', 0)
-                                            ->whereIn('id', $Cat)
-                                            ->whereHas('CategoryTranslation')
-                                            ->inRandomOrder()
-                                            ->limit(18)
-                                            ->get();
+            ->where('parent_id', '!=', 0)
+            ->whereIn('id', $Cat)
+            ->whereHas('CategoryTranslation')
+            ->inRandomOrder()
+            ->limit(18)
+            ->get();
         $data['static_category'] = Category::whereNotNull('show_category')->where('static', 1)->whereHas('CategoryTranslation')->first();
 
         $data['subcategories'] = Category::whereNotNull('show_category')->static()
-            ->where('parent_id','!=', 0)->whereHas('CategoryTranslation')->get();
+            ->where('parent_id', '!=', 0)->whereHas('CategoryTranslation')->get();
         $data['categories'] = Category::whereNotNull('show_category')->static()
             ->where('parent_id', 0)
-            ->orWhere('parent_id',null)
+            ->orWhere('parent_id', null)
             ->whereHas('CategoryTranslation')->get();
 
         // $categories = Category::whereIN('id', $productCat)->whereHas('CategoryTranslation')->pluck('id');
@@ -456,7 +456,7 @@ class WelcomeController extends WebController
             ->generate(env('APP_URL').'ar');
         $output_file = 'img-'.time().'.png';
         Storage::disk('MyDisk')->put($output_file, $image); // storage/app/public/img/qr-code/img-1557309130.png
-        $path = public_path('website/images/BarCode/').\Illuminate\Support\Carbon::now()->format('M-Y').'/';
+        $path = public_path('website/images/BarCode/').Carbon::now()->format('M-Y').'/';
         $toRemove = HelperController::getResourcePath().'public/';
         $url = str_replace($toRemove, '', $path);
         $fullUrl = env('APP_URL').$url.$output_file;

@@ -2,51 +2,55 @@
 
     <?php
 
-        if (auth()->check()) {
-            $user_pers = \App\Models\GroupPermission::where('group_id', \Illuminate\Support\Facades\Auth::user()->permission_group)->pluck('permission_id');
-            $permissionss = \App\Models\Permission::whereIn('id', $user_pers)->get();
-            $groups = $permissionss->groupBy('parent_permission');
-
-            $permissions = [];
-            $permissionNames = [];
-
-            foreach ($groups as $key => $group) {
-                echo '<h1>'.$key.'</h1>';
-                foreach ($group as $i => $items) {
-                    $permissions[] = $items['name'];
-
-                    if (str_contains($items['name'], '_read')) {
-                        $fullNames = str_replace('_read', '', $items['name']);
-                    }
-                    if (str_contains($items['name'], '_create')) {
-                        $fullNames = str_replace('_create', '', $items['name']);
-                    }
-                    if (str_contains($items['name'], '_update')) {
-                        $fullNames = str_replace('_update', '', $items['name']);
-                    }
-                    if (str_contains($items['name'], '_delete')) {
-                        $fullNames = str_replace('_delete', '', $items['name']);
-                    }
-                    if (! in_array($fullNames, $permissionNames)) {
-                        $permissionNames[] = $fullNames;
-                        echo '<h4>'.$fullNames.'</h4>';
-                    }
-                }
-            }
-
-        }
+use App\Models\GroupPermission;
+    use App\Models\Permission;
+    use Illuminate\Support\Facades\Auth;
 
     if (auth()->check()) {
-        $user_per = \App\Models\GroupPermission::where('group_id', \Illuminate\Support\Facades\Auth::user()->permission_group)->get();
+        $user_pers = GroupPermission::where('group_id', Auth::user()->permission_group)->pluck('permission_id');
+        $permissionss = Permission::whereIn('id', $user_pers)->get();
+        $groups = $permissionss->groupBy('parent_permission');
+
+        $permissions = [];
+        $permissionNames = [];
+
+        foreach ($groups as $key => $group) {
+            echo '<h1>'.$key.'</h1>';
+            foreach ($group as $i => $items) {
+                $permissions[] = $items['name'];
+
+                if (str_contains($items['name'], '_read')) {
+                    $fullNames = str_replace('_read', '', $items['name']);
+                }
+                if (str_contains($items['name'], '_create')) {
+                    $fullNames = str_replace('_create', '', $items['name']);
+                }
+                if (str_contains($items['name'], '_update')) {
+                    $fullNames = str_replace('_update', '', $items['name']);
+                }
+                if (str_contains($items['name'], '_delete')) {
+                    $fullNames = str_replace('_delete', '', $items['name']);
+                }
+                if (! in_array($fullNames, $permissionNames)) {
+                    $permissionNames[] = $fullNames;
+                    echo '<h4>'.$fullNames.'</h4>';
+                }
+            }
+        }
+
+    }
+
+    if (auth()->check()) {
+        $user_per = GroupPermission::where('group_id', Auth::user()->permission_group)->get();
         $permission = [];
         $permissionName = [];
 
         if (isset($user_per)) {
             foreach ($user_per as $per) {
-                $permissions = \App\Models\Permission::where('id', $per->permission_id)->pluck('id');
+                $permissions = Permission::where('id', $per->permission_id)->pluck('id');
                 if (isset($permissions[0])) {
                     $permission[] = $permissions[0];
-                    $Names = \App\Models\Permission::where('id', $per->permission_id)->select('name')->first();
+                    $Names = Permission::where('id', $per->permission_id)->select('name')->first();
 
                     if (str_contains($Names->name, '_read')) {
                         $fullName = str_replace('_read', '', $Names->name);

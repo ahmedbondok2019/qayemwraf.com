@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\ProductTranslation;
 use App\Models\Vendor;
 use App\Observers\ProductObserver;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -122,7 +123,7 @@ class Products extends Component
 
     public function deleteConfirm($productID)
     {
-        if (! in_array('44', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('44', Session::get('permissionData'))) {
             return redirect()->back();
         }
         $testRelated = OrderDetail::where('product_id', $productID)->first();
@@ -152,7 +153,7 @@ class Products extends Component
 
     public function updatePrice($productID, $value, $index)
     {
-        if (! in_array('130', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('130', Session::get('permissionData'))) {
             return redirect()->back();
         }
         if ($index == 1) {
@@ -183,7 +184,7 @@ class Products extends Component
 
     public function updateVendor($productID, $vendor_id)
     {
-        if (! in_array('131', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('131', Session::get('permissionData'))) {
             return redirect()->back();
         }
 
@@ -197,7 +198,7 @@ class Products extends Component
 
     public function delete()
     {
-        if (! in_array('44', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('44', Session::get('permissionData'))) {
             return redirect()->back();
         }
         $testRelated = OrderDetail::where('product_id', $this->deleteId)->first();
@@ -218,7 +219,7 @@ class Products extends Component
     public function multiStatus()
     {
         // dd($this->multi_status);
-        if (! in_array('131', \Illuminate\Support\Facades\Session::get('permissionData'))) {
+        if (! in_array('131', Session::get('permissionData'))) {
             return redirect()->back();
         }
 

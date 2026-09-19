@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\HelperController;
 use App\Models\BlogCategory;
 use App\Models\BlogCategoryTranslation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Yajra\DataTables\Facades\DataTables;
 
 class BlogCategoryController extends BackendController
@@ -16,6 +14,7 @@ class BlogCategoryController extends BackendController
     {
         if ($request->ajax()) {
             $data = BlogCategory::with('translation')->orderByDesc('id');
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('title', function ($row) {
@@ -23,27 +22,29 @@ class BlogCategoryController extends BackendController
                 })
                 ->addColumn('status', function ($row) {
                     $checked = $row->status ? 'checked' : '';
+
                     return '<div class="custom-control custom-switch custom-control-inline">
                                 <input type="checkbox" class="custom-control-input status-switch" 
-                                       id="status_' . $row->id . '" 
-                                       data-id="' . $row->id . '"
-                                       ' . $checked . '>
-                                <label class="custom-control-label" for="status_' . $row->id . '"></label>
+                                       id="status_'.$row->id.'" 
+                                       data-id="'.$row->id.'"
+                                       '.$checked.'>
+                                <label class="custom-control-label" for="status_'.$row->id.'"></label>
                             </div>';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="btn-group">
-                                <a href="' . route('admin.blog_categories.edit', $row->id) . '" class="btn btn-sm btn-warning">
+                                <a href="'.route('admin.blog_categories.edit', $row->id).'" class="btn btn-sm btn-warning">
                                     <i data-feather="edit"></i>
                                 </a>
-                                <form action="' . route('admin.blog_categories.destroy', $row->id) . '" method="POST" class="d-inline delete-form">
-                                    ' . csrf_field() . '
-                                    ' . method_field('DELETE') . '
+                                <form action="'.route('admin.blog_categories.destroy', $row->id).'" method="POST" class="d-inline delete-form">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
                                     <button type="submit" class="btn btn-sm btn-danger confirm-delete">
                                         <i data-feather="trash"></i>
                                     </button>
                                 </form>
                             </div>';
+
                     return $btn;
                 })
                 ->rawColumns(['status', 'action'])
@@ -83,12 +84,14 @@ class BlogCategoryController extends BackendController
         ]);
 
         alert()->success(trans_db('dashboard.saved'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.blog_categories.index');
     }
 
     public function edit(BlogCategory $blog_category)
     {
         $category = $blog_category->load('translation');
+
         return view('dashboard.admin.blog_categories.edit', compact('category'));
     }
 
@@ -118,6 +121,7 @@ class BlogCategoryController extends BackendController
         );
 
         alert()->success(trans_db('dashboard.updated'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.blog_categories.index');
     }
 
@@ -125,6 +129,7 @@ class BlogCategoryController extends BackendController
     {
         $blog_category->delete();
         alert()->success(trans_db('dashboard.deleted'), trans_db('dashboard.congratulation'));
+
         return redirect()->route('admin.blog_categories.index');
     }
 
@@ -132,6 +137,7 @@ class BlogCategoryController extends BackendController
     {
         $category = BlogCategory::find($request->id);
         $category->update(['status' => $request->status]);
+
         return response()->json(['data' => 'success']);
     }
 }

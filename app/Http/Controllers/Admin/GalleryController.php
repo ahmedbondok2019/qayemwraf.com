@@ -14,6 +14,7 @@ use App\Models\GalleryVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class GalleryController extends BackendController
@@ -241,13 +242,13 @@ class GalleryController extends BackendController
             foreach ($videos as $video) {
                 $video_file = HelperController::make_slug($gallery_price).Str::random('8').'_.mp4';
 
-                $path = 'website' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'videos';
-                $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-                if (!file_exists($fullStoragePath)) {
+                $path = 'website'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'videos';
+                $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+                if (! file_exists($fullStoragePath)) {
                     mkdir($fullStoragePath, 0755, true);
                 }
                 $video->move($fullStoragePath, $video_file);
-                $relativePath = 'storage/website/uploads/videos/' . $video_file;
+                $relativePath = 'storage/website/uploads/videos/'.$video_file;
 
                 GalleryVideo::create([
                     'video' => $relativePath,
@@ -284,10 +285,10 @@ class GalleryController extends BackendController
         foreach ($images as $image) {
             if ($image->image) {
                 $oldPath = str_replace('storage/', '', $image->image);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-                } elseif (file_exists(public_path('website/images/gallery/' . $image->image))) {
-                    unlink(public_path('website/images/gallery/' . $image->image));
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                } elseif (file_exists(public_path('website/images/gallery/'.$image->image))) {
+                    unlink(public_path('website/images/gallery/'.$image->image));
                 }
             }
         }
@@ -397,8 +398,8 @@ class GalleryController extends BackendController
 
                 if (isset($oldImage) && $oldImage != null) {
                     $oldPath = str_replace('storage/', '', $oldImage);
-                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
                     } elseif (file_exists(public_path('website/images/gallery/'.$oldImage))) {
                         unlink(public_path('website/images/gallery/'.$oldImage));
                     }
@@ -418,13 +419,13 @@ class GalleryController extends BackendController
 
     public static function UploadImagesGallery($image, $name, $folder, $width = null, $height = null)
     {
-        $path = 'website' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $folder;
-        $fullStoragePath = storage_path('app/public' . DIRECTORY_SEPARATOR . $path);
-        $destination = $fullStoragePath . DIRECTORY_SEPARATOR . $name;
+        $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$folder;
+        $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
+        $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$name;
 
         HelperController::upload_images($fullStoragePath, $destination, $image, $width, $height);
-        
-        return 'storage/website/images/' . $folder . '/' . $name;
+
+        return 'storage/website/images/'.$folder.'/'.$name;
     }
 
     public function cropSlider(Request $request)

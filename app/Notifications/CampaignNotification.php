@@ -36,6 +36,7 @@ class CampaignNotification extends Notification implements ShouldQueue
         if (in_array('email', $this->broadcast->channels)) {
             $channels[] = 'mail';
         }
+
         // SMS and WhatsApp would need specific drivers/channels
         return $channels;
     }
@@ -46,8 +47,8 @@ class CampaignNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $mail = (new MailMessage)
-                    ->subject($this->broadcast->title)
-                    ->line($this->broadcast->content);
+            ->subject($this->broadcast->title)
+            ->line($this->broadcast->content);
 
         if ($this->broadcast->link) {
             $mail->action('View Details', route('frontend.broadcast.click', $this->broadcast->id));

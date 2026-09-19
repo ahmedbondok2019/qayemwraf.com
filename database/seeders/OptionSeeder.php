@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Option;
 use App\Models\OptionTranslation;
 use App\Models\OptionValue;
 use App\Models\OptionValueTranslation;
+use Illuminate\Database\Seeder;
 
 class OptionSeeder extends Seeder
 {
@@ -32,7 +32,7 @@ class OptionSeeder extends Seeder
                     ['en' => '4 Meters', 'ar' => '4 متر'],
                     ['en' => '5 Meters', 'ar' => '5 متر'],
                     ['en' => '6 Meters', 'ar' => '6 متر'],
-                ]
+                ],
             ],
             [
                 'type' => 'single',
@@ -49,7 +49,7 @@ class OptionSeeder extends Seeder
                     ['en' => '80 cm', 'ar' => '80 سم'],
                     ['en' => '1.0 Meter', 'ar' => '1 متر (100 سم)'],
                     ['en' => '1.2 Meters', 'ar' => '1.2 متر (120 سم)'],
-                ]
+                ],
             ],
             [
                 'type' => 'single',
@@ -65,7 +65,7 @@ class OptionSeeder extends Seeder
                     ['en' => '2.2 Meters', 'ar' => '2.2 متر'],
                     ['en' => '2.5 Meters', 'ar' => '2.5 متر'],
                     ['en' => '2.8 Meters', 'ar' => '2.8 متر'],
-                ]
+                ],
             ],
             [
                 'type' => 'single',
@@ -86,7 +86,7 @@ class OptionSeeder extends Seeder
                     ['en' => '1 Ton (1000 kg) / Level', 'ar' => '1 طن (1000 كجم) للمستوى'],
                     ['en' => '2 Tons (2000 kg) / Level', 'ar' => '2 طن (2000 كجم) للمستوى'],
                     ['en' => '3 Tons (3000 kg) / Level', 'ar' => '3 طن (3000 كجم) للمستوى'],
-                ]
+                ],
             ],
             [
                 'type' => 'single',
@@ -100,7 +100,7 @@ class OptionSeeder extends Seeder
                     ['en' => '4 Levels', 'ar' => '4 مستويات'],
                     ['en' => '5 Shelves (Standard Unit)', 'ar' => '5 أرفف (الوحدة القياسية)'],
                     ['en' => '6 Shelves', 'ar' => '6 أرفف'],
-                ]
+                ],
             ],
             [
                 'type' => 'single',
@@ -117,7 +117,7 @@ class OptionSeeder extends Seeder
                     ['en' => 'Orange x Light Beige', 'ar' => 'برتقالي × بيج فاتح (150 كجم)', 'color_code' => '#F97316'],
                     ['en' => 'Orange x Turquoise', 'ar' => 'برتقالي × تركواز (200 كجم)', 'color_code' => '#06B6D4'],
                     ['en' => 'Industrial Blue x Orange', 'ar' => 'أزرق صناعي × برتقالي (هيفي وميدي)', 'color_code' => '#2563EB'],
-                ]
+                ],
             ],
             [
                 'type' => 'single',
@@ -129,7 +129,7 @@ class OptionSeeder extends Seeder
                 'values' => [
                     ['en' => 'Standalone Unit (Separate)', 'ar' => 'وحدة رئيسية منفصلة'],
                     ['en' => 'Connected Extension Unit', 'ar' => 'وحدة إضافية متصلة'],
-                ]
+                ],
             ],
         ];
 

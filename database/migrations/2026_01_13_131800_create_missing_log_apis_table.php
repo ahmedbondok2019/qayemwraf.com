@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        if (!Schema::hasTable('log_apis')) {
+        if (! Schema::hasTable('log_apis')) {
             Schema::create('log_apis', function (Blueprint $table) {
                 $table->id();
                 $table->text('url')->nullable();

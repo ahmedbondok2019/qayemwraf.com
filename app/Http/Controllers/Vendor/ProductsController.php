@@ -183,7 +183,7 @@ class ProductsController extends VendorBackendController
             );
         $output_file = 'img-'.time().'.png';
         Storage::disk('MyDisk')->put($output_file, $image); // storage/app/public/img/qr-code/img-1557309130.png
-        $path = public_path('website/images/BarCode/').\Illuminate\Support\Carbon::now()->format('M-Y').'/';
+        $path = public_path('website/images/BarCode/').Carbon::now()->format('M-Y').'/';
         $toRemove = HelperController::getResourcePath().'public/';
         $url = str_replace($toRemove, '', $path);
         $data['fullUrl'] = env('APP_URL').$url.$output_file;
@@ -510,7 +510,7 @@ class ProductsController extends VendorBackendController
 
             $path = public_path('website'.$ds.'images'.$ds.'products');
             $destination = public_path('website'.$ds.'images'.$ds.'products'.$ds.$primary_image);
-            helperController::upload_images($path, $destination, Input::file('primary_image'), '288', '393', 'png');
+            HelperController::upload_images($path, $destination, Input::file('primary_image'), '288', '393', 'png');
 
             // $watermark = Image::make(public_path('WATER MARK.png'))->resize(576 , 786);
             // $img = Image::make($destination)->insert($watermark);
