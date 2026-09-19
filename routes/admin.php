@@ -51,6 +51,7 @@ Route::group([
 
         // Dashboard
         Route::get('/', [AdminController::class, 'home'])->name('home');
+        Route::get('home', [AdminController::class, 'home'])->name('home.alias');
 
         // Categories
         Route::resource('categories', CategoryController::class);

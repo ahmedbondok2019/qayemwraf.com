@@ -4,7 +4,7 @@
 <div class="navbar-header">
     <ul class="nav navbar-nav flex-row">
         <li class="nav-item mr-auto">
-            <a class="navbar-brand" href="{{ \LaravelLocalization::localizeUrl('admin-2026/home') }}">
+            <a class="navbar-brand" href="{{ route('admin.home') }}">
                 @if(isset($Setting) && $Setting->logo)
                     <img src="{{ asset($Setting->logo) }}" class="img-fluid admin-logo-img" style="max-height: 65px; width: auto; max-width: 175px; object-fit: contain;" alt="{{ $Setting->translate('app_name') }}" />
                 @else
