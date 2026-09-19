@@ -107,7 +107,8 @@
 
     .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a i,
     .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a svg,
-    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a span {
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a span,
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:after {
         color: #f5eedc !important;
     }
 
@@ -119,35 +120,41 @@
 
     .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover i,
     .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover svg,
-    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover span {
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover span,
+    .main-menu .navigation li:not(.active):not(.sidebar-group-active) > a:hover:after {
         color: var(--brand-yellow-primary) !important;
     }
 
-    /* Active Sidebar Item */
+    /* Active & Open Sidebar Group Item - High Contrast Inverted Colors */
     .main-menu .navigation > li.active > a,
-    .main-menu .navigation > li.sidebar-group-active > a {
+    .main-menu .navigation > li.sidebar-group-active > a,
+    .main-menu .navigation > li.open.sidebar-group-active > a,
+    .main-menu .navigation > li.open:not(.sidebar-group-active) > a {
         background: linear-gradient(135deg, var(--brand-yellow-primary), var(--brand-yellow-secondary)) !important;
         color: var(--brand-dark-brown) !important;
         font-weight: 700 !important;
-        box-shadow: 0 6px 18px rgba(255, 222, 89, 0.4) !important;
+        box-shadow: 0 4px 15px rgba(255, 222, 89, 0.35) !important;
         border-radius: 10px !important;
         margin: 4px 12px !important;
     }
 
-    .main-menu .navigation > li.active > a i,
-    .main-menu .navigation > li.active > a svg,
-    .main-menu .navigation > li.active > a span,
-    .main-menu .navigation > li.sidebar-group-active > a i,
-    .main-menu .navigation > li.sidebar-group-active > a svg,
-    .main-menu .navigation > li.sidebar-group-active > a span {
+    .main-menu .navigation > li.active > a *,
+    .main-menu .navigation > li.sidebar-group-active > a *,
+    .main-menu .navigation > li.open > a *,
+    .main-menu .navigation > li.sidebar-group-active > a:after,
+    .main-menu .navigation > li.open > a:after {
         color: var(--brand-dark-brown) !important;
     }
 
     /* Submenu active item */
     .main-menu .navigation li.has-sub .menu-content li.active a {
-        background: rgba(255, 222, 89, 0.2) !important;
+        background: rgba(255, 222, 89, 0.22) !important;
         color: var(--brand-yellow-primary) !important;
         font-weight: 700 !important;
+        border-radius: 6px !important;
+    }
+    .main-menu .navigation li.has-sub .menu-content li.active a * {
+        color: var(--brand-yellow-primary) !important;
     }
 
     /* ========================================================

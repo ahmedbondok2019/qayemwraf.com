@@ -29,6 +29,7 @@
                 $groupIcons = [
                     'UsersManagement' => 'users',
                     'General' => 'layers',
+                    'Projects' => 'briefcase',
                     'Location' => 'map-pin',
                     'Products' => 'box',
                     'Offers' => 'zap',

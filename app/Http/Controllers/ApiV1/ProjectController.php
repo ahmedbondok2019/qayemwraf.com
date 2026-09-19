@@ -30,7 +30,9 @@ class ProjectController extends Controller
             ->with(['translation', 'translations'])
             ->paginate($perPage);
 
-        return $this->paginatedResponse($projects, ProjectResource::class);
+        return $this->successResponse(
+            $this->paginateResponse($projects, ProjectResource::collection($projects))
+        );
     }
 
     /**

@@ -59,7 +59,7 @@ trait UploadImageTrait
      * @param  int  $opacity
      * @return void
      */
-    public function applyWatermark(&$image, $opacity = 35)
+    public function applyWatermark(&$image, $opacity = 25)
     {
         $watermarkPath = public_path('_fixed/watermark.png');
         if (File::exists($watermarkPath)) {

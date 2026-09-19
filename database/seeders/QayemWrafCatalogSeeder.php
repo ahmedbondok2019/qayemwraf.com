@@ -91,6 +91,7 @@ class QayemWrafCatalogSeeder extends Seeder
             FlashSaleSeeder::class,
             RatingsSeeder::class,
             OrderSeeder::class,
+            ProjectSeeder::class,
         ]);
 
         $this->command->info('✅ Qayem W Raf catalog seeded successfully!');

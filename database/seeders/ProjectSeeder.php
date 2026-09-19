@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Project;
 use App\Models\ProjectTranslation;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
@@ -17,26 +18,24 @@ class ProjectSeeder extends Seeder
     {
         ini_set('memory_limit', '2048M');
 
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Safety guard: skip if already seeded
+        if (Project::count() >= 60) {
+            $this->command->info('✅ تم العثور على مشروعات سابقة في قاعدة البيانات. تم تخطي السيدر تلقائياً للحفاظ على البيانات.');
+            return;
+        }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         ProjectTranslation::truncate();
         Project::truncate();
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $sourceDir = 'D:\\قائم ورف';
         $storageDir = storage_path('app/public/uploads/projects');
+        $bundledDir = base_path('database/seeders/images/projects');
+        $localSourceDir = 'D:\\قائم ورف';
 
         if (! File::exists($storageDir)) {
             File::makeDirectory($storageDir, 0755, true, true);
         }
-
-        if (! File::isDirectory($sourceDir)) {
-            $this->command->error("Source directory {$sourceDir} does not exist!");
-
-            return;
-        }
-
-        $watermarkPath = public_path('_fixed/watermark.png');
-        $hasWatermark = File::exists($watermarkPath);
 
         $titlesAr = [
             'تجهيز مستودعات ومخازن كبرى بالرفوف المعدنية',
@@ -63,81 +62,118 @@ class ProjectSeeder extends Seeder
         $descAr = 'تم تنفيذ المشروع وتوريد وتركيب الرفوف المعدنية بأعلى معايير الجودة والمتانة من مصنع قائم ورف، لتحقيق أقصى استغلال للمساحات التخزينية وسهولة التحميل والتفريغ.';
         $descEn = 'Successfully executed and installed high-grade industrial metal racking systems by Qayem & Raf, engineered for maximum load capacity, safety, and optimal warehouse space utilization.';
 
-        $files = File::files($sourceDir);
         $count = 0;
 
-        foreach ($files as $index => $file) {
-            $extension = strtolower($file->getExtension());
+        // Mode 1: If bundled images exist in repo (Server / CI/CD Workflow mode)
+        if (File::isDirectory($bundledDir) && count(File::files($bundledDir)) > 0) {
+            $this->command->info('Seeding projects from bundled repository images...');
+            $files = File::files($bundledDir);
 
-            // Handle image files
-            if (in_array($extension, ['jpg', 'jpeg', 'png', 'webp'])) {
-                $filename = 'project_'.uniqid().'_'.$index.'.webp';
+            foreach ($files as $index => $file) {
+                $filename = $file->getFilename();
                 $destPath = $storageDir.DIRECTORY_SEPARATOR.$filename;
 
-                try {
-                    $img = Image::make($file->getRealPath());
+                if (! File::exists($destPath)) {
+                    File::copy($file->getRealPath(), $destPath);
+                }
 
-                    // Resize if larger than 1600px width
-                    if ($img->width() > 1600) {
-                        $img->resize(1600, null, function ($constraint) {
-                            $constraint->aspectRatio();
-                            $constraint->upsize();
-                        });
+                $titleIndex = $count % count($titlesAr);
+                $projectNumber = $count + 1;
+
+                $project = Project::create([
+                    'image' => 'storage/uploads/projects/'.$filename,
+                    'sort_order' => $count,
+                    'is_active' => true,
+                ]);
+
+                ProjectTranslation::create([
+                    'project_id' => $project->id,
+                    'locale' => 'ar',
+                    'title' => $titlesAr[$titleIndex]." (#{$projectNumber})",
+                    'description' => $descAr,
+                ]);
+
+                ProjectTranslation::create([
+                    'project_id' => $project->id,
+                    'locale' => 'en',
+                    'title' => $titlesEn[$titleIndex]." (#{$projectNumber})",
+                    'description' => $descEn,
+                ]);
+
+                $count++;
+            }
+        }
+        // Mode 2: Fallback to local source directory if available
+        elseif (File::isDirectory($localSourceDir)) {
+            $this->command->info('Processing local images from source directory...');
+            $watermarkPath = public_path('_fixed/watermark.png');
+            $hasWatermark = File::exists($watermarkPath);
+            $files = File::files($localSourceDir);
+
+            foreach ($files as $index => $file) {
+                $extension = strtolower($file->getExtension());
+                if (in_array($extension, ['jpg', 'jpeg', 'png', 'webp'])) {
+                    $filename = 'project_'.uniqid().'_'.$index.'.webp';
+                    $destPath = $storageDir.DIRECTORY_SEPARATOR.$filename;
+
+                    try {
+                        $img = Image::make($file->getRealPath());
+                        if ($img->width() > 1600) {
+                            $img->resize(1600, null, function ($constraint) {
+                                $constraint->aspectRatio();
+                                $constraint->upsize();
+                            });
+                        }
+
+                        if ($hasWatermark) {
+                            $wm = Image::make($watermarkPath);
+                            $targetWidth = (int) ($img->width() * 0.55);
+                            $targetHeight = (int) ($img->height() * 0.65);
+                            $wm->resize($targetWidth, $targetHeight, function ($constraint) {
+                                $constraint->aspectRatio();
+                                $constraint->upsize();
+                            });
+                            $wm->opacity(25);
+                            $img->insert($wm, 'center');
+                            $wm->destroy();
+                        }
+
+                        $img->encode('webp', 85)->save($destPath);
+                        $img->destroy();
+                        unset($img);
+                        gc_collect_cycles();
+
+                        $titleIndex = $count % count($titlesAr);
+                        $projectNumber = $count + 1;
+
+                        $project = Project::create([
+                            'image' => 'storage/uploads/projects/'.$filename,
+                            'sort_order' => $count,
+                            'is_active' => true,
+                        ]);
+
+                        ProjectTranslation::create([
+                            'project_id' => $project->id,
+                            'locale' => 'ar',
+                            'title' => $titlesAr[$titleIndex]." (#{$projectNumber})",
+                            'description' => $descAr,
+                        ]);
+
+                        ProjectTranslation::create([
+                            'project_id' => $project->id,
+                            'locale' => 'en',
+                            'title' => $titlesEn[$titleIndex]." (#{$projectNumber})",
+                            'description' => $descEn,
+                        ]);
+
+                        $count++;
+                    } catch (\Exception $e) {
+                        continue;
                     }
-
-                    // Apply Watermark
-                    if ($hasWatermark) {
-                        $wm = Image::make($watermarkPath);
-                        $targetWidth = (int) ($img->width() * 0.55);
-                        $targetHeight = (int) ($img->height() * 0.65);
-
-                        $wm->resize($targetWidth, $targetHeight, function ($constraint) {
-                            $constraint->aspectRatio();
-                            $constraint->upsize();
-                        });
-
-                        $wm->opacity(35);
-                        $img->insert($wm, 'center');
-                    }
-
-                    // Save as WebP
-                    $img->encode('webp', 85)->save($destPath);
-                    $img->destroy();
-                    unset($img);
-                    gc_collect_cycles();
-
-                    // Create Project Record
-                    $titleIndex = $count % count($titlesAr);
-                    $projectNumber = $count + 1;
-
-                    $project = Project::create([
-                        'image' => 'storage/uploads/projects/'.$filename,
-                        'sort_order' => $count,
-                        'is_active' => true,
-                    ]);
-
-                    ProjectTranslation::create([
-                        'project_id' => $project->id,
-                        'locale' => 'ar',
-                        'title' => $titlesAr[$titleIndex]." (#{$projectNumber})",
-                        'description' => $descAr,
-                    ]);
-
-                    ProjectTranslation::create([
-                        'project_id' => $project->id,
-                        'locale' => 'en',
-                        'title' => $titlesEn[$titleIndex]." (#{$projectNumber})",
-                        'description' => $descEn,
-                    ]);
-
-                    $count++;
-                } catch (\Exception $e) {
-                    // Log or continue
-                    continue;
                 }
             }
         }
 
-        $this->command->info("Successfully seeded {$count} projects with watermarked images!");
+        $this->command->info("Successfully seeded {$count} projects!");
     }
 }

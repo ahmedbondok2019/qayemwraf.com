@@ -20,6 +20,7 @@ use App\Http\Controllers\ApiV1\PageController;
 use App\Http\Controllers\ApiV1\PaymentMethodController;
 use App\Http\Controllers\ApiV1\ProductController;
 use App\Http\Controllers\ApiV1\ProfileController;
+use App\Http\Controllers\ApiV1\ProjectController;
 use App\Http\Controllers\ApiV1\RatingController;
 use App\Http\Controllers\ApiV1\SettingController;
 use App\Http\Controllers\ApiV1\SliderController;

@@ -39,10 +39,11 @@ class PermissionSeeder extends Seeder
             ['customers' => ['customers', 'UsersManagement']],
 
             ['pages' => ['pages', 'General']],
-            ['projects' => ['projects', 'General']],
             ['blog_categories' => ['blog_categories', 'General']],
             ['blogs' => ['blogs', 'General']],
             ['contacts' => ['contacts', 'General']],
+
+            ['projects' => ['projects', 'Projects']],
 
             ['countries' => ['countries', 'Location']],
             ['governorates' => ['governorates', 'Location']],
