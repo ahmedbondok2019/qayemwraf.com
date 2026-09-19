@@ -3,7 +3,9 @@
 use App\Models\Group;
 use App\Models\GroupPermission;
 use App\Models\Permission;
+use App\Models\Project;
 use App\Models\StaticTranslation;
+use Database\Seeders\ProjectSeeder;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
@@ -34,7 +36,6 @@ return new class extends Migration
                 ]
             );
 
-            // Ensure parent and group are set properly
             $perm->update([
                 'parent_permission' => 'projects',
                 'group_permission' => 'Projects',
@@ -44,7 +45,7 @@ return new class extends Migration
             $permissionIds[] = $perm->id;
         }
 
-        // 2. Attach permissions to Super Admin group (ID 1) and all other existing groups if needed
+        // 2. Attach permissions to Super Admin group (ID 1) and all other existing groups
         $groups = Group::all();
         if ($groups->isEmpty()) {
             $group = Group::firstOrCreate(['id' => 1], ['name' => 'Super Admin']);
@@ -60,17 +61,39 @@ return new class extends Migration
             }
         }
 
-        // 3. Add Static Translations for Projects
+        // 3. Add Static Translations for Projects & Table labels
         if (Schema::hasTable('static_translations')) {
-            StaticTranslation::updateOrCreate(
-                ['key' => 'dashboard.Projects'],
-                ['translations' => ['ar' => 'المشروعات', 'en' => 'Projects']]
-            );
+            $translations = [
+                'dashboard.Projects' => ['ar' => 'المشروعات', 'en' => 'Projects'],
+                'dashboard.projects' => ['ar' => 'المشروعات', 'en' => 'Projects'],
+                'dashboard.project' => ['ar' => 'مشروع', 'en' => 'project'],
+                'dashboard.Sort' => ['ar' => 'الترتيب', 'en' => 'Sort'],
+                'dashboard.SORT' => ['ar' => 'الترتيب', 'en' => 'Sort'],
+                'dashboard.No data available' => ['ar' => 'لا توجد بيانات متاحة', 'en' => 'No data available'],
+                'dashboard.Image' => ['ar' => 'الصورة', 'en' => 'Image'],
+                'dashboard.Title' => ['ar' => 'العنوان', 'en' => 'Title'],
+                'dashboard.Status' => ['ar' => 'الحالة', 'en' => 'Status'],
+                'dashboard.Created At' => ['ar' => 'تاريخ الإضافة', 'en' => 'Created At'],
+                'dashboard.Actions' => ['ar' => 'الإجراءات', 'en' => 'Actions'],
+                'dashboard.Add New' => ['ar' => 'إضافة جديد', 'en' => 'Add New'],
+                'dashboard.Are you sure?' => ['ar' => 'هل أنت متأكد من الحذف؟', 'en' => 'Are you sure you want to delete?'],
+            ];
 
-            StaticTranslation::updateOrCreate(
-                ['key' => 'dashboard.projects'],
-                ['translations' => ['ar' => 'المشروعات', 'en' => 'Projects']]
-            );
+            foreach ($translations as $key => $values) {
+                StaticTranslation::updateOrCreate(
+                    ['key' => $key],
+                    ['translations' => $values]
+                );
+            }
+        }
+
+        // 4. Auto-seed projects if none exist on production
+        if (Schema::hasTable('projects') && Project::count() < 60) {
+            try {
+                (new ProjectSeeder())->run();
+            } catch (\Throwable $e) {
+                // Ignore or continue
+            }
         }
     }
 

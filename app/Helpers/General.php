@@ -31,8 +31,12 @@ if (! function_exists('trans_db')) {
             return $entry->translations[$locale];
         }
 
-        // Fallback to default translation if not found in DB
-        return trans($key, $replace, $locale);
+        $translated = trans($key, $replace, $locale);
+        if ($translated !== $key && ! empty($translated)) {
+            return $translated;
+        }
+
+        return $default !== null ? $default : $key;
     }
 }
 
