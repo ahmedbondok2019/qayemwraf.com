@@ -25,10 +25,18 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 15);
-        $projects = Project::active()
-            ->with(['translation', 'translations'])
-            ->paginate($perPage);
+        $perPage = (int) $request->input('per_page', 15);
+        $query = Project::active()->with(['translation', 'translations']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('translations', function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $projects = $query->paginate($perPage);
 
         return $this->successResponse(
             $this->paginateResponse($projects, ProjectResource::collection($projects))
