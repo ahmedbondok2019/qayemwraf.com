@@ -193,6 +193,7 @@ class HomeController extends Controller
         // 10. قسم لماذا تختارنا (Why Choose Us) - مميزات الخدمة والشركة
         $setting = Setting::first() ?: new Setting;
         $data['why_choose_us'] = $setting->getWhyChooseUsFormatted();
+        $data['about_section'] = $setting->getAboutSectionFormatted();
 
         // 11. قسم تحميل الكتالوج الطبي بصيغة PDF (Catalog Download)
         $data['catalog_download'] = [
@@ -241,6 +242,7 @@ class HomeController extends Controller
             'features' => $data['featured_products'],
             'about' => $data['about'],
             'about_us' => $data['about'],
+            'about_section' => $data['about_section'],
         ];
 
         $responseData = array_merge($data, $legacyData);

@@ -92,6 +92,11 @@
                                                             <i data-feather="file-text"></i> {{ trans_db('dashboard.Catalog Download Settings') }}
                                                         </a>
                                                     </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="about-section-tab" data-toggle="tab" href="#about-section" aria-controls="about-section" role="tab" aria-selected="false">
+                                                            <i data-feather="layout"></i> {{ trans_db('dashboard.About Section Settings') ?: 'قسم عن قائم ورف' }}
+                                                        </a>
+                                                    </li>
                                                 </ul>
 
                                                 <div class="tab-content">
@@ -540,6 +545,221 @@
                                                                             </a>
                                                                         </div>
                                                                     @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- About Qayem Wraf Section Tab -->
+                                                    <div class="tab-pane" id="about-section" aria-labelledby="about-section-tab" role="tabpanel">
+                                                        @php
+                                                            $aboutDefaults = \App\Models\Setting::defaultAboutSection();
+                                                            $currentStats = $Setting->about_stats ?? $aboutDefaults['stats'];
+                                                            $currentFeatures = $Setting->about_features ?? $aboutDefaults['features'];
+                                                        @endphp
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h5 class="mb-2 theme-text-primary"><i data-feather="type"></i> {{ trans_db('dashboard.Main Texts') ?: 'النصوص والفقرات الرئيسية' }}</h5>
+                                                            </div>
+
+                                                            <!-- Tag (Badge) -->
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>الشارة العلوية ({{ $properties['native'] }}) - Tag / Badge</label>
+                                                                    <input type="text" class="form-control" name="about_tag[{{ $localeCode }}]"
+                                                                        value="{{ old("about_tag.$localeCode", $Setting->translate('about_tag', $localeCode) ?: ($aboutDefaults['tag'][$localeCode] ?? '')) }}" placeholder="عن قائم ورف" />
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <!-- Title -->
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>العنوان الرئيسي ({{ $properties['native'] }})</label>
+                                                                    <input type="text" class="form-control" name="about_title[{{ $localeCode }}]"
+                                                                        value="{{ old("about_title.$localeCode", $Setting->translate('about_title', $localeCode) ?: ($aboutDefaults['title'][$localeCode] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <!-- Highlight Text -->
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>النص المميز باللون الذهبي ({{ $properties['native'] }}) - Highlight Word</label>
+                                                                    <input type="text" class="form-control" name="about_highlight_text[{{ $localeCode }}]"
+                                                                        value="{{ old("about_highlight_text.$localeCode", $Setting->translate('about_highlight_text', $localeCode) ?: ($aboutDefaults['highlight_text'][$localeCode] ?? '')) }}" />
+                                                                    <small class="text-muted">الكلمة أو العبارة التي ستظهر باللون الذهبي داخل العنوان</small>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <!-- Description -->
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label>الفقرة التعريفية ({{ $properties['native'] }})</label>
+                                                                    <textarea class="form-control" rows="3" name="about_description[{{ $localeCode }}]">{{ old("about_description.$localeCode", $Setting->translate('about_description', $localeCode) ?: ($aboutDefaults['description'][$localeCode] ?? '')) }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <!-- 4 Statistics Counters -->
+                                                            <div class="col-12"><hr><h5 class="mb-2 theme-text-primary"><i data-feather="bar-chart-2"></i> العدادات والإحصائيات (4 عناصر)</h5></div>
+                                                            @for($i = 0; $i < 4; $i++)
+                                                            @php
+                                                                $stat = $currentStats[$i] ?? ($aboutDefaults['stats'][$i] ?? ['value' => '', 'label' => ['ar' => '', 'en' => '']]);
+                                                            @endphp
+                                                            <div class="col-md-6 col-12 mb-2 p-2 border rounded" style="background: #fdfdfd;">
+                                                                <h6 class="font-weight-bold text-secondary">إحصائية {{ $i + 1 }}</h6>
+                                                                <div class="row">
+                                                                    <div class="col-4">
+                                                                        <div class="form-group mb-1">
+                                                                            <label>الرقم / القيمة</label>
+                                                                            <input type="text" class="form-control" name="about_stats[{{ $i }}][value]" value="{{ old("about_stats.$i.value", $stat['value'] ?? '') }}" placeholder="+15">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="form-group mb-1">
+                                                                            <label>التسمية (عربي)</label>
+                                                                            <input type="text" class="form-control" name="about_stats[{{ $i }}][label][ar]" value="{{ old("about_stats.$i.label.ar", is_array($stat['label'] ?? null) ? ($stat['label']['ar'] ?? '') : ($stat['label'] ?? '')) }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="form-group mb-1">
+                                                                            <label>التسمية (EN)</label>
+                                                                            <input type="text" class="form-control" name="about_stats[{{ $i }}][label][en]" value="{{ old("about_stats.$i.label.en", is_array($stat['label'] ?? null) ? ($stat['label']['en'] ?? '') : '') }}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @endfor
+
+                                                            <!-- 3 Feature Cards -->
+                                                            <div class="col-12"><hr><h5 class="mb-2 theme-text-primary"><i data-feather="check-square"></i> بطاقات المميزات (3 بطاقات)</h5></div>
+                                                            @for($j = 0; $j < 3; $j++)
+                                                            @php
+                                                                $feat = $currentFeatures[$j] ?? ($aboutDefaults['features'][$j] ?? ['icon' => 'shield', 'title' => ['ar' => '', 'en' => ''], 'description' => ['ar' => '', 'en' => '']]);
+                                                            @endphp
+                                                            <div class="col-md-4 col-12 mb-2 p-2 border rounded" style="background: #f8f9fa;">
+                                                                <h6 class="font-weight-bold text-primary">الميزة {{ $j + 1 }}</h6>
+                                                                <div class="form-group mb-1">
+                                                                    <label>الأيقونة</label>
+                                                                    <select class="form-control" name="about_features[{{ $j }}][icon]">
+                                                                        <option value="shield" {{ ($feat['icon'] ?? '') == 'shield' ? 'selected' : '' }}>درع أمان وجودة (Shield)</option>
+                                                                        <option value="truck" {{ ($feat['icon'] ?? '') == 'truck' ? 'selected' : '' }}>شاحنة وتوصيل (Truck)</option>
+                                                                        <option value="headset" {{ ($feat['icon'] ?? '') == 'headset' ? 'selected' : '' }}>سماعة واستشارات (Headset)</option>
+                                                                        <option value="award" {{ ($feat['icon'] ?? '') == 'award' ? 'selected' : '' }}>وسام تميز (Award)</option>
+                                                                        <option value="wrench" {{ ($feat['icon'] ?? '') == 'wrench' ? 'selected' : '' }}>معدات وتركيب (Wrench)</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>العنوان (عربي)</label>
+                                                                    <input type="text" class="form-control" name="about_features[{{ $j }}][title][ar]" value="{{ old("about_features.$j.title.ar", is_array($feat['title'] ?? null) ? ($feat['title']['ar'] ?? '') : ($feat['title'] ?? '')) }}">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>العنوان (EN)</label>
+                                                                    <input type="text" class="form-control" name="about_features[{{ $j }}][title][en]" value="{{ old("about_features.$j.title.en", is_array($feat['title'] ?? null) ? ($feat['title']['en'] ?? '') : '') }}">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>الوصف (عربي)</label>
+                                                                    <textarea class="form-control" rows="2" name="about_features[{{ $j }}][description][ar]">{{ old("about_features.$j.description.ar", is_array($feat['description'] ?? null) ? ($feat['description']['ar'] ?? '') : ($feat['description'] ?? '')) }}</textarea>
+                                                                </div>
+                                                                <div class="form-group mb-0">
+                                                                    <label>الوصف (EN)</label>
+                                                                    <textarea class="form-control" rows="2" name="about_features[{{ $j }}][description][en]">{{ old("about_features.$j.description.en", is_array($feat['description'] ?? null) ? ($feat['description']['en'] ?? '') : '') }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            @endfor
+
+                                                            <!-- Images & Badges Section -->
+                                                            <div class="col-12"><hr><h5 class="mb-2 theme-text-primary"><i data-feather="image"></i> الصور والشارات التفاعلية (Images & Floating Badges)</h5></div>
+
+                                                            <!-- Image 1 -->
+                                                            <div class="col-md-4 col-12 mb-3 p-2 border rounded">
+                                                                <h6 class="font-weight-bold text-dark">الصورة الرئيسية (الكبيرة يميناً)</h6>
+                                                                <div class="form-group">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" class="custom-file-input" id="about_image_1" name="about_image_1" accept="image/*">
+                                                                        <label class="custom-file-label" for="about_image_1">{{ trans_db('dashboard.Choose file') }}</label>
+                                                                    </div>
+                                                                    <div class="mt-1">
+                                                                        <img src="{{ asset($Setting->about_image_1 ?? $aboutDefaults['image_1']) }}" alt="About Image 1" class="img-fluid rounded" style="max-height: 120px;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>عنوان شارة الصورة 1 (عربي)</label>
+                                                                    <input type="text" class="form-control" name="about_image_1_badge_title[ar]" value="{{ old('about_image_1_badge_title.ar', $Setting->translate('about_image_1_badge_title', 'ar') ?: ($aboutDefaults['image_1_badge_title']['ar'] ?? '')) }}">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>عنوان شارة الصورة 1 (EN)</label>
+                                                                    <input type="text" class="form-control" name="about_image_1_badge_title[en]" value="{{ old('about_image_1_badge_title.en', $Setting->translate('about_image_1_badge_title', 'en') ?: ($aboutDefaults['image_1_badge_title']['en'] ?? '')) }}">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>نص الشارة الفرعي 1 (عربي)</label>
+                                                                    <input type="text" class="form-control" name="about_image_1_badge_subtitle[ar]" value="{{ old('about_image_1_badge_subtitle.ar', $Setting->translate('about_image_1_badge_subtitle', 'ar') ?: ($aboutDefaults['image_1_badge_subtitle']['ar'] ?? '')) }}">
+                                                                </div>
+                                                                <div class="form-group mb-0">
+                                                                    <label>نص الشارة الفرعي 1 (EN)</label>
+                                                                    <input type="text" class="form-control" name="about_image_1_badge_subtitle[en]" value="{{ old('about_image_1_badge_subtitle.en', $Setting->translate('about_image_1_badge_subtitle', 'en') ?: ($aboutDefaults['image_1_badge_subtitle']['en'] ?? '')) }}">
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Image 2 -->
+                                                            <div class="col-md-4 col-12 mb-3 p-2 border rounded">
+                                                                <h6 class="font-weight-bold text-dark">الصورة الثانية (أعلى اليسار)</h6>
+                                                                <div class="form-group">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" class="custom-file-input" id="about_image_2" name="about_image_2" accept="image/*">
+                                                                        <label class="custom-file-label" for="about_image_2">{{ trans_db('dashboard.Choose file') }}</label>
+                                                                    </div>
+                                                                    <div class="mt-1">
+                                                                        <img src="{{ asset($Setting->about_image_2 ?? $aboutDefaults['image_2']) }}" alt="About Image 2" class="img-fluid rounded" style="max-height: 120px;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>نص شارة الصورة 2 (عربي)</label>
+                                                                    <input type="text" class="form-control" name="about_image_2_badge[ar]" value="{{ old('about_image_2_badge.ar', $Setting->translate('about_image_2_badge', 'ar') ?: ($aboutDefaults['image_2_badge']['ar'] ?? '')) }}">
+                                                                </div>
+                                                                <div class="form-group mb-0">
+                                                                    <label>نص شارة الصورة 2 (EN)</label>
+                                                                    <input type="text" class="form-control" name="about_image_2_badge[en]" value="{{ old('about_image_2_badge.en', $Setting->translate('about_image_2_badge', 'en') ?: ($aboutDefaults['image_2_badge']['en'] ?? '')) }}">
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Image 3 & Experience Badge -->
+                                                            <div class="col-md-4 col-12 mb-3 p-2 border rounded">
+                                                                <h6 class="font-weight-bold text-dark">الصورة الثالثة + شارة سنوات الخبرة</h6>
+                                                                <div class="form-group">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" class="custom-file-input" id="about_image_3" name="about_image_3" accept="image/*">
+                                                                        <label class="custom-file-label" for="about_image_3">{{ trans_db('dashboard.Choose file') }}</label>
+                                                                    </div>
+                                                                    <div class="mt-1">
+                                                                        <img src="{{ asset($Setting->about_image_3 ?? $aboutDefaults['image_3']) }}" alt="About Image 3" class="img-fluid rounded" style="max-height: 120px;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>سنوات الخبرة (الرقم)</label>
+                                                                    <input type="text" class="form-control" name="about_experience_years" value="{{ old('about_experience_years', $Setting->about_experience_years ?: $aboutDefaults['experience_years']) }}" placeholder="15+">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>عنوان شارة الخبرة (عربي)</label>
+                                                                    <input type="text" class="form-control" name="about_experience_title[ar]" value="{{ old('about_experience_title.ar', $Setting->translate('about_experience_title', 'ar') ?: ($aboutDefaults['experience_title']['ar'] ?? '')) }}">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>عنوان شارة الخبرة (EN)</label>
+                                                                    <input type="text" class="form-control" name="about_experience_title[en]" value="{{ old('about_experience_title.en', $Setting->translate('about_experience_title', 'en') ?: ($aboutDefaults['experience_title']['en'] ?? '')) }}">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label>نص الشارة الفرعي (عربي)</label>
+                                                                    <textarea class="form-control" rows="2" name="about_experience_subtitle[ar]">{{ old('about_experience_subtitle.ar', $Setting->translate('about_experience_subtitle', 'ar') ?: ($aboutDefaults['experience_subtitle']['ar'] ?? '')) }}</textarea>
+                                                                </div>
+                                                                <div class="form-group mb-0">
+                                                                    <label>نص الشارة الفرعي (EN)</label>
+                                                                    <textarea class="form-control" rows="2" name="about_experience_subtitle[en]">{{ old('about_experience_subtitle.en', $Setting->translate('about_experience_subtitle', 'en') ?: ($aboutDefaults['experience_subtitle']['en'] ?? '')) }}</textarea>
                                                                 </div>
                                                             </div>
                                                         </div>

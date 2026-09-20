@@ -63,6 +63,21 @@ class SettingController extends BackendController
             'catalog_title' => 'nullable|array',
             'catalog_description' => 'nullable|array',
             'catalog_pdf' => 'nullable|file|mimes:pdf|max:51200',
+            'about_tag' => 'nullable|array',
+            'about_title' => 'nullable|array',
+            'about_highlight_text' => 'nullable|array',
+            'about_description' => 'nullable|array',
+            'about_stats' => 'nullable|array',
+            'about_features' => 'nullable|array',
+            'about_image_1' => 'nullable|image|max:10240',
+            'about_image_1_badge_title' => 'nullable|array',
+            'about_image_1_badge_subtitle' => 'nullable|array',
+            'about_image_2' => 'nullable|image|max:10240',
+            'about_image_2_badge' => 'nullable|array',
+            'about_image_3' => 'nullable|image|max:10240',
+            'about_experience_years' => 'nullable|string',
+            'about_experience_title' => 'nullable|array',
+            'about_experience_subtitle' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {
@@ -105,6 +120,18 @@ class SettingController extends BackendController
             'why_choose_us_items' => $request->why_choose_us_items,
             'catalog_title' => $request->catalog_title,
             'catalog_description' => $request->catalog_description,
+            'about_tag' => $request->about_tag,
+            'about_title' => $request->about_title,
+            'about_highlight_text' => $request->about_highlight_text,
+            'about_description' => $request->about_description,
+            'about_stats' => $request->about_stats,
+            'about_features' => $request->about_features,
+            'about_image_1_badge_title' => $request->about_image_1_badge_title,
+            'about_image_1_badge_subtitle' => $request->about_image_1_badge_subtitle,
+            'about_image_2_badge' => $request->about_image_2_badge,
+            'about_experience_years' => $request->about_experience_years,
+            'about_experience_title' => $request->about_experience_title,
+            'about_experience_subtitle' => $request->about_experience_subtitle,
         ];
 
         // Handle Images
@@ -147,6 +174,27 @@ class SettingController extends BackendController
             $fileName = 'catalog_'.time().'.'.$file->getClientOriginalExtension();
             $path = $file->storeAs('catalogs', $fileName, 'public');
             $data['catalog_pdf'] = 'storage/'.$path;
+        }
+
+        if ($request->hasFile('about_image_1')) {
+            $file = $request->file('about_image_1');
+            $fileName = 'about_1_'.time().'.'.$file->getClientOriginalExtension();
+            $path = $file->storeAs('about', $fileName, 'public');
+            $data['about_image_1'] = 'storage/'.$path;
+        }
+
+        if ($request->hasFile('about_image_2')) {
+            $file = $request->file('about_image_2');
+            $fileName = 'about_2_'.time().'.'.$file->getClientOriginalExtension();
+            $path = $file->storeAs('about', $fileName, 'public');
+            $data['about_image_2'] = 'storage/'.$path;
+        }
+
+        if ($request->hasFile('about_image_3')) {
+            $file = $request->file('about_image_3');
+            $fileName = 'about_3_'.time().'.'.$file->getClientOriginalExtension();
+            $path = $file->storeAs('about', $fileName, 'public');
+            $data['about_image_3'] = 'storage/'.$path;
         }
 
         Setting::updateOrCreate(['id' => 1], $data);
