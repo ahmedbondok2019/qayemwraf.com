@@ -476,15 +476,23 @@
                             @include('frontend.products.partials.rating_display', ['product' => $product])
                         </div>
 
-                        <div class="price-container mt-3">
-                           @if($product->has_special_price)
-                                <span class="current-price">{{ format_price($product->special_price) }}</span>
-                                <span class="old-price">{{ format_price($product->price) }}</span>
+                        <div class="price-container d-flex align-items-center flex-wrap" style="gap: 12px; margin-bottom: 25px; background: #f8fafc; padding: 15px 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                            @if($product->has_special_price && $product->special_price < $product->price)
+                                @php
+                                    $discountPct = $product->price > 0 ? round((($product->price - $product->special_price) / $product->price) * 100) : 0;
+                                    $savedAmount = $product->price - $product->special_price;
+                                @endphp
+                                <span class="current-price font-weight-bold" style="font-size: 28px; color: #ef4444;">{{ format_price($product->special_price) }}</span>
+                                <span class="old-price" style="text-decoration: line-through; color: #94a3b8; font-size: 18px;">{{ format_price($product->price) }}</span>
+                                @if($discountPct > 0)
+                                    <span class="badge badge-danger px-2 py-1" style="font-size: 13px; border-radius: 6px; background-color: #ef4444; color: white;">-{{ $discountPct }}% {{ app()->getLocale() == 'ar' ? 'خصم' : 'OFF' }}</span>
+                                    <span class="badge badge-success px-2 py-1" style="font-size: 13px; border-radius: 6px; background-color: #10b981; color: white;">{{ app()->getLocale() == 'ar' ? 'وفرت ' . format_price($savedAmount) : 'Saved ' . format_price($savedAmount) }}</span>
+                                @endif
                             @else
-                                <span class="current-price">{{ format_price($product->price) }}</span>
+                                <span class="current-price font-weight-bold" style="font-size: 28px; color: #1e293b;">{{ format_price($product->price) }}</span>
                             @endif
                             
-                            <span class="badge-stock {{ ($product->quantity > 0 || $product->ignore_quantity) ? 'badge-in-stock' : 'badge-out-stock' }} ml-3">
+                            <span class="badge-stock {{ ($product->quantity > 0 || $product->ignore_quantity) ? 'badge-in-stock' : 'badge-out-stock' }} ml-auto">
                                 {{ ($product->quantity > 0 || $product->ignore_quantity) ? trans_db('frontend.in_stock') : trans_db('frontend.out_of_stock') }}
                             </span>
                         </div>

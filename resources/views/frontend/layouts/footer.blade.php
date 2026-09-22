@@ -93,6 +93,12 @@
                                 <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
                                 <div class="text">{{ $Setting?->translate('address') ?? 'Cairo, Egypt' }}</div>
                             </li>
+                            @if($Setting?->translate('factory_address'))
+                            <li>
+                                <div class="icon"><i class="fa-solid fa-industry"></i></div>
+                                <div class="text">{{ $Setting->translate('factory_address') }}</div>
+                            </li>
+                            @endif
                             <li>
                                 <div class="icon"><i class="fa-solid fa-phone"></i></div>
                                 <div class="text" dir="ltr">{{ $Setting->phone ?? '+20 123 456 789' }}</div>

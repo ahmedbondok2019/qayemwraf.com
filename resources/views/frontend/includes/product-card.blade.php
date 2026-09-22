@@ -29,7 +29,12 @@
     <a href="{{ route('frontend.products.show', $routeParams) }}" class="v-card-img-link">
         <img src="{{ asset($product->image) }}" alt="{{ $productName }}" onerror="this.src='{{ asset('assets/images/placeholder.png') }}'">
         @if($product->has_special_price)
-            <span class="v-discount-badge-overlay">{{ round((($product->price - $product->special_price) / $product->price) * 100) }}% {{ trans_db('frontend.OFF') }}</span>
+            @php
+                $discountPct = ($product->price > 0 && $product->special_price < $product->price) ? round((($product->price - $product->special_price) / $product->price) * 100) : 0;
+            @endphp
+            @if($discountPct > 0)
+                <span class="v-discount-badge-overlay" style="position: absolute; top: 10px; right: 10px; background: #ef4444; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 5px rgba(239,68,68,0.3); z-index: 2;">-{{ $discountPct }}% {{ trans_db('frontend.OFF') ?: (app()->getLocale() == 'ar' ? 'خصم' : 'OFF') }}</span>
+            @endif
         @endif
     </a>
 
@@ -45,9 +50,9 @@
         @endif
 
         <div class="v-card-price-box">
-            @if($product->has_special_price)
-                <span class="v-current-price">{{ format_price($product->special_price) }}</span>
-                <span class="v-old-price">{{ format_price($product->price) }}</span>
+            @if($product->has_special_price && $product->special_price < $product->price)
+                <span class="v-current-price" style="color: #ef4444; font-weight: 800;">{{ format_price($product->special_price) }}</span>
+                <span class="v-old-price" style="text-decoration: line-through; color: #94a3b8; font-size: 13px;">{{ format_price($product->price) }}</span>
             @else
                 <span class="v-current-price">{{ format_price($product->price) }}</span>
             @endif

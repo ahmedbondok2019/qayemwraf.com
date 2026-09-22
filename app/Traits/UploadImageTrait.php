@@ -59,26 +59,37 @@ trait UploadImageTrait
      * @param  int  $opacity
      * @return void
      */
-    public function applyWatermark(&$image, $opacity = 25)
+    public function applyWatermark(&$image, $opacity = 35)
     {
         $watermarkPath = public_path('_fixed/watermark.png');
+        if (! File::exists($watermarkPath)) {
+            $setting = \App\Models\Setting::first();
+            if ($setting && $setting->logo && File::exists(public_path($setting->logo))) {
+                $watermarkPath = public_path($setting->logo);
+            }
+        }
+
         if (File::exists($watermarkPath)) {
-            $watermark = Image::make($watermarkPath);
+            try {
+                $watermark = Image::make($watermarkPath);
 
-            $imgWidth = $image->width();
-            $imgHeight = $image->height();
+                $imgWidth = $image->width();
+                $imgHeight = $image->height();
 
-            $targetWidth = (int) ($imgWidth * 0.55);
-            $targetHeight = (int) ($imgHeight * 0.65);
+                $targetWidth = (int) ($imgWidth * 0.45);
+                $targetHeight = (int) ($imgHeight * 0.45);
 
-            $watermark->resize($targetWidth, $targetHeight, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
+                $watermark->resize($targetWidth, $targetHeight, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
 
-            $watermark->opacity($opacity);
+                $watermark->opacity($opacity);
 
-            $image->insert($watermark, 'center');
+                $image->insert($watermark, 'center');
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning('Watermark failed: '.$e->getMessage());
+            }
         }
     }
 }

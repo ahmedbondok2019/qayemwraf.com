@@ -194,7 +194,7 @@ class ProductController extends Controller
             // Main Image
             $imagePath = null;
             if ($request->hasFile('image')) {
-                $imagePath = $this->uploadImage($request->file('image'), 'products');
+                $imagePath = $this->uploadImage($request->file('image'), 'products', null, null, true);
             }
 
             $product = Product::create([
@@ -245,7 +245,7 @@ class ProductController extends Controller
             // Gallery Images
             if ($request->hasFile('gallery')) {
                 foreach ($request->file('gallery') as $key => $file) {
-                    $imagePath = $this->uploadImage($file, 'products/gallery');
+                    $imagePath = $this->uploadImage($file, 'products/gallery', null, null, true);
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $imagePath,
@@ -330,7 +330,7 @@ class ProductController extends Controller
                         unlink(public_path($product->image));
                     }
                 }
-                $product->image = $this->uploadImage($request->file('image'), 'products');
+                $product->image = $this->uploadImage($request->file('image'), 'products', null, null, true);
             }
 
             $product->update([
@@ -388,7 +388,7 @@ class ProductController extends Controller
             if ($request->hasFile('gallery')) {
                 $maxSort = ProductImage::where('product_id', $product->id)->max('sort_order') ?? -1;
                 foreach ($request->file('gallery') as $key => $file) {
-                    $imagePath = $this->uploadImage($file, 'products/gallery');
+                    $imagePath = $this->uploadImage($file, 'products/gallery', null, null, true);
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $imagePath,

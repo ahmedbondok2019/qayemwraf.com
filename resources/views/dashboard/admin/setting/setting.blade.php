@@ -89,12 +89,12 @@
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" id="catalog-tab" data-toggle="tab" href="#catalog" aria-controls="catalog" role="tab" aria-selected="false">
-                                                            <i data-feather="file-text"></i> {{ trans_db('dashboard.Catalog Download Settings') }}
+                                                            <i data-feather="file-text"></i> {{ trans_db('dashboard.Catalog Download Settings', 'إعدادات كتالوج المنتجات (PDF)') }}
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" id="about-section-tab" data-toggle="tab" href="#about-section" aria-controls="about-section" role="tab" aria-selected="false">
-                                                            <i data-feather="layout"></i> {{ trans_db('dashboard.About Section Settings') ?: 'قسم عن قائم ورف' }}
+                                                            <i data-feather="layout"></i> {{ trans_db('dashboard.About Section Settings', 'قسم عن قائم ورف') }}
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -217,12 +217,32 @@
                                                                 </div>
                                                             </div>
                                                             
+                                                            <div class="col-12">
+                                                                <hr>
+                                                                <h6 class="mb-1 text-primary font-weight-bold"><i data-feather="map-pin"></i> {{ trans_db('dashboard.Showroom Address', 'عنوان المعرض / المقر الرئيسي') }}</h6>
+                                                            </div>
+
                                                             @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
                                                             <div class="col-md-6 col-12">
                                                                 <div class="form-group">
-                                                                    <label>{{ trans_db('dashboard.address') }} ({{ $properties['native'] }})</label>
+                                                                    <label>{{ trans_db('dashboard.Showroom Address', 'عنوان المعرض') }} ({{ $properties['native'] }})</label>
                                                                     <input type="text" class="form-control" name="address[{{ $localeCode }}]"
-                                                                        value="{{ old("address.$localeCode", $Setting->translate('address', $localeCode)) }}" />
+                                                                        value="{{ old("address.$localeCode", $Setting->translate('address', $localeCode)) }}" placeholder="مثال: 35 عمارات التوفيقية، مدينة نصر، القاهرة..." />
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <div class="col-12">
+                                                                <hr>
+                                                                <h6 class="mb-1 text-primary font-weight-bold"><i data-feather="home"></i> {{ trans_db('dashboard.Factory Address', 'عنوان المصنع') }}</h6>
+                                                            </div>
+
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.Factory Address', 'عنوان المصنع') }} ({{ $properties['native'] }})</label>
+                                                                    <input type="text" class="form-control" name="factory_address[{{ $localeCode }}]"
+                                                                        value="{{ old("factory_address.$localeCode", $Setting->translate('factory_address', $localeCode)) }}" placeholder="مثال: المنطقة الصناعية - 6 أكتوبر - الجيزة..." />
                                                                 </div>
                                                             </div>
                                                             @endforeach
@@ -559,7 +579,7 @@
                                                         @endphp
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <h5 class="mb-2 theme-text-primary"><i data-feather="type"></i> {{ trans_db('dashboard.Main Texts') ?: 'النصوص والفقرات الرئيسية' }}</h5>
+                                                                <h5 class="mb-2 theme-text-primary"><i data-feather="type"></i> {{ trans_db('dashboard.Main Texts', 'النصوص والفقرات الرئيسية') }}</h5>
                                                             </div>
 
                                                             <!-- Tag (Badge) -->

@@ -23,17 +23,30 @@
     {{-- Top Bar --}}
     <div class="elegant-top-bar" style="background: var(--primary-color); color: #fff; padding: 5px 0; font-size: 12px;">
         <div class="container d-flex justify-content-between align-items-center">
-            <div class="top-bar-item d-flex align-items-center gap-2">
-                <i class="fa-solid fa-phone"></i>
-                <span>{{ trans_db('frontend.Customer Service') }}: {{ $Setting->phone ?? '01203036736' }}</span>
+            <div class="d-flex align-items-center gap-3">
+                <div class="top-bar-item d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>{{ trans_db('frontend.Customer Service') }}: {{ $Setting->phone ?? '01154813836' }}</span>
+                </div>
+                <div class="top-bar-item d-none d-md-flex align-items-center gap-2">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    <span>{{ trans_db('frontend.Shipping to all governorates') }}</span>
+                </div>
+                <div class="top-bar-item d-none d-lg-flex align-items-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>{{ trans_db('frontend.Real guarantee on all products') }}</span>
+                </div>
             </div>
-            <div class="top-bar-item d-flex align-items-center gap-2">
-                <i class="fa-solid fa-truck-fast"></i>
-                <span>{{ trans_db('frontend.Shipping to all governorates') }}</span>
-            </div>
-            <div class="top-bar-item d-flex align-items-center gap-2">
-                <i class="fa-solid fa-shield-halved"></i>
-                <span>{{ trans_db('frontend.Real guarantee on all products') }}</span>
+            <div class="top-bar-item d-flex align-items-center">
+                @if(app()->getLocale() == 'ar')
+                    <a href="{{ LaravelLocalization::getLocalizedURL('en', null, [], true) }}" style="color: #fff; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 20px; transition: 0.3s;">
+                        <i class="fa-solid fa-globe"></i> English
+                    </a>
+                @else
+                    <a href="{{ LaravelLocalization::getLocalizedURL('ar', null, [], true) }}" style="color: #fff; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 20px; transition: 0.3s;">
+                        <i class="fa-solid fa-globe"></i> العربية
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -190,6 +203,18 @@
                     </span>
                 </a>
 
+                <div class="elegant-lang-switch d-none d-sm-block">
+                    @if(app()->getLocale() == 'ar')
+                        <a href="{{ LaravelLocalization::getLocalizedURL('en', null, [], true) }}" class="elegant-action-item text-decoration-none" title="Switch to English" style="background: #f8f9fa; border-radius: 20px; padding: 6px 12px; display: flex; align-items: center; gap: 5px; font-weight: 700; font-size: 12px; color: var(--primary-color); border: 1px solid #eee;">
+                            <i class="fa-solid fa-globe"></i> EN
+                        </a>
+                    @else
+                        <a href="{{ LaravelLocalization::getLocalizedURL('ar', null, [], true) }}" class="elegant-action-item text-decoration-none" title="التحويل للغة العربية" style="background: #f8f9fa; border-radius: 20px; padding: 6px 12px; display: flex; align-items: center; gap: 5px; font-weight: 700; font-size: 12px; color: var(--primary-color); border: 1px solid #eee;">
+                            <i class="fa-solid fa-globe"></i> عربي
+                        </a>
+                    @endif
+                </div>
+
                 <button class="elegant-mobile-toggle d-lg-none" id="elegantMobileToggle">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -201,7 +226,7 @@
     <div class="elegant-mobile-overlay" id="elegantMobileOverlay"></div>
     <div class="elegant-mobile-menu" id="elegantMobileMenu">
         <div class="elegant-mobile-header">
-            <span class="mobile-logo-text">{{ $Setting->translate('app_name') ?? 'Egi Medical' }}</span>
+            <span class="mobile-logo-text">{{ $Setting->translate('app_name') ?? 'قائم ورف' }}</span>
             <button class="elegant-mobile-close" id="elegantMobileClose">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -237,6 +262,18 @@
                     <i class="fa-solid fa-bag-shopping"></i> {{ trans_db('frontend.Cart') }}
                     <span class="mobile-badge">{{ $c_count ?? 0 }}</span>
                 </a>
+            </div>
+
+            <div class="mobile-lang-switch mt-3 px-2">
+                @if(app()->getLocale() == 'ar')
+                    <a href="{{ LaravelLocalization::getLocalizedURL('en', null, [], true) }}" class="btn btn-outline-primary btn-sm w-100 d-flex align-items-center justify-content-center gap-2" style="border-radius: 8px; font-weight: 600; padding: 8px;">
+                        <i class="fa-solid fa-globe"></i> Switch to English
+                    </a>
+                @else
+                    <a href="{{ LaravelLocalization::getLocalizedURL('ar', null, [], true) }}" class="btn btn-outline-primary btn-sm w-100 d-flex align-items-center justify-content-center gap-2" style="border-radius: 8px; font-weight: 600; padding: 8px;">
+                        <i class="fa-solid fa-globe"></i> التحويل للغة العربية
+                    </a>
+                @endif
             </div>
 
             <hr class="mobile-divider">

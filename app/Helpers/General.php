@@ -7,8 +7,9 @@ if (! function_exists('format_price')) {
     function format_price($price)
     {
         // For API, we might use config or a custom header-based setting
-        // For Web, we use Session
-        $currencySymbol = config('app.currency_symbol') ?: Session::get('currency_symbol', 'ج.م');
+        // For Web, we use Session with locale-aware fallback
+        $defaultSymbol = app()->getLocale() === 'en' ? 'EGP' : 'ج.م';
+        $currencySymbol = config('app.currency_symbol') ?: Session::get('currency_symbol', $defaultSymbol);
         $rate = config('app.exchange_rate') ?: Session::get('exchange_rate', 1);
 
         if ($rate <= 0) {

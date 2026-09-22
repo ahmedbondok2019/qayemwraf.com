@@ -21,10 +21,20 @@
                                 <div class="info-item">
                                     <i class="fa-solid fa-location-dot"></i>
                                     <div>
-                                        <h5>{{ trans_db('frontend.Address') }}</h5>
-                                        <p>{{ $Setting->translate('address') ?? 'Cairo, Egypt' }}</p>
+                                        <h5>{{ trans_db('frontend.Showroom / Head Office') ?: (app()->getLocale() == 'ar' ? 'المعرض والمقر الرئيسي' : 'Showroom & Head Office') }}</h5>
+                                        <p>{{ $Setting->translate('address') ?: (app()->getLocale() == 'ar' ? 'القاهرة، مصر' : 'Cairo, Egypt') }}</p>
                                     </div>
                                 </div>
+
+                                @if($Setting->translate('factory_address'))
+                                <div class="info-item">
+                                    <i class="fa-solid fa-industry"></i>
+                                    <div>
+                                        <h5>{{ trans_db('frontend.Factory Address') ?: (app()->getLocale() == 'ar' ? 'عنوان المصنع' : 'Factory Address') }}</h5>
+                                        <p>{{ $Setting->translate('factory_address') }}</p>
+                                    </div>
+                                </div>
+                                @endif
 
                                 <div class="info-item">
                                     <i class="fa-solid fa-phone"></i>

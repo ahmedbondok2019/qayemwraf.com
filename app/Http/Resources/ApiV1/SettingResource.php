@@ -34,6 +34,8 @@ class SettingResource extends JsonResource
             'about_images' => $aboutImageUrl ? [$aboutImageUrl] : [],
             'about_details' => $aboutPage ? new PageResource($aboutPage) : null,
             'address' => $this->translate('address'),
+            'showroom_address' => $this->translate('address'),
+            'factory_address' => $this->translate('factory_address'),
             'phone' => $this->phone,
             'contact_email' => $this->contact_email,
             'social_links' => [
