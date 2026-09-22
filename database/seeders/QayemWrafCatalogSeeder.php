@@ -16,8 +16,8 @@ class QayemWrafCatalogSeeder extends Seeder
      */
     public function run()
     {
-        // Safety guard: If the new catalog is already seeded, skip to avoid repeating on every deployment
-        if (Product::where('sku', 'HD-PALLET-1TON')->exists()) {
+        // Safety guard: If the catalog already has products, skip to avoid repeating on every deployment and deleting custom products
+        if (Product::exists()) {
             $this->command->info('✅ تم العثور على كتالوج المنتجات مسبقاً. تم تخطي السيدر تلقائياً لمنع التكرار والحفاظ على التعديلات.');
 
             return;

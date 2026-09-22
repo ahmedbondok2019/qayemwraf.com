@@ -19,7 +19,7 @@ class ProjectSeeder extends Seeder
         ini_set('memory_limit', '2048M');
 
         // Safety guard: skip if already seeded
-        if (Project::count() >= 60) {
+        if (Project::exists()) {
             $this->command->info('✅ تم العثور على مشروعات سابقة في قاعدة البيانات. تم تخطي السيدر تلقائياً للحفاظ على البيانات.');
             return;
         }

@@ -377,7 +377,7 @@ class BlogSeeder extends Seeder
             }
 
             foreach (['ar', 'en'] as $lang) {
-                BlogCategoryTranslation::updateOrCreate(
+                BlogCategoryTranslation::firstOrCreate(
                     [
                         'blog_category_id' => $category->id,
                         'lang_id' => $lang,
@@ -393,15 +393,17 @@ class BlogSeeder extends Seeder
                 );
             }
 
-            // 3. Insert or Update Category Blogs safely (Never deletes existing articles!)
+            // 3. Insert Category Blogs safely (Never overwrites or deletes existing articles/images!)
             if (! empty($catGroup['blogs'])) {
                 $blogIndex = 0;
                 foreach ($catGroup['blogs'] as $blogData) {
                     $blogIndex++;
                     
-                    // Check if blog exists by Arabic or English slug
+                    // Check if blog exists by Arabic or English slug or title
                     $existingBlogTrans = BlogTranslation::where('slug', Str::slug($blogData['ar']['slug']))
                         ->orWhere('slug', Str::slug($blogData['en']['slug']))
+                        ->orWhere('title', $blogData['ar']['title'])
+                        ->orWhere('title', $blogData['en']['title'])
                         ->first();
 
                     if ($existingBlogTrans) {
@@ -415,15 +417,18 @@ class BlogSeeder extends Seeder
                     }
 
                     foreach (['ar', 'en'] as $lang) {
-                        $cardImg = $blogData[$lang]['card_image'] ?? $blogData[$lang]['image'] ?? '/_fixed/news.jpg';
-                        $innerImg = $blogData[$lang]['inner_image'] ?? $blogData[$lang]['image'] ?? '/_fixed/news.jpg';
-                        
-                        BlogTranslation::updateOrCreate(
-                            [
+                        $existingTrans = BlogTranslation::where('blog_id', $blog->id)
+                            ->where('lang_id', $lang)
+                            ->first();
+
+                        // Only create if translation does not exist; NEVER overwrite existing user-edited data/images!
+                        if (! $existingTrans) {
+                            $cardImg = $blogData[$lang]['card_image'] ?? $blogData[$lang]['image'] ?? '/_fixed/news.jpg';
+                            $innerImg = $blogData[$lang]['inner_image'] ?? $blogData[$lang]['image'] ?? '/_fixed/news.jpg';
+
+                            BlogTranslation::create([
                                 'blog_id' => $blog->id,
                                 'lang_id' => $lang,
-                            ],
-                            [
                                 'title' => $blogData[$lang]['title'],
                                 'slug' => Str::slug($blogData[$lang]['slug']),
                                 'image' => $cardImg,
@@ -435,8 +440,8 @@ class BlogSeeder extends Seeder
                                 'meta_title' => $blogData[$lang]['meta_title'],
                                 'meta_description' => $blogData[$lang]['meta_description'],
                                 'meta_keywords' => $blogData[$lang]['meta_keywords'],
-                            ]
-                        );
+                            ]);
+                        }
                     }
                 }
             }
