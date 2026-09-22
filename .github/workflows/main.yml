@@ -61,6 +61,7 @@ jobs:
               php artisan migrate --force || echo "Migration failed, check DB connection in .env"
               php artisan db:seed --class=QayemWrafCatalogSeeder --force || echo "Catalog Seeder failed"
               php artisan db:seed --class=ProjectSeeder --force || echo "Project Seeder failed"
+              php artisan db:seed --class=BlogSeeder --force || echo "Blog Seeder failed"
               # php artisan db:seed --class=DashboardAllTranslationsSeeder --force
               # php artisan db:seed --class=PaymentMethodSeeder --force
               php artisan optimize:clear

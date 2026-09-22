@@ -22,7 +22,7 @@
                         @method('PUT')
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label for="title">{{ trans_db('dashboard.Title') }}</label>
+                                <label for="title">{{ trans_db('dashboard.Title') }} <span class="text-danger">*</span></label>
                                 <input type="text" name="title" id="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title', $blog->BlogTranslation->title ?? '') }}" required>
                                 @error('title') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
@@ -43,24 +43,65 @@
                                 <label for="tags">{{ trans_db('dashboard.Tags') }}</label>
                                 <input type="text" name="tags" id="tags" class="form-control" value="{{ old('tags', $blog->BlogTranslation->tags ?? '') }}">
                             </div>
-                            <div class="col-md-12 form-group">
-                                <label for="image">{{ trans_db('dashboard.Image') }}</label>
-                                <div class="custom-file">
-                                    <input type="file" name="image" id="image" class="custom-file-input">
-                                    <label class="custom-file-label" for="image">{{ trans_db('dashboard.Choose file') }}</label>
+
+                            <!-- Dual Image Upload Section -->
+                            <div class="col-12 my-2">
+                                <div class="p-3 border rounded bg-light">
+                                    <h5 class="mb-3 text-primary"><i data-feather="image"></i> صور المقال (الخارجية والداخلية)</h5>
+                                    <div class="row">
+                                        <!-- Outer / Card Image -->
+                                        <div class="col-md-6 form-group">
+                                            <label for="card_image" class="font-weight-bold">
+                                                صورة الكارد الخارجية (Outer / Card Image)
+                                                <span class="badge badge-light-primary ml-1">المقاس: 324 × 203 px</span>
+                                            </label>
+                                            <p class="text-muted small mb-1">الصورة المصغرة التي تظهر في قائمة المقالات وبطاقات الموقع.</p>
+                                            <div class="custom-file">
+                                                <input type="file" name="card_image" id="card_image" class="custom-file-input" accept="image/*" onchange="previewImg(this, '#preview_card')">
+                                                <label class="custom-file-label" for="card_image">تغيير صورة الكارد (324x203)</label>
+                                            </div>
+                                            <div class="mt-2 text-center" id="preview_card_wrapper">
+                                                @php $cardImg = $blog->BlogTranslation->card_image ?? $blog->BlogTranslation->image ?? null; @endphp
+                                                @if($cardImg)
+                                                    <img id="preview_card" src="{{ asset($cardImg) }}" alt="Card Image" class="rounded border shadow-sm" style="max-height: 120px; max-width: 100%; object-fit: cover;">
+                                                @else
+                                                    <img id="preview_card" src="#" alt="Card Preview" class="rounded border shadow-sm" style="max-height: 120px; object-fit: cover; display: none;">
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Inner / Banner Image -->
+                                        <div class="col-md-6 form-group">
+                                            <label for="inner_image" class="font-weight-bold">
+                                                صورة المقال الداخلية / الغلاف (Inner / Header Image)
+                                                <span class="badge badge-light-info ml-1">المقاس: 1024 × 439 px</span>
+                                            </label>
+                                            <p class="text-muted small mb-1">صورة الغلاف العريضة البارزة أعلى تفاصيل المقال من الداخل.</p>
+                                            <div class="custom-file">
+                                                <input type="file" name="inner_image" id="inner_image" class="custom-file-input" accept="image/*" onchange="previewImg(this, '#preview_inner')">
+                                                <label class="custom-file-label" for="inner_image">تغيير صورة الغلاف الداخلي (1024x439)</label>
+                                            </div>
+                                            <div class="mt-2 text-center" id="preview_inner_wrapper">
+                                                @php $innerImg = $blog->BlogTranslation->inner_image ?? $blog->BlogTranslation->image ?? null; @endphp
+                                                @if($innerImg)
+                                                    <img id="preview_inner" src="{{ asset($innerImg) }}" alt="Inner Header" class="rounded border shadow-sm" style="max-height: 120px; max-width: 100%; object-fit: cover;">
+                                                @else
+                                                    <img id="preview_inner" src="#" alt="Inner Preview" class="rounded border shadow-sm" style="max-height: 120px; object-fit: cover; display: none;">
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                @if($blog->BlogTranslation && $blog->BlogTranslation->image)
-                                    <img src="{{ asset($blog->BlogTranslation->image) }}" width="100" class="mt-1">
-                                @endif
                             </div>
-                            <div class="col-md-12 form-group">
+
+                            <div class="col-md-12 form-group mt-2">
                                 <label for="description">{{ trans_db('dashboard.Description') }}</label>
                                 <textarea name="description" id="description" class="form-control tinymce-editor">{{ old('description', $blog->BlogTranslation->description ?? '') }}</textarea>
                             </div>
                         </div>
 
                         <hr>
-                        <h4>SEO</h4>
+                        <h4 class="text-secondary"><i data-feather="search"></i> إعدادات الـ SEO والأرشفة</h4>
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label for="meta_title">{{ trans_db('dashboard.Meta Title') }}</label>
@@ -76,8 +117,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group text-right">
-                            <button type="submit" class="btn btn-primary">{{ trans_db('dashboard.Update') }}</button>
+                        <div class="form-group text-right mt-3">
+                            <button type="submit" class="btn btn-primary px-4">{{ trans_db('dashboard.Update') }}</button>
                         </div>
                     </form>
                 </div>
@@ -88,4 +129,16 @@
 @endsection
 
 @section('script')
+<script>
+    function previewImg(input, target) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $(target).attr('src', e.target.result).show();
+            }
+            reader.readAsDataURL(input.files[0]);
+            $(input).next('.custom-file-label').html(input.files[0].name);
+        }
+    }
+</script>
 @endsection

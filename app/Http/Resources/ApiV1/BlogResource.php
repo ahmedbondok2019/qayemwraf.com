@@ -14,11 +14,16 @@ class BlogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $cardImage = $this->BlogTranslation->card_image ?? $this->BlogTranslation->image ?? null;
+        $innerImage = $this->BlogTranslation->inner_image ?? $this->BlogTranslation->image ?? null;
+
         return [
             'id' => $this->id,
             'title' => $this->BlogTranslation->title ?? '',
             'description' => $this->BlogTranslation->description ?? '',
-            'image' => $this->BlogTranslation->image ? asset($this->BlogTranslation->image) : null,
+            'image' => $cardImage ? asset($cardImage) : null,
+            'card_image' => $cardImage ? asset($cardImage) : null,
+            'inner_image' => $innerImage ? asset($innerImage) : null,
             'slug' => $this->BlogTranslation->slug ?? '',
             'tags' => $this->BlogTranslation->tags ?? '',
             'meta_title' => $this->BlogTranslation->meta_title ?? '',

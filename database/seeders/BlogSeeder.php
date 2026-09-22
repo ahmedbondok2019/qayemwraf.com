@@ -21,26 +21,36 @@ class BlogSeeder extends Seeder
      */
     public function run()
     {
-        // 0. Clean up existing blog records, articles, and categories
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // 0. Clean up only obsolete legacy medical records if present (non-destructive)
+        $legacySlugs = [
+            'home-medical-equipment', 'home-medical-devices', 'medical-devices', 'clinic-equipment', 'home-care',
+            'how-to-choose-best-home-blood-pressure-monitor-2026', 'how-to-choose-best-home-blood-pressure-monitor-2026-en'
+        ];
         
-        if (Schema::hasTable('blog_comments')) {
-            DB::table('blog_comments')->truncate();
-        }
-        if (Schema::hasTable('blog_translations')) {
-            DB::table('blog_translations')->truncate();
-        }
-        if (Schema::hasTable('blogs')) {
-            DB::table('blogs')->truncate();
-        }
         if (Schema::hasTable('blog_category_translations')) {
-            DB::table('blog_category_translations')->truncate();
+            $legacyCategoryIds = DB::table('blog_category_translations')
+                ->whereIn('slug', $legacySlugs)
+                ->pluck('blog_category_id')
+                ->toArray();
+                
+            if (!empty($legacyCategoryIds)) {
+                DB::table('blogs')->whereIn('blog_category_id', $legacyCategoryIds)->delete();
+                DB::table('blog_category_translations')->whereIn('blog_category_id', $legacyCategoryIds)->delete();
+                DB::table('blog_categories')->whereIn('id', $legacyCategoryIds)->delete();
+            }
         }
-        if (Schema::hasTable('blog_categories')) {
-            DB::table('blog_categories')->truncate();
+        
+        if (Schema::hasTable('blog_translations')) {
+            $legacyBlogIds = DB::table('blog_translations')
+                ->whereIn('slug', $legacySlugs)
+                ->pluck('blog_id')
+                ->toArray();
+                
+            if (!empty($legacyBlogIds)) {
+                DB::table('blogs')->whereIn('id', $legacyBlogIds)->delete();
+                DB::table('blog_translations')->whereIn('blog_id', $legacyBlogIds)->delete();
+            }
         }
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // 1. Define Specialized Categories with Articles
         $categoriesData = [
@@ -347,53 +357,86 @@ class BlogSeeder extends Seeder
             ],
         ];
 
-        // 2. Insert Categories and Category Translations
+        // 2. Insert or Update Categories without deleting anything
         $catIndex = 0;
         foreach ($categoriesData as $catGroup) {
             $catIndex++;
-            $category = BlogCategory::create([
-                'view_index' => $catIndex,
-                'status' => true,
-            ]);
+            
+            // Check if category exists by Arabic or English slug
+            $existingCatTrans = BlogCategoryTranslation::where('slug', Str::slug($catGroup['ar']['slug']))
+                ->orWhere('slug', Str::slug($catGroup['en']['slug']))
+                ->first();
 
-            foreach (['ar', 'en'] as $lang) {
-                BlogCategoryTranslation::create([
-                    'blog_category_id' => $category->id,
-                    'title' => $catGroup[$lang]['title'],
-                    'slug' => Str::slug($catGroup[$lang]['slug']),
-                    'description' => $catGroup[$lang]['description'],
-                    'meta_title' => $catGroup[$lang]['meta_title'],
-                    'meta_description' => $catGroup[$lang]['meta_description'],
-                    'meta_keywords' => $catGroup[$lang]['meta_keywords'],
-                    'lang_id' => $lang,
+            if ($existingCatTrans) {
+                $category = BlogCategory::find($existingCatTrans->blog_category_id);
+            } else {
+                $category = BlogCategory::create([
+                    'view_index' => $catIndex,
+                    'status' => true,
                 ]);
             }
 
-            // 3. Insert Category Blogs if any
+            foreach (['ar', 'en'] as $lang) {
+                BlogCategoryTranslation::updateOrCreate(
+                    [
+                        'blog_category_id' => $category->id,
+                        'lang_id' => $lang,
+                    ],
+                    [
+                        'title' => $catGroup[$lang]['title'],
+                        'slug' => Str::slug($catGroup[$lang]['slug']),
+                        'description' => $catGroup[$lang]['description'],
+                        'meta_title' => $catGroup[$lang]['meta_title'],
+                        'meta_description' => $catGroup[$lang]['meta_description'],
+                        'meta_keywords' => $catGroup[$lang]['meta_keywords'],
+                    ]
+                );
+            }
+
+            // 3. Insert or Update Category Blogs safely (Never deletes existing articles!)
             if (! empty($catGroup['blogs'])) {
                 $blogIndex = 0;
                 foreach ($catGroup['blogs'] as $blogData) {
                     $blogIndex++;
-                    $blog = Blog::create([
-                        'blog_category_id' => $category->id,
-                        'view_index' => $blogIndex,
-                        'status' => true,
-                    ]);
+                    
+                    // Check if blog exists by Arabic or English slug
+                    $existingBlogTrans = BlogTranslation::where('slug', Str::slug($blogData['ar']['slug']))
+                        ->orWhere('slug', Str::slug($blogData['en']['slug']))
+                        ->first();
+
+                    if ($existingBlogTrans) {
+                        $blog = Blog::find($existingBlogTrans->blog_id);
+                    } else {
+                        $blog = Blog::create([
+                            'blog_category_id' => $category->id,
+                            'view_index' => $blogIndex,
+                            'status' => true,
+                        ]);
+                    }
 
                     foreach (['ar', 'en'] as $lang) {
-                        BlogTranslation::create([
-                            'blog_id' => $blog->id,
-                            'title' => $blogData[$lang]['title'],
-                            'slug' => Str::slug($blogData[$lang]['slug']),
-                            'image' => $blogData[$lang]['image'] ?? '/_fixed/news.jpg',
-                            'tags' => $blogData[$lang]['tags'],
-                            'description' => $blogData[$lang]['description'],
-                            'Author' => $blogData[$lang]['Author'],
-                            'meta_title' => $blogData[$lang]['meta_title'],
-                            'meta_description' => $blogData[$lang]['meta_description'],
-                            'meta_keywords' => $blogData[$lang]['meta_keywords'],
-                            'lang_id' => $lang,
-                        ]);
+                        $cardImg = $blogData[$lang]['card_image'] ?? $blogData[$lang]['image'] ?? '/_fixed/news.jpg';
+                        $innerImg = $blogData[$lang]['inner_image'] ?? $blogData[$lang]['image'] ?? '/_fixed/news.jpg';
+                        
+                        BlogTranslation::updateOrCreate(
+                            [
+                                'blog_id' => $blog->id,
+                                'lang_id' => $lang,
+                            ],
+                            [
+                                'title' => $blogData[$lang]['title'],
+                                'slug' => Str::slug($blogData[$lang]['slug']),
+                                'image' => $cardImg,
+                                'card_image' => $cardImg,
+                                'inner_image' => $innerImg,
+                                'tags' => $blogData[$lang]['tags'],
+                                'description' => $blogData[$lang]['description'],
+                                'Author' => $blogData[$lang]['Author'],
+                                'meta_title' => $blogData[$lang]['meta_title'],
+                                'meta_description' => $blogData[$lang]['meta_description'],
+                                'meta_keywords' => $blogData[$lang]['meta_keywords'],
+                            ]
+                        );
                     }
                 }
             }

@@ -14,4 +14,20 @@ class BlogTranslation extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    /**
+     * Get card image (outer image) with fallback to default image.
+     */
+    public function getCardImageAttribute($value)
+    {
+        return $value ?: $this->attributes['image'] ?? null;
+    }
+
+    /**
+     * Get inner image (inside article image) with fallback to default image.
+     */
+    public function getInnerImageAttribute($value)
+    {
+        return $value ?: $this->attributes['image'] ?? null;
+    }
 }

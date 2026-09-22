@@ -21,6 +21,13 @@ class BlogController extends BackendController
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('image', function ($row) {
+                    $img = $row->BlogTranslation->card_image ?? $row->BlogTranslation->image ?? null;
+                    if ($img) {
+                        return '<img src="'.asset($img).'" width="60" height="40" class="rounded object-fit-cover">';
+                    }
+                    return '<span class="badge badge-light-secondary">'.trans_db('dashboard.No Image').'</span>';
+                })
                 ->addColumn('title', function ($row) {
                     return $row->BlogTranslation->title ?? '---';
                 })
@@ -57,7 +64,7 @@ class BlogController extends BackendController
 
                     return $btn;
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['image', 'status', 'action'])
                 ->make(true);
         }
 
@@ -77,13 +84,26 @@ class BlogController extends BackendController
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
             'blog_category_id' => 'nullable|exists:blog_categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
+            'inner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
         ]);
 
-        $image_name = null;
-        if ($request->hasFile('image')) {
-            $data = self::imageUpload($request);
-            $image_name = $data['image'];
+        $cardImageName = null;
+        if ($request->hasFile('card_image')) {
+            $data = self::imageUpload($request, 'card_image', 'card');
+            $cardImageName = $data['image'];
+        } elseif ($request->hasFile('image')) {
+            $data = self::imageUpload($request, 'image', 'card');
+            $cardImageName = $data['image'];
+        }
+
+        $innerImageName = null;
+        if ($request->hasFile('inner_image')) {
+            $data = self::imageUpload($request, 'inner_image', 'inner');
+            $innerImageName = $data['image'];
+        } elseif ($cardImageName) {
+            $innerImageName = $cardImageName; // fallback if only one was provided
         }
 
         $blog = Blog::create([
@@ -101,7 +121,9 @@ class BlogController extends BackendController
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
             'meta_keywords' => $request->meta_keywords,
-            'image' => $image_name,
+            'image' => $cardImageName ?? $innerImageName,
+            'card_image' => $cardImageName,
+            'inner_image' => $innerImageName,
             'Author' => Auth::id(),
             'lang_id' => app()->getLocale(),
         ]);
@@ -127,23 +149,35 @@ class BlogController extends BackendController
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
             'blog_category_id' => 'nullable|exists:blog_categories,id',
+            'card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
+            'inner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
         ]);
 
-        if ($request->hasFile('image')) {
-            $oldImage = $blog->BlogTranslation->image;
-            if ($oldImage) {
-                $oldPath = str_replace('storage/', '', $oldImage);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                } elseif (file_exists(public_path('website/images/blog/'.$oldImage))) {
-                    unlink(public_path('website/images/blog/'.$oldImage));
-                }
-            }
+        $translation = $blog->BlogTranslation;
+        $cardImageName = $translation->card_image ?? $translation->image ?? null;
+        $innerImageName = $translation->inner_image ?? $translation->image ?? null;
 
-            $data = self::imageUpload($request);
-            $image_name = $data['image'];
-        } else {
-            $image_name = $blog->BlogTranslation->image;
+        if ($request->hasFile('card_image')) {
+            if ($cardImageName) {
+                self::deleteOldFile($cardImageName);
+            }
+            $data = self::imageUpload($request, 'card_image', 'card');
+            $cardImageName = $data['image'];
+        } elseif ($request->hasFile('image')) {
+            if ($cardImageName) {
+                self::deleteOldFile($cardImageName);
+            }
+            $data = self::imageUpload($request, 'image', 'card');
+            $cardImageName = $data['image'];
+        }
+
+        if ($request->hasFile('inner_image')) {
+            if ($innerImageName && $innerImageName !== $cardImageName) {
+                self::deleteOldFile($innerImageName);
+            }
+            $data = self::imageUpload($request, 'inner_image', 'inner');
+            $innerImageName = $data['image'];
         }
 
         $blog->update([
@@ -162,7 +196,9 @@ class BlogController extends BackendController
                 'meta_title' => $request->meta_title,
                 'meta_description' => $request->meta_description,
                 'meta_keywords' => $request->meta_keywords,
-                'image' => $image_name,
+                'image' => $cardImageName ?? $innerImageName,
+                'card_image' => $cardImageName,
+                'inner_image' => $innerImageName,
                 'Author' => Auth::id(),
             ]
         );
@@ -175,13 +211,15 @@ class BlogController extends BackendController
     public function delete($id)
     {
         $blog = Blog::findOrFail($id);
-        $oldImage = $blog->BlogTranslation->image ?? null;
-        if ($oldImage) {
-            $oldPath = str_replace('storage/', '', $oldImage);
-            if (Storage::disk('public')->exists($oldPath)) {
-                Storage::disk('public')->delete($oldPath);
-            } elseif (file_exists(public_path('website/images/blog/'.$oldImage))) {
-                unlink(public_path('website/images/blog/'.$oldImage));
+        if ($blog->BlogTranslation) {
+            if ($blog->BlogTranslation->card_image) {
+                self::deleteOldFile($blog->BlogTranslation->card_image);
+            }
+            if ($blog->BlogTranslation->inner_image) {
+                self::deleteOldFile($blog->BlogTranslation->inner_image);
+            }
+            if ($blog->BlogTranslation->image) {
+                self::deleteOldFile($blog->BlogTranslation->image);
             }
         }
         $blog->delete();
@@ -218,7 +256,9 @@ class BlogController extends BackendController
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
             'meta_keywords' => $request->meta_keywords,
-            'image' => $blog->BlogTranslation->image, // Use same image for all translations usually
+            'image' => $blog->BlogTranslation->image ?? null,
+            'card_image' => $blog->BlogTranslation->card_image ?? null,
+            'inner_image' => $blog->BlogTranslation->inner_image ?? null,
             'Author' => Auth::id(),
             'lang_id' => app()->getLocale(),
         ]);
@@ -228,10 +268,12 @@ class BlogController extends BackendController
         return redirect()->route('admin.blogs.index');
     }
 
-    public static function imageUpload(Request $request)
+    public static function imageUpload(Request $request, string $fieldName = 'image', string $prefix = '')
     {
-        $file = $request->file('image');
-        $fileName = Str::slug($request->title).'-'.time().'.'.$file->getClientOriginalExtension();
+        $file = $request->file($fieldName);
+        $titleSlug = Str::slug($request->title ?? 'blog');
+        $prefixStr = $prefix ? $prefix.'_' : '';
+        $fileName = $prefixStr.$titleSlug.'-'.time().'.'.$file->getClientOriginalExtension();
         $path = 'website'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'blog';
         $fullStoragePath = storage_path('app/public'.DIRECTORY_SEPARATOR.$path);
         $destination = $fullStoragePath.DIRECTORY_SEPARATOR.$fileName;
@@ -239,5 +281,19 @@ class BlogController extends BackendController
         HelperController::upload_images($fullStoragePath, $destination, $file, null, null, null);
 
         return ['image' => 'storage/website/images/blog/'.$fileName];
+    }
+
+    protected static function deleteOldFile(?string $imagePath)
+    {
+        if (! $imagePath) return;
+
+        $oldPath = str_replace('storage/', '', $imagePath);
+        if (Storage::disk('public')->exists($oldPath)) {
+            Storage::disk('public')->delete($oldPath);
+        } elseif (file_exists(public_path('website/images/blog/'.$imagePath))) {
+            unlink(public_path('website/images/blog/'.$imagePath));
+        } elseif (file_exists(public_path($imagePath))) {
+            unlink(public_path($imagePath));
+        }
     }
 }

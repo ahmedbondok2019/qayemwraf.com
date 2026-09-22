@@ -31,11 +31,14 @@
                         </div>
                     </div>
 
-                    <div class="post-featured-image-wrapper rounded-20 shadow-sm overflow-hidden mb-5">
-                        @if($blog->BlogTranslation && $blog->BlogTranslation->image)
-                            <img src="{{ asset($blog->BlogTranslation->image) }}" class="img-fluid w-100" alt="{{ $blog->BlogTranslation->title }}">
+                    @php 
+                        $innerImg = $blog->BlogTranslation->inner_image ?? $blog->BlogTranslation->image ?? null; 
+                    @endphp
+                    <div class="post-featured-image-wrapper rounded-20 shadow-sm overflow-hidden mb-5" style="aspect-ratio: 1024/439; background: #f8f9fa;">
+                        @if($innerImg)
+                            <img src="{{ asset($innerImg) }}" class="img-fluid w-100 h-100 object-fit-cover" alt="{{ $blog->BlogTranslation->title ?? '' }}">
                         @else
-                            <div class="placeholder-img bg-light d-flex align-items-center justify-content-center py-5">
+                            <div class="placeholder-img bg-light d-flex align-items-center justify-content-center h-100 py-5">
                                 <i class="fa-regular fa-image fa-5x opacity-25"></i>
                             </div>
                         @endif
@@ -93,11 +96,14 @@
                         <h4 class="widget-title">{{ trans_db('frontend.Latest Articles') }}</h4>
                         <div class="posts-list">
                             @foreach($latestBlogs as $lblog)
+                            @php 
+                                $miniCardImg = $lblog->BlogTranslation->card_image ?? $lblog->BlogTranslation->image ?? null; 
+                            @endphp
                             <div class="mini-post-item d-flex align-items-center mb-4">
-                                <div class="mini-post-img rounded-12 overflow-hidden flex-shrink-0">
+                                <div class="mini-post-img rounded-12 overflow-hidden flex-shrink-0" style="aspect-ratio: 324/203;">
                                     <a href="{{ route('frontend.blogs.show', ['id' => $lblog->id, 'slug' => $lblog->BlogTranslation->slug ?? 'post']) }}">
-                                        @if($lblog->BlogTranslation && $lblog->BlogTranslation->image)
-                                            <img src="{{ asset($lblog->BlogTranslation->image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $lblog->BlogTranslation->title }}">
+                                        @if($miniCardImg)
+                                            <img src="{{ asset($miniCardImg) }}" class="w-100 h-100 object-fit-cover" alt="{{ $lblog->BlogTranslation->title ?? '' }}">
                                         @else
                                             <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
                                                 <i class="fa-regular fa-image opacity-25"></i>

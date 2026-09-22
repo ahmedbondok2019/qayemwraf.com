@@ -10,17 +10,20 @@
 
         <div class="row">
             @forelse($blogs as $blog)
+            @php 
+                $cardImg = $blog->BlogTranslation->card_image ?? $blog->BlogTranslation->image ?? null; 
+            @endphp
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="blog-card-modern h-100 shadow-sm rounded-20 overflow-hidden bg-white border-0 transition-hover">
-                    <div class="blog-img-wrapper position-relative" style="height: 240px;">
-                        @if($blog->BlogTranslation && $blog->BlogTranslation->image)
-                            <img src="{{ asset($blog->BlogTranslation->image) }}" class="w-100 h-100 object-fit-cover transition-img" alt="{{ $blog->BlogTranslation->title }}">
+                    <div class="blog-img-wrapper position-relative" style="aspect-ratio: 324/203; overflow: hidden; background: #f8f9fa;">
+                        @if($cardImg)
+                            <img src="{{ asset($cardImg) }}" class="w-100 h-100 object-fit-cover transition-img" alt="{{ $blog->BlogTranslation->title ?? '' }}">
                         @else
                             <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
                                 <i class="fa-regular fa-image fa-4x opacity-25"></i>
                             </div>
                         @endif
-                        <div class="blog-date-badge position-absolute" style="top: 20px; right: 20px; background: rgba(102, 126, 234, 0.9); color: white; padding: 6px 15px; border-radius: 50px; font-size: 0.85rem; backdrop-filter: blur(4px);">
+                        <div class="blog-date-badge position-absolute" style="top: 15px; right: 15px; background: rgba(102, 126, 234, 0.9); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; backdrop-filter: blur(4px);">
                             {{ $blog->created_at->format('d M, Y') }}
                         </div>
                     </div>
@@ -28,7 +31,7 @@
                         @if($blog->category)
                         <span class="badge mb-3 px-3 py-2 rounded-pill" style="background: rgba(102, 126, 234, 0.1); color: #667eea; font-weight: 600;">{{ $blog->category->translation->title ?? '' }}</span>
                         @endif
-                        <h4 class="blog-title font-weight-bold mb-3" style="line-height: 1.5; font-size: 1.3rem;">
+                        <h4 class="blog-title font-weight-bold mb-3" style="line-height: 1.5; font-size: 1.25rem;">
                             <a href="{{ route('frontend.blogs.show', ['id' => $blog->id, 'slug' => $blog->BlogTranslation->slug ?? 'post']) }}" class="text-dark text-decoration-none hover-primary">
                                 {{ $blog->BlogTranslation->title ?? 'بدون عنوان' }}
                             </a>
@@ -36,7 +39,7 @@
                         <p class="blog-excerpt text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                             {{ strip_tags($blog->BlogTranslation->description ?? '') }}
                         </p>
-                        <hr class="opacity-5 my-4">
+                        <hr class="opacity-5 my-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <a href="{{ route('frontend.blogs.show', ['id' => $blog->id, 'slug' => $blog->BlogTranslation->slug ?? 'post']) }}" class="btn btn-link p-0 text-primary font-weight-bold text-decoration-none read-more-link">
                                 {{ trans_db('frontend.Read More') }} <i class="fa-solid fa-arrow-left ml-2 animate-icon"></i>
@@ -63,9 +66,9 @@
 <style>
     .rounded-20 { border-radius: 20px; }
     .transition-hover { transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-    .transition-hover:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important; }
+    .transition-hover:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important; }
     .transition-img { transition: transform 0.6s ease; }
-    .blog-card-modern:hover .transition-img { transform: scale(1.1); }
+    .blog-card-modern:hover .transition-img { transform: scale(1.06); }
     .hover-primary:hover { color: #667eea !important; }
     .animate-icon { transition: transform 0.3s ease; display: inline-block; }
     .read-more-link:hover .animate-icon { transform: translateX(-5px); }
