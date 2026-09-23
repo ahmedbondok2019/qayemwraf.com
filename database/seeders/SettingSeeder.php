@@ -39,6 +39,10 @@ class SettingSeeder extends Seeder
                     'ar' => 'المنطقة الصناعية - 6 أكتوبر - الجيزة',
                     'en' => 'Industrial Zone, 6th of October City, Giza, Egypt',
                 ],
+                'additional_address' => [
+                    'ar' => '',
+                    'en' => '',
+                ],
                 'phone' => '01154813836',
                 'whatsapp' => '01154813836',
                 'contact_email' => 'ahmed.kamel@qayemwraf.com',

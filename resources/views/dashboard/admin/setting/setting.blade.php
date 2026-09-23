@@ -249,6 +249,21 @@
 
                                                             <div class="col-12">
                                                                 <hr>
+                                                                <h6 class="mb-1 text-primary font-weight-bold"><i data-feather="map"></i> {{ trans_db('dashboard.Additional Address', 'العنوان الإضافي') }}</h6>
+                                                            </div>
+
+                                                            @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.Additional Address', 'العنوان الإضافي') }} ({{ $properties['native'] }})</label>
+                                                                    <input type="text" class="form-control" name="additional_address[{{ $localeCode }}]"
+                                                                        value="{{ old("additional_address.$localeCode", $Setting->translate('additional_address', $localeCode)) }}" placeholder="مثال: فرع الإسكندرية / عنوان آخر..." />
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+
+                                                            <div class="col-12">
+                                                                <hr>
                                                                 <h5 class="mb-1 mt-2"><i data-feather="share-2"></i> {{ trans_db('dashboard.Social Media') }}</h5>
                                                             </div>
 

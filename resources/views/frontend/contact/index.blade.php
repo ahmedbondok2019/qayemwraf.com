@@ -36,6 +36,16 @@
                                 </div>
                                 @endif
 
+                                @if($Setting->translate('additional_address'))
+                                <div class="info-item">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                    <div>
+                                        <h5>{{ trans_db('frontend.Additional Address') ?: (app()->getLocale() == 'ar' ? 'العنوان الإضافي' : 'Additional Address') }}</h5>
+                                        <p>{{ $Setting->translate('additional_address') }}</p>
+                                    </div>
+                                </div>
+                                @endif
+
                                 <div class="info-item">
                                     <i class="fa-solid fa-phone"></i>
                                     <div>

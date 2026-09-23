@@ -17,6 +17,7 @@ class Setting extends Model
         'app_meta_desc' => 'array',
         'address' => 'array',
         'factory_address' => 'array',
+        'additional_address' => 'array',
         'msg_processing' => 'array',
         'msg_shipped' => 'array',
         'msg_completed' => 'array',

@@ -36,6 +36,7 @@ class SettingResource extends JsonResource
             'address' => $this->translate('address'),
             'showroom_address' => $this->translate('address'),
             'factory_address' => $this->translate('factory_address'),
+            'additional_address' => $this->translate('additional_address'),
             'phone' => $this->phone,
             'contact_email' => $this->contact_email,
             'social_links' => [
