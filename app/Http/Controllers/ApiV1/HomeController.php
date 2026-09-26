@@ -194,6 +194,7 @@ class HomeController extends Controller
         $setting = Setting::first() ?: new Setting;
         $data['why_choose_us'] = $setting->getWhyChooseUsFormatted();
         $data['about_section'] = $setting->getAboutSectionFormatted();
+        $data['showroom_section'] = $setting->getShowroomSectionFormatted();
 
         // 11. قسم تحميل الكتالوج الطبي بصيغة PDF (Catalog Download)
         $data['catalog_download'] = [

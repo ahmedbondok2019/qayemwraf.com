@@ -97,6 +97,11 @@
                                                             <i data-feather="layout"></i> {{ trans_db('dashboard.About Section Settings', 'قسم عن قائم ورف') }}
                                                         </a>
                                                     </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="showroom-section-tab" data-toggle="tab" href="#showroom-section" aria-controls="showroom-section" role="tab" aria-selected="false">
+                                                            <i data-feather="map-pin"></i> {{ trans_db('dashboard.Showroom Section Settings', 'قسم المعرض وموقع المبيعات') }}
+                                                        </a>
+                                                    </li>
                                                 </ul>
 
                                                 <div class="tab-content">
@@ -799,6 +804,128 @@
                                                                 <div class="form-group mb-0">
                                                                     <label>نص الشارة الفرعي (EN)</label>
                                                                     <textarea class="form-control" rows="2" name="about_experience_subtitle[en]">{{ old('about_experience_subtitle.en', $Setting->translate('about_experience_subtitle', 'en') ?: ($aboutDefaults['experience_subtitle']['en'] ?? '')) }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Showroom Section Tab -->
+                                                    <div class="tab-pane" id="showroom-section" aria-labelledby="showroom-section-tab" role="tabpanel">
+                                                        @php
+                                                            $showroomDefaults = \App\Models\Setting::defaultShowroomSection();
+                                                        @endphp
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h5 class="mb-1 mt-2 theme-text-primary"><i data-feather="map-pin"></i> {{ trans_db('dashboard.Showroom Section Settings', 'قسم المعرض وموقع المبيعات') }}</h5>
+                                                            </div>
+
+                                                            <!-- Tag / Badge -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_tag', 'شارة موقع المعرض (عربي)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_tag[ar]"
+                                                                        value="{{ old('showroom_tag.ar', $Setting->translate('showroom_tag', 'ar') ?: ($showroomDefaults['tag']['ar'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_tag', 'شارة موقع المعرض (EN)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_tag[en]"
+                                                                        value="{{ old('showroom_tag.en', $Setting->translate('showroom_tag', 'en') ?: ($showroomDefaults['tag']['en'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Main Title -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_title', 'عنوان المعرض الرئيسي (عربي)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_title[ar]"
+                                                                        value="{{ old('showroom_title.ar', $Setting->translate('showroom_title', 'ar') ?: ($showroomDefaults['title']['ar'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_title', 'عنوان المعرض الرئيسي (EN)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_title[en]"
+                                                                        value="{{ old('showroom_title.en', $Setting->translate('showroom_title', 'en') ?: ($showroomDefaults['title']['en'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Detailed Address -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_address', 'العنوان التفصيلي للمعرض (عربي)') }}</label>
+                                                                    <textarea class="form-control" rows="2" name="showroom_address[ar]">{{ old('showroom_address.ar', $Setting->translate('showroom_address', 'ar') ?: ($Setting->translate('address', 'ar') ?: ($showroomDefaults['address']['ar'] ?? ''))) }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_address', 'العنوان التفصيلي للمعرض (EN)') }}</label>
+                                                                    <textarea class="form-control" rows="2" name="showroom_address[en]">{{ old('showroom_address.en', $Setting->translate('showroom_address', 'en') ?: ($Setting->translate('address', 'en') ?: ($showroomDefaults['address']['en'] ?? ''))) }}</textarea>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Working Hours -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_working_hours', 'مواعيد العمل (عربي)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_working_hours[ar]"
+                                                                        value="{{ old('showroom_working_hours.ar', $Setting->translate('showroom_working_hours', 'ar') ?: ($showroomDefaults['working_hours']['ar'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_working_hours', 'مواعيد العمل (EN)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_working_hours[en]"
+                                                                        value="{{ old('showroom_working_hours.en', $Setting->translate('showroom_working_hours', 'en') ?: ($showroomDefaults['working_hours']['en'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Features / Notes -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_features', 'الملاحظات / المميزات (عربي)') }}</label>
+                                                                    <textarea class="form-control" rows="2" name="showroom_features[ar]">{{ old('showroom_features.ar', $Setting->translate('showroom_features', 'ar') ?: ($showroomDefaults['features']['ar'] ?? '')) }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_features', 'الملاحظات / المميزات (EN)') }}</label>
+                                                                    <textarea class="form-control" rows="2" name="showroom_features[en]">{{ old('showroom_features.en', $Setting->translate('showroom_features', 'en') ?: ($showroomDefaults['features']['en'] ?? '')) }}</textarea>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Map Button Text -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_map_button_text', 'نص زر فتح الخريطة (عربي)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_map_button_text[ar]"
+                                                                        value="{{ old('showroom_map_button_text.ar', $Setting->translate('showroom_map_button_text', 'ar') ?: ($showroomDefaults['map_button_text']['ar'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_map_button_text', 'نص زر فتح الخريطة (EN)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_map_button_text[en]"
+                                                                        value="{{ old('showroom_map_button_text.en', $Setting->translate('showroom_map_button_text', 'en') ?: ($showroomDefaults['map_button_text']['en'] ?? '')) }}" />
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Google Maps Link -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_map_url', 'رابط خرائط جوجل (Google Maps Link)') }}</label>
+                                                                    <input type="url" class="form-control" name="showroom_map_url"
+                                                                        value="{{ old('showroom_map_url', $Setting->showroom_map_url ?: ($showroomDefaults['map_url'] ?? '')) }}" placeholder="https://maps.google.com/..." />
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Google Maps Embed / Iframe -->
+                                                            <div class="col-md-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label>{{ trans_db('dashboard.showroom_map_iframe', 'رابط الخريطة المضمنة (Embed / Iframe URL)') }}</label>
+                                                                    <input type="text" class="form-control" name="showroom_map_iframe"
+                                                                        value="{{ old('showroom_map_iframe', $Setting->showroom_map_iframe ?: ($showroomDefaults['map_iframe'] ?? '')) }}" placeholder="https://www.google.com/maps/embed?..." />
                                                                 </div>
                                                             </div>
                                                         </div>

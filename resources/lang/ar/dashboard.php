@@ -1030,4 +1030,13 @@ return [
     'Gradient Color' => 'لون التدرج',
     'primary_color' => 'اللون الأساسي',
     'gradient_color' => 'لون التدرج',
+    'Showroom Section Settings' => 'قسم المعرض وموقع المبيعات',
+    'showroom_tag' => 'شارة موقع المعرض (Badge)',
+    'showroom_title' => 'عنوان المعرض الرئيسي',
+    'showroom_address' => 'العنوان التفصيلي للمعرض',
+    'showroom_working_hours' => 'مواعيد العمل',
+    'showroom_features' => 'الملاحظات / المميزات الإضافية',
+    'showroom_map_button_text' => 'نص زر الخريطة',
+    'showroom_map_url' => 'رابط خرائط جوجل (Google Maps URL)',
+    'showroom_map_iframe' => 'رابط أو كود تضمين الخريطة (Iframe Embed URL)',
 ];

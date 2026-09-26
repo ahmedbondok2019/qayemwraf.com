@@ -45,6 +45,14 @@ class Setting extends Model
         'google_client_id' => 'string',
         'google_client_secret' => 'string',
         'google_redirect' => 'string',
+        'showroom_tag' => 'array',
+        'showroom_title' => 'array',
+        'showroom_address' => 'array',
+        'showroom_working_hours' => 'array',
+        'showroom_features' => 'array',
+        'showroom_map_button_text' => 'array',
+        'showroom_map_url' => 'string',
+        'showroom_map_iframe' => 'string',
         'show_ratings' => 'boolean',
         'enable_reviews' => 'boolean',
     ];
@@ -269,6 +277,73 @@ class Setting extends Model
             'experience_years' => $expYears,
             'experience_title' => $expTitle,
             'experience_subtitle' => $expSubtitle,
+        ];
+    }
+
+    public static function defaultShowroomSection()
+    {
+        return [
+            'tag' => [
+                'ar' => 'موقع المعرض والمبيعات',
+                'en' => 'Showroom & Sales Location',
+            ],
+            'title' => [
+                'ar' => 'تفضل بزيارتنا في المعرض',
+                'en' => 'Visit Our Showroom',
+            ],
+            'address' => [
+                'ar' => '35 عمارات التوفيقية، شرق مدينة نصر (امتداد مصطفى النحاس - قرب النادي الأهلي)، القاهرة.',
+                'en' => '35 Tawfikiya Buildings, East Nasr City (Mostafa El-Nahas Ext. - Near Al Ahly Club), Cairo.',
+            ],
+            'working_hours' => [
+                'ar' => 'مواعيد العمل: يومياً من 9:00 ص إلى 10:00 م',
+                'en' => 'Working Hours: Daily from 9:00 AM to 10:00 PM',
+            ],
+            'features' => [
+                'ar' => 'معاينة وفحص كافة أنواع الأرفف والمشغولات',
+                'en' => 'Inspect and examine all types of shelves and metal fixtures',
+            ],
+            'map_button_text' => [
+                'ar' => 'فتح الموقع على Google Maps',
+                'en' => 'Open Location on Google Maps',
+            ],
+            'map_url' => 'https://maps.google.com/?q=30.0561,31.3532',
+            'map_iframe' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.6425110378036!2d31.3532!3d30.0561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDAzJzIyLjAiTiAzMcKwMjEnMTEuNSJF!5e0!3m2!1sen!2seg!4v1620000000000!5m2!1sen!2seg',
+        ];
+    }
+
+    public function getShowroomSectionFormatted($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        $defaults = self::defaultShowroomSection();
+
+        $tag = $this->translate('showroom_tag', $locale) ?: ($defaults['tag'][$locale] ?? $defaults['tag']['ar']);
+        $title = $this->translate('showroom_title', $locale) ?: ($defaults['title'][$locale] ?? $defaults['title']['ar']);
+        $address = $this->translate('showroom_address', $locale) ?: ($this->translate('address', $locale) ?: ($defaults['address'][$locale] ?? $defaults['address']['ar']));
+        $workingHours = $this->translate('showroom_working_hours', $locale) ?: ($defaults['working_hours'][$locale] ?? $defaults['working_hours']['ar']);
+        $features = $this->translate('showroom_features', $locale) ?: ($defaults['features'][$locale] ?? $defaults['features']['ar']);
+        $mapButtonText = $this->translate('showroom_map_button_text', $locale) ?: ($defaults['map_button_text'][$locale] ?? $defaults['map_button_text']['ar']);
+
+        $mapUrl = $this->showroom_map_url ?: $defaults['map_url'];
+        $mapIframe = $this->showroom_map_iframe ?: $defaults['map_iframe'];
+
+        return [
+            'tag' => $tag,
+            'title' => $title,
+            'address' => $address,
+            'working_hours' => $workingHours,
+            'features' => $features,
+            'map_button_text' => $mapButtonText,
+            'map_url' => $mapUrl,
+            'map_iframe' => $mapIframe,
+            'translations' => [
+                'tag' => $this->showroom_tag ?: $defaults['tag'],
+                'title' => $this->showroom_title ?: $defaults['title'],
+                'address' => $this->showroom_address ?: ($this->address ?: $defaults['address']),
+                'working_hours' => $this->showroom_working_hours ?: $defaults['working_hours'],
+                'features' => $this->showroom_features ?: $defaults['features'],
+                'map_button_text' => $this->showroom_map_button_text ?: $defaults['map_button_text'],
+            ],
         ];
     }
 

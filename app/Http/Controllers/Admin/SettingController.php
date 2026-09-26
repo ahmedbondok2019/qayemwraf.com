@@ -80,6 +80,14 @@ class SettingController extends BackendController
             'about_experience_years' => 'nullable|string',
             'about_experience_title' => 'nullable|array',
             'about_experience_subtitle' => 'nullable|array',
+            'showroom_tag' => 'nullable|array',
+            'showroom_title' => 'nullable|array',
+            'showroom_address' => 'nullable|array',
+            'showroom_working_hours' => 'nullable|array',
+            'showroom_features' => 'nullable|array',
+            'showroom_map_button_text' => 'nullable|array',
+            'showroom_map_url' => 'nullable|string',
+            'showroom_map_iframe' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -136,6 +144,14 @@ class SettingController extends BackendController
             'about_experience_years' => $request->about_experience_years,
             'about_experience_title' => $request->about_experience_title,
             'about_experience_subtitle' => $request->about_experience_subtitle,
+            'showroom_tag' => $request->showroom_tag,
+            'showroom_title' => $request->showroom_title,
+            'showroom_address' => $request->showroom_address,
+            'showroom_working_hours' => $request->showroom_working_hours,
+            'showroom_features' => $request->showroom_features,
+            'showroom_map_button_text' => $request->showroom_map_button_text,
+            'showroom_map_url' => $request->showroom_map_url,
+            'showroom_map_iframe' => $request->showroom_map_iframe,
         ];
 
         // Handle Images

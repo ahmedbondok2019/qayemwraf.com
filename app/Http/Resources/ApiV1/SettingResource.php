@@ -59,6 +59,7 @@ class SettingResource extends JsonResource
                 'min_order_for_gift' => (float) ($this->min_order_for_gift ?? 0),
             ],
             'why_choose_us' => $this->getWhyChooseUsFormatted(),
+            'showroom_section' => $this->getShowroomSectionFormatted(),
             'catalog_download' => [
                 'title' => $this->translate('catalog_title') ?: 'حمّل كتالوج المنتجات الطبية الكامل',
                 'description' => $this->translate('catalog_description') ?: 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.',

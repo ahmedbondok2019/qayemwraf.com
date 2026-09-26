@@ -1015,4 +1015,13 @@ return [
     'Gradient Color' => 'Gradient Color',
     'primary_color' => 'Primary Color',
     'gradient_color' => 'Gradient Color',
+    'Showroom Section Settings' => 'Showroom & Location Settings',
+    'showroom_tag' => 'Showroom Badge / Tag',
+    'showroom_title' => 'Showroom Main Title',
+    'showroom_address' => 'Detailed Showroom Address',
+    'showroom_working_hours' => 'Working Hours',
+    'showroom_features' => 'Notes / Additional Features',
+    'showroom_map_button_text' => 'Map Button Text',
+    'showroom_map_url' => 'Google Maps URL',
+    'showroom_map_iframe' => 'Google Maps Embed (Iframe URL)',
 ];

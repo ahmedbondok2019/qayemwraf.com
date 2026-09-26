@@ -76,6 +76,14 @@ class SettingSeeder extends Seeder
                     'en' => 'Integrated storage and racking solutions engineered for heavy loads, maximum space utilization, and ultimate safety.',
                 ],
                 'why_choose_us_items' => Setting::defaultWhyChooseUsItems(),
+                'showroom_tag' => Setting::defaultShowroomSection()['tag'],
+                'showroom_title' => Setting::defaultShowroomSection()['title'],
+                'showroom_address' => Setting::defaultShowroomSection()['address'],
+                'showroom_working_hours' => Setting::defaultShowroomSection()['working_hours'],
+                'showroom_features' => Setting::defaultShowroomSection()['features'],
+                'showroom_map_button_text' => Setting::defaultShowroomSection()['map_button_text'],
+                'showroom_map_url' => Setting::defaultShowroomSection()['map_url'],
+                'showroom_map_iframe' => Setting::defaultShowroomSection()['map_iframe'],
             ]
         );
     }

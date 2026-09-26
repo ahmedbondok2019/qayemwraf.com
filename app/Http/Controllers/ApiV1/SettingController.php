@@ -87,6 +87,7 @@ class SettingController extends Controller
                 'logo' => $setting->logo ? asset($setting->logo) : null,
                 'currencey' => 'EGP',
                 'why_choose_us' => $setting->getWhyChooseUsFormatted(),
+                'showroom_section' => $setting->getShowroomSectionFormatted(),
                 'catalog_download' => [
                     'title' => $setting->translate('catalog_title') ?: 'حمّل كتالوج المنتجات الطبية الكامل',
                     'description' => $setting->translate('catalog_description') ?: 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.',

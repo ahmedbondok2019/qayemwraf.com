@@ -130,3 +130,59 @@ Route::group([
 });
 
 Route::get('/test-jnt-order', [TestJntController::class, 'testOrder']);
+
+// رابط مؤقت لتحديث قسم "لماذا تختارنا" و "المعرض" لمرة واحدة فقط (يمكن حذفه بعد استخدامه على السيرفر)
+Route::get('/update-why-choose-us', function () {
+    $setting = \App\Models\Setting::first();
+    if (! $setting) {
+        return response()->json(['status' => 'error', 'message' => 'لم يتم العثور على سجل الإعدادات.'], 404);
+    }
+
+    $setting->update([
+        'why_choose_us_title' => [
+            'ar' => 'لماذا تختار قايم ورف؟',
+            'en' => 'Why Choose Qayem & Raf?',
+        ],
+        'why_choose_us_subtitle' => [
+            'ar' => 'حلول تخزين هندسية متكاملة مصممة لتحمل أقصى الأحمال واستغلال مساحة مخزنك بالكامل بأعلى معايير الأمان.',
+            'en' => 'Integrated storage and racking solutions engineered for heavy loads, maximum space utilization, and ultimate safety.',
+        ],
+        'why_choose_us_items' => \App\Models\Setting::defaultWhyChooseUsItems(),
+        'showroom_tag' => [
+            'ar' => 'موقع المعرض والمبيعات',
+            'en' => 'Showroom & Sales Location',
+        ],
+        'showroom_title' => [
+            'ar' => 'تفضل بزيارتنا في المعرض',
+            'en' => 'Visit Our Showroom',
+        ],
+        'showroom_address' => [
+            'ar' => '35 عمارات التوفيقية، شرق مدينة نصر (امتداد مصطفى النحاس - قرب النادي الأهلي)، القاهرة.',
+            'en' => '35 Tawfikiya Buildings, East Nasr City (Mostafa El-Nahas Ext. - Near Al Ahly Club), Cairo.',
+        ],
+        'showroom_working_hours' => [
+            'ar' => 'مواعيد العمل: يومياً من 9:00 ص إلى 10:00 م',
+            'en' => 'Working Hours: Daily from 9:00 AM to 10:00 PM',
+        ],
+        'showroom_features' => [
+            'ar' => 'معاينة وفحص كافة أنواع الأرفف والمشغولات',
+            'en' => 'Inspect and examine all types of shelves and metal fixtures',
+        ],
+        'showroom_map_button_text' => [
+            'ar' => 'فتح الموقع على Google Maps',
+            'en' => 'Open Location on Google Maps',
+        ],
+        'showroom_map_url' => 'https://maps.google.com/?q=30.0561,31.3532',
+        'showroom_map_iframe' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.6425110378036!2d31.3532!3d30.0561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDAzJzIyLjAiTiAzMcKwMjEnMTEuNSJF!5e0!3m2!1sen!2seg!4v1620000000000!5m2!1sen!2seg',
+    ]);
+
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    \Illuminate\Support\Facades\Artisan::call('view:clear');
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'تم تحديث عناصر "لماذا تختارنا" وقسم "المعرض" بنجاح 100% دون المساس بأي إعدادات أخرى، وتم تفريغ الكاش!',
+        'showroom_section' => $setting->getShowroomSectionFormatted(),
+    ], 200, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+});
+
