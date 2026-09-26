@@ -132,7 +132,7 @@ Route::group([
 Route::get('/test-jnt-order', [TestJntController::class, 'testOrder']);
 
 // رابط مؤقت لتحديث قسم "لماذا تختارنا" و "المعرض" لمرة واحدة فقط (يمكن حذفه بعد استخدامه على السيرفر)
-Route::get('/update-why-choose-us', function () {
+$updateWhyChooseUsCallback = function () {
     $setting = \App\Models\Setting::first();
     if (! $setting) {
         return response()->json(['status' => 'error', 'message' => 'لم يتم العثور على سجل الإعدادات.'], 404);
@@ -184,5 +184,8 @@ Route::get('/update-why-choose-us', function () {
         'message' => 'تم تحديث عناصر "لماذا تختارنا" وقسم "المعرض" بنجاح 100% دون المساس بأي إعدادات أخرى، وتم تفريغ الكاش!',
         'showroom_section' => $setting->getShowroomSectionFormatted(),
     ], 200, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-});
+};
+
+Route::get('/ar/admin-2026/update-why-choose-us', $updateWhyChooseUsCallback);
+Route::get('/admin-2026/update-why-choose-us', $updateWhyChooseUsCallback);
 
