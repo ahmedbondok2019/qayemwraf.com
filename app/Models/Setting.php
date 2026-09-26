@@ -56,48 +56,48 @@ class Setting extends Model
                 'id' => 1,
                 'icon' => 'shield_check',
                 'title' => [
-                    'ar' => 'منتجات أصلية 100%',
-                    'en' => '100% Original Products',
+                    'ar' => 'خامات متينة وتحمل أوزان ثقيلة',
+                    'en' => 'Heavy-Duty Steel & High Load Capacity',
                 ],
                 'description' => [
-                    'ar' => 'مستوردة مباشرة من المصنعين العالميين المعتمدين.',
-                    'en' => 'Imported directly from certified global manufacturers.',
+                    'ar' => 'صاج وشاسيهات بأعلى سماكة محسوبة هندسياً لتتحمل أثقل البضائع وتعيش في ضغط التشغيل اليومي.',
+                    'en' => 'Heavy-gauge steel frames precisely engineered to withstand maximum loads and demanding daily warehouse operations.',
                 ],
             ],
             [
                 'id' => 2,
                 'icon' => 'award',
                 'title' => [
-                    'ar' => 'موزع رسمي معتمد',
-                    'en' => 'Official Authorized Distributor',
+                    'ar' => 'تصميم هندسي محسوب بدقة',
+                    'en' => 'Custom Engineered Storage Solutions',
                 ],
                 'description' => [
-                    'ar' => 'الوكيل والموزع المعتمد لأكبر ماركات الأجهزة الطبية.',
-                    'en' => 'Authorized agent & distributor for top medical device brands.',
+                    'ar' => 'دراسة كاملة لنوع بضائعك، أوزانها، وطريقة مناولتها لنقدّم النظام الأنسب لمخزنك دون عشوائية أو هدر.',
+                    'en' => 'Customized rack design based on your pallet sizes, cargo weights, and material handling equipment.',
                 ],
             ],
             [
                 'id' => 3,
-                'icon' => 'stethoscope',
+                'icon' => 'maximize',
                 'title' => [
-                    'ar' => 'استشارات طبية متخصصة',
-                    'en' => 'Specialized Medical Consultations',
+                    'ar' => 'استغلال ذكي لمساحة المخزن',
+                    'en' => 'Smart Warehouse Space Optimization',
                 ],
                 'description' => [
-                    'ar' => 'مهندسون متخصصون لمساعدتك في اختيار الجهاز المناسب.',
-                    'en' => 'Specialized engineers to assist you in selecting the right device.',
+                    'ar' => 'بنستغل كل متر من الأرض للسقف بتصميم مدروس يضاعف طاقتك الاستيعابية ويسهّل حركة البضائع والمعدات.',
+                    'en' => 'Maximizing floor-to-ceiling storage space to double your warehouse capacity and streamline workflow.',
                 ],
             ],
             [
                 'id' => 4,
                 'icon' => 'wrench',
                 'title' => [
-                    'ar' => 'ضمان وصيانة معتمدة',
-                    'en' => 'Certified Warranty & Maintenance',
+                    'ar' => 'تركيب احترافي وتسليم على المفتاح',
+                    'en' => 'Turnkey Installation & Safe Delivery',
                 ],
                 'description' => [
-                    'ar' => 'ضمان الوكيل الشامل وتوافر قطع الغيار الأصلية والصيانة.',
-                    'en' => 'Comprehensive agent warranty, genuine spare parts, and maintenance.',
+                    'ar' => 'فريق فني متمرس يضمن تركيباً متزناً 100% ومثبتاً بأمان، لتستلم مخزنك جاهزاً للتشغيل فوراً دون قلق.',
+                    'en' => 'Professional on-site assembly ensuring 100% alignment, robust anchoring, and immediate operational readiness.',
                 ],
             ],
         ];
@@ -137,8 +137,8 @@ class Setting extends Model
         }
 
         return [
-            'title' => $this->translate('why_choose_us_title', $locale) ?: ($locale === 'en' ? 'Why choose EG Medical?' : 'لماذا تختار EG Medical؟'),
-            'subtitle' => $this->translate('why_choose_us_subtitle', $locale) ?: ($locale === 'en' ? 'We set new standards of reliability and safety in providing medical supplies and equipment' : 'نحن نضع معايير جديدة للموثوقية والأمان في توفير المستلزمات والأجهزة الطبية'),
+            'title' => $this->translate('why_choose_us_title', $locale) ?: ($locale === 'en' ? 'Why Choose Qayem & Raf?' : 'لماذا تختار قايم ورف؟'),
+            'subtitle' => $this->translate('why_choose_us_subtitle', $locale) ?: ($locale === 'en' ? 'Integrated storage and racking solutions engineered for heavy loads, maximum space utilization, and ultimate safety.' : 'حلول تخزين هندسية متكاملة مصممة لتحمل أقصى الأحمال واستغلال مساحة مخزنك بالكامل بأعلى معايير الأمان.'),
             'items' => $formattedItems,
         ];
     }

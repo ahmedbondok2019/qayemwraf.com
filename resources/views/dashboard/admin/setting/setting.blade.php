@@ -183,7 +183,7 @@
 
                                                             <div class="col-md-4 col-12">
                                                                 <div class="form-group">
-                                                                    <label for="primary_color">{{ trans_db('dashboard.Primary Color') ?: 'اللون الرئيسي' }}</label>
+                                                                    <label for="primary_color">{{ trans_db('dashboard.Primary Color', 'اللون الأساسي') }}</label>
                                                                     <input type="color" class="form-control" id="primary_color" name="primary_color" value="{{ old('primary_color', $Setting->primary_color ?? '#28c76f') }}">
                                                                     <small class="text-muted">هذا اللون سيتحكم في هوية الموقع الرئيسية</small>
                                                                 </div>
@@ -191,7 +191,7 @@
 
                                                             <div class="col-md-4 col-12">
                                                                 <div class="form-group">
-                                                                    <label for="primary_color_to">{{ trans_db('dashboard.Gradient Color') ?: 'لون التدرج' }}</label>
+                                                                    <label for="primary_color_to">{{ trans_db('dashboard.Gradient Color', 'لون التدرج') }}</label>
                                                                     <input type="color" class="form-control" id="primary_color_to" name="primary_color_to" value="{{ old('primary_color_to', $Setting->primary_color_to ?? '#3066d1') }}">
                                                                     <small class="text-muted">هذا اللون يستخدم لنهاية تدرج الألوان</small>
                                                                 </div>
@@ -503,10 +503,14 @@
                                                                         <div class="form-group mb-1">
                                                                             <label>الأيقونة (Icon Key)</label>
                                                                             <select class="form-control" name="why_choose_us_items[{{ $index }}][icon]">
-                                                                                <option value="shield_check" {{ ($item['icon'] ?? '') == 'shield_check' ? 'selected' : '' }}>shield_check (أمان)</option>
-                                                                                <option value="award" {{ ($item['icon'] ?? '') == 'award' ? 'selected' : '' }}>award (جودة)</option>
+                                                                                <option value="shield_check" {{ ($item['icon'] ?? '') == 'shield_check' ? 'selected' : '' }}>shield_check (خامات وأمان)</option>
+                                                                                <option value="award" {{ ($item['icon'] ?? '') == 'award' ? 'selected' : '' }}>award (جودة وهندسة)</option>
+                                                                                <option value="maximize" {{ ($item['icon'] ?? '') == 'maximize' ? 'selected' : '' }}>maximize (استغلال مساحات)</option>
+                                                                                <option value="wrench" {{ ($item['icon'] ?? '') == 'wrench' ? 'selected' : '' }}>wrench (تركيب وصيانة)</option>
+                                                                                <option value="layers" {{ ($item['icon'] ?? '') == 'layers' ? 'selected' : '' }}>layers (أحمال ثقيلة)</option>
+                                                                                <option value="truck" {{ ($item['icon'] ?? '') == 'truck' ? 'selected' : '' }}>truck (توريد ونقل)</option>
+                                                                                <option value="box" {{ ($item['icon'] ?? '') == 'box' ? 'selected' : '' }}>box (تخزين ذكي)</option>
                                                                                 <option value="stethoscope" {{ ($item['icon'] ?? '') == 'stethoscope' ? 'selected' : '' }}>stethoscope (استشارات)</option>
-                                                                                <option value="wrench" {{ ($item['icon'] ?? '') == 'wrench' ? 'selected' : '' }}>wrench (صيانة)</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>

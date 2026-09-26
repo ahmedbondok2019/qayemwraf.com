@@ -67,6 +67,15 @@ class SettingSeeder extends Seeder
                 'about_experience_years' => $defaults['experience_years'],
                 'about_experience_title' => $defaults['experience_title'],
                 'about_experience_subtitle' => $defaults['experience_subtitle'],
+                'why_choose_us_title' => [
+                    'ar' => 'لماذا تختار قايم ورف؟',
+                    'en' => 'Why Choose Qayem & Raf?',
+                ],
+                'why_choose_us_subtitle' => [
+                    'ar' => 'حلول تخزين هندسية متكاملة مصممة لتحمل أقصى الأحمال واستغلال مساحة مخزنك بالكامل بأعلى معايير الأمان.',
+                    'en' => 'Integrated storage and racking solutions engineered for heavy loads, maximum space utilization, and ultimate safety.',
+                ],
+                'why_choose_us_items' => Setting::defaultWhyChooseUsItems(),
             ]
         );
     }

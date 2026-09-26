@@ -1026,4 +1026,8 @@ return [
     'Main Texts' => 'النصوص والفقرات الرئيسية',
     'Showroom Address' => 'عنوان المعرض / المقر الرئيسي',
     'Factory Address' => 'عنوان المصنع',
+    'Primary Color' => 'اللون الأساسي',
+    'Gradient Color' => 'لون التدرج',
+    'primary_color' => 'اللون الأساسي',
+    'gradient_color' => 'لون التدرج',
 ];

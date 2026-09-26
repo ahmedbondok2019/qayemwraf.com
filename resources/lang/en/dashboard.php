@@ -1011,4 +1011,8 @@ return [
     'Main Texts' => 'Main Texts & Paragraphs',
     'Showroom Address' => 'Showroom / Head Office Address',
     'Factory Address' => 'Factory Address',
+    'Primary Color' => 'Primary Color',
+    'Gradient Color' => 'Gradient Color',
+    'primary_color' => 'Primary Color',
+    'gradient_color' => 'Gradient Color',
 ];
