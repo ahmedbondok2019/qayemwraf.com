@@ -185,7 +185,3 @@ $updateWhyChooseUsCallback = function () {
         'showroom_section' => $setting->getShowroomSectionFormatted(),
     ], 200, [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 };
-
-Route::get('/ar/admin-2026/update-why-choose-us', $updateWhyChooseUsCallback);
-Route::get('/admin-2026/update-why-choose-us', $updateWhyChooseUsCallback);
-
