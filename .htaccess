@@ -1,8 +1,20 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine on
+    RewriteEngine On
+
+    # Force HTTPS (SSL) Redirect for all Web and API requests
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTP:X-Forwarded-SSL} !on
+    RewriteCond %{REQUEST_METHOD} ^(POST|PUT|DELETE|PATCH)$
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=308]
+
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTP:X-Forwarded-SSL} !on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     RewriteCond %{REQUEST_URI} !^public
     RewriteRule ^(.*)$ public/$1 [L]
-    
 </IfModule>
 
 # BEGIN cPanel-generated php ini directives, do not edit
