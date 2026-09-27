@@ -34,7 +34,7 @@ class SettingResource extends JsonResource
             'about_images' => $aboutImageUrl ? [$aboutImageUrl] : [],
             'about_details' => $aboutPage ? new PageResource($aboutPage) : null,
             'address' => $this->translate('address'),
-            'showroom_address' => $this->translate('address'),
+            'showroom_address' => $this->translate('showroom_address') ?: $this->translate('address'),
             'factory_address' => $this->translate('factory_address'),
             'additional_address' => $this->translate('additional_address'),
             'phone' => $this->phone,
@@ -60,6 +60,9 @@ class SettingResource extends JsonResource
             ],
             'why_choose_us' => $this->getWhyChooseUsFormatted(),
             'showroom_section' => $this->getShowroomSectionFormatted(),
+            'showroom' => $this->getShowroomSectionFormatted(),
+            'showroom_map_url' => $this->showroom_map_url ?: ($this->defaultShowroomSection()['map_url'] ?? ''),
+            'showroom_map_iframe' => $this->showroom_map_iframe ?: ($this->defaultShowroomSection()['map_iframe'] ?? ''),
             'catalog_download' => [
                 'title' => $this->translate('catalog_title') ?: 'حمّل كتالوج المنتجات الطبية الكامل',
                 'description' => $this->translate('catalog_description') ?: 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.',

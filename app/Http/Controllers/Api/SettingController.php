@@ -84,6 +84,8 @@ class SettingController extends ApiController
             'logo' => 'logo/'.(string) $setting->logo,
             'currencey' => $Currency->translations->currency_sign,
             'version' => $setting->version,
+            'showroom_section' => $setting ? $setting->getShowroomSectionFormatted() : null,
+            'showroom' => $setting ? $setting->getShowroomSectionFormatted() : null,
         ];
 
         return $this->NewApiResponse($data, '', 'true', '200');

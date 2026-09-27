@@ -71,6 +71,9 @@ Route::group(['middleware' => ['Language']], function () {
         Route::get('configuration', [SettingController::class, 'configuration']);
         // جلب إعدادات التطبيق التفصيلية
         Route::get('settings', [SettingController::class, 'index']);
+        // جلب بيانات قسم المعرض وموقع المبيعات
+        Route::get('showroom', [SettingController::class, 'showroom']);
+        Route::get('showroom-section', [SettingController::class, 'showroom']);
         // جلب خدمات الطلبات الإضافية (مثل التركيب والتوصيل الخاص)
         Route::get('order-services', [OrderServiceController::class, 'index']);
         // جلب طرق الدفع المتاحة

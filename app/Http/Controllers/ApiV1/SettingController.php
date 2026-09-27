@@ -37,6 +37,22 @@ class SettingController extends Controller
     }
 
     /**
+     * جلب بيانات قسم المعرض وموقع المبيعات
+     *
+     * يعيد تفاصيل موقع المعرض، العنوان، مواعيد العمل، المميزات، وروابط خرائط جوجل.
+     */
+    public function showroom()
+    {
+        $setting = Setting::first();
+
+        if (! $setting) {
+            return $this->errorResponse('الإعدادات غير موجودة', 404);
+        }
+
+        return $this->successResponse($setting->getShowroomSectionFormatted());
+    }
+
+    /**
      * جلب التكوينات العامة للتطبيق
      *
      * واجهة مخصصة لتزويد التطبيق بالتكوينات العامة كاللغات، الشروط، سياسة الخصوصية، الكتالوج، وإمكانية التسجيل.
@@ -88,6 +104,7 @@ class SettingController extends Controller
                 'currencey' => 'EGP',
                 'why_choose_us' => $setting->getWhyChooseUsFormatted(),
                 'showroom_section' => $setting->getShowroomSectionFormatted(),
+                'showroom' => $setting->getShowroomSectionFormatted(),
                 'catalog_download' => [
                     'title' => $setting->translate('catalog_title') ?: 'حمّل كتالوج المنتجات الطبية الكامل',
                     'description' => $setting->translate('catalog_description') ?: 'استعرض أكثر من 10,000 منتج طبي. مثالي للمستشفيات، العيادات، وطلبات الجملة.',

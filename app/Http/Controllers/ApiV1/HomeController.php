@@ -244,6 +244,8 @@ class HomeController extends Controller
             'about' => $data['about'],
             'about_us' => $data['about'],
             'about_section' => $data['about_section'],
+            'showroom_section' => $data['showroom_section'],
+            'showroom' => $data['showroom_section'],
         ];
 
         $responseData = array_merge($data, $legacyData);
