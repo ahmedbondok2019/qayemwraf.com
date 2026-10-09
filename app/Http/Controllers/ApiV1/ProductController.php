@@ -73,7 +73,7 @@ class ProductController extends Controller
 
                 // If not found by category slug directly, try searching offer translations slug!
                 if ($foundCategories->isEmpty()) {
-                    $foundOffer = \AppModels\Offer::where(function ($q) use ($ident, $decoded) {
+                    $foundOffer = Offer::where(function ($q) use ($ident, $decoded) {
                         if (is_numeric($ident)) {
                             $q->where('id', $ident);
                         }

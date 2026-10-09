@@ -1,10 +1,10 @@
 <?php
 
-namespace AppHttpResourcesApiV1;
+namespace App\Http\Resources\ApiV1;
 
-use AppModelsCategory;
-use IlluminateHttpRequest;
-use IlluminateHttpResourcesJsonJsonResource;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class OfferResource extends JsonResource
 {

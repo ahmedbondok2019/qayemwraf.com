@@ -1,9 +1,9 @@
 <?php
 
-namespace AppHttpResourcesApiV1;
+namespace App\Http\Resources\ApiV1;
 
-use IlluminateHttpRequest;
-use IlluminateHttpResourcesJsonJsonResource;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class CategoryResource extends JsonResource
 {
