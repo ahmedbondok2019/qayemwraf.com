@@ -69,12 +69,44 @@ class ProductController extends Controller
                     $q->orWhereHas('translations', function ($qt) use ($ident, $decoded) {
                         $qt->where('slug', $ident)->orWhere('slug', $decoded);
                     });
-                })->with('children')->get();
+                })->with(['children', 'parent'])->get();
+
+                // If not found by category slug directly, try searching offer translations slug!
+                if ($foundCategories->isEmpty()) {
+                    $foundOffer = \AppModels\Offer::where(function ($q) use ($ident, $decoded) {
+                        if (is_numeric($ident)) {
+                            $q->where('id', $ident);
+                        }
+                        $q->orWhereHas('translations', function ($qt) use ($ident, $decoded) {
+                            $qt->where('slug', $ident)->orWhere('slug', $decoded);
+                        });
+                    })->with('category')->first();
+
+                    if ($foundOffer) {
+                        if ($foundOffer->category_id) {
+                            $targetCategoryIds[] = $foundOffer->category_id;
+                        } elseif ($foundOffer->category) {
+                            $targetCategoryIds[] = $foundOffer->category->id;
+                        } else {
+                            $offerName = $foundOffer->translation->name ?? ($foundOffer->translations->first()->name ?? '');
+                            $cleanTitle = trim(explode('(', $offerName)[0]);
+                            $matchedCat = Category::whereHas('translations', function ($q) use ($cleanTitle) {
+                                $q->where('title', 'like', '%'.$cleanTitle.'%');
+                            })->first();
+                            if ($matchedCat) {
+                                $targetCategoryIds[] = $matchedCat->id;
+                            }
+                        }
+                    }
+                }
 
                 foreach ($foundCategories as $foundCat) {
                     $targetCategoryIds[] = $foundCat->id;
                     foreach ($foundCat->children as $child) {
                         $targetCategoryIds[] = $child->id;
+                    }
+                    if ($foundCat->parent_id) {
+                        $targetCategoryIds[] = $foundCat->parent_id;
                     }
                 }
 

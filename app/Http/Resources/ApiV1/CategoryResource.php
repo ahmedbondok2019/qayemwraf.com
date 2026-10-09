@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Resources\ApiV1;
+namespace AppHttpResourcesApiV1;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use IlluminateHttpRequest;
+use IlluminateHttpResourcesJsonJsonResource;
 
 class CategoryResource extends JsonResource
 {
@@ -14,12 +14,15 @@ class CategoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $slug = $this->translation->slug ?? ($this->translations->first()->slug ?? (string) $this->id);
+
         return [
             'id' => $this->id,
             'title' => $this->translation->title ?? ($this->translations->first()->title ?? ''),
             'name' => $this->translation->title ?? ($this->translations->first()->title ?? ''),
+            'slug' => $slug,
             'image' => $this->image ? asset(ltrim(preg_replace('#/+#', '/', $this->image), '/')) : null,
-            'link' => (string) $this->id,
+            'link' => $slug,
             'show_on_home' => (bool) ($this->show_on_home ?? true),
             'products_count' => $this->whenCounted('products'),
             'parent_id' => $this->parent_id,
