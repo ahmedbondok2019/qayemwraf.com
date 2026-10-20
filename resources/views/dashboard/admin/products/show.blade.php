@@ -121,6 +121,16 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
+                                                        <th class="pl-0">{{ trans_db('dashboard.tax_included', 'تشمل الضريبة') }}:</th>
+                                                        <td>
+                                                            @if($product->is_tax_included)
+                                                                <span class="badge badge-light-success">{{ trans_db('dashboard.yes', 'نعم') }}</span>
+                                                            @else
+                                                                <span class="badge badge-light-secondary">{{ trans_db('dashboard.no', 'لا') }}</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
                                                         <th class="pl-0">{{ trans_db('dashboard.Quantity') }}:</th>
                                                         <td>
                                                             @if($product->ignore_quantity)

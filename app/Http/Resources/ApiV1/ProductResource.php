@@ -33,6 +33,9 @@ class ProductResource extends JsonResource
             'special_price_end' => $this->special_price_end ? $this->special_price_end->format('Y-m-d') : null,
             'final_price' => (float) ($flashPrice > 0 ? $flashPrice : ($this->special_price ?: $this->price)),
             'formatted_final_price' => format_price($flashPrice > 0 ? $flashPrice : ($this->special_price ?: $this->price)),
+            'is_tax_included' => (bool) $this->is_tax_included,
+            'tax_included' => (bool) $this->is_tax_included,
+            'includes_tax' => (bool) $this->is_tax_included,
             'currency' => [
                 'code' => config('app.currency_code'),
                 'symbol' => config('app.currency_symbol'),

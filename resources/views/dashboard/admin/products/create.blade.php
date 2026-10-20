@@ -113,6 +113,10 @@
                                                     <div class="form-group">
                                                         <label for="price">{{ trans_db('dashboard.Price') }}</label>
                                                         <input type="number" step="0.01" id="price" class="form-control" name="price" value="{{ old('price') }}" required />
+                                                        <div class="custom-control custom-checkbox mt-50">
+                                                            <input type="checkbox" class="custom-control-input" id="is_tax_included" name="is_tax_included" {{ old('is_tax_included') ? 'checked' : '' }} />
+                                                            <label class="custom-control-label font-weight-bold" for="is_tax_included">{{ trans_db('dashboard.tax_included', 'تشمل الضريبة') }}</label>
+                                                        </div>
                                                         @error('price')
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror

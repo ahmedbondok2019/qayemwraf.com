@@ -96,6 +96,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     'weight' => $row['weight'] ?? null,
                     'max_order_qty' => $row['max_order_qty'] ?? null,
                     'ignore_quantity' => $row['ignore_quantity'] ?? 0,
+                    'is_tax_included' => $row['is_tax_included'] ?? $row['tax_included'] ?? 0,
                     'special_price' => $row['special_price'] ?? null,
                     'special_price_start' => $row['special_price_start'] ?? null,
                     'special_price_end' => $row['special_price_end'] ?? null,

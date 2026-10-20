@@ -23,6 +23,7 @@ class Product extends Model
         'is_best_seller' => 'boolean',
         'is_gift' => 'boolean',
         'show_on_home' => 'boolean',
+        'is_tax_included' => 'boolean',
         'special_price_start' => 'date',
         'special_price_end' => 'date',
         'best_seller_start' => 'date',

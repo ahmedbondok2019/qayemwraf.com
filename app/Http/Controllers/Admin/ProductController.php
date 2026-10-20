@@ -115,14 +115,19 @@ class ProductController extends Controller
                             </div>';
                 })
                 ->editColumn('price', function ($row) {
+                    $taxBadge = $row->is_tax_included 
+                        ? '<br><span class="badge badge-light-success" style="font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">'.trans_db('dashboard.tax_included', 'شامل الضريبة').'</span>' 
+                        : '';
+
                     if ($row->has_special_price) {
                         return '<div class="d-flex flex-column text-center">'.
                                '<span class="text-muted" style="text-decoration: line-through; font-size: 0.8rem;">'.number_format($row->price, 2).'</span>'.
                                '<span class="text-success font-weight-bold" style="font-size: 0.9rem;">'.number_format($row->special_price, 2).'</span>'.
+                               $taxBadge.
                                '</div>';
                     }
 
-                    return '<div class="text-center font-weight-bold" style="font-size: 0.9rem; color: #334155;">'.number_format($row->price, 2).'</div>';
+                    return '<div class="text-center font-weight-bold" style="font-size: 0.9rem; color: #334155;">'.number_format($row->price, 2).$taxBadge.'</div>';
                 })
                 ->addColumn('status', function ($row) {
                     return $row->status
@@ -208,6 +213,7 @@ class ProductController extends Controller
                 'quantity' => $request->quantity ?? 0,
                 'max_order_qty' => $request->max_order_qty,
                 'ignore_quantity' => $request->has('ignore_quantity'),
+                'is_tax_included' => $request->has('is_tax_included'),
                 'is_best_seller' => $request->has('is_best_seller'),
                 'is_gift' => $request->has('is_gift'),
                 'show_on_home' => $request->has('show_on_home') || ! $request->has('_token') ? 1 : 0, // Default to true if not specified during import/etc
@@ -344,6 +350,7 @@ class ProductController extends Controller
                 'quantity' => $request->quantity ?? 0,
                 'max_order_qty' => $request->max_order_qty,
                 'ignore_quantity' => $request->has('ignore_quantity'),
+                'is_tax_included' => $request->has('is_tax_included'),
                 'is_best_seller' => $request->has('is_best_seller'),
                 'is_gift' => $request->has('is_gift'),
                 'show_on_home' => $request->has('show_on_home'),
