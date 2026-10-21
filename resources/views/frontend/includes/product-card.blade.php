@@ -57,6 +57,17 @@
                 <span class="v-current-price">{{ format_price($product->price) }}</span>
             @endif
         </div>
+        <div class="v-card-tax-info" style="margin-top: 2px; margin-bottom: 4px;">
+            @if($product->is_tax_included)
+                <span style="font-size: 10.5px; font-weight: 600; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px;">
+                    <i class="fa-solid fa-check" style="font-size: 9px;"></i> {{ trans_db('frontend.tax_included', 'شامل الضريبة') }}
+                </span>
+            @else
+                <span style="font-size: 10.5px; font-weight: 600; color: #64748b; background: #f8fafc; border: 1px solid #e2e8f0; padding: 1px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px;">
+                    <i class="fa-solid fa-minus" style="font-size: 9px;"></i> {{ trans_db('frontend.tax_excluded', 'بدون ضريبة') }}
+                </span>
+            @endif
+        </div>
         
         @include('frontend.products.partials.rating_display', ['product' => $product])
     </div>

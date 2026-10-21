@@ -116,8 +116,8 @@ class ProductController extends Controller
                 })
                 ->editColumn('price', function ($row) {
                     $taxBadge = $row->is_tax_included 
-                        ? '<br><span class="badge badge-light-success" style="font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">'.trans_db('dashboard.tax_included', 'شامل الضريبة').'</span>' 
-                        : '';
+                        ? '<br><button type="button" class="btn btn-xs py-0 px-1 btn-outline-success toggle-tax-btn" data-id="'.$row->id.'" style="font-size: 10px; border-radius: 4px; margin-top: 3px;" title="'.trans_db('dashboard.click_to_toggle', 'اضغط للتبديل').'"><i data-feather="check"></i> '.trans_db('dashboard.tax_included', 'شامل الضريبة').'</button>' 
+                        : '<br><button type="button" class="btn btn-xs py-0 px-1 btn-outline-secondary toggle-tax-btn" data-id="'.$row->id.'" style="font-size: 10px; border-radius: 4px; margin-top: 3px;" title="'.trans_db('dashboard.click_to_toggle', 'اضغط للتبديل').'">'.trans_db('dashboard.tax_excluded', 'بدون ضريبة').'</button>';
 
                     if ($row->has_special_price) {
                         return '<div class="d-flex flex-column text-center">'.
@@ -516,6 +516,21 @@ class ProductController extends Controller
         $product->save();
 
         return response()->json(['success' => true]);
+    }
+
+    public function toggleTax($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->is_tax_included = ! $product->is_tax_included;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'is_tax_included' => (bool) $product->is_tax_included,
+            'message' => $product->is_tax_included 
+                ? trans_db('dashboard.tax_included', 'شامل الضريبة') 
+                : trans_db('dashboard.tax_excluded', 'بدون ضريبة')
+        ]);
     }
 
     public function show($id)

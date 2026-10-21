@@ -491,6 +491,16 @@
                             @else
                                 <span class="current-price font-weight-bold" style="font-size: 28px; color: #1e293b;">{{ format_price($product->price) }}</span>
                             @endif
+
+                            @if($product->is_tax_included)
+                                <span class="badge" style="font-size: 13px; font-weight: 700; background-color: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 5px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-check"></i> {{ trans_db('frontend.tax_included', 'شامل الضريبة') }}
+                                </span>
+                            @else
+                                <span class="badge" style="font-size: 13px; font-weight: 700; background-color: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; padding: 5px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-minus"></i> {{ trans_db('frontend.tax_excluded', 'بدون ضريبة') }}
+                                </span>
+                            @endif
                             
                             <span class="badge-stock {{ ($product->quantity > 0 || $product->ignore_quantity) ? 'badge-in-stock' : 'badge-out-stock' }} ml-auto">
                                 {{ ($product->quantity > 0 || $product->ignore_quantity) ? trans_db('frontend.in_stock') : trans_db('frontend.out_of_stock') }}

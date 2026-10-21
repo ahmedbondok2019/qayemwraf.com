@@ -121,13 +121,20 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th class="pl-0">{{ trans_db('dashboard.tax_included', 'تشمل الضريبة') }}:</th>
+                                                        <th class="pl-0">{{ trans_db('dashboard.tax_status_on_site', 'الضريبة على الموقع') }}:</th>
                                                         <td>
-                                                            @if($product->is_tax_included)
-                                                                <span class="badge badge-light-success">{{ trans_db('dashboard.yes', 'نعم') }}</span>
-                                                            @else
-                                                                <span class="badge badge-light-secondary">{{ trans_db('dashboard.no', 'لا') }}</span>
-                                                            @endif
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="custom-control custom-switch custom-switch-success mr-1">
+                                                                    <input type="checkbox" class="custom-control-input toggle-tax-switch" id="tax_switch_data" data-id="{{ $product->id }}" {{ $product->is_tax_included ? 'checked' : '' }}>
+                                                                    <label class="custom-control-label" for="tax_switch_data">
+                                                                        <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                                                        <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                                                    </label>
+                                                                </div>
+                                                                <span class="tax-status-badge badge {{ $product->is_tax_included ? 'badge-light-success' : 'badge-light-secondary' }}">
+                                                                    {{ $product->is_tax_included ? trans_db('dashboard.tax_included', 'شامل الضريبة') : trans_db('dashboard.tax_excluded', 'بدون ضريبة') }}
+                                                                </span>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -282,6 +289,19 @@
                                             <span class="badge badge-light-secondary">No</span>
                                         @endif
                                     </div>
+                                    <div>
+                                        <small class="text-muted d-block">{{ trans_db('dashboard.tax', 'الضريبة') }}</small>
+                                        <div class="custom-control custom-switch custom-switch-success mt-25">
+                                            <input type="checkbox" class="custom-control-input toggle-tax-switch" id="tax_switch_sidebar" data-id="{{ $product->id }}" {{ $product->is_tax_included ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="tax_switch_sidebar">
+                                                <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                                <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                            </label>
+                                        </div>
+                                        <span class="tax-status-badge badge {{ $product->is_tax_included ? 'badge-light-success' : 'badge-light-secondary' }}" style="font-size: 10px;">
+                                            {{ $product->is_tax_included ? trans_db('dashboard.tax_included', 'شامل الضريبة') : trans_db('dashboard.tax_excluded', 'بدون ضريبة') }}
+                                        </span>
+                                    </div>
                                 </div>
                                 <hr>
                                 <div class="text-left">
@@ -343,6 +363,38 @@
 <script>
     $(document).ready(function() {
         if(feather) feather.replace();
+
+        $(document).on('change', '.toggle-tax-switch', function() {
+            let id = $(this).data('id');
+            let isChecked = $(this).is(':checked');
+            $('.toggle-tax-switch').prop('checked', isChecked);
+            
+            $.ajax({
+                url: "{{ route('admin.products.toggle_tax', '') }}/" + id,
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    toastr.success(response.message || "{{ trans_db('dashboard.updated_successfully') }}");
+                    if (response.is_tax_included) {
+                        $('.tax-status-badge')
+                            .removeClass('badge-light-secondary')
+                            .addClass('badge-light-success')
+                            .text("{{ trans_db('dashboard.tax_included', 'شامل الضريبة') }}");
+                    } else {
+                        $('.tax-status-badge')
+                            .removeClass('badge-light-success')
+                            .addClass('badge-light-secondary')
+                            .text("{{ trans_db('dashboard.tax_excluded', 'بدون ضريبة') }}");
+                    }
+                },
+                error: function() {
+                    toastr.error("{{ trans_db('dashboard.error') }}");
+                    $('.toggle-tax-switch').prop('checked', !isChecked);
+                }
+            });
+        });
     });
 </script>
 @endsection

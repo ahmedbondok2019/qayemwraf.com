@@ -113,13 +113,23 @@
                                                     <div class="form-group">
                                                         <label for="price">{{ trans_db('dashboard.Price') }}</label>
                                                         <input type="number" step="0.01" id="price" class="form-control" name="price" value="{{ old('price') }}" required />
-                                                        <div class="custom-control custom-checkbox mt-50">
-                                                            <input type="checkbox" class="custom-control-input" id="is_tax_included" name="is_tax_included" {{ old('is_tax_included') ? 'checked' : '' }} />
-                                                            <label class="custom-control-label font-weight-bold" for="is_tax_included">{{ trans_db('dashboard.tax_included', 'تشمل الضريبة') }}</label>
-                                                        </div>
                                                         @error('price')
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-12">
+                                                    <div class="form-group">
+                                                        <label class="d-block font-weight-bold" for="is_tax_included">{{ trans_db('dashboard.tax_status_on_site', 'الضريبة على الموقع') }}</label>
+                                                        <div class="custom-control custom-switch custom-switch-success mt-50">
+                                                            <input type="checkbox" class="custom-control-input" id="is_tax_included" name="is_tax_included" {{ old('is_tax_included') ? 'checked' : '' }} />
+                                                            <label class="custom-control-label font-weight-bold" for="is_tax_included">
+                                                                <span class="switch-icon-left"><i data-feather="check"></i></span>
+                                                                <span class="switch-icon-right"><i data-feather="x"></i></span>
+                                                                <span class="ml-50" id="tax_label_text">{{ old('is_tax_included') ? trans_db('dashboard.tax_included', 'شامل الضريبة') : trans_db('dashboard.tax_excluded', 'بدون ضريبة') }}</span>
+                                                            </label>
+                                                        </div>
+                                                        <small class="text-muted d-block mt-25">{{ trans_db('dashboard.tax_included_hint', 'حدد ما إذا كان السعر على الموقع بالضريبة أو بدون ضريبة') }}</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 col-12">
@@ -593,6 +603,10 @@
 
         $(document).on('click', '.remove-value-row', function() {
             $(this).closest('tr').remove();
+        });
+
+        $('#is_tax_included').on('change', function() {
+            $('#tax_label_text').text($(this).is(':checked') ? "{{ trans_db('dashboard.tax_included', 'شامل الضريبة') }}" : "{{ trans_db('dashboard.tax_excluded', 'بدون ضريبة') }}");
         });
     });
 </script>

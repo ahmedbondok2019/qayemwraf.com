@@ -134,6 +134,27 @@
                     }
                 });
             });
+
+            $(document).on('click', '.toggle-tax-btn', function() {
+                let btn = $(this);
+                let id = btn.data('id');
+                btn.prop('disabled', true);
+                $.ajax({
+                    url: "{{ route('admin.products.toggle_tax', '') }}/" + id,
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        toastr.success(response.message || "{{ trans_db('dashboard.updated_successfully') }}");
+                        $('#products-table').DataTable().ajax.reload(null, false);
+                    },
+                    error: function() {
+                        toastr.error("{{ trans_db('dashboard.error') }}");
+                        btn.prop('disabled', false);
+                    }
+                });
+            });
         });
 
         function deleteItem(id) {
